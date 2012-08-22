@@ -14,11 +14,11 @@
 		2CE4720C15E3FEEC00B092DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720B15E3FEEC00B092DB /* main.m */; };
 		2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720F15E3FEEC00B092DB /* AppDelegate.m */; };
 		2CE4721315E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */; };
-		2CE4721915E3FEEC00B092DB /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4721815E3FEEC00B092DB /* ViewController.m */; };
 		2CE4722015E4016300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4721F15E4016300B092DB /* CoreLocation.framework */; };
 		2CE4722215E4016F00B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4722115E4016F00B092DB /* MapKit.framework */; };
 		2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722415E4055F00B092DB /* TrackingLocationController.m */; };
 		2CE4722E15E4122500B092DB /* TrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722D15E4122500B092DB /* TrackingViewController.m */; };
+		2CE4723415E54ECF00B092DB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4723315E54ECF00B092DB /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,14 +33,13 @@
 		2CE4720E15E3FEEC00B092DB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2CE4720F15E3FEEC00B092DB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2CE4721215E3FEEC00B092DB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
-		2CE4721715E3FEEC00B092DB /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		2CE4721815E3FEEC00B092DB /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		2CE4721F15E4016300B092DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2CE4722115E4016F00B092DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2CE4722315E4055F00B092DB /* TrackingLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackingLocationController.h; sourceTree = "<group>"; };
 		2CE4722415E4055F00B092DB /* TrackingLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackingLocationController.m; sourceTree = "<group>"; };
 		2CE4722C15E4122500B092DB /* TrackingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackingViewController.h; sourceTree = "<group>"; };
 		2CE4722D15E4122500B092DB /* TrackingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackingViewController.m; sourceTree = "<group>"; };
+		2CE4723315E54ECF00B092DB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CE4723415E54ECF00B092DB /* CoreData.framework in Frameworks */,
 				2CE4722215E4016F00B092DB /* MapKit.framework in Frameworks */,
 				2CE4722015E4016300B092DB /* CoreLocation.framework in Frameworks */,
 				2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */,
@@ -62,6 +62,7 @@
 		2CE471F015E3FEEB00B092DB = {
 			isa = PBXGroup;
 			children = (
+				2CE4723315E54ECF00B092DB /* CoreData.framework */,
 				2CE4722115E4016F00B092DB /* MapKit.framework */,
 				2CE4721F15E4016300B092DB /* CoreLocation.framework */,
 				2CE4720515E3FEEC00B092DB /* geotracking */,
@@ -98,8 +99,6 @@
 				2CE4722D15E4122500B092DB /* TrackingViewController.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
-				2CE4721715E3FEEC00B092DB /* ViewController.h */,
-				2CE4721815E3FEEC00B092DB /* ViewController.m */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;
@@ -181,7 +180,6 @@
 			files = (
 				2CE4720C15E3FEEC00B092DB /* main.m in Sources */,
 				2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */,
-				2CE4721915E3FEEC00B092DB /* ViewController.m in Sources */,
 				2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */,
 				2CE4722E15E4122500B092DB /* TrackingViewController.m in Sources */,
 			);

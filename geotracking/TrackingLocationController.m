@@ -39,6 +39,15 @@
 - (void)trackingLocation {
     [self.locationManager startUpdatingLocation];
     NSLog(@"currentLocation %@",self.currentLocation);
+    NSLog(@"%f",self.currentLocation.coordinate.latitude);
+    NSLog(@"%f",self.currentLocation.coordinate.longitude);
+    NSLog(@"%@",self.currentLocation.altitude);
+    NSLog(@"%@",self.currentLocation.horizontalAccuracy);
+    NSLog(@"%@",self.currentLocation.verticalAccuracy);
+    NSLog(@"%@",self.currentLocation.timestamp);
+    NSLog(@"%@",self.currentLocation.description);
+    NSLog(@"%@",self.currentLocation.speed);
+    NSLog(@"%@",self.currentLocation.course);
 }
 
 - (CLLocation *)getCurrentLocation {
