@@ -35,6 +35,11 @@
     return _coreData;
 }
 
+- (IBAction)clearData:(id)sender {
+    [self.tracker clearLocations];
+    [self.tableView reloadData];
+}
+
 - (IBAction)refreshData:(id)sender {
     [self.tableView reloadData];
 }

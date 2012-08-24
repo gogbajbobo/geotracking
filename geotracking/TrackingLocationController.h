@@ -21,6 +21,7 @@
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
+- (void)clearLocations;
 //- (CLLocation *)getCurrentLocation;
 
 

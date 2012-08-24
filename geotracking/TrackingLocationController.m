@@ -66,6 +66,17 @@
     return _distanceFilter;
 }
 
+- (void)clearLocations {
+    for (Location *location in locationsArray) {
+        [managedObjectContext deleteObject:location];
+    }
+    NSError *error;
+	if (![managedObjectContext save:&error]) {
+        NSLog(@"managedObjectContext save:&error %@", error.localizedDescription);
+	}
+    locationsArray = [self fetchLocationData];
+}
+
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
     locationsArray = [self fetchLocationData];

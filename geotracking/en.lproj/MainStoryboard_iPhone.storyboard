@@ -34,6 +34,11 @@
                                         <action selector="refreshData:" destination="WGT-ET-mIr" id="kbO-xG-Tgh"/>
                                     </connections>
                                 </barButtonItem>
+                                <barButtonItem title="Clear" id="uKi-Fm-4MH">
+                                    <connections>
+                                        <action selector="clearData:" destination="WGT-ET-mIr" id="qF6-rj-Exv"/>
+                                    </connections>
+                                </barButtonItem>
                             </items>
                         </toolbar>
                         <prototypes>
