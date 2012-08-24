@@ -75,6 +75,14 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+//    [self.tableView reloadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+//    [self.tracker stopTrackingLocation];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);

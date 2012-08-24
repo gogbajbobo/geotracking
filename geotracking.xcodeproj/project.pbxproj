@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6015E8025B00A3A83D /* CoreDataController.m */; };
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
+		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
+		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
 		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
 		2C81523515E6A94A00A886E1 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C81523415E6A94A00A886E1 /* Location.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
@@ -29,6 +31,10 @@
 		2C417C6015E8025B00A3A83D /* CoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataController.m; sourceTree = "<group>"; };
 		2C417C6215E80E3F00A3A83D /* TrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerViewController.h; sourceTree = "<group>"; };
 		2C417C6315E80E3F00A3A83D /* TrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerViewController.m; sourceTree = "<group>"; };
+		2C417C6515E81E6000A3A83D /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
+		2C417C6615E81E6000A3A83D /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		2C417C6815E8280B00A3A83D /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
+		2C417C6915E8280B00A3A83D /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
 		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
 		2C81523315E6A94A00A886E1 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		2C81523415E6A94A00A886E1 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
@@ -107,6 +113,10 @@
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2C417C6215E80E3F00A3A83D /* TrackerViewController.h */,
 				2C417C6315E80E3F00A3A83D /* TrackerViewController.m */,
+				2C417C6515E81E6000A3A83D /* MapViewController.h */,
+				2C417C6615E81E6000A3A83D /* MapViewController.m */,
+				2C417C6815E8280B00A3A83D /* MapAnnotation.h */,
+				2C417C6915E8280B00A3A83D /* MapAnnotation.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
@@ -198,6 +208,8 @@
 				2C81523515E6A94A00A886E1 /* Location.m in Sources */,
 				2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */,
 				2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */,
+				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
+				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

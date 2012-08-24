@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="WGT-ET-mIr">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="1.1" toolsVersion="2182" systemVersion="11E53" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="t7X-Ki-mKp">
     <dependencies>
         <deployment defaultVersion="1296" identifier="iOS"/>
         <development defaultVersion="4200" identifier="xcode"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1179"/>
     </dependencies>
     <scenes>
-        <!--Tracker View Controller-->
+        <!--Tracker View Controller - Table-->
         <scene sceneID="JsU-pg-ygu">
             <objects>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gaN-AQ-Pq6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <tableViewController id="WGT-ET-mIr" customClass="TrackerViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EON-rK-JTk">
-                        <rect key="frame" x="0.0" y="20" width="320" height="460"/>
+                        <rect key="frame" x="0.0" y="20" width="320" height="411"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <toolbar key="tableHeaderView" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="se0-t8-RfD">
@@ -68,16 +68,54 @@
                             <outlet property="delegate" destination="WGT-ET-mIr" id="SrS-bN-4bl"/>
                         </connections>
                     </tableView>
+                    <tabBarItem key="tabBarItem" title="Table" id="sPp-Cv-YCx"/>
                 </tableViewController>
             </objects>
-            <point key="canvasLocation" x="542" y="-33"/>
+            <point key="canvasLocation" x="1088" y="-109"/>
+        </scene>
+        <!--Map View Controller - Map-->
+        <scene sceneID="jzN-vt-4uB">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="diD-SM-aEE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <viewController id="tND-F5-tUH" customClass="MapViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Hkj-op-5yV">
+                        <rect key="frame" x="0.0" y="20" width="320" height="411"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="DOi-n5-e9c">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="411"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Map" id="AzJ-Eu-Ndm"/>
+                    <connections>
+                        <outlet property="mapView" destination="DOi-n5-e9c" id="XI9-Y0-Bnw"/>
+                    </connections>
+                </viewController>
+            </objects>
+            <point key="canvasLocation" x="1096" y="492"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="fUm-JY-GZs">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OKj-7f-Ba4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tabBarController id="t7X-Ki-mKp" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="vG4-ZM-E7t">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="WGT-ET-mIr" kind="relationship" relationship="viewControllers" id="hXa-ZJ-yXB"/>
+                        <segue destination="tND-F5-tUH" kind="relationship" relationship="viewControllers" id="l0X-nB-GHI"/>
+                    </connections>
+                </tabBarController>
+            </objects>
+            <point key="canvasLocation" x="542" y="47"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="TrackerViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TrackerViewController.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
