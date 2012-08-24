@@ -30,6 +30,10 @@
 @synthesize desiredAccuracy = _desiredAccuracy;
 @synthesize managedObjectContext, locationsArray, locationManager;
 
+- (NSMutableArray *)locationsArray {
+    if(!locationsArray) locationsArray = [self fetchLocationData];
+    return locationsArray;
+}
 
 - (void)addLocation {
     CLLocation *currentLocation = [locationManager location];

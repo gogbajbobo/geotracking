@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6015E8025B00A3A83D /* CoreDataController.m */; };
+		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
 		2C81523515E6A94A00A886E1 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C81523415E6A94A00A886E1 /* Location.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
@@ -20,13 +21,14 @@
 		2CE4722015E4016300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4721F15E4016300B092DB /* CoreLocation.framework */; };
 		2CE4722215E4016F00B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4722115E4016F00B092DB /* MapKit.framework */; };
 		2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722415E4055F00B092DB /* TrackingLocationController.m */; };
-		2CE4722E15E4122500B092DB /* TrackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722D15E4122500B092DB /* TrackingViewController.m */; };
 		2CE4723415E54ECF00B092DB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4723315E54ECF00B092DB /* CoreData.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2C417C5F15E8025B00A3A83D /* CoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataController.h; sourceTree = "<group>"; };
 		2C417C6015E8025B00A3A83D /* CoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataController.m; sourceTree = "<group>"; };
+		2C417C6215E80E3F00A3A83D /* TrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerViewController.h; sourceTree = "<group>"; };
+		2C417C6315E80E3F00A3A83D /* TrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerViewController.m; sourceTree = "<group>"; };
 		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
 		2C81523315E6A94A00A886E1 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		2C81523415E6A94A00A886E1 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
@@ -45,8 +47,6 @@
 		2CE4722115E4016F00B092DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		2CE4722315E4055F00B092DB /* TrackingLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackingLocationController.h; sourceTree = "<group>"; };
 		2CE4722415E4055F00B092DB /* TrackingLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackingLocationController.m; sourceTree = "<group>"; };
-		2CE4722C15E4122500B092DB /* TrackingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackingViewController.h; sourceTree = "<group>"; };
-		2CE4722D15E4122500B092DB /* TrackingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackingViewController.m; sourceTree = "<group>"; };
 		2CE4723315E54ECF00B092DB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -105,8 +105,8 @@
 				2C417C5F15E8025B00A3A83D /* CoreDataController.h */,
 				2C417C6015E8025B00A3A83D /* CoreDataController.m */,
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
-				2CE4722C15E4122500B092DB /* TrackingViewController.h */,
-				2CE4722D15E4122500B092DB /* TrackingViewController.m */,
+				2C417C6215E80E3F00A3A83D /* TrackerViewController.h */,
+				2C417C6315E80E3F00A3A83D /* TrackerViewController.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
@@ -194,10 +194,10 @@
 				2CE4720C15E3FEEC00B092DB /* main.m in Sources */,
 				2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */,
 				2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */,
-				2CE4722E15E4122500B092DB /* TrackingViewController.m in Sources */,
 				2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */,
 				2C81523515E6A94A00A886E1 /* Location.m in Sources */,
 				2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */,
+				2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
