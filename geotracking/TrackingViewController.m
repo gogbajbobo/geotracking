@@ -8,11 +8,14 @@
 
 #import "TrackingViewController.h"
 #import "TrackingLocationController.h"
+#import "CoreDataController.h"
+
 
 @interface TrackingViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *location;
 @property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) CoreDataController *coreData;
 
 @end
 
@@ -20,6 +23,7 @@
 
 @synthesize location = _location;
 @synthesize tracker = _tracker;
+@synthesize coreData = _coreData;
 
 - (TrackingLocationController *)tracker
 {
@@ -27,8 +31,15 @@
     return _tracker;
 }
 
+- (CoreDataController *)coreData {
+    if(!_coreData) _coreData = [[CoreDataController alloc] init];
+    return _coreData;
+}
+
 - (IBAction)startTracking:(id)sender {
-    self.location.text = [NSString stringWithFormat:@"%@",[self.tracker getCurrentLocation]];
+    [self.tracker setManagedObjectContext:self.coreData.managedObjectContext];
+    [self.tracker startTrackingLocation];
+    self.location.text = [NSString stringWithFormat:@"%@",[[self.tracker locationsArray] objectAtIndex:0]];
 }
 
 - (IBAction)stopTracking:(id)sender {

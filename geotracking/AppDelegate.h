@@ -7,23 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreData/CoreData.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate> {
     
-    UIWindow *window;
-	
-    NSPersistentStoreCoordinator *persistentStoreCoordinator;
-    NSManagedObjectModel *managedObjectModel;
-    NSManagedObjectContext *managedObjectContext;	    
 }
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (nonatomic, readonly) NSManagedObjectModel *managedObjectModel;
-@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, readonly) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
-@property (nonatomic, readonly) NSURL *applicationDocumentsDirectory;
 
 @end

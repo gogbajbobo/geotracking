@@ -7,66 +7,108 @@
 //
 
 #import "TrackingLocationController.h"
+#import "AppDelegate.h"
+#import "Location.h"
 
-@interface TrackingLocationController()
+#define ENTITY_NAME @"Location"
+#define SORT_DESCRIPTOR @"timestamp"
+#define SORT_ASCEND NO
 
-@property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic, strong) CLLocation *currentLocation;
+@interface TrackingLocationController() {
+    
+    CLLocationManager *locationManager;
+    
+}
+
+@property (nonatomic) CLLocationManager *locationManager;
 
 @end
 
 @implementation TrackingLocationController
 
-@synthesize locationManager = _locationManager;
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;
-@synthesize currentLocation = _currentLocation;
+@synthesize managedObjectContext, locationsArray, locationManager;
+
+
+- (void)addLocation {
+    CLLocation *currentLocation = [locationManager location];
+	Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
+	CLLocationCoordinate2D coordinate = [currentLocation coordinate];
+	[location setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
+	[location setLongitude:[NSNumber numberWithDouble:coordinate.longitude]];
+	[location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
+    [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
+    [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
+	[location setTimestamp:[currentLocation timestamp]];
+    
+    NSLog(@"currentLocation %@",currentLocation);
+    
+	NSError *error;
+	if (![managedObjectContext save:&error]) {
+        NSLog(@"managedObjectContext save:&error %@", error.localizedDescription);
+	}
+
+    [locationsArray insertObject:location atIndex:0];
+}
+
+- (CLLocationAccuracy)desiredAccuracy {
+    if (!_desiredAccuracy) _desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    return _desiredAccuracy;
+}
+
+- (CLLocationDistance)distanceFilter {
+    if (!_distanceFilter) _distanceFilter = kCLDistanceFilterNone;
+    return _distanceFilter;
+}
 
 - (void)startTrackingLocation {
-    NSLog(@"startTrackingLocation");
-    [self initLocationManager];
-    [self trackingLocation];
-//    [self stopTrackingLocation];
-}
-
-- (void)initLocationManager {
-    if (!self.locationManager) self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-    self.locationManager.distanceFilter = self.distanceFilter;
-    self.locationManager.desiredAccuracy = self.desiredAccuracy;
-}
-
-- (void)trackingLocation {
-    [self.locationManager startUpdatingLocation];
-    NSLog(@"currentLocation %@",self.currentLocation);
-    NSLog(@"%f",self.currentLocation.coordinate.latitude);
-    NSLog(@"%f",self.currentLocation.coordinate.longitude);
-    NSLog(@"%@",self.currentLocation.altitude);
-    NSLog(@"%@",self.currentLocation.horizontalAccuracy);
-    NSLog(@"%@",self.currentLocation.verticalAccuracy);
-    NSLog(@"%@",self.currentLocation.timestamp);
-    NSLog(@"%@",self.currentLocation.description);
-    NSLog(@"%@",self.currentLocation.speed);
-    NSLog(@"%@",self.currentLocation.course);
-}
-
-- (CLLocation *)getCurrentLocation {
-    [self startTrackingLocation];
-    return self.currentLocation;
-//    [self stopTrackingLocation];
+//    NSLog(@"startTrackingLocation");
+    locationsArray = [self fetchLocationData];
+    [[self locationManager] startUpdatingLocation];
 }
 
 - (void)stopTrackingLocation {
-    NSLog(@"stopTrackingLocation");
-    [self.locationManager stopUpdatingLocation];
-    self.locationManager.delegate = nil;
+//    NSLog(@"stopTrackingLocation");
+    [[self locationManager] stopUpdatingLocation];
+    locationManager.delegate = nil;
+    locationManager = nil;
+}
+
+- (CLLocationManager *)locationManager {
+    if (!locationManager) {
+        locationManager = [[CLLocationManager alloc] init];
+        locationManager.delegate = self;
+        locationManager.distanceFilter = self.distanceFilter;
+        locationManager.desiredAccuracy = self.desiredAccuracy;        
+    }
+    return locationManager;
+}
+
+- (NSMutableArray *)fetchLocationData {
+
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSLog(@"self.managedObjectContext %@",managedObjectContext);
+    NSEntityDescription *enity = [NSEntityDescription entityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
+	[request setEntity:enity];
+	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND];
+	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+	[request setSortDescriptors:sortDescriptors];
+	
+	NSError *error;
+	NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+	if (mutableFetchResults == nil) {
+        NSLog(@"executeFetchRequest error %@", error.localizedDescription);
+	}
+    
+    return mutableFetchResults;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    self.currentLocation = newLocation;
+
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    if (locationAge > 5.0) return;
-    if (newLocation.horizontalAccuracy < 0) return;
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0) [self addLocation];
 }
+
 
 @end

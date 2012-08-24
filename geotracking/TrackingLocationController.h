@@ -9,13 +9,25 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface TrackingLocationController : NSObject <CLLocationManagerDelegate>
+@interface TrackingLocationController : NSObject <CLLocationManagerDelegate> {
+    
+    NSMutableArray *locationsArray;
+	NSManagedObjectContext *managedObjectContext;
+    
+}
 
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
-- (CLLocation *)getCurrentLocation;
+//- (CLLocation *)getCurrentLocation;
+
+
+@property (nonatomic) NSMutableArray *locationsArray;
+@property (nonatomic) NSManagedObjectContext *managedObjectContext;	    
+
+- (void)addLocation;
+
 
 @end

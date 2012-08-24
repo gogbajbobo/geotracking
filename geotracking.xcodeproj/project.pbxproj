@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6015E8025B00A3A83D /* CoreDataController.m */; };
+		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
+		2C81523515E6A94A00A886E1 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C81523415E6A94A00A886E1 /* Location.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
@@ -22,6 +25,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C417C5F15E8025B00A3A83D /* CoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataController.h; sourceTree = "<group>"; };
+		2C417C6015E8025B00A3A83D /* CoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataController.m; sourceTree = "<group>"; };
+		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
+		2C81523315E6A94A00A886E1 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		2C81523415E6A94A00A886E1 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE471FF15E3FEEC00B092DB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE4720115E3FEEC00B092DB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -62,9 +70,6 @@
 		2CE471F015E3FEEB00B092DB = {
 			isa = PBXGroup;
 			children = (
-				2CE4723315E54ECF00B092DB /* CoreData.framework */,
-				2CE4722115E4016F00B092DB /* MapKit.framework */,
-				2CE4721F15E4016300B092DB /* CoreLocation.framework */,
 				2CE4720515E3FEEC00B092DB /* geotracking */,
 				2CE471FE15E3FEEC00B092DB /* Frameworks */,
 				2CE471FC15E3FEEC00B092DB /* Products */,
@@ -82,6 +87,9 @@
 		2CE471FE15E3FEEC00B092DB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2CE4723315E54ECF00B092DB /* CoreData.framework */,
+				2CE4722115E4016F00B092DB /* MapKit.framework */,
+				2CE4721F15E4016300B092DB /* CoreLocation.framework */,
 				2CE471FF15E3FEEC00B092DB /* UIKit.framework */,
 				2CE4720115E3FEEC00B092DB /* Foundation.framework */,
 				2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */,
@@ -94,11 +102,16 @@
 			children = (
 				2CE4720E15E3FEEC00B092DB /* AppDelegate.h */,
 				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
+				2C417C5F15E8025B00A3A83D /* CoreDataController.h */,
+				2C417C6015E8025B00A3A83D /* CoreDataController.m */,
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2CE4722C15E4122500B092DB /* TrackingViewController.h */,
 				2CE4722D15E4122500B092DB /* TrackingViewController.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
+				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
+				2C81523315E6A94A00A886E1 /* Location.h */,
+				2C81523415E6A94A00A886E1 /* Location.m */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;
@@ -182,6 +195,9 @@
 				2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */,
 				2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */,
 				2CE4722E15E4122500B092DB /* TrackingViewController.m in Sources */,
+				2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */,
+				2C81523515E6A94A00A886E1 /* Location.m in Sources */,
+				2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,8 +313,22 @@
 				2CE4721E15E3FEEC00B092DB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2C81523015E6A7D300A886E1 /* Location.xcdatamodel */,
+			);
+			currentVersion = 2C81523015E6A7D300A886E1 /* Location.xcdatamodel */;
+			path = Location.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 2CE471F215E3FEEB00B092DB /* Project object */;
 }
