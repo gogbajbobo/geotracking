@@ -35,6 +35,10 @@
     return _coreData;
 }
 
+- (IBAction)showOptions:(id)sender {
+    [self performSegueWithIdentifier:@"showOptions" sender:self];
+}
+
 - (IBAction)clearData:(id)sender {
     [self.tracker clearLocations];
     [self.tableView reloadData];
@@ -174,5 +178,14 @@
      [self.navigationController pushViewController:detailViewController animated:YES];
      */
 }
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    if ([segue.identifier isEqualToString:@"showOptions"]) {
+        [segue.destinationViewController setTracker:self.tracker];
+    }
+}
+
 
 @end

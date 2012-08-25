@@ -47,6 +47,8 @@
 	[location setTimestamp:[currentLocation timestamp]];
     
     NSLog(@"currentLocation %@",currentLocation);
+    NSLog(@"distanceFilter %f",self.distanceFilter);
+    NSLog(@"desiredAccuracy %f",self.desiredAccuracy);
     
 	NSError *error;
 	if (![managedObjectContext save:&error]) {
@@ -57,13 +59,14 @@
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
-    if (!_desiredAccuracy) _desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    if (!_desiredAccuracy) _desiredAccuracy = kCLLocationAccuracyThreeKilometers;
     return _desiredAccuracy;
 }
 
 - (CLLocationDistance)distanceFilter {
     if (!_distanceFilter) _distanceFilter = kCLDistanceFilterNone;
     return _distanceFilter;
+//    double CLLocationDistance;
 }
 
 - (void)clearLocations {
