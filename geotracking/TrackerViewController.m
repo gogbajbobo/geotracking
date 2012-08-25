@@ -11,7 +11,7 @@
 #import "CoreDataController.h"
 #import "Location.h"
 
-@interface TrackerViewController ()
+@interface TrackerViewController () <UIAlertViewDelegate>
 
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) CoreDataController *coreData;
@@ -40,9 +40,22 @@
 }
 
 - (IBAction)clearData:(id)sender {
-    [self.tracker clearLocations];
-    [self.tableView reloadData];
+    
+    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle: @"Clear Locations" message: @"Delete?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
+    
+    [clearAlert show];
+    
 }
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if(buttonIndex==0)
+    {
+        [self.tracker clearLocations];
+        [self.tableView reloadData];
+    }
+}
+
 
 - (IBAction)refreshData:(id)sender {
     [self.tableView reloadData];
