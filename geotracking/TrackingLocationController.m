@@ -103,7 +103,7 @@
 - (NSMutableArray *)fetchLocationData {
 
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSLog(@"self.managedObjectContext %@",managedObjectContext);
+//    NSLog(@"self.managedObjectContext %@",managedObjectContext);
     NSEntityDescription *enity = [NSEntityDescription entityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
 	[request setEntity:enity];
 	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND];

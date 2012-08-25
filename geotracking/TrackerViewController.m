@@ -113,7 +113,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
 	Location *location = (Location *)[self.tracker.locationsArray objectAtIndex:indexPath.row];
-	NSLog(@"location %@",location);
+//	NSLog(@"location %@",location);
     
 	cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];
 	

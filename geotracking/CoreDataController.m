@@ -38,7 +38,7 @@
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if (![fileManager fileExistsAtPath:[storeUrl path]]) {
             NSString *defaultStorePath = [[NSBundle mainBundle] pathForResource:@"geoTracker" ofType:@"sqlite"];
-            NSLog(@"defaultStorePath %@",defaultStorePath);
+//            NSLog(@"defaultStorePath %@",defaultStorePath);
             if (defaultStorePath) {
                 [fileManager copyItemAtPath:defaultStorePath toPath:[storeUrl path] error:NULL];
             }
@@ -58,7 +58,7 @@
 	
     NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     url = [url URLByAppendingPathComponent:@"geoTracker.sqlite"];
-    NSLog(@"url %@",url);
+//    NSLog(@"url %@",url);
     return url;
 }
 
