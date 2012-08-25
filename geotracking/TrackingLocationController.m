@@ -47,8 +47,8 @@
 	[location setTimestamp:[currentLocation timestamp]];
     
     NSLog(@"currentLocation %@",currentLocation);
-    NSLog(@"distanceFilter %f",self.distanceFilter);
-    NSLog(@"desiredAccuracy %f",self.desiredAccuracy);
+    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
+    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
     
 	NSError *error;
 	if (![managedObjectContext save:&error]) {
@@ -63,10 +63,19 @@
     return _desiredAccuracy;
 }
 
+- (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
+    _desiredAccuracy = desiredAccuracy;
+    locationManager.desiredAccuracy = desiredAccuracy;
+}
+
 - (CLLocationDistance)distanceFilter {
     if (!_distanceFilter) _distanceFilter = kCLDistanceFilterNone;
     return _distanceFilter;
-//    double CLLocationDistance;
+}
+
+- (void)setDistanceFilter:(CLLocationDistance)distanceFilter {
+    _distanceFilter = distanceFilter;
+    locationManager.distanceFilter = distanceFilter;
 }
 
 - (void)clearLocations {
@@ -78,6 +87,11 @@
         NSLog(@"managedObjectContext save:&error %@", error.localizedDescription);
 	}
     locationsArray = [self fetchLocationData];
+}
+
+- (void)restartLocationManager {
+    [self stopTrackingLocation];
+    [self startTrackingLocation];
 }
 
 - (void)startTrackingLocation {

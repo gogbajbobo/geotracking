@@ -11,17 +11,30 @@
 @interface OptionsViewController () <UIPickerViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *desiredAccuracyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *distanceFilterLabel;
+@property (weak, nonatomic) IBOutlet UISlider *distanceFilterSlider;
 
 @end
 
 @implementation OptionsViewController
 @synthesize desiredAccuracyLabel = _desiredAccuracyLabel;
 @synthesize distanceFilterLabel = _distanceFilterLabel;
+@synthesize distanceFilterSlider = _distanceFilterSlider;
 @synthesize tracker = _tracker;
+
+- (IBAction)distanceFilterChangeValue:(id)sender {
+    self.tracker.distanceFilter = self.distanceFilterSlider.value;
+    [self updateLabels];
+}
+
+- (void)distanceFilterSliderSetup {
+    self.distanceFilterSlider.maximumValue = 1000.0;
+    self.distanceFilterSlider.minimumValue = -1.0;
+    [self.distanceFilterSlider setValue:self.tracker.distanceFilter animated:YES];    
+}
 
 - (IBAction)closeView:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
-        NSLog(@"dismissViewControllerAnimated");
+//        NSLog(@"dismissViewControllerAnimated");
     }];
 }
 
@@ -65,6 +78,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self distanceFilterSliderSetup];
     [self updateLabels];
 }
 
@@ -81,6 +95,7 @@
 {
     [self setDesiredAccuracyLabel:nil];
     [self setDistanceFilterLabel:nil];
+    [self setDistanceFilterSlider:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
