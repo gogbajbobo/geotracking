@@ -9,11 +9,9 @@
 #import "MapViewController.h"
 #import "CoreDataController.h"
 #import "TrackingLocationController.h"
-#import "Location.h"
 #import "MapAnnotation.h"
 
-@interface MapViewController () <MKMapViewDelegate>
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@interface MapViewController ()
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
 @property (nonatomic, strong) NSArray *annotations;
@@ -42,24 +40,23 @@
     return _tracker;
 }
 
-
 - (void)updateMapView
 {
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
-    [self.mapView addAnnotations:self.annotations];
+    [self annotationsCreate];
     self.mapView.region = MKCoordinateRegionMake(self.center, self.span);
 }
 
 - (void)setMapView:(MKMapView *)mapView
 {
     _mapView = mapView;
-    [self updateMapView];
+//    [self updateMapView];
 }
 
-- (NSArray *)annotations
+- (void)annotationsCreate
 {
-    NSMutableArray *annotations = [NSMutableArray array];
     NSArray *locationsArray = self.tracker.locationsArray;
+
     Location *location = (Location *)[locationsArray objectAtIndex:0];
 
     double maxLon = [location.longitude doubleValue];
@@ -73,12 +70,11 @@
         if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
         if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
         //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-        [annotations addObject:[MapAnnotation createAnnotationFor:location]];
-//        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+//        [annotations addObject:[MapAnnotation createAnnotationFor:location]];
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
     }
 
-    
-    NSLog(@"annotations.count %d",annotations.count);
+    NSLog(@"annotations.count %d",self.mapView.annotations.count);
     
 //    //    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
     CLLocationCoordinate2D center;
@@ -93,7 +89,7 @@
     //    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);
 //    [self updateMapView];
     
-    return annotations;
+//    return annotations;
 }
 
 
@@ -109,7 +105,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
 	// Do any additional setup after loading the view.
 }
@@ -118,6 +113,11 @@
 {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+//    NSLog(@"viewWillAppear");
+    [self updateMapView];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

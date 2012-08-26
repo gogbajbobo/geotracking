@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MapViewController.h"
 
-@interface TrackingLocationController : NSObject <CLLocationManagerDelegate> {
+@interface TrackingLocationController : NSObject <CLLocationManagerDelegate,UITableViewDataSource> {
     
     NSMutableArray *locationsArray;
 	NSManagedObjectContext *managedObjectContext;
@@ -26,9 +27,10 @@
 
 
 @property (nonatomic) NSMutableArray *locationsArray;
-@property (nonatomic) NSManagedObjectContext *managedObjectContext;	    
+@property (nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (void)addLocation;
 
+@property (nonatomic) UITableView *tableView;
 
 @end

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TrackerViewController : UITableViewController
+@interface TrackerViewController : UIViewController
 
 @end
