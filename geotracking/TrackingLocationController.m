@@ -22,6 +22,7 @@
 }
 
 @property (nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) CLLocationDistance *overalDistance;
 
 @end
 
@@ -30,7 +31,12 @@
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;
 @synthesize managedObjectContext, locationsArray, locationManager;
+
 @synthesize tableView = _tableView;
+@synthesize mapView = _mapView;
+@synthesize locationManagerRunning = _locationManagerRunning;
+
+@synthesize overalDistance = _overalDistance;
 
 - (NSMutableArray *)locationsArray {
     if(!locationsArray) locationsArray = [self fetchLocationData];
@@ -49,8 +55,9 @@
 	[location setTimestamp:[currentLocation timestamp]];
     
     NSLog(@"currentLocation %@",currentLocation);
-    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
-    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
+//    NSLog(@"horizontalAccuracy %f",currentLocation.horizontalAccuracy);
+//    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
+//    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
     
 	NSError *error;
 	if (![managedObjectContext save:&error]) {
@@ -58,9 +65,12 @@
 	}
 
     [locationsArray insertObject:location atIndex:0];
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    
+	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
 	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
@@ -71,6 +81,8 @@
 - (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
     _desiredAccuracy = desiredAccuracy;
     locationManager.desiredAccuracy = desiredAccuracy;
+    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
+;
 }
 
 - (CLLocationDistance)distanceFilter {
@@ -81,6 +93,7 @@
 - (void)setDistanceFilter:(CLLocationDistance)distanceFilter {
     _distanceFilter = distanceFilter;
     locationManager.distanceFilter = distanceFilter;
+    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
 }
 
 - (void)clearLocations {
@@ -103,6 +116,7 @@
 //    NSLog(@"startTrackingLocation");
     locationsArray = [self fetchLocationData];
     [[self locationManager] startUpdatingLocation];
+    self.locationManagerRunning = YES;
 }
 
 - (void)stopTrackingLocation {
@@ -110,6 +124,7 @@
     [[self locationManager] stopUpdatingLocation];
     locationManager.delegate = nil;
     locationManager = nil;
+    self.locationManagerRunning = NO;
 }
 
 - (CLLocationManager *)locationManager {
@@ -153,86 +168,49 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    //    if (section == 1) {
-    //        return 1;
-    //    } else {
-    //        return [self.tracker.locationsArray count];
-    //    }
-    return [self.locationsArray count];
+//     Return the number of rows in the section.
+        if (section == 0) {
+            return 1;
+        } else {
+            return [self.locationsArray count];
+        }
 }
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return @"Summary";
+    } else {
+        return @"Locations";
+    }
+}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Location";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-	Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
-    //	NSLog(@"location %@",location);
-    
-	cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];
-	
-	NSString *string = [NSString stringWithFormat:@"%@, %@",location.latitude,location.longitude];
-    cell.detailTextLabel.text = string;
+    if (indexPath.section == 0) {
+        Location *location = (Location *)[self.locationsArray lastObject];
+        cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
+    } else {
+        Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
+        //	NSLog(@"location %@",location);
+        
+        cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];
+        
+        NSString *string = [NSString stringWithFormat:@"%@, %@",location.latitude,location.longitude];
+        cell.detailTextLabel.text = string;
+    }
     
     return cell;
-}
-
-/*
- // Override to support conditional editing of the table view.
- - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the specified item to be editable.
- return YES;
- }
- */
-
-/*
- // Override to support editing the table view.
- - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
- {
- if (editingStyle == UITableViewCellEditingStyleDelete) {
- // Delete the row from the data source
- [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
- }   
- else if (editingStyle == UITableViewCellEditingStyleInsert) {
- // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
- }   
- }
- */
-
-/*
- // Override to support rearranging the table view.
- - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
- {
- }
- */
-
-/*
- // Override to support conditional rearranging of the table view.
- - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
- {
- // Return NO if you do not want the item to be re-orderable.
- return YES;
- }
- */
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
 }
 
 

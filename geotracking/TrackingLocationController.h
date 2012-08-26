@@ -32,5 +32,7 @@
 - (void)addLocation;
 
 @property (nonatomic) UITableView *tableView;
+@property (nonatomic) MKMapView *mapView;
+@property (nonatomic) BOOL locationManagerRunning;
 
 @end

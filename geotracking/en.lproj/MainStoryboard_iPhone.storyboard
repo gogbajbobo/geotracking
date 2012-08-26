@@ -173,12 +173,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" id="AzJ-Eu-Ndm"/>
+                    <navigationItem key="navigationItem" id="6K6-ZI-ni2"/>
                     <connections>
                         <outlet property="mapView" destination="DOi-n5-e9c" id="XI9-Y0-Bnw"/>
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="1096" y="492"/>
+            <point key="canvasLocation" x="2035" y="471"/>
         </scene>
         <!--Tracker View Controller-->
         <scene sceneID="x86-YA-av0">
@@ -193,20 +194,20 @@
                                 <rect key="frame" x="0.0" y="416" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
-                                    <barButtonItem title="▶" id="JMd-Xj-Lvb">
+                                    <barButtonItem title="Start" width="56" id="NqZ-7M-H0G">
                                         <connections>
-                                            <action selector="startTracker:" destination="X39-dw-5jp" id="6Dy-8M-Uqd"/>
+                                            <action selector="trackerSwitchPressed:" destination="X39-dw-5jp" id="fdi-Xl-x9l"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="◼" id="Sva-0w-6xc">
-                                        <connections>
-                                            <action selector="stopTracker:" destination="X39-dw-5jp" id="h0E-Db-iBn"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="✱" id="STs-tV-Tnh">
+                                    <barButtonItem title="Options" id="STs-tV-Tnh">
                                         <connections>
                                             <action selector="showOptions:" destination="X39-dw-5jp" id="efR-Mo-eLF"/>
                                             <segue destination="J3s-3h-Q2X" kind="modal" identifier="showOptions" modalTransitionStyle="coverVertical" id="8nw-66-dFm"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Map" id="KKA-sb-C5C">
+                                        <connections>
+                                            <segue destination="tND-F5-tUH" kind="modal" identifier="showMap" modalTransitionStyle="partialCurl" id="f3X-GH-Etn"/>
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="LJS-oU-9AL"/>

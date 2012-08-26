@@ -24,12 +24,14 @@
 @synthesize tracker = _tracker;
 @synthesize coreData = _coreData;
 @synthesize tableView = _tableView;
+@synthesize mapViewController = _mapViewController;
 
 - (TrackingLocationController *)tracker
 {
     if(!_tracker) _tracker = [[TrackingLocationController alloc] init];
     [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
     _tracker.tableView = self.tableView;
+    _tracker.mapView = self.mapViewController.mapView;
     return _tracker;
 }
 
@@ -59,14 +61,14 @@
     }
 }
 
-- (IBAction)startTracker:(id)sender {
-//    [self.tracker setManagedObjectContext:self.coreData.managedObjectContext];
-    NSLog(@"startTracker");
-    [self.tracker startTrackingLocation];
-}
-
-- (IBAction)stopTracker:(id)sender {
-    [self.tracker stopTrackingLocation];
+- (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
+    if (self.tracker.locationManagerRunning) {
+        [self.tracker stopTrackingLocation];
+        sender.title = @"Start";
+    } else {
+        [self.tracker startTrackingLocation];
+        sender.title = @"Stop";
+    }
 }
 
 - (void)viewDidLoad
@@ -106,6 +108,9 @@
     
     if ([segue.identifier isEqualToString:@"showOptions"]) {
         [segue.destinationViewController setTracker:self.tracker];
+    }
+    if ([segue.identifier isEqualToString:@"showMap"]) {
+        self.mapViewController = segue.destinationViewController;
     }
 }
 

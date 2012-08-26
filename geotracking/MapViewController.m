@@ -50,46 +50,46 @@
 - (void)setMapView:(MKMapView *)mapView
 {
     _mapView = mapView;
-//    [self updateMapView];
+    [self updateMapView];
 }
 
 - (void)annotationsCreate
 {
     NSArray *locationsArray = self.tracker.locationsArray;
 
-    Location *location = (Location *)[locationsArray objectAtIndex:0];
-
-    double maxLon = [location.longitude doubleValue];
-    double minLon = [location.longitude doubleValue];
-    double maxLat = [location.latitude doubleValue];
-    double minLat = [location.latitude doubleValue];
-
-    for (Location *location in locationsArray) {
-        if ([location.longitude doubleValue] > maxLon) maxLon = [location.longitude doubleValue];
-        if ([location.longitude doubleValue] < minLon) minLon = [location.longitude doubleValue];
-        if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
-        if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
-        //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-//        [annotations addObject:[MapAnnotation createAnnotationFor:location]];
-        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+    if (locationsArray.count > 0) {
+        Location *location = (Location *)[locationsArray objectAtIndex:0];
+        
+        double maxLon = [location.longitude doubleValue];
+        double minLon = [location.longitude doubleValue];
+        double maxLat = [location.latitude doubleValue];
+        double minLat = [location.latitude doubleValue];
+        
+        for (Location *location in locationsArray) {
+            if ([location.longitude doubleValue] > maxLon) maxLon = [location.longitude doubleValue];
+            if ([location.longitude doubleValue] < minLon) minLon = [location.longitude doubleValue];
+            if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
+            if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
+            //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+            [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+        }
+        
+        NSLog(@"annotations.count %d",self.mapView.annotations.count);
+        
+        //    //    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+        CLLocationCoordinate2D center;
+        center.longitude = (maxLon + minLon)/2;
+        center.latitude = (maxLat + minLat)/2;
+        self.center = center;
+        //    NSLog(@"center %f %f",center.longitude, center.latitude);
+        MKCoordinateSpan span;
+        span.longitudeDelta = maxLon - minLon;
+        span.latitudeDelta = maxLat - minLat;
+        self.span = span;
+        //    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);        
+    } else {
+        self.center = self.mapView.userLocation.location.coordinate;
     }
-
-    NSLog(@"annotations.count %d",self.mapView.annotations.count);
-    
-//    //    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-    CLLocationCoordinate2D center;
-    center.longitude = (maxLon + minLon)/2;
-    center.latitude = (maxLat + minLat)/2;
-    self.center = center;
-    //    NSLog(@"center %f %f",center.longitude, center.latitude);
-    MKCoordinateSpan span;
-    span.longitudeDelta = maxLon - minLon;
-    span.latitudeDelta = maxLat - minLat;
-    self.span = span;
-    //    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);
-//    [self updateMapView];
-    
-//    return annotations;
 }
 
 
@@ -115,10 +115,6 @@
     // Release any retained subviews of the main view.
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-//    NSLog(@"viewWillAppear");
-    [self updateMapView];
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
