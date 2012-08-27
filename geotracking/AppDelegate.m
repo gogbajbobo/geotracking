@@ -14,15 +14,8 @@
 
 - (void)applicationDidFinishLaunching:(UIApplication *)application {
 }
+
 - (void)applicationWillTerminate:(UIApplication *)application {
-	
-//    NSError *error;
-//    if (managedObjectContext != nil) {
-//        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
-//            NSLog(@"[managedObjectContext save:&error] %@", error.localizedDescription);        
-//        } 
-//    }
-    
 }
 
 

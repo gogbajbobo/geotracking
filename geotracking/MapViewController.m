@@ -35,8 +35,10 @@
 
 - (TrackingLocationController *)tracker
 {
-    if(!_tracker) _tracker = [[TrackingLocationController alloc] init];
-    [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
+    if(!_tracker) {
+        _tracker = [[TrackingLocationController alloc] init];
+        [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
+    }
     return _tracker;
 }
 

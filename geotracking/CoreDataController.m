@@ -34,7 +34,7 @@
 	
     if (!persistentStoreCoordinator) {
         NSURL *storeUrl = [self applicationDocumentsDirectory];
-        
+
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if (![fileManager fileExistsAtPath:[storeUrl path]]) {
             NSString *defaultStorePath = [[NSBundle mainBundle] pathForResource:@"geoTracker" ofType:@"sqlite"];

@@ -28,10 +28,11 @@
 
 - (TrackingLocationController *)tracker
 {
-    if(!_tracker) _tracker = [[TrackingLocationController alloc] init];
-    [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
-    _tracker.tableView = self.tableView;
-    _tracker.mapView = self.mapViewController.mapView;
+    if(!_tracker) {
+        _tracker = [[TrackingLocationController alloc] init];
+        [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
+        _tracker.tableView = self.tableView;
+    }
     return _tracker;
 }
 
@@ -90,14 +91,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-//    [self.tableView reloadData];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-//    [self.tracker stopTrackingLocation];
-}
-
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -111,6 +104,7 @@
     }
     if ([segue.identifier isEqualToString:@"showMap"]) {
         self.mapViewController = segue.destinationViewController;
+        self.tracker.mapView = self.mapViewController.mapView;
     }
 }
 
