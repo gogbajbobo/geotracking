@@ -10,12 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "MapViewController.h"
 
-@interface TrackingLocationController : NSObject <CLLocationManagerDelegate,UITableViewDataSource> {
-    
-    NSMutableArray *locationsArray;
-	NSManagedObjectContext *managedObjectContext;
-    
-}
+@interface TrackingLocationController : NSObject <CLLocationManagerDelegate,UITableViewDataSource>
 
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
@@ -23,13 +18,11 @@
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
-//- (CLLocation *)getCurrentLocation;
 
+@property (nonatomic, strong) NSMutableArray *locationsArray;
+@property (nonatomic, strong) UIManagedDocument *locationDatabase;
 
-@property (nonatomic) NSMutableArray *locationsArray;
-@property (nonatomic) NSManagedObjectContext *managedObjectContext;
-
-- (void)addLocation;
+- (void)addLocation:(CLLocation *)currentLocation;
 
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) MKMapView *mapView;

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6015E8025B00A3A83D /* CoreDataController.m */; };
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
@@ -28,8 +27,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2C417C5F15E8025B00A3A83D /* CoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreDataController.h; sourceTree = "<group>"; };
-		2C417C6015E8025B00A3A83D /* CoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreDataController.m; sourceTree = "<group>"; };
 		2C417C6215E80E3F00A3A83D /* TrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerViewController.h; sourceTree = "<group>"; };
 		2C417C6315E80E3F00A3A83D /* TrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerViewController.m; sourceTree = "<group>"; };
 		2C417C6515E81E6000A3A83D /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -111,8 +108,6 @@
 			children = (
 				2CE4720E15E3FEEC00B092DB /* AppDelegate.h */,
 				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
-				2C417C5F15E8025B00A3A83D /* CoreDataController.h */,
-				2C417C6015E8025B00A3A83D /* CoreDataController.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
@@ -211,7 +206,6 @@
 				2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */,
 				2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */,
 				2C81523515E6A94A00A886E1 /* Location.m in Sources */,
-				2C417C6115E8025C00A3A83D /* CoreDataController.m in Sources */,
 				2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */,
 				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,

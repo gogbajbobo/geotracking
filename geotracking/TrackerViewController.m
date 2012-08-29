@@ -8,37 +8,31 @@
 
 #import "TrackerViewController.h"
 #import "TrackingLocationController.h"
-#import "CoreDataController.h"
 #import "Location.h"
 
 @interface TrackerViewController () <UIAlertViewDelegate>
 
 @property (nonatomic, strong) TrackingLocationController *tracker;
-@property (nonatomic, strong) CoreDataController *coreData;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) UIManagedDocument *locationDatabase;
 
 
 @end
 
 @implementation TrackerViewController
 @synthesize tracker = _tracker;
-@synthesize coreData = _coreData;
 @synthesize tableView = _tableView;
 @synthesize mapViewController = _mapViewController;
+@synthesize locationDatabase = _locationDatabase;
 
 - (TrackingLocationController *)tracker
 {
     if(!_tracker) {
         _tracker = [[TrackingLocationController alloc] init];
-        [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
+        [_tracker setLocationDatabase:self.locationDatabase];
         _tracker.tableView = self.tableView;
     }
     return _tracker;
-}
-
-- (CoreDataController *)coreData {
-    if(!_coreData) _coreData = [[CoreDataController alloc] init];
-    return _coreData;
 }
 
 - (IBAction)showOptions:(id)sender {
@@ -72,23 +66,35 @@
     }
 }
 
+- (void)initLocationDatabase {
+    
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    url = [url URLByAppendingPathComponent:@"geoTracker.sqlite"];
+    self.locationDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+    [self.locationDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationDatabase.fileURL path]]) {
+        [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {NSLog(@"UIDocumentSaveForCreating success");}];
+    } else if (self.locationDatabase.documentState == UIDocumentStateClosed) {
+        [self.locationDatabase openWithCompletionHandler:^(BOOL success) {NSLog(@"openWithCompletionHandler");}];
+    } else if (self.locationDatabase.documentState == UIDocumentStateNormal) {
+    }
+//    NSLog(@"TVC self.locationDatabase %@", self.locationDatabase);
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [self initLocationDatabase];
+    self.tableView.dataSource = self.tracker;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.tableView.dataSource = self.tracker;
-
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 

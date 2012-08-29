@@ -7,7 +7,6 @@
 //
 
 #import "MapViewController.h"
-#import "CoreDataController.h"
 #import "TrackingLocationController.h"
 #import "MapAnnotation.h"
 
@@ -15,7 +14,6 @@
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
 @property (nonatomic, strong) NSArray *annotations;
-@property (nonatomic, strong) CoreDataController *coreData;
 @property (nonatomic, strong) TrackingLocationController *tracker;
 
 @end
@@ -25,19 +23,13 @@
 @synthesize center = _center;
 @synthesize span = _span;
 @synthesize annotations = _annotations;
-@synthesize coreData = _coreData;
 @synthesize tracker = _tracker;
-
-- (CoreDataController *)coreData {
-    if(!_coreData) _coreData = [[CoreDataController alloc] init];
-    return _coreData;
-}
 
 - (TrackingLocationController *)tracker
 {
     if(!_tracker) {
         _tracker = [[TrackingLocationController alloc] init];
-        [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
+//        [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
     }
     return _tracker;
 }

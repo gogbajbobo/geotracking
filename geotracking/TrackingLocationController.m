@@ -15,14 +15,9 @@
 #define SORT_DESCRIPTOR @"timestamp"
 #define SORT_ASCEND NO
 
-@interface TrackingLocationController() {
-    
-    CLLocationManager *locationManager;
-    
-}
+@interface TrackingLocationController()
 
 @property (nonatomic) CLLocationManager *locationManager;
-@property (nonatomic) CLLocationDistance *overalDistance;
 
 @end
 
@@ -30,47 +25,51 @@
 
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;
-@synthesize managedObjectContext, locationsArray, locationManager;
+@synthesize locationManager = _locationManager;
+@synthesize locationDatabase = _locationDatabase;
+@synthesize locationsArray = _locationsArray;
 
 @synthesize tableView = _tableView;
 @synthesize mapView = _mapView;
 @synthesize locationManagerRunning = _locationManagerRunning;
 
-@synthesize overalDistance = _overalDistance;
 
 - (NSMutableArray *)locationsArray {
-    if(!locationsArray) locationsArray = [self fetchLocationData];
-    return locationsArray;
+    if(!_locationsArray) _locationsArray = [self fetchLocationData];
+    return _locationsArray;
 }
 
-- (void)addLocation {
-    CLLocation *currentLocation = [locationManager location];
-	Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
-	CLLocationCoordinate2D coordinate = [currentLocation coordinate];
-	[location setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
-	[location setLongitude:[NSNumber numberWithDouble:coordinate.longitude]];
-	[location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
+- (void)addLocation:(CLLocation *)currentLocation {
+
+    Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:self.locationDatabase.managedObjectContext];
+    CLLocationCoordinate2D coordinate = [currentLocation coordinate];
+    [location setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
+    [location setLongitude:[NSNumber numberWithDouble:coordinate.longitude]];
+    [location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
-	[location setTimestamp:[currentLocation timestamp]];
+    [location setTimestamp:[currentLocation timestamp]];
     
     NSLog(@"currentLocation %@",currentLocation);
 //    NSLog(@"horizontalAccuracy %f",currentLocation.horizontalAccuracy);
 //    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
 //    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
     
-	NSError *error;
-	if (![managedObjectContext save:&error]) {
-        NSLog(@"managedObjectContext save:&error %@", error.localizedDescription);
-	}
+    [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"UIDocumentSaveForOverwriting success");
+    }];
 
-    [locationsArray insertObject:location atIndex:0];
+    [self.locationsArray insertObject:location atIndex:0];
     
-	NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+//    NSLog(@"locationsArray.count %d",self.locationsArray.count);
+//    NSLog(@"self.locationDatabase.managedObjectContext.registeredObjects.count %d",self.locationDatabase.managedObjectContext.registeredObjects.count);
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-	[self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
+
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
@@ -80,7 +79,7 @@
 
 - (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
     _desiredAccuracy = desiredAccuracy;
-    locationManager.desiredAccuracy = desiredAccuracy;
+    self.locationManager.desiredAccuracy = desiredAccuracy;
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
 ;
 }
@@ -92,19 +91,18 @@
 
 - (void)setDistanceFilter:(CLLocationDistance)distanceFilter {
     _distanceFilter = distanceFilter;
-    locationManager.distanceFilter = distanceFilter;
+    self.locationManager.distanceFilter = distanceFilter;
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
 }
 
 - (void)clearLocations {
-    for (Location *location in locationsArray) {
-        [managedObjectContext deleteObject:location];
+    for (Location *location in self.locationsArray) {
+        [self.locationDatabase.managedObjectContext deleteObject:location];
     }
-    NSError *error;
-	if (![managedObjectContext save:&error]) {
-        NSLog(@"managedObjectContext save:&error %@", error.localizedDescription);
-	}
-    locationsArray = [self fetchLocationData];
+    [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"UIDocumentSaveForOverwriting success");
+    }];
+    self.locationsArray = [self fetchLocationData];
 }
 
 - (void)restartLocationManager {
@@ -114,7 +112,7 @@
 
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
-    locationsArray = [self fetchLocationData];
+    self.locationsArray = [self fetchLocationData];
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
 }
@@ -122,44 +120,40 @@
 - (void)stopTrackingLocation {
 //    NSLog(@"stopTrackingLocation");
     [[self locationManager] stopUpdatingLocation];
-    locationManager.delegate = nil;
-    locationManager = nil;
+    self.locationManager.delegate = nil;
+    self.locationManager = nil;
     self.locationManagerRunning = NO;
 }
 
 - (CLLocationManager *)locationManager {
-    if (!locationManager) {
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.distanceFilter = self.distanceFilter;
-        locationManager.desiredAccuracy = self.desiredAccuracy;        
+    if (!_locationManager) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.distanceFilter = self.distanceFilter;
+        _locationManager.desiredAccuracy = self.desiredAccuracy;        
     }
-    return locationManager;
+    return _locationManager;
 }
 
 - (NSMutableArray *)fetchLocationData {
 
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-//    NSLog(@"self.managedObjectContext %@",managedObjectContext);
-    NSEntityDescription *enity = [NSEntityDescription entityForName:ENTITY_NAME inManagedObjectContext:managedObjectContext];
-	[request setEntity:enity];
-	NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND];
-	NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-	[request setSortDescriptors:sortDescriptors];
-	
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
+//    NSLog(@"TLC self.locationDatabase %@",self.locationDatabase);
 	NSError *error;
-	NSMutableArray *mutableFetchResults = [[managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+	NSMutableArray *mutableFetchResults = [[self.locationDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
 	if (mutableFetchResults == nil) {
         NSLog(@"executeFetchRequest error %@", error.localizedDescription);
 	}
-    
+//    NSLog(@"mutableFetchResults.count %d", mutableFetchResults.count);
     return mutableFetchResults;
+
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
 
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0) [self addLocation];
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0) [self addLocation:newLocation];
 }
 
 
@@ -167,17 +161,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//     Return the number of rows in the section.
         if (section == 0) {
             return 1;
         } else {
-            return [self.locationsArray count];
+            NSInteger rowsInSection = self.locationsArray.count ;
+            NSLog(@"self.locationsArray.count %d", rowsInSection);
+            return rowsInSection;
         }
 }
 
@@ -202,7 +196,6 @@
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
         Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
-        //	NSLog(@"location %@",location);
         
         cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];
         
