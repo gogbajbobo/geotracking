@@ -11,6 +11,5 @@
 
 @interface TrackerViewController : UIViewController
 
-@property (nonatomic, strong) MapViewController *mapViewController;
 
 @end

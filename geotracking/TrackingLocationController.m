@@ -91,8 +91,9 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
+    
+    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
 
 }
 
@@ -137,7 +138,6 @@
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
     self.locationsArray = [self fetchLocationData];
-    [self.tableView reloadData];
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
 }
@@ -191,14 +191,11 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-
         if (section == 0) {
             return 1;
         } else {
-//            return self.locationsArray.count;
             return self.locationsDatabase.managedObjectContext.registeredObjects.count;
         }
-    
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -219,7 +216,7 @@
     if (indexPath.section == 0) {
         Location *location = (Location *)[self.locationsArray lastObject];
         cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
         Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];        
         cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];

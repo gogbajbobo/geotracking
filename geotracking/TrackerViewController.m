@@ -20,7 +20,6 @@
 @implementation TrackerViewController
 @synthesize tracker = _tracker;
 @synthesize tableView = _tableView;
-@synthesize mapViewController = _mapViewController;
 
 - (TrackingLocationController *)tracker
 {
@@ -87,8 +86,11 @@
         [segue.destinationViewController setTracker:self.tracker];
     }
     if ([segue.identifier isEqualToString:@"showMap"]) {
-        self.mapViewController = segue.destinationViewController;
-        self.tracker.mapView = self.mapViewController.mapView;
+        if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
+            MapViewController *mapVC = segue.destinationViewController;
+            mapVC.tracker = self.tracker;
+        }
+        NSLog(@"segue showMap");
     }
 }
 

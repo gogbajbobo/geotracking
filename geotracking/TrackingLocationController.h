@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "MapViewController.h"
 
 @interface TrackingLocationController : NSObject <CLLocationManagerDelegate,UITableViewDataSource>
 

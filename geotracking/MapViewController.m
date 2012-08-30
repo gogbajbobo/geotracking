@@ -7,14 +7,12 @@
 //
 
 #import "MapViewController.h"
-#import "TrackingLocationController.h"
 #import "MapAnnotation.h"
 
 @interface MapViewController ()
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
-@property (nonatomic, strong) NSArray *annotations;
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (weak, nonatomic) IBOutlet MKMapView *mapView;
 
 @end
 
@@ -25,14 +23,6 @@
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
 
-- (TrackingLocationController *)tracker
-{
-    if(!_tracker) {
-        _tracker = [[TrackingLocationController alloc] init];
-//        [_tracker setManagedObjectContext:self.coreData.managedObjectContext];
-    }
-    return _tracker;
-}
 
 - (void)updateMapView
 {
@@ -44,6 +34,7 @@
 - (void)setMapView:(MKMapView *)mapView
 {
     _mapView = mapView;
+    self.tracker.mapView = self.mapView;
     [self updateMapView];
 }
 

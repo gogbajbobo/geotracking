@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "Location.h"
+#import "TrackingLocationController.h"
 
 @interface MapViewController : UIViewController
-@property (weak, nonatomic) IBOutlet MKMapView *mapView;
-
+@property (nonatomic, strong) NSArray *annotations;
+@property (nonatomic, strong) TrackingLocationController *tracker;
 
 @end
