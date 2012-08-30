@@ -19,6 +19,8 @@
 @interface TrackingLocationController()
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic) CLLocationDistance overallDistance;
+@property (nonatomic) CLLocationSpeed averageSpeed;
 
 @end
 
@@ -32,6 +34,8 @@
 @synthesize tableView = _tableView;
 @synthesize mapView = _mapView;
 @synthesize locationManagerRunning = _locationManagerRunning;
+@synthesize overallDistance = _overallDistance;
+@synthesize averageSpeed = _averageSpeed;
 
 
 - (void)setLocationsArray:(NSMutableArray *)locationsArray {
@@ -91,10 +95,19 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
+    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s",self.overallDistance,self.averageSpeed];
     
     [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
 
+}
+
+- (CLLocationSpeed)averageSpeed {
+    CLLocationSpeed speed = 0;
+    for (Location *location in self.locationsArray) {
+        if ([location.speed doubleValue] > 0) speed = speed + [location.speed doubleValue];
+    }
+    speed = speed / self.locationsArray.count;
+    return speed;
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
@@ -127,13 +140,10 @@
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
+    self.overallDistance = 0;
+    self.averageSpeed = 0;
     self.locationsArray = [self fetchLocationData];
 }
-
-//- (void)restartLocationManager {
-//    [self stopTrackingLocation];
-//    [self startTrackingLocation];
-//}
 
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
@@ -163,7 +173,10 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0) [self addLocation:newLocation];
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0) {
+        self.overallDistance = self.overallDistance + [newLocation distanceFromLocation:oldLocation];
+        [self addLocation:newLocation];
+    }
 }
 
 
@@ -214,15 +227,15 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (indexPath.section == 0) {
-        Location *location = (Location *)[self.locationsArray lastObject];
-        cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s",self.overallDistance,self.averageSpeed];
+
         cell.detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
         Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
 
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
         
         cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
         
