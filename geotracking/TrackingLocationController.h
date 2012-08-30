@@ -20,14 +20,12 @@
 - (void)clearLocations;
 
 @property (nonatomic, strong) NSMutableArray *locationsArray;
-@property (nonatomic, strong) UIManagedDocument *locationDatabase;
+@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 - (void)addLocation:(CLLocation *)currentLocation;
 
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) MKMapView *mapView;
 @property (nonatomic) BOOL locationManagerRunning;
-
-- (void)initLocationDatabase;
 
 @end

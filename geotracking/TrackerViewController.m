@@ -63,7 +63,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.tableView.dataSource = self.tracker;
-    [self.tracker initLocationDatabase];
 }
 
 - (void)viewDidLoad

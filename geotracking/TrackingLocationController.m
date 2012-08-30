@@ -27,7 +27,7 @@
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;
 @synthesize locationManager = _locationManager;
-@synthesize locationDatabase = _locationDatabase;
+@synthesize locationsDatabase = _locationsDatabase;
 @synthesize locationsArray = _locationsArray;
 @synthesize tableView = _tableView;
 @synthesize mapView = _mapView;
@@ -41,30 +41,33 @@
     }
 }
 
-- (void)initLocationDatabase {
+- (UIManagedDocument *)locationsDatabase {
     
-    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    url = [url URLByAppendingPathComponent:DB_FILE];
-    self.locationDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
-    [self.locationDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationDatabase.fileURL path]]) {
-        [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
-            NSLog(@"UIDocumentSaveForCreating success");
-        }];
-    } else if (self.locationDatabase.documentState == UIDocumentStateClosed) {
-        [self.locationDatabase openWithCompletionHandler:^(BOOL success) {
-            self.locationsArray = [self fetchLocationData];
-            NSLog(@"openWithCompletionHandler");
-        }];
-    } else if (self.locationDatabase.documentState == UIDocumentStateNormal) {
+    if (!_locationsDatabase) {
+        NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+        url = [url URLByAppendingPathComponent:DB_FILE];
+        self.locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+        [self.locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationsDatabase.fileURL path]]) {
+            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+                NSLog(@"UIDocumentSaveForCreating success");
+            }];
+        } else if (self.locationsDatabase.documentState == UIDocumentStateClosed) {
+            [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
+                self.locationsArray = [self fetchLocationData];
+                NSLog(@"openWithCompletionHandler");
+            }];
+        } else if (self.locationsDatabase.documentState == UIDocumentStateNormal) {
+        }
     }
-
+    return _locationsDatabase;
+    
 }
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
-    Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:self.locationDatabase.managedObjectContext];
+    Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:ENTITY_NAME inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     CLLocationCoordinate2D coordinate = [currentLocation coordinate];
     [location setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
     [location setLongitude:[NSNumber numberWithDouble:coordinate.longitude]];
@@ -78,7 +81,7 @@
 //    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
 //    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
     
-    [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
 
@@ -118,9 +121,9 @@
 
 - (void)clearLocations {
     for (Location *location in self.locationsArray) {
-        [self.locationDatabase.managedObjectContext deleteObject:location];
+        [self.locationsDatabase.managedObjectContext deleteObject:location];
     }
-    [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
     self.locationsArray = [self fetchLocationData];
@@ -170,7 +173,7 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
     
 	NSError *error;
-	NSMutableArray *mutableFetchResults = [[self.locationDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
+	NSMutableArray *mutableFetchResults = [[self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
 	if (mutableFetchResults == nil) {
         NSLog(@"executeFetchRequest error %@", error.localizedDescription);
 	}
@@ -192,7 +195,8 @@
         if (section == 0) {
             return 1;
         } else {
-            return self.locationsArray.count;
+//            return self.locationsArray.count;
+            return self.locationsDatabase.managedObjectContext.registeredObjects.count;
         }
     
 }
