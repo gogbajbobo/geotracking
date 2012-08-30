@@ -218,9 +218,18 @@
         cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
         cell.detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
-        Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];        
-        cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];
-        NSString *string = [NSString stringWithFormat:@"%@, %@",location.latitude,location.longitude];
+        Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
+
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+        [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+        
+        cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
+        
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setMaximumFractionDigits:5];
+        
+        NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], location.horizontalAccuracy, location.speed, location.course];
         cell.detailTextLabel.text = string;
     }
     
