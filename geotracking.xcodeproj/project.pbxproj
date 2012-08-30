@@ -110,7 +110,6 @@
 				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
-				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2C417C6215E80E3F00A3A83D /* TrackerViewController.h */,
 				2C417C6315E80E3F00A3A83D /* TrackerViewController.m */,
 				2C417C6515E81E6000A3A83D /* MapViewController.h */,
@@ -119,9 +118,10 @@
 				2C417C6915E8280B00A3A83D /* MapAnnotation.m */,
 				2CC7F59B15E8C1E400CF638E /* OptionsViewController.h */,
 				2CC7F59C15E8C1E500CF638E /* OptionsViewController.m */,
-				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
 				2C81523315E6A94A00A886E1 /* Location.h */,
 				2C81523415E6A94A00A886E1 /* Location.m */,
+				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
+				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;

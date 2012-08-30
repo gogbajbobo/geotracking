@@ -74,9 +74,16 @@
     [self.locationDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationDatabase.fileURL path]]) {
-        [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {NSLog(@"UIDocumentSaveForCreating success");}];
+        [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+            NSLog(@"UIDocumentSaveForCreating success");
+        }];
     } else if (self.locationDatabase.documentState == UIDocumentStateClosed) {
-        [self.locationDatabase openWithCompletionHandler:^(BOOL success) {NSLog(@"openWithCompletionHandler");}];
+        [self.locationDatabase openWithCompletionHandler:^(BOOL success) {
+            self.tracker.locationsArray = [self.tracker fetchLocationData];
+            NSLog(@"self.locationDatabase.documentState %@", self.locationDatabase.documentState);
+            NSLog(@"openWithCompletionHandler");
+            NSLog(@"self.tracker.locationsArray.count %d", self.tracker.locationsArray.count);
+        }];
     } else if (self.locationDatabase.documentState == UIDocumentStateNormal) {
     }
 //    NSLog(@"TVC self.locationDatabase %@", self.locationDatabase);
@@ -85,6 +92,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self initLocationDatabase];
     self.tableView.dataSource = self.tracker;
+//    if (self.locationDatabase.documentState == UIDocumentStateClosed) NSLog(@"UIDocumentStateClosed");
+    NSLog(@"self.tracker.locationsArray.count %d", self.tracker.locationsArray.count);
 }
 
 - (void)viewDidLoad
