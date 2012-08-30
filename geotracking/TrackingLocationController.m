@@ -14,11 +14,11 @@
 #define ENTITY_NAME @"Location"
 #define SORT_DESCRIPTOR @"timestamp"
 #define SORT_ASCEND NO
+#define DB_FILE @"geoTracker.sqlite"
 
 @interface TrackingLocationController()
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
-//@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsContoller;
 
 @end
 
@@ -29,16 +29,10 @@
 @synthesize locationManager = _locationManager;
 @synthesize locationDatabase = _locationDatabase;
 @synthesize locationsArray = _locationsArray;
-//@synthesize fetchedResultsContoller = _fetchedResultsContoller;
 @synthesize tableView = _tableView;
 @synthesize mapView = _mapView;
 @synthesize locationManagerRunning = _locationManagerRunning;
 
-
-- (NSMutableArray *)locationsArray {
-    if(!_locationsArray) _locationsArray = [self fetchLocationData];
-    return _locationsArray;
-}
 
 - (void)setLocationsArray:(NSMutableArray *)locationsArray {
     if (_locationsArray != locationsArray) {
@@ -47,26 +41,26 @@
     }
 }
 
-//- (NSFetchedResultsController *)fetchedResultsContoller {
-//    if (!_fetchedResultsContoller) {
-//        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
-//        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR 
-//                                                                                         ascending:SORT_ASCEND 
-//                                                                                          selector:@selector(localizedCaseInsensitiveCompare:)]];
-//
-//        _fetchedResultsContoller = [[NSFetchedResultsController alloc] initWithFetchRequest:request 
-//                                                                       managedObjectContext:self.locationDatabase.managedObjectContext 
-//                                                                         sectionNameKeyPath:nil 
-//                                                                                  cacheName:ENTITY_NAME];
-//    }
-//    NSError *error;
-//    if (![_fetchedResultsContoller performFetch:&error]) {
-//        NSLog(@"performFetch %@",error.localizedDescription);
-//    }
-//    NSLog(@"_fetchedResultsContoller.fetchedObjects.count %d", _fetchedResultsContoller.fetchedObjects.count);
-//
-//    return _fetchedResultsContoller;
-//}
+- (void)initLocationDatabase {
+    
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    url = [url URLByAppendingPathComponent:DB_FILE];
+    self.locationDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+    [self.locationDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationDatabase.fileURL path]]) {
+        [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+            NSLog(@"UIDocumentSaveForCreating success");
+        }];
+    } else if (self.locationDatabase.documentState == UIDocumentStateClosed) {
+        [self.locationDatabase openWithCompletionHandler:^(BOOL success) {
+            self.locationsArray = [self fetchLocationData];
+            NSLog(@"openWithCompletionHandler");
+        }];
+    } else if (self.locationDatabase.documentState == UIDocumentStateNormal) {
+    }
+
+}
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
@@ -89,9 +83,7 @@
     }];
 
     [self.locationsArray insertObject:location atIndex:0];
-    
-//    NSLog(@"locationsArray.count %d",self.locationsArray.count);
-//    NSLog(@"self.locationDatabase.managedObjectContext.registeredObjects.count %d",self.locationDatabase.managedObjectContext.registeredObjects.count);
+    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -177,14 +169,11 @@
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
     
-//    self.fetchedResultsContoller = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:ENTITY_NAME];
-
 	NSError *error;
 	NSMutableArray *mutableFetchResults = [[self.locationDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
 	if (mutableFetchResults == nil) {
         NSLog(@"executeFetchRequest error %@", error.localizedDescription);
 	}
-//    NSLog(@"mutableFetchResults.count %d", mutableFetchResults.count);
     return mutableFetchResults;
 
 }
@@ -194,21 +183,16 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-//    return [[self.fetchedResultsContoller sections] count];
     return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsContoller sections] objectAtIndex:section];
-//    return [sectionInfo numberOfObjects];
 
         if (section == 0) {
             return 1;
         } else {
-            NSInteger rowsInSection = self.locationsArray.count ;
-            NSLog(@"self.locationsArray.count %d", rowsInSection);
-            return rowsInSection;
+            return self.locationsArray.count;
         }
     
 }
@@ -233,17 +217,11 @@
         cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s, %g",[location.horizontalAccuracy doubleValue],[location.speed doubleValue],[location.course doubleValue]];
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
-        Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
-//        NSLog(@"self.fetchedResultsContoller.fetchedObjects.count %@", [self.fetchedResultsContoller indexPathForObject:self.fetchedResultsContoller.fetchedObjects.lastObject]);
-//        Location *location = (Location *)[self.fetchedResultsContoller objectAtIndexPath:indexPath];
-        
+        Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];        
         cell.textLabel.text = [NSString stringWithFormat:@"%@",location.timestamp];
-        
         NSString *string = [NSString stringWithFormat:@"%@, %@",location.latitude,location.longitude];
         cell.detailTextLabel.text = string;
     }
-    
-    
     
     return cell;
 }

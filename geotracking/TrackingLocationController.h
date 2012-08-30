@@ -28,6 +28,6 @@
 @property (nonatomic) MKMapView *mapView;
 @property (nonatomic) BOOL locationManagerRunning;
 
-- (NSMutableArray *)fetchLocationData;
+- (void)initLocationDatabase;
 
 @end

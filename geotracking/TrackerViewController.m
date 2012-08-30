@@ -14,8 +14,6 @@
 
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) UIManagedDocument *locationDatabase;
-
 
 @end
 
@@ -23,13 +21,11 @@
 @synthesize tracker = _tracker;
 @synthesize tableView = _tableView;
 @synthesize mapViewController = _mapViewController;
-@synthesize locationDatabase = _locationDatabase;
 
 - (TrackingLocationController *)tracker
 {
     if(!_tracker) {
         _tracker = [[TrackingLocationController alloc] init];
-        [_tracker setLocationDatabase:self.locationDatabase];
         _tracker.tableView = self.tableView;
     }
     return _tracker;
@@ -52,7 +48,6 @@
     if(buttonIndex==0)
     {
         [self.tracker clearLocations];
-        [self.tableView reloadData];
     }
 }
 
@@ -66,34 +61,9 @@
     }
 }
 
-- (void)initLocationDatabase {
-    
-    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    url = [url URLByAppendingPathComponent:@"geoTracker.sqlite"];
-    self.locationDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
-    [self.locationDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
-    
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationDatabase.fileURL path]]) {
-        [self.locationDatabase saveToURL:self.locationDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
-            NSLog(@"UIDocumentSaveForCreating success");
-        }];
-    } else if (self.locationDatabase.documentState == UIDocumentStateClosed) {
-        [self.locationDatabase openWithCompletionHandler:^(BOOL success) {
-            self.tracker.locationsArray = [self.tracker fetchLocationData];
-            NSLog(@"self.locationDatabase.documentState %@", self.locationDatabase.documentState);
-            NSLog(@"openWithCompletionHandler");
-            NSLog(@"self.tracker.locationsArray.count %d", self.tracker.locationsArray.count);
-        }];
-    } else if (self.locationDatabase.documentState == UIDocumentStateNormal) {
-    }
-//    NSLog(@"TVC self.locationDatabase %@", self.locationDatabase);
-}
-
 - (void)viewWillAppear:(BOOL)animated {
-    [self initLocationDatabase];
     self.tableView.dataSource = self.tracker;
-//    if (self.locationDatabase.documentState == UIDocumentStateClosed) NSLog(@"UIDocumentStateClosed");
-    NSLog(@"self.tracker.locationsArray.count %d", self.tracker.locationsArray.count);
+    [self.tracker initLocationDatabase];
 }
 
 - (void)viewDidLoad
