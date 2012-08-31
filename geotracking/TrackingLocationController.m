@@ -15,6 +15,7 @@
 #define SORT_DESCRIPTOR @"timestamp"
 #define SORT_ASCEND NO
 #define DB_FILE @"geoTracker.sqlite"
+#define REQUIRED_ACCURACY 15.0
 
 @interface TrackingLocationController()
 
@@ -95,7 +96,10 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s",self.overallDistance,self.averageSpeed];
+    
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setMaximumFractionDigits:5];
+    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
     
     [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
 
@@ -111,7 +115,7 @@
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
-    if (!_desiredAccuracy) _desiredAccuracy = kCLLocationAccuracyThreeKilometers;
+    if (!_desiredAccuracy) _desiredAccuracy = kCLLocationAccuracyBest;
     return _desiredAccuracy;
 }
 
@@ -173,7 +177,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0) {
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
         self.overallDistance = self.overallDistance + [newLocation distanceFromLocation:oldLocation];
         [self addLocation:newLocation];
     }
@@ -227,7 +231,10 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (indexPath.section == 0) {
-        cell.textLabel.text = [NSString stringWithFormat:@"%gm, %gm/s",self.overallDistance,self.averageSpeed];
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setMaximumFractionDigits:5];
+
+        cell.textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
 
         cell.detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
