@@ -98,7 +98,7 @@
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setMaximumFractionDigits:5];
+    [numberFormatter setMaximumFractionDigits:2];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
     
     [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
@@ -144,8 +144,8 @@
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
-    self.overallDistance = 0;
-    self.averageSpeed = 0;
+//    self.overallDistance = 0;
+//    self.averageSpeed = 0;
     self.locationsArray = [self fetchLocationData];
 }
 
@@ -189,11 +189,24 @@
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
     
+    self.overallDistance = 0.0;
+    
 	NSError *error;
 	NSMutableArray *mutableFetchResults = [[self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
 	if (mutableFetchResults == nil) {
         NSLog(@"executeFetchRequest error %@", error.localizedDescription);
 	}
+    
+    if (mutableFetchResults.count > 0) {
+        Location *temp = [mutableFetchResults objectAtIndex:0];
+        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
+        for (Location *temp in mutableFetchResults) {
+            CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
+            self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
+            oldLocation = location;
+        }
+    }
+    
     return mutableFetchResults;
 
 }
@@ -232,9 +245,9 @@
     
     if (indexPath.section == 0) {
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setMaximumFractionDigits:5];
+        [numberFormatter setMaximumFractionDigits:2];
 
-        cell.textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s          ",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
 
         cell.detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     } else {
@@ -247,9 +260,9 @@
         cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
         
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setMaximumFractionDigits:5];
+        [numberFormatter setMaximumFractionDigits:3];
         
-        NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], location.horizontalAccuracy, location.speed, location.course];
+        NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], [numberFormatter stringFromNumber:location.horizontalAccuracy], [numberFormatter stringFromNumber:location.speed], [numberFormatter stringFromNumber:location.course]];
         cell.detailTextLabel.text = string;
     }
     
