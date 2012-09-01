@@ -100,39 +100,79 @@
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setMaximumFractionDigits:2];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
-    
     [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
 
 }
 
+//- (CLLocationSpeed)averageSpeedCalculateWithPreviousSpeed:(CLLocationSpeed)prevSpeed {
+//    CLLocationSpeed speed = 0.0;
+//    if (self.locationsArray.count != 0) {
+//        Location *lastLocation = [self.locationsArray objectAtIndex:0];
+////        NSLog(@"lastLocation.speed %f", [lastLocation.speed doubleValue]);
+////        NSLog(@"_averageSpeed %f", self.averageSpeed);
+//        speed = (prevSpeed * (self.locationsArray.count - 1) + [lastLocation.speed doubleValue]) / self.locationsArray.count;
+//    }
+//    return speed;
+//}
+
 - (CLLocationSpeed)averageSpeed {
-    CLLocationSpeed speed = 0;
-    for (Location *location in self.locationsArray) {
-        if ([location.speed doubleValue] > 0) speed = speed + [location.speed doubleValue];
+//    _averageSpeed = [self averageSpeedCalculateWithPreviousSpeed:_averageSpeed];
+//    return _averageSpeed;
+    CLLocationSpeed speed = 0.0;
+    if (self.locationsArray.count != 0) {
+        for (Location *location in self.locationsArray) {
+            if ([location.speed doubleValue] > 0) speed = speed + [location.speed doubleValue];
+        }
+        speed = speed / self.locationsArray.count;
     }
-    speed = speed / self.locationsArray.count;
+    NSLog(@"speed1 %f", speed);
     return speed;
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
-    if (!_desiredAccuracy) _desiredAccuracy = kCLLocationAccuracyBest;
+    if (!_desiredAccuracy) {
+        NSNumber *desiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"desiredAccuracy"];
+        if (desiredAccuracy == nil) {
+            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+                _desiredAccuracy = kCLLocationAccuracyBest;
+            [settings setObject:[NSNumber numberWithDouble:_desiredAccuracy] forKey:@"desiredAccuracy"];
+            [settings synchronize];
+        } else {
+            _desiredAccuracy = [desiredAccuracy doubleValue];
+        }
+    }
     return _desiredAccuracy;
 }
 
 - (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
     _desiredAccuracy = desiredAccuracy;
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    [settings setObject:[NSNumber numberWithDouble:desiredAccuracy] forKey:@"desiredAccuracy"];
+    [settings synchronize];
     self.locationManager.desiredAccuracy = desiredAccuracy;
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
-;
 }
 
 - (CLLocationDistance)distanceFilter {
-    if (!_distanceFilter) _distanceFilter = kCLDistanceFilterNone;
+    if (!_distanceFilter) {
+        NSNumber *distanceFilter = [[NSUserDefaults standardUserDefaults] objectForKey:@"distanceFilter"];
+        if (distanceFilter == nil) {
+            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+            _distanceFilter = kCLDistanceFilterNone;
+            [settings setObject:[NSNumber numberWithDouble:_distanceFilter] forKey:@"distanceFilter"];
+            [settings synchronize];
+        } else {
+            _distanceFilter = [distanceFilter doubleValue];
+        }
+    }
     return _distanceFilter;
 }
 
 - (void)setDistanceFilter:(CLLocationDistance)distanceFilter {
     _distanceFilter = distanceFilter;
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    [settings setObject:[NSNumber numberWithDouble:distanceFilter] forKey:@"distanceFilter"];
+    [settings synchronize];
     self.locationManager.distanceFilter = distanceFilter;
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
 }
@@ -144,14 +184,12 @@
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
-//    self.overallDistance = 0;
-//    self.averageSpeed = 0;
     self.locationsArray = [self fetchLocationData];
 }
 
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
-    self.locationsArray = [self fetchLocationData];
+//    self.locationsArray = [self fetchLocationData];
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
 }
