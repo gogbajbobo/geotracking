@@ -139,7 +139,7 @@
         }
         speed = speed / self.locationsArray.count;
     }
-//    NSLog(@"speed1 %f", speed);
+
     return speed;
 }
 
