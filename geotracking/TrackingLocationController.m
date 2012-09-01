@@ -10,6 +10,7 @@
 #import "AppDelegate.h"
 #import "Location.h"
 #import "MapAnnotation.h"
+#import "TrackerViewController.h"
 
 #define ENTITY_NAME @"Location"
 #define SORT_DESCRIPTOR @"timestamp"
@@ -37,6 +38,7 @@
 @synthesize locationManagerRunning = _locationManagerRunning;
 @synthesize overallDistance = _overallDistance;
 @synthesize averageSpeed = _averageSpeed;
+@synthesize caller = _caller;
 
 
 - (void)setLocationsArray:(NSMutableArray *)locationsArray {
@@ -49,6 +51,15 @@
 - (UIManagedDocument *)locationsDatabase {
     
     if (!_locationsDatabase) {
+        
+        UIBarButtonItem *startButton;
+        TrackerViewController *caller;
+        if ([self.caller isKindOfClass:[TrackerViewController class]]) {
+            caller = self.caller;
+        }
+        startButton = caller.startButton;
+        caller.startButton.enabled = NO;
+        
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
         self.locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
@@ -56,14 +67,17 @@
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationsDatabase.fileURL path]]) {
             [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+                caller.startButton.enabled = YES;
                 NSLog(@"UIDocumentSaveForCreating success");
             }];
         } else if (self.locationsDatabase.documentState == UIDocumentStateClosed) {
             [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 self.locationsArray = [self fetchLocationData];
+                caller.startButton.enabled = YES;
                 NSLog(@"openWithCompletionHandler");
             }];
         } else if (self.locationsDatabase.documentState == UIDocumentStateNormal) {
+            caller.startButton.enabled = YES;
         }
     }
     return _locationsDatabase;
@@ -125,7 +139,7 @@
         }
         speed = speed / self.locationsArray.count;
     }
-    NSLog(@"speed1 %f", speed);
+//    NSLog(@"speed1 %f", speed);
     return speed;
 }
 
@@ -302,6 +316,7 @@
         
         NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], [numberFormatter stringFromNumber:location.horizontalAccuracy], [numberFormatter stringFromNumber:location.speed], [numberFormatter stringFromNumber:location.course]];
         cell.detailTextLabel.text = string;
+
     }
     
     return cell;

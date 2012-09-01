@@ -27,5 +27,6 @@
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) MKMapView *mapView;
 @property (nonatomic) BOOL locationManagerRunning;
+@property (nonatomic) id caller;
 
 @end

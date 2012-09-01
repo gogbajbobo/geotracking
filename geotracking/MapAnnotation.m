@@ -20,12 +20,17 @@
 
 - (NSString *)title
 {
-    return [NSString stringWithFormat:@"%@",self.location.timestamp];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    
+    return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.location.timestamp]];
 }
 
 - (NSString *)subtitle
 {
-	return [NSString stringWithFormat:@"%@, %@",self.location.latitude,self.location.longitude];
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:[self.location.latitude doubleValue] longitude:[self.location.longitude doubleValue]];
+    return [NSString stringWithFormat:@"%@",[location description]];
 }
 
 - (CLLocationCoordinate2D)coordinate

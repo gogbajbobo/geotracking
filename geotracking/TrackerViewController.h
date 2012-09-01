@@ -10,6 +10,7 @@
 #import "MapViewController.h"
 
 @interface TrackerViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *startButton;
 
 
 @end

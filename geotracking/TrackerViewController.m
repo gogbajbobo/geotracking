@@ -18,6 +18,7 @@
 @end
 
 @implementation TrackerViewController
+@synthesize startButton = _startButton;
 @synthesize tracker = _tracker;
 @synthesize tableView = _tableView;
 
@@ -26,6 +27,7 @@
     if(!_tracker) {
         _tracker = [[TrackingLocationController alloc] init];
         _tracker.tableView = self.tableView;
+        _tracker.caller = self;
     }
     return _tracker;
 }
@@ -71,6 +73,7 @@
 
 - (void)viewDidUnload
 {
+    [self setStartButton:nil];
     [super viewDidUnload];
 }
 

@@ -9,7 +9,7 @@
 #import "MapViewController.h"
 #import "MapAnnotation.h"
 
-@interface MapViewController ()
+@interface MapViewController () <MKMapViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -77,6 +77,19 @@
     }
 }
 
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
+    if (!pinView) {
+        pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
+        pinView.pinColor = MKPinAnnotationColorPurple;
+//        pinView.animatesDrop = YES;
+        pinView.canShowCallout = YES;
+    }
+    pinView.annotation = annotation;
+    return pinView;
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -91,7 +104,12 @@
 {
     [super viewDidLoad];
     self.mapView.showsUserLocation = YES;
+    self.mapView.delegate = self;
 	// Do any additional setup after loading the view.
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.mapView.delegate = nil;
 }
 
 - (void)viewDidUnload
