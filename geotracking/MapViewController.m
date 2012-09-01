@@ -59,9 +59,9 @@
             [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
         }
         
-        NSLog(@"annotations.count %d",self.mapView.annotations.count);
+//        NSLog(@"annotations.count %d",self.mapView.annotations.count);
         
-        //    //    NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+//        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
         CLLocationCoordinate2D center;
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;

@@ -105,7 +105,7 @@
     }];
 
     [self.locationsArray insertObject:location atIndex:0];
-    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
+//    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];

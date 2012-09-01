@@ -93,7 +93,6 @@
             MapViewController *mapVC = segue.destinationViewController;
             mapVC.tracker = self.tracker;
         }
-        NSLog(@"segue showMap");
     }
 }
 
