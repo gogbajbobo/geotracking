@@ -22,6 +22,7 @@
 @synthesize tracker = _tracker;
 
 - (IBAction)distanceFilterChangeValue:(id)sender {
+    [self.distanceFilterSlider setValue:floor(self.distanceFilterSlider.value/10)*10];
     self.tracker.distanceFilter = self.distanceFilterSlider.value;
     [self updateLabels];
 }
