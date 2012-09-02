@@ -129,7 +129,7 @@
             pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
             pinView.pinColor = MKPinAnnotationColorPurple;
             pinView.canShowCallout = YES;
-            pinView.animatesDrop = YES;
+//            pinView.animatesDrop = YES;
         }
         pinView.annotation = annotation;
         return pinView;
