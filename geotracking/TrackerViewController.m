@@ -38,7 +38,7 @@
 
 - (IBAction)clearData:(id)sender {
     
-    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle: @"Clear Locations" message: @"Delete?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
+    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle: @"Clear locations" message: @"Delete?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
     
     [clearAlert show];
     
@@ -46,16 +46,22 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if(buttonIndex==0)
-    {
-        [self.tracker clearLocations];
+    if (alertView.title == @"Stop tracking") {
+        if (buttonIndex == 0) {
+            [self.tracker stopTrackingLocation];
+            [self startButton].title = @"Start";
+        }
+    } else if (alertView.title == @"Clear locations") {
+        if (buttonIndex == 0) {
+            [self.tracker clearLocations];
+        }        
     }
 }
 
 - (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
     if (self.tracker.locationManagerRunning) {
-        [self.tracker stopTrackingLocation];
-        sender.title = @"Start";
+        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
+        [stopAlert show];
     } else {
         [self.tracker startTrackingLocation];
         sender.title = @"Stop";

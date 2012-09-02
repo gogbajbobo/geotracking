@@ -226,7 +226,7 @@
                                             <action selector="trackerSwitchPressed:" destination="X39-dw-5jp" id="fdi-Xl-x9l"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem title="Options" id="STs-tV-Tnh">
+                                    <barButtonItem title="Settings" id="STs-tV-Tnh">
                                         <connections>
                                             <action selector="showOptions:" destination="X39-dw-5jp" id="efR-Mo-eLF"/>
                                             <segue destination="J3s-3h-Q2X" kind="modal" identifier="showSettings" modalTransitionStyle="coverVertical" id="8nw-66-dFm"/>
@@ -289,22 +289,6 @@
             <point key="canvasLocation" x="1613" y="-109"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="MapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-            </relationships>
-        </class>
-        <class className="TrackerViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TrackerViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="startButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
