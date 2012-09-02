@@ -26,12 +26,6 @@
 @synthesize tracker = _tracker;
 
 
-// Добавить переключение типов карт
-
-// Добавить overlay MKPolylineView
-
-
-
 
 - (IBAction)mapSwitchPressed:(id)sender {
     NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
@@ -50,11 +44,6 @@
     [settings synchronize];
 }
 
-//NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-//[settings setObject:[NSNumber numberWithDouble:distanceFilter] forKey:@"distanceFilter"];
-//[settings synchronize];
-
-
 
 - (void)updateMapView
 {
@@ -68,6 +57,7 @@
     _mapView = mapView;
     self.tracker.mapView = self.mapView;
     [self updateMapView];
+//    [self.mapView addOverlay:(id<MKOverlay>)[self pathLine]];
 }
 
 - (void)annotationsCreate
@@ -126,6 +116,33 @@
     }
 }
 
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
+    
+    NSLog(@"viewForOverlay");
+    
+    MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
+    pathView.strokeColor = [UIColor blueColor];
+    pathView.lineWidth = 5.0;
+
+    return pathView;
+}
+
+- (MKPolyline *)pathLine {
+    
+    NSArray *locationsArray = self.tracker.locationsArray;
+    int numberOfLocations = locationsArray.count;
+    CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
+    if (numberOfLocations > 0) {
+        int i = 0;
+        for (Location *location in locationsArray) {
+            CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([location.latitude doubleValue], [location.longitude doubleValue]);
+            annotationsCoordinates[i] = coordinate;
+            i++;
+        }
+    }
+    return [MKPolyline polylineWithCoordinates:annotationsCoordinates count:numberOfLocations];
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -157,6 +174,7 @@
     } else if ([mapType integerValue] == MKMapTypeHybrid) {
         self.mapSwitch.selectedSegmentIndex = 2;
     }
+    [self.mapView addOverlay:(id<MKOverlay>)[self pathLine]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
