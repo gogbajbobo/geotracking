@@ -105,18 +105,21 @@
     }];
 
     [self.locationsArray insertObject:location atIndex:0];
-//    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
+    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    
+        
+
+    if (self.locationsArray.count > 1) {
+        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.locationsArray objectAtIndex:1] latitude] doubleValue] longitude:[[[self.locationsArray objectAtIndex:1] longitude] doubleValue]];
+        self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
+    }
+
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setMaximumFractionDigits:2];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
-    
-    CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.locationsArray objectAtIndex:1] latitude] doubleValue] longitude:[[[self.locationsArray objectAtIndex:1] longitude] doubleValue]];
-    self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
 
     [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
 
@@ -137,7 +140,7 @@
 //    _averageSpeed = [self averageSpeedCalculateWithPreviousSpeed:_averageSpeed];
 //    return _averageSpeed;
     CLLocationSpeed speed = 0.0;
-    if (self.locationsArray.count != 0) {
+    if (self.locationsArray.count > 0) {
         for (Location *location in self.locationsArray) {
             if ([location.speed doubleValue] > 0) speed = speed + [location.speed doubleValue];
         }
@@ -207,7 +210,7 @@
 
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
-//    self.locationsArray = [self fetchLocationData];
+    self.locationsArray = [self fetchLocationData];
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
 }
@@ -316,7 +319,7 @@
         
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setMaximumFractionDigits:3];
-        
+                
         NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], [numberFormatter stringFromNumber:location.horizontalAccuracy], [numberFormatter stringFromNumber:location.speed], [numberFormatter stringFromNumber:location.course]];
         cell.detailTextLabel.text = string;
 
