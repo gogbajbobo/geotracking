@@ -152,7 +152,7 @@
         NSNumber *desiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"desiredAccuracy"];
         if (desiredAccuracy == nil) {
             NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-                _desiredAccuracy = kCLLocationAccuracyBest;
+                _desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
             [settings setObject:[NSNumber numberWithDouble:_desiredAccuracy] forKey:@"desiredAccuracy"];
             [settings synchronize];
         } else {
@@ -176,7 +176,7 @@
         NSNumber *distanceFilter = [[NSUserDefaults standardUserDefaults] objectForKey:@"distanceFilter"];
         if (distanceFilter == nil) {
             NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _distanceFilter = kCLDistanceFilterNone;
+            _distanceFilter = 50.0;
             [settings setObject:[NSNumber numberWithDouble:_distanceFilter] forKey:@"distanceFilter"];
             [settings synchronize];
         } else {

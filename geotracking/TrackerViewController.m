@@ -33,7 +33,7 @@
 }
 
 - (IBAction)showOptions:(id)sender {
-    [self performSegueWithIdentifier:@"showOptions" sender:self];
+    [self performSegueWithIdentifier:@"showSettings" sender:self];
 }
 
 - (IBAction)clearData:(id)sender {
@@ -85,7 +85,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.identifier isEqualToString:@"showOptions"]) {
+    if ([segue.identifier isEqualToString:@"showSettings"]) {
         [segue.destinationViewController setTracker:self.tracker];
     }
     if ([segue.identifier isEqualToString:@"showMap"]) {

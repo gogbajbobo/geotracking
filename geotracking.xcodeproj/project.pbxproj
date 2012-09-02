@@ -12,7 +12,7 @@
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
 		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
 		2C81523515E6A94A00A886E1 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C81523415E6A94A00A886E1 /* Location.m */; };
-		2CC7F59D15E8C1E500CF638E /* OptionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* OptionsViewController.m */; };
+		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
@@ -36,8 +36,8 @@
 		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
 		2C81523315E6A94A00A886E1 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		2C81523415E6A94A00A886E1 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
-		2CC7F59B15E8C1E400CF638E /* OptionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OptionsViewController.h; sourceTree = "<group>"; };
-		2CC7F59C15E8C1E500CF638E /* OptionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OptionsViewController.m; sourceTree = "<group>"; };
+		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE471FF15E3FEEC00B092DB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE4720115E3FEEC00B092DB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -116,8 +116,8 @@
 				2C417C6615E81E6000A3A83D /* MapViewController.m */,
 				2C417C6815E8280B00A3A83D /* MapAnnotation.h */,
 				2C417C6915E8280B00A3A83D /* MapAnnotation.m */,
-				2CC7F59B15E8C1E400CF638E /* OptionsViewController.h */,
-				2CC7F59C15E8C1E500CF638E /* OptionsViewController.m */,
+				2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */,
+				2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */,
 				2C81523315E6A94A00A886E1 /* Location.h */,
 				2C81523415E6A94A00A886E1 /* Location.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
@@ -209,7 +209,7 @@
 				2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */,
 				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,
-				2CC7F59D15E8C1E500CF638E /* OptionsViewController.m in Sources */,
+				2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
