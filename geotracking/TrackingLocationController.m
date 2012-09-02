@@ -39,6 +39,7 @@
 @synthesize overallDistance = _overallDistance;
 @synthesize averageSpeed = _averageSpeed;
 @synthesize caller = _caller;
+@synthesize sendAnnotationsToMap = _sendAnnotationsToMap;
 
 
 - (void)setLocationsArray:(NSMutableArray *)locationsArray {
@@ -121,7 +122,9 @@
     [numberFormatter setMaximumFractionDigits:2];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
 
-    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+    if (self.sendAnnotationsToMap) {
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+    }
 
 }
 

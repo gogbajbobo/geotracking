@@ -24,7 +24,25 @@
 @synthesize span = _span;
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
+@synthesize showPins = _showPins;
 
+
+- (IBAction)showPinsSwitchSwitched:(id)sender {
+    if ([sender isKindOfClass:[UISwitch class]]) {
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        UISwitch *showPins = sender;
+        if (showPins.on) {
+            [self annotationsCreate];
+            self.tracker.sendAnnotationsToMap = self.showPins.on;
+        } else {
+            [self.mapView removeAnnotations:self.mapView.annotations];
+            self.tracker.sendAnnotationsToMap = self.showPins.on;
+        }
+        [settings setObject:[NSNumber numberWithBool:self.showPins.on] forKey:@"showPins"];
+        [settings synchronize];
+        NSLog(@"self.showPins.on3 %d", self.showPins.on);
+    }
+}
 
 
 - (IBAction)mapSwitchPressed:(id)sender {
@@ -77,7 +95,10 @@
             if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
             if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
             //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-            [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+            NSLog(@"self.showPins.on %d", self.showPins.on);
+            if (self.showPins.on) {
+                [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+            }
         }
         
 //        NSLog(@"annotations.count %d",self.mapView.annotations.count);
@@ -100,17 +121,17 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
+    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
     if (annotation == mapView.userLocation){
         return nil;
     } else {
-        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
         if (!pinView) {
             pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
             pinView.pinColor = MKPinAnnotationColorPurple;
             pinView.canShowCallout = YES;
+            pinView.animatesDrop = YES;
         }
         pinView.annotation = annotation;
-        
         return pinView;
     }
 }
@@ -160,7 +181,23 @@
 	// Do any additional setup after loading the view.
 }
 
+
 - (void)viewWillAppear:(BOOL)animated {
+    
+    NSNumber *showPins = [[NSUserDefaults standardUserDefaults] objectForKey:@"showPins"];
+    if (!showPins) {
+        NSLog(@"I'm here!");
+        showPins = [NSNumber numberWithBool:YES];
+    }
+    NSLog(@"self.showPins.on1 %d", [showPins boolValue]);
+    [self.showPins setOn:[showPins boolValue] animated:NO];
+    NSLog(@"self.showPins.on2 %d", self.showPins.on);
+    if (self.showPins.on) {
+        [self annotationsCreate];
+    }
+    self.tracker.sendAnnotationsToMap = self.showPins.on;
+
+
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
     if (!mapType) {
         self.mapView.mapType = MKMapTypeStandard;
@@ -173,6 +210,7 @@
     } else if ([mapType integerValue] == MKMapTypeHybrid) {
         self.mapSwitch.selectedSegmentIndex = 2;
     }
+    
     [self.mapView addOverlay:(id<MKOverlay>)[self pathLine]];
 }
 
@@ -183,6 +221,7 @@
 - (void)viewDidUnload
 {
     [self setMapSwitch:nil];
+    [self setShowPins:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

@@ -28,5 +28,6 @@
 @property (nonatomic) MKMapView *mapView;
 @property (nonatomic) BOOL locationManagerRunning;
 @property (nonatomic) id caller;
+@property (nonatomic) BOOL sendAnnotationsToMap;
 
 @end
