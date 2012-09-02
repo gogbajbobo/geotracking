@@ -13,11 +13,13 @@
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
 
 @end
 
 @implementation MapViewController
 @synthesize mapView = _mapView;
+@synthesize mapSwitch = _mapSwitch;
 @synthesize center = _center;
 @synthesize span = _span;
 @synthesize annotations = _annotations;
@@ -30,6 +32,27 @@
 
 
 
+
+- (IBAction)mapSwitchPressed:(id)sender {
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    UISegmentedControl *mapSwitch;
+    if ([sender isKindOfClass:[UISegmentedControl class]]) {
+        mapSwitch = sender;
+    }
+    if (mapSwitch.selectedSegmentIndex == 0) {
+        self.mapView.mapType = MKMapTypeStandard;
+    } else if (mapSwitch.selectedSegmentIndex == 1) {
+        self.mapView.mapType = MKMapTypeSatellite;        
+    } else if (mapSwitch.selectedSegmentIndex == 2) {
+        self.mapView.mapType = MKMapTypeHybrid;
+    }
+    [settings setObject:[NSNumber numberWithInteger:self.mapView.mapType] forKey:@"mapType"];
+    [settings synchronize];
+}
+
+//NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+//[settings setObject:[NSNumber numberWithDouble:distanceFilter] forKey:@"distanceFilter"];
+//[settings synchronize];
 
 
 
@@ -121,12 +144,28 @@
 	// Do any additional setup after loading the view.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
+    if (!mapType) {
+        self.mapView.mapType = MKMapTypeStandard;
+    }
+    self.mapView.mapType = [mapType integerValue];
+    if ([mapType integerValue] == MKMapTypeStandard) {
+        self.mapSwitch.selectedSegmentIndex = 0;
+    } else if ([mapType integerValue] == MKMapTypeSatellite) {
+        self.mapSwitch.selectedSegmentIndex = 1;
+    } else if ([mapType integerValue] == MKMapTypeHybrid) {
+        self.mapSwitch.selectedSegmentIndex = 2;
+    }
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     self.mapView.delegate = nil;
 }
 
 - (void)viewDidUnload
 {
+    [self setMapSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
