@@ -57,7 +57,6 @@
     _mapView = mapView;
     self.tracker.mapView = self.mapView;
     [self updateMapView];
-//    [self.mapView addOverlay:(id<MKOverlay>)[self pathLine]];
 }
 
 - (void)annotationsCreate
@@ -118,7 +117,7 @@
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
     
-    NSLog(@"viewForOverlay");
+//    NSLog(@"viewForOverlay");
     
     MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
     pathView.strokeColor = [UIColor blueColor];
