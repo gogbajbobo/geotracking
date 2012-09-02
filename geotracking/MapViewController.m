@@ -24,6 +24,15 @@
 @synthesize tracker = _tracker;
 
 
+// Добавить переключение типов карт
+
+// Добавить overlay MKPolylineView
+
+
+
+
+
+
 - (void)updateMapView
 {
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
@@ -79,15 +88,19 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
-    if (!pinView) {
-        pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
-        pinView.pinColor = MKPinAnnotationColorPurple;
-//        pinView.animatesDrop = YES;
-        pinView.canShowCallout = YES;
+    if (annotation == mapView.userLocation){
+        return nil;
+    } else {
+        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
+        if (!pinView) {
+            pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
+            pinView.pinColor = MKPinAnnotationColorPurple;
+            pinView.canShowCallout = YES;
+        }
+        pinView.annotation = annotation;
+        
+        return pinView;
     }
-    pinView.annotation = annotation;
-    return pinView;
 }
 
 
