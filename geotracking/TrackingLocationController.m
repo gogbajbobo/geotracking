@@ -153,6 +153,19 @@
     return speed;
 }
 
+- (void)recalculateOverallDistance {
+    if (self.locationsArray.count > 0) {
+        self.overallDistance = 0.0;
+        Location *temp = [self.locationsArray objectAtIndex:0];
+        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
+        for (Location *temp in self.locationsArray) {
+            CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
+            self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
+            oldLocation = location;
+        }
+    }
+}
+
 - (CLLocationAccuracy)desiredAccuracy {
     if (!_desiredAccuracy) {
         NSNumber *desiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"desiredAccuracy"];
@@ -343,6 +356,12 @@
             NSLog(@"UIDocumentSaveForOverwriting success");
         }];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+        [self recalculateOverallDistance];
+        
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setMaximumFractionDigits:2];
+        [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
+
     }   
 }
 
