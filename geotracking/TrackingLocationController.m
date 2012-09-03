@@ -245,7 +245,6 @@
     }
 }
 
-
 - (NSMutableArray *)fetchLocationData {
 
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
@@ -331,6 +330,22 @@
     
     return cell;
 }
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
+		
+		NSManagedObject *location = [self.locationsArray objectAtIndex:indexPath.row];
+		[self.locationsDatabase.managedObjectContext deleteObject:location];
+        [self.locationsArray removeObjectAtIndex:indexPath.row];
+		[self.locationsDatabase.managedObjectContext deleteObject:location];
+        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"UIDocumentSaveForOverwriting success");
+        }];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+    }   
+}
+
 
 
 @end

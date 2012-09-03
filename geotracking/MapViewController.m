@@ -56,7 +56,6 @@
         }
         [settings setObject:[NSNumber numberWithBool:self.showPins.on] forKey:@"showPins"];
         [settings synchronize];
-        NSLog(@"self.showPins.on3 %d", self.showPins.on);
     }
 }
 
@@ -209,11 +208,14 @@
     }
     self.tracker.sendAnnotationsToMap = self.showPins.on;
 
-    NSNumber *headingMode = [[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"];
+    BOOL headingMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"] boolValue];
     if (!headingMode) {
-        headingMode = [NSNumber numberWithBool:NO];
+        headingMode = NO;
+        [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+    } else {
+        [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
     }
-    [self.headingModeSwitch setOn:[headingMode boolValue] animated:NO];
+    [self.headingModeSwitch setOn:headingMode animated:NO];
 
 
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
@@ -241,6 +243,7 @@
     [self setMapSwitch:nil];
     [self setShowPins:nil];
     [self setHeadingModeSwitch:nil];
+    self.mapView.delegate = nil;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
