@@ -209,12 +209,27 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <switch opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" id="3NF-Xd-b6f">
+                                <rect key="frame" x="20" y="376" width="79" height="27"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <connections>
+                                    <action selector="headingModeSwitchSwitched:" destination="tND-F5-tUH" eventType="valueChanged" id="mqw-ch-yvj"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Heading" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="35D-cY-Ba3">
+                                <rect key="frame" x="27" y="347" width="64" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Map" id="AzJ-Eu-Ndm"/>
                     <navigationItem key="navigationItem" id="6K6-ZI-ni2"/>
                     <connections>
+                        <outlet property="headingModeSwitch" destination="3NF-Xd-b6f" id="Ar2-5N-MR6"/>
                         <outlet property="mapSwitch" destination="e6X-Iq-7HB" id="DqX-O3-snF"/>
                         <outlet property="mapView" destination="DOi-n5-e9c" id="XI9-Y0-Bnw"/>
                         <outlet property="showPins" destination="fjv-1i-BJk" id="cYL-tz-nP4"/>

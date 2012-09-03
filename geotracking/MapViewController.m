@@ -14,18 +14,34 @@
 @property (nonatomic) MKCoordinateSpan span;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *headingModeSwitch;
 
 @end
 
 @implementation MapViewController
 @synthesize mapView = _mapView;
 @synthesize mapSwitch = _mapSwitch;
+@synthesize headingModeSwitch = _headingModeSwitch;
 @synthesize center = _center;
 @synthesize span = _span;
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
 @synthesize showPins = _showPins;
 
+
+- (IBAction)headingModeSwitchSwitched:(id)sender {
+    if ([sender isKindOfClass:[UISwitch class]]) {
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        UISwitch *headingMode = sender;
+        if (headingMode.on) {
+            [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
+        } else {
+            [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+        }
+        [settings setObject:[NSNumber numberWithBool:headingMode.on] forKey:@"headingMode"];
+        [settings synchronize];
+    }
+}
 
 - (IBAction)showPinsSwitchSwitched:(id)sender {
     if ([sender isKindOfClass:[UISwitch class]]) {
@@ -95,7 +111,6 @@
             if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
             if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
             //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-            NSLog(@"self.showPins.on %d", self.showPins.on);
             if (self.showPins.on) {
                 [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
             }
@@ -186,16 +201,19 @@
     
     NSNumber *showPins = [[NSUserDefaults standardUserDefaults] objectForKey:@"showPins"];
     if (!showPins) {
-        NSLog(@"I'm here!");
         showPins = [NSNumber numberWithBool:YES];
     }
-    NSLog(@"self.showPins.on1 %d", [showPins boolValue]);
     [self.showPins setOn:[showPins boolValue] animated:NO];
-    NSLog(@"self.showPins.on2 %d", self.showPins.on);
     if (self.showPins.on) {
         [self annotationsCreate];
     }
     self.tracker.sendAnnotationsToMap = self.showPins.on;
+
+    NSNumber *headingMode = [[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"];
+    if (!headingMode) {
+        headingMode = [NSNumber numberWithBool:NO];
+    }
+    [self.headingModeSwitch setOn:[headingMode boolValue] animated:NO];
 
 
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
@@ -222,6 +240,7 @@
 {
     [self setMapSwitch:nil];
     [self setShowPins:nil];
+    [self setHeadingModeSwitch:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
