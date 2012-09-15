@@ -74,6 +74,7 @@
         } else if (self.locationsDatabase.documentState == UIDocumentStateClosed) {
             [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 self.locationsArray = [self fetchLocationData];
+                NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
                 caller.startButton.enabled = YES;
                 NSLog(@"openWithCompletionHandler");
             }];
@@ -117,6 +118,8 @@
         CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.locationsArray objectAtIndex:1] latitude] doubleValue] longitude:[[[self.locationsArray objectAtIndex:1] longitude] doubleValue]];
         self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
     }
+    CLLocationSpeed speed = (currentLocation.speed < 0) ? 0.0 : currentLocation.speed;
+    self.averageSpeed = (self.averageSpeed * (self.locationsArray.count - 1) + speed) / self.locationsArray.count;
 
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setMaximumFractionDigits:2];
@@ -128,29 +131,19 @@
 
 }
 
-//- (CLLocationSpeed)averageSpeedCalculateWithPreviousSpeed:(CLLocationSpeed)prevSpeed {
-//    CLLocationSpeed speed = 0.0;
-//    if (self.locationsArray.count != 0) {
-//        Location *lastLocation = [self.locationsArray objectAtIndex:0];
-////        NSLog(@"lastLocation.speed %f", [lastLocation.speed doubleValue]);
-////        NSLog(@"_averageSpeed %f", self.averageSpeed);
-//        speed = (prevSpeed * (self.locationsArray.count - 1) + [lastLocation.speed doubleValue]) / self.locationsArray.count;
-//    }
-//    return speed;
-//}
-
-- (CLLocationSpeed)averageSpeed {
-//    _averageSpeed = [self averageSpeedCalculateWithPreviousSpeed:_averageSpeed];
-//    return _averageSpeed;
-    CLLocationSpeed speed = 0.0;
+- (void)recalculateAverageSpeed {
     if (self.locationsArray.count > 0) {
+        self.averageSpeed = 0.0;
+        CLLocationSpeed integralSpeed = 0.0;
         for (Location *location in self.locationsArray) {
-            if ([location.speed doubleValue] > 0) speed = speed + [location.speed doubleValue];
+            double speed = (location.speed < 0) ? 0.0 : [location.speed doubleValue];
+            integralSpeed = integralSpeed + speed;
+//            NSLog(@"integralSpeed %f", integralSpeed);
         }
-        speed = speed / self.locationsArray.count;
+        self.averageSpeed = integralSpeed / self.locationsArray.count;
+    } else {
+        self.averageSpeed = 0.0;
     }
-
-    return speed;
 }
 
 - (void)recalculateOverallDistance {
@@ -163,6 +156,8 @@
             self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
             oldLocation = location;
         }
+    } else {
+        self.overallDistance = 0.0;
     }
 }
 
@@ -226,7 +221,7 @@
 
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
-    self.locationsArray = [self fetchLocationData];
+//    self.locationsArray = [self fetchLocationData];
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
 }
@@ -264,6 +259,7 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
     
     self.overallDistance = 0.0;
+    self.averageSpeed = 0.0;
     
 	NSError *error;
 	NSMutableArray *mutableFetchResults = [[self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
@@ -274,10 +270,15 @@
     if (mutableFetchResults.count > 0) {
         Location *temp = [mutableFetchResults objectAtIndex:0];
         CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
-        for (Location *temp in mutableFetchResults) {
+        for (int i = 0; i < mutableFetchResults.count; i++) {
+            Location *temp = [mutableFetchResults objectAtIndex:i];
             CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
             self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
             oldLocation = location;
+            if ([temp.speed doubleValue] < 0) temp.speed = [NSNumber numberWithDouble:0.0];
+            self.averageSpeed = (self.averageSpeed * i + [temp.speed doubleValue]) / (i + 1);
+//            NSLog(@"temp.speed %f", [temp.speed doubleValue]);
+//            NSLog(@"self.averageSpeed %f", self.averageSpeed);
         }
     }
     
@@ -357,6 +358,7 @@
         }];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         [self recalculateOverallDistance];
+        [self recalculateAverageSpeed];
         
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setMaximumFractionDigits:2];
