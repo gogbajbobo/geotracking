@@ -14,6 +14,7 @@
 
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
+@property (nonatomic) CLLocationAccuracy currentAccuracy;
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
@@ -26,6 +27,8 @@
 
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) MKMapView *mapView;
+@property (weak, nonatomic) UILabel *summary;
+@property (weak, nonatomic) UILabel *currentValues;
 @property (nonatomic) BOOL locationManagerRunning;
 @property (nonatomic) id caller;
 @property (nonatomic) BOOL sendAnnotationsToMap;

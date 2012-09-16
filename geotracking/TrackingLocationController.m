@@ -40,6 +40,9 @@
 @synthesize averageSpeed = _averageSpeed;
 @synthesize caller = _caller;
 @synthesize sendAnnotationsToMap = _sendAnnotationsToMap;
+@synthesize summary = _summary;
+@synthesize currentValues = _currentValues;
+@synthesize currentAccuracy = _currentAccuracy;
 
 
 - (void)setLocationsArray:(NSMutableArray *)locationsArray {
@@ -125,6 +128,8 @@
     [numberFormatter setMaximumFractionDigits:2];
     [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
 
+    [self updateInfoLabels];
+    
     if (self.sendAnnotationsToMap) {
         [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
     }
@@ -159,6 +164,15 @@
     } else {
         self.overallDistance = 0.0;
     }
+    [self updateInfoLabels];
+
+}
+
+- (void)updateInfoLabels {
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setMaximumFractionDigits:2];
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s          ",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
+    self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
@@ -247,7 +261,8 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, newLocation.horizontalAccuracy];
+    self.currentAccuracy = newLocation.horizontalAccuracy;
+    [self updateInfoLabels];
     if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
         [self addLocation:newLocation];
     }
@@ -281,6 +296,13 @@
 //            NSLog(@"self.averageSpeed %f", self.averageSpeed);
         }
     }
+    
+//    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+//    [numberFormatter setMaximumFractionDigits:2];
+//    
+//    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s          ",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
+//    self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
+    [self updateInfoLabels];
     
     return mutableFetchResults;
 

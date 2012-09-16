@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UILabel *summary;
+@property (weak, nonatomic) IBOutlet UILabel *currentValues;
 
 @end
 
@@ -21,12 +23,16 @@
 @synthesize startButton = _startButton;
 @synthesize tracker = _tracker;
 @synthesize tableView = _tableView;
+@synthesize summary = _summary;
+@synthesize currentValues = _currentValues;
 
 - (TrackingLocationController *)tracker
 {
     if(!_tracker) {
         _tracker = [[TrackingLocationController alloc] init];
         _tracker.tableView = self.tableView;
+        _tracker.summary = self.summary;
+        _tracker.currentValues = self.currentValues;
         _tracker.caller = self;
     }
     return _tracker;
@@ -80,6 +86,8 @@
 - (void)viewDidUnload
 {
     [self setStartButton:nil];
+    [self setSummary:nil];
+    [self setCurrentValues:nil];
     [super viewDidUnload];
 }
 
