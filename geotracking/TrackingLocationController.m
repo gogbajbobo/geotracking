@@ -18,11 +18,12 @@
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
 
-@interface TrackingLocationController()
+@interface TrackingLocationController() <NSFetchedResultsControllerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) CLLocationDistance overallDistance;
 @property (nonatomic) CLLocationSpeed averageSpeed;
+@property (nonatomic, strong) NSFetchedResultsController *resultsController;
 
 @end
 
@@ -43,7 +44,25 @@
 @synthesize summary = _summary;
 @synthesize currentValues = _currentValues;
 @synthesize currentAccuracy = _currentAccuracy;
+@synthesize resultsController = _resultsController;
 
+
+- (NSFetchedResultsController *)resultsController {
+    if (!_resultsController) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
+        NSError *error;
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:@"Locations"];
+        if (![_resultsController performFetch:&error]) {
+            NSLog(@"performFetch error %@", error.localizedDescription);
+        } else {
+            NSLog(@"_resultsController.fetchedObjects.count %d", _resultsController.fetchedObjects.count);
+            _resultsController.delegate = self;
+//            [self.tableView reloadData];
+        }
+    }
+    return _resultsController;
+}
 
 - (void)setLocationsArray:(NSMutableArray *)locationsArray {
     if (_locationsArray != locationsArray) {
@@ -291,7 +310,7 @@
         }
     }
     [self updateInfoLabels];
-    
+
     return mutableFetchResults;
 
 }
@@ -301,11 +320,19 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    NSLog(@"[[self.resultsController sections] count] %d", [[self.resultsController sections] count]);
+    return [[self.resultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+//    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
+//    NSLog(@"section %d [sectionInfo numberOfObjects] %d", section, [sectionInfo numberOfObjects]);
+//    return [sectionInfo numberOfObjects];
+
+//    NSLog(@"self.resultsController.fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
+//    return self.resultsController.fetchedObjects.count;
+    
     return self.locationsDatabase.managedObjectContext.registeredObjects.count;
 }
 
@@ -354,6 +381,11 @@
         [self updateInfoLabels];
         
     }   
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.tableView reloadData];
+    NSLog(@"controllerDidChangeContent");
 }
 
 
