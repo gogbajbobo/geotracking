@@ -112,7 +112,7 @@
     [self.locationsArray insertObject:location atIndex:0];
     NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
@@ -123,10 +123,6 @@
     }
     CLLocationSpeed speed = (currentLocation.speed < 0) ? 0.0 : currentLocation.speed;
     self.averageSpeed = (self.averageSpeed * (self.locationsArray.count - 1) + speed) / self.locationsArray.count;
-
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setMaximumFractionDigits:2];
-    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
 
     [self updateInfoLabels];
     
@@ -164,8 +160,6 @@
     } else {
         self.overallDistance = 0.0;
     }
-    [self updateInfoLabels];
-
 }
 
 - (void)updateInfoLabels {
@@ -196,7 +190,7 @@
     [settings setObject:[NSNumber numberWithDouble:desiredAccuracy] forKey:@"desiredAccuracy"];
     [settings synchronize];
     self.locationManager.desiredAccuracy = desiredAccuracy;
-    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
+    [self updateInfoLabels];
 }
 
 - (CLLocationDistance)distanceFilter {
@@ -220,7 +214,7 @@
     [settings setObject:[NSNumber numberWithDouble:distanceFilter] forKey:@"distanceFilter"];
     [settings synchronize];
     self.locationManager.distanceFilter = distanceFilter;
-    [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].detailTextLabel.text = [NSString stringWithFormat:@"%gm, %gm",self.desiredAccuracy, self.distanceFilter];
+    [self updateInfoLabels];
 }
 
 - (void)clearLocations {
@@ -296,12 +290,6 @@
 //            NSLog(@"self.averageSpeed %f", self.averageSpeed);
         }
     }
-    
-//    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-//    [numberFormatter setMaximumFractionDigits:2];
-//    
-//    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s          ",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
-//    self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     [self updateInfoLabels];
     
     return mutableFetchResults;
@@ -313,25 +301,17 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-        if (section == 0) {
-            return 1;
-        } else {
-            return self.locationsDatabase.managedObjectContext.registeredObjects.count;
-        }
+    return self.locationsDatabase.managedObjectContext.registeredObjects.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return @"Summary";
-    } else {
-        return @"Locations";
-    }
+    return @"Locations";
 }
 
 
@@ -340,36 +320,26 @@
     static NSString *CellIdentifier = @"Location";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    if (indexPath.section == 0) {
-        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setMaximumFractionDigits:2];
+    Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
 
-        cell.textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s          ",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
-
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
-    } else {
-        Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
-
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-        [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-        
-        cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
-        
-        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setMaximumFractionDigits:3];
-                
-        NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], [numberFormatter stringFromNumber:location.horizontalAccuracy], [numberFormatter stringFromNumber:location.speed], [numberFormatter stringFromNumber:location.course]];
-        cell.detailTextLabel.text = string;
-
-    }
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    
+    cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
+    
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setMaximumFractionDigits:3];
+            
+    NSString *string = [NSString stringWithFormat:@"lat%@ lon%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], [numberFormatter stringFromNumber:location.horizontalAccuracy], [numberFormatter stringFromNumber:location.speed], [numberFormatter stringFromNumber:location.course]];
+    cell.detailTextLabel.text = string;
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    if (editingStyle == UITableViewCellEditingStyleDelete && indexPath.section == 1) {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
 		NSManagedObject *location = [self.locationsArray objectAtIndex:indexPath.row];
 		[self.locationsDatabase.managedObjectContext deleteObject:location];
@@ -381,11 +351,8 @@
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         [self recalculateOverallDistance];
         [self recalculateAverageSpeed];
+        [self updateInfoLabels];
         
-        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-        [numberFormatter setMaximumFractionDigits:2];
-        [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]].textLabel.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
-
     }   
 }
 
