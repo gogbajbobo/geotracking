@@ -50,26 +50,24 @@
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
-        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
-        NSError *error;
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(compare:)]];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:@"Locations"];
-        if (![_resultsController performFetch:&error]) {
-            NSLog(@"performFetch error %@", error.localizedDescription);
-        } else {
-            NSLog(@"_resultsController.fetchedObjects.count %d", _resultsController.fetchedObjects.count);
-            _resultsController.delegate = self;
-//            [self.tableView reloadData];
-        }
+        _resultsController.delegate = self;
     }
     return _resultsController;
 }
 
-- (void)setLocationsArray:(NSMutableArray *)locationsArray {
-    if (_locationsArray != locationsArray) {
-        _locationsArray = locationsArray;
-        [self.tableView reloadData];
-    }
+- (NSMutableArray *)locationsArray {
+    _locationsArray = [self.resultsController.fetchedObjects mutableCopy];
+    return _locationsArray;
 }
+
+//- (void)setLocationsArray:(NSMutableArray *)locationsArray {
+//    if (_locationsArray != locationsArray) {
+//        _locationsArray = locationsArray;
+//        [self.tableView reloadData];
+//    }
+//}
 
 - (UIManagedDocument *)locationsDatabase {
     
@@ -95,10 +93,19 @@
             }];
         } else if (self.locationsDatabase.documentState == UIDocumentStateClosed) {
             [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
-                self.locationsArray = [self fetchLocationData];
-                NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
+//                self.locationsArray = [self fetchLocationData];
+//                NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
                 caller.startButton.enabled = YES;
                 NSLog(@"openWithCompletionHandler");
+                NSError *error;
+                if (![_resultsController performFetch:&error]) {
+                    NSLog(@"performFetch error %@", error.localizedDescription);
+                } else {
+                    NSLog(@"[self.resultsController.fetchedObjects count] %d", [self.resultsController.fetchedObjects count]);
+                    [self.tableView reloadData];
+                    [self updateInfoLabels];
+                }
+
             }];
         } else if (self.locationsDatabase.documentState == UIDocumentStateNormal) {
             caller.startButton.enabled = YES;
@@ -128,20 +135,25 @@
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
 
-    [self.locationsArray insertObject:location atIndex:0];
-    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
+//    [self.locationsArray insertObject:location atIndex:0];
+//    NSLog(@"self.locationsArray.count %d", self.locationsArray.count);
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
     [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
 
-    if (self.locationsArray.count > 1) {
-        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.locationsArray objectAtIndex:1] latitude] doubleValue] longitude:[[[self.locationsArray objectAtIndex:1] longitude] doubleValue]];
+//    if (self.locationsArray.count > 1) {
+//        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.locationsArray objectAtIndex:1] latitude] doubleValue] longitude:[[[self.locationsArray objectAtIndex:1] longitude] doubleValue]];
+//        self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
+//    }
+    if (self.resultsController.fetchedObjects.count > 1) {
+        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.resultsController.fetchedObjects objectAtIndex:1] latitude] doubleValue] longitude:[[[self.resultsController.fetchedObjects objectAtIndex:1] longitude] doubleValue]];
         self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
     }
     CLLocationSpeed speed = (currentLocation.speed < 0) ? 0.0 : currentLocation.speed;
-    self.averageSpeed = (self.averageSpeed * (self.locationsArray.count - 1) + speed) / self.locationsArray.count;
+    self.averageSpeed = (self.averageSpeed * (self.resultsController.fetchedObjects.count - 1) + speed) / self.resultsController.fetchedObjects.count;
+//    self.averageSpeed = (self.averageSpeed * (self.locationsArray.count - 1) + speed) / self.locationsArray.count;
 
     [self updateInfoLabels];
     
@@ -152,26 +164,38 @@
 }
 
 - (void)recalculateAverageSpeed {
-    if (self.locationsArray.count > 0) {
+    if (self.resultsController.fetchedObjects.count > 0) {
         self.averageSpeed = 0.0;
         CLLocationSpeed integralSpeed = 0.0;
-        for (Location *location in self.locationsArray) {
+        for (Location *location in self.resultsController.fetchedObjects) {
             double speed = (location.speed < 0) ? 0.0 : [location.speed doubleValue];
             integralSpeed = integralSpeed + speed;
-//            NSLog(@"integralSpeed %f", integralSpeed);
+            //            NSLog(@"integralSpeed %f", integralSpeed);
         }
-        self.averageSpeed = integralSpeed / self.locationsArray.count;
+        self.averageSpeed = integralSpeed / self.resultsController.fetchedObjects.count;
     } else {
         self.averageSpeed = 0.0;
     }
+//    if (self.locationsArray.count > 0) {
+//        self.averageSpeed = 0.0;
+//        CLLocationSpeed integralSpeed = 0.0;
+//        for (Location *location in self.locationsArray) {
+//            double speed = (location.speed < 0) ? 0.0 : [location.speed doubleValue];
+//            integralSpeed = integralSpeed + speed;
+//            //            NSLog(@"integralSpeed %f", integralSpeed);
+//        }
+//        self.averageSpeed = integralSpeed / self.locationsArray.count;
+//    } else {
+//        self.averageSpeed = 0.0;
+//    }
 }
 
 - (void)recalculateOverallDistance {
-    if (self.locationsArray.count > 0) {
+    if (self.resultsController.fetchedObjects.count > 0) {
         self.overallDistance = 0.0;
-        Location *temp = [self.locationsArray objectAtIndex:0];
+        Location *temp = [self.resultsController.fetchedObjects objectAtIndex:0];
         CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
-        for (Location *temp in self.locationsArray) {
+        for (Location *temp in self.resultsController.fetchedObjects) {
             CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
             self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
             oldLocation = location;
@@ -179,12 +203,24 @@
     } else {
         self.overallDistance = 0.0;
     }
+//    if (self.locationsArray.count > 0) {
+//        self.overallDistance = 0.0;
+//        Location *temp = [self.locationsArray objectAtIndex:0];
+//        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
+//        for (Location *temp in self.locationsArray) {
+//            CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
+//            self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
+//            oldLocation = location;
+//        }
+//    } else {
+//        self.overallDistance = 0.0;
+//    }
 }
 
 - (void)updateInfoLabels {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setMaximumFractionDigits:2];
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s          ",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
     self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
 }
 
@@ -237,13 +273,13 @@
 }
 
 - (void)clearLocations {
-    for (Location *location in self.locationsArray) {
+    for (Location *location in self.resultsController.fetchedObjects) {
         [self.locationsDatabase.managedObjectContext deleteObject:location];
     }
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"UIDocumentSaveForOverwriting success");
     }];
-    self.locationsArray = [self fetchLocationData];
+//    self.locationsArray = [self fetchLocationData];
 }
 
 - (void)startTrackingLocation {
@@ -320,20 +356,14 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSLog(@"[[self.resultsController sections] count] %d", [[self.resultsController sections] count]);
     return [[self.resultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
-//    NSLog(@"section %d [sectionInfo numberOfObjects] %d", section, [sectionInfo numberOfObjects]);
-//    return [sectionInfo numberOfObjects];
-
-//    NSLog(@"self.resultsController.fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
-//    return self.resultsController.fetchedObjects.count;
-    
-    return self.locationsDatabase.managedObjectContext.registeredObjects.count;
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
+    NSLog(@"section %d [sectionInfo numberOfObjects] %d", section, [sectionInfo numberOfObjects]);
+    return [sectionInfo numberOfObjects];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -347,7 +377,7 @@
     static NSString *CellIdentifier = @"Location";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    Location *location = (Location *)[self.locationsArray objectAtIndex:indexPath.row];
+    Location *location = (Location *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
 
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
@@ -368,9 +398,9 @@
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
-		NSManagedObject *location = [self.locationsArray objectAtIndex:indexPath.row];
+		NSManagedObject *location = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
 		[self.locationsDatabase.managedObjectContext deleteObject:location];
-        [self.locationsArray removeObjectAtIndex:indexPath.row];
+//        [self.locationsArray removeObjectAtIndex:indexPath.row];
 		[self.locationsDatabase.managedObjectContext deleteObject:location];
         [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"UIDocumentSaveForOverwriting success");
@@ -384,10 +414,10 @@
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
     NSLog(@"controllerDidChangeContent");
+    NSLog(@"[self.resultsController.fetchedObjects count] %d", [self.resultsController.fetchedObjects count]);
 }
-
 
 
 @end
