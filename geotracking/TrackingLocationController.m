@@ -268,39 +268,6 @@
     }
 }
 
-- (NSMutableArray *)fetchLocationData {
-
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:ENTITY_NAME];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(localizedCaseInsensitiveCompare:)]];
-    
-    self.overallDistance = 0.0;
-    self.averageSpeed = 0.0;
-    
-	NSError *error;
-	NSMutableArray *mutableFetchResults = [[self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
-	if (mutableFetchResults == nil) {
-        NSLog(@"executeFetchRequest error %@", error.localizedDescription);
-	}
-    
-    if (mutableFetchResults.count > 0) {
-        Location *temp = [mutableFetchResults objectAtIndex:0];
-        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
-        for (int i = 0; i < mutableFetchResults.count; i++) {
-            Location *temp = [mutableFetchResults objectAtIndex:i];
-            CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
-            self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
-            oldLocation = location;
-            if ([temp.speed doubleValue] < 0) temp.speed = [NSNumber numberWithDouble:0.0];
-            self.averageSpeed = (self.averageSpeed * i + [temp.speed doubleValue]) / (i + 1);
-//            NSLog(@"temp.speed %f", [temp.speed doubleValue]);
-//            NSLog(@"self.averageSpeed %f", self.averageSpeed);
-        }
-    }
-    [self updateInfoLabels];
-
-    return mutableFetchResults;
-
-}
 
 
 #pragma mark - Table view data source
@@ -361,6 +328,9 @@
         
     }   
 }
+
+#pragma mark - NSFetchedResultsController delegate
+
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
 //    [self.tableView reloadData];
