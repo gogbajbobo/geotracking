@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <libxml/encoding.h>
+#import <libxml/xmlwriter.h>
+
 
 @interface TrackingLocationController : NSObject <CLLocationManagerDelegate,UITableViewDataSource>
 

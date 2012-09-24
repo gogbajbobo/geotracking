@@ -11,6 +11,7 @@
 #import "Location.h"
 #import "MapAnnotation.h"
 #import "TrackerViewController.h"
+#import <objc/runtime.h>
 
 #define ENTITY_NAME @"Location"
 #define SORT_DESCRIPTOR @"timestamp"
@@ -18,7 +19,7 @@
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
 
-@interface TrackingLocationController() <NSFetchedResultsControllerDelegate>
+@interface TrackingLocationController() <NSFetchedResultsControllerDelegate,NSURLConnectionDataDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) CLLocationDistance overallDistance;
@@ -53,6 +54,8 @@
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(compare:)]];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:@"Locations"];
         _resultsController.delegate = self;
+
+        [self startConnection];
     }
     return _resultsController;
 }
@@ -268,7 +271,75 @@
     }
 }
 
+- (void)startConnection {
+    NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+    [request setHTTPMethod:@"POST"];
+//    NSString *requestString = @"<?xml version=\"1.0\" encoding=\"utf-8\"?><post><set-of name=\"animal\"><fields><field name=\"id\"/><field name=\"name\"/></fields><csv><d xid=\"d5d01b28-9e66-4194-bdf2-1b2925f12419\">1,Cat</d><d xid=\"edfbb824-0527-4ee8-a74f-5f66c545f55b\">2,Dog,23</d></csv></set-of></post>";
+//    NSData *requestData = [requestString dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *requestData = [self requestData];
+    [request setHTTPBody:requestData];
+    [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (!connection) NSLog(@"connection error");
+}
 
+- (NSData *)requestData {
+    
+    xmlTextWriterPtr xmlTextWriter;
+    xmlBufferPtr xmlBuffer;
+
+    xmlBuffer = xmlBufferCreate();
+    xmlTextWriter = xmlNewTextWriterMemory(xmlBuffer, 0);
+    
+    xmlTextWriterStartDocument(xmlTextWriter, "1.0", "UTF-8", NULL);
+    
+        xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "post");
+        
+            xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "set-of");
+            xmlTextWriterWriteAttribute(xmlTextWriter, BAD_CAST "name", (xmlChar *)[ENTITY_NAME UTF8String]);
+
+                xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "fields");
+                    unsigned int propertyCount = 0;
+                    objc_property_t * properties = class_copyPropertyList([Location class], &propertyCount);
+                    for (unsigned int i = 0; i < propertyCount; ++i) {
+                        xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "field");
+                        xmlTextWriterWriteAttribute(xmlTextWriter, BAD_CAST "name", (xmlChar *)property_getName(properties[i]));
+                        xmlTextWriterEndElement(xmlTextWriter); //field
+                    }
+                xmlTextWriterEndElement(xmlTextWriter); //fields
+
+                xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "cvs");
+                xmlTextWriterEndElement(xmlTextWriter); //cvs
+    
+            xmlTextWriterEndElement(xmlTextWriter); //set-of
+    
+        xmlTextWriterEndElement(xmlTextWriter); //post
+        
+    xmlTextWriterEndDocument(xmlTextWriter);
+    xmlFreeTextWriter(xmlTextWriter);
+        
+    NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
+    xmlBufferFree(xmlBuffer);
+    
+    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+    
+    return requestData;
+}
+
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+//    self.responseData = [NSMutableData data];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+//    [self.responseData appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+}
 
 #pragma mark - Table view data source
 
