@@ -54,8 +54,6 @@
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:SORT_DESCRIPTOR ascending:SORT_ASCEND selector:@selector(compare:)]];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:@"Locations"];
         _resultsController.delegate = self;
-
-        [self startConnection];
     }
     return _resultsController;
 }
@@ -98,6 +96,7 @@
                     NSLog(@"[self.resultsController.fetchedObjects count] %d", [self.resultsController.fetchedObjects count]);
                     [self.tableView reloadData];
                     [self updateInfoLabels];
+                    [self startConnection];
                 }
 
             }];
@@ -284,6 +283,18 @@
     if (!connection) NSLog(@"connection error");
 }
 
+- (NSString *)newid
+{
+    NSString *uuidString = nil;
+    CFUUIDRef uuid = CFUUIDCreate(nil);
+    if (uuid) {
+        uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuid);
+        CFRelease(uuid);
+    }
+    
+    return uuidString;
+}
+
 - (NSData *)requestData {
     
     xmlTextWriterPtr xmlTextWriter;
@@ -294,22 +305,37 @@
     
     xmlTextWriterStartDocument(xmlTextWriter, "1.0", "UTF-8", NULL);
     
-        xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "post");
+        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "post");
         
-            xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "set-of");
-            xmlTextWriterWriteAttribute(xmlTextWriter, BAD_CAST "name", (xmlChar *)[ENTITY_NAME UTF8String]);
+            xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
+            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[ENTITY_NAME UTF8String]);
 
-                xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "fields");
+                xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
                     unsigned int propertyCount = 0;
                     objc_property_t * properties = class_copyPropertyList([Location class], &propertyCount);
+                    NSMutableArray *propertyNames = [NSMutableArray array];
                     for (unsigned int i = 0; i < propertyCount; ++i) {
-                        xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "field");
-                        xmlTextWriterWriteAttribute(xmlTextWriter, BAD_CAST "name", (xmlChar *)property_getName(properties[i]));
+                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
+                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)property_getName(properties[i]));
+                        [propertyNames addObject:[NSString stringWithUTF8String:property_getName(properties[i])]];
                         xmlTextWriterEndElement(xmlTextWriter); //field
                     }
                 xmlTextWriterEndElement(xmlTextWriter); //fields
 
-                xmlTextWriterStartElement(xmlTextWriter, BAD_CAST "cvs");
+                xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
+                    for (Location *location in self.resultsController.fetchedObjects) {
+                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
+                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[self newid] UTF8String]);
+                        NSMutableString *locationValues = [NSMutableString string];
+                        for (NSString *propertyName in propertyNames) {
+                            id value = [location valueForKey:propertyName];
+                            if ([value isKindOfClass:[NSNumber class]]) [locationValues appendFormat:@"%f,",value];
+                            if ([value isKindOfClass:[NSDate class]]) [locationValues appendFormat:@"%d,",value];
+                        }
+                        [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
+                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
+                        xmlTextWriterEndElement(xmlTextWriter); //d
+                    }
                 xmlTextWriterEndElement(xmlTextWriter); //cvs
     
             xmlTextWriterEndElement(xmlTextWriter); //set-of
