@@ -231,13 +231,14 @@
 }
 
 - (void)clearLocations {
-    for (Location *location in self.resultsController.fetchedObjects) {
-        [self.locationsDatabase.managedObjectContext deleteObject:location];
-    }
-    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"UIDocumentSaveForOverwriting success");
-    }];
+        for (Location *location in self.resultsController.fetchedObjects) {
+            [self.locationsDatabase.managedObjectContext deleteObject:location];
+            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                NSLog(@"UIDocumentSaveForOverwriting success");
+            }];
+        }
 }
+
 
 - (void)startTrackingLocation {
 //    NSLog(@"startTrackingLocation");
@@ -347,7 +348,7 @@
     NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
     xmlBufferFree(xmlBuffer);
     
-    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+//    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
     
     return requestData;
 }
@@ -438,7 +439,9 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     if (type == NSFetchedResultsChangeDelete) {
-                
+        
+        NSLog(@"rowIndexPath %@", indexPath);
+        
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         [self recalculateOverallDistance];
         [self recalculateAverageSpeed];
