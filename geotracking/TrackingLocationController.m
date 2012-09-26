@@ -329,12 +329,7 @@
                             xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[self newid] UTF8String]);
                             NSMutableString *locationValues = [NSMutableString string];
                             for (NSString *propertyName in propertyNames) {
-                                id value = [location valueForKey:propertyName];
-                                if ([value isKindOfClass:[NSDate class]]) {
-                                    [locationValues appendFormat:@"%d,",value];
-                                } else {
-                                    [locationValues appendFormat:@"%@,",value];
-                                }
+                                [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
                             }
                             [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
                             xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);

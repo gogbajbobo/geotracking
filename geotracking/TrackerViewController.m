@@ -52,12 +52,12 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (alertView.title == @"Stop tracking") {
+    if ([alertView.title isEqualToString:@"Stop tracking"]) {
         if (buttonIndex == 0) {
             [self.tracker stopTrackingLocation];
             [self startButton].title = @"Start";
         }
-    } else if (alertView.title == @"Clear locations") {
+    } else if ([alertView.title isEqualToString:@"Clear locations"]) {
         if (buttonIndex == 0) {
             [self.tracker clearLocations];
         }        
