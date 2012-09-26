@@ -68,7 +68,6 @@
 - (UIManagedDocument *)locationsDatabase {
     
     if (!_locationsDatabase) {
-        
         UIBarButtonItem *startButton;
         TrackerViewController *caller;
         if ([self.caller isKindOfClass:[TrackerViewController class]]) {
@@ -79,35 +78,38 @@
         
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
-        self.locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
-        [self.locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+        [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationsDatabase.fileURL path]]) {
-            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
+            [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
                 NSLog(@"UIDocumentSaveForCreating success");
+                [self performFetch];
             }];
-        } else if (self.locationsDatabase.documentState == UIDocumentStateClosed) {
-            [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
+        } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
+            [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
-                NSLog(@"openWithCompletionHandler");
-                NSError *error;
-                if (![_resultsController performFetch:&error]) {
-                    NSLog(@"performFetch error %@", error.localizedDescription);
-                } else {
-                    NSLog(@"[self.resultsController.fetchedObjects count] %d", [self.resultsController.fetchedObjects count]);
-                    [self.tableView reloadData];
-                    [self updateInfoLabels];
-                    [self startConnection];
-                }
-
+                NSLog(@"openWithCompletionHandler success");
+                [self performFetch];
             }];
-        } else if (self.locationsDatabase.documentState == UIDocumentStateNormal) {
+        } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
             caller.startButton.enabled = YES;
         }
     }
     return _locationsDatabase;
     
+}
+
+- (void)performFetch {
+    NSError *error;
+    if (![_resultsController performFetch:&error]) {
+        NSLog(@"performFetch error %@", error.localizedDescription);
+    } else {
+        [self.tableView reloadData];
+        [self updateInfoLabels];
+        [self startConnection];
+    }
 }
 
 - (void)addLocation:(CLLocation *)currentLocation {
@@ -124,22 +126,11 @@
     NSLog(@"currentLocation %@",currentLocation);
 //    NSLog(@"latitude %f",[location.latitude doubleValue]);
 //    NSLog(@"longitude %f",[location.longitude doubleValue]);
-//    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
-//    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
     
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"UIDocumentSaveForOverwriting success");
+        NSLog(@"addLocation UIDocumentSaveForOverwriting success");
     }];
 
-//    if (self.resultsController.fetchedObjects.count > 1) {
-//        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.resultsController.fetchedObjects objectAtIndex:1] latitude] doubleValue] longitude:[[[self.resultsController.fetchedObjects objectAtIndex:1] longitude] doubleValue]];
-//        self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
-//    }
-//    CLLocationSpeed speed = (currentLocation.speed < 0) ? 0.0 : currentLocation.speed;
-//    self.averageSpeed = (self.averageSpeed * (self.resultsController.fetchedObjects.count - 1) + speed) / self.resultsController.fetchedObjects.count;
-//
-//    [self updateInfoLabels];
-    
     if (self.sendAnnotationsToMap) {
         [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
     }
@@ -231,23 +222,21 @@
 }
 
 - (void)clearLocations {
-        for (Location *location in self.resultsController.fetchedObjects) {
-            [self.locationsDatabase.managedObjectContext deleteObject:location];
-            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                NSLog(@"UIDocumentSaveForOverwriting success");
-            }];
-        }
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    url = [url URLByAppendingPathComponent:DB_FILE];
+    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+    self.locationsDatabase = nil;
+    self.resultsController = nil;
+    [self.tableView reloadData];
 }
 
 
 - (void)startTrackingLocation {
-//    NSLog(@"startTrackingLocation");
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
 }
 
 - (void)stopTrackingLocation {
-//    NSLog(@"stopTrackingLocation");
     [[self locationManager] stopUpdatingLocation];
     self.locationManager.delegate = nil;
     self.locationManager = nil;
@@ -378,7 +367,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
-    NSLog(@"section %d [sectionInfo numberOfObjects] %d", section, [sectionInfo numberOfObjects]);
     return [sectionInfo numberOfObjects];
 }
 
@@ -419,11 +407,6 @@
         [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"UIDocumentSaveForOverwriting success");
         }];
-//        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-//        [self recalculateOverallDistance];
-//        [self recalculateAverageSpeed];
-//        [self updateInfoLabels];
-        
     }   
 }
 
@@ -431,17 +414,13 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-//    [self.tableView reloadData];
 //    NSLog(@"controllerDidChangeContent");
-//    NSLog(@"[self.resultsController.fetchedObjects count] %d", [self.resultsController.fetchedObjects count]);
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     if (type == NSFetchedResultsChangeDelete) {
-        
-        NSLog(@"rowIndexPath %@", indexPath);
-        
+                
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         [self recalculateOverallDistance];
         [self recalculateAverageSpeed];
