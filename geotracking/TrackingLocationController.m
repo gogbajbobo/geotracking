@@ -25,6 +25,7 @@
 @property (nonatomic) CLLocationDistance overallDistance;
 @property (nonatomic) CLLocationSpeed averageSpeed;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
+@property (nonatomic, strong) NSMutableData *responseData;
 
 @end
 
@@ -46,6 +47,7 @@
 @synthesize currentValues = _currentValues;
 @synthesize currentAccuracy = _currentAccuracy;
 @synthesize resultsController = _resultsController;
+@synthesize responseData = _responseData;
 
 
 - (NSFetchedResultsController *)resultsController {
@@ -120,7 +122,8 @@
     [location setTimestamp:[currentLocation timestamp]];
     
     NSLog(@"currentLocation %@",currentLocation);
-//    NSLog(@"horizontalAccuracy %f",currentLocation.horizontalAccuracy);
+//    NSLog(@"latitude %f",[location.latitude doubleValue]);
+//    NSLog(@"longitude %f",[location.longitude doubleValue]);
 //    NSLog(@"distanceFilter %f",locationManager.distanceFilter);
 //    NSLog(@"desiredAccuracy %f",locationManager.desiredAccuracy);
     
@@ -274,13 +277,11 @@
     NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
     [request setHTTPMethod:@"POST"];
-//    NSString *requestString = @"<?xml version=\"1.0\" encoding=\"utf-8\"?><post><set-of name=\"animal\"><fields><field name=\"id\"/><field name=\"name\"/></fields><csv><d xid=\"d5d01b28-9e66-4194-bdf2-1b2925f12419\">1,Cat</d><d xid=\"edfbb824-0527-4ee8-a74f-5f66c545f55b\">2,Dog,23</d></csv></set-of></post>";
-//    NSData *requestData = [requestString dataUsingEncoding:NSUTF8StringEncoding];
     NSData *requestData = [self requestData];
     [request setHTTPBody:requestData];
     [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if (!connection) NSLog(@"connection error");
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//    if (!connection) NSLog(@"connection error");
 }
 
 - (NSString *)newid
@@ -316,8 +317,8 @@
                     NSMutableArray *propertyNames = [NSMutableArray array];
                     for (unsigned int i = 0; i < propertyCount; ++i) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
-                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)property_getName(properties[i]));
-                        [propertyNames addObject:[NSString stringWithUTF8String:property_getName(properties[i])]];
+                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)property_getName(properties[i]));
+                            [propertyNames addObject:[NSString stringWithUTF8String:property_getName(properties[i])]];
                         xmlTextWriterEndElement(xmlTextWriter); //field
                     }
                 xmlTextWriterEndElement(xmlTextWriter); //fields
@@ -325,15 +326,18 @@
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
                     for (Location *location in self.resultsController.fetchedObjects) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[self newid] UTF8String]);
-                        NSMutableString *locationValues = [NSMutableString string];
-                        for (NSString *propertyName in propertyNames) {
-                            id value = [location valueForKey:propertyName];
-                            if ([value isKindOfClass:[NSNumber class]]) [locationValues appendFormat:@"%f,",value];
-                            if ([value isKindOfClass:[NSDate class]]) [locationValues appendFormat:@"%d,",value];
-                        }
-                        [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
-                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
+                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[self newid] UTF8String]);
+                            NSMutableString *locationValues = [NSMutableString string];
+                            for (NSString *propertyName in propertyNames) {
+                                id value = [location valueForKey:propertyName];
+                                if ([value isKindOfClass:[NSDate class]]) {
+                                    [locationValues appendFormat:@"%d,",value];
+                                } else {
+                                    [locationValues appendFormat:@"%@,",value];
+                                }
+                            }
+                            [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
+                            xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
                         xmlTextWriterEndElement(xmlTextWriter); //d
                     }
                 xmlTextWriterEndElement(xmlTextWriter); //cvs
@@ -353,18 +357,19 @@
     return requestData;
 }
 
+#pragma mark - NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-//    self.responseData = [NSMutableData data];
+    self.responseData = [NSMutableData data];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-//    [self.responseData appendData:data];
+    [self.responseData appendData:data];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
 }
 
 #pragma mark - Table view data source
