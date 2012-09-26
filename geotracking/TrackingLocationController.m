@@ -107,6 +107,8 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         [self.tableView reloadData];
+        [self recalculateOverallDistance];
+        [self recalculateAverageSpeed];
         [self updateInfoLabels];
         [self startConnection];
     }
