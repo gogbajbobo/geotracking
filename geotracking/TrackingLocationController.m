@@ -289,7 +289,7 @@
 }
 
 - (NSData *)requestData {
-    
+        
     xmlTextWriterPtr xmlTextWriter;
     xmlBufferPtr xmlBuffer;
 
@@ -304,13 +304,10 @@
             xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[ENTITY_NAME UTF8String]);
 
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
-                    unsigned int propertyCount = 0;
-                    objc_property_t * properties = class_copyPropertyList([Location class], &propertyCount);
-                    NSMutableArray *propertyNames = [NSMutableArray array];
-                    for (unsigned int i = 0; i < propertyCount; ++i) {
+                    NSArray *entityAttributes = [self.resultsController.fetchRequest.entity.attributesByName allKeys];
+                    for (NSString *attributeName in entityAttributes) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
-                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)property_getName(properties[i]));
-                            [propertyNames addObject:[NSString stringWithUTF8String:property_getName(properties[i])]];
+                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[attributeName UTF8String]);
                         xmlTextWriterEndElement(xmlTextWriter); //field
                     }
                 xmlTextWriterEndElement(xmlTextWriter); //fields
@@ -320,10 +317,10 @@
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
                             xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[self newid] UTF8String]);
                             NSMutableString *locationValues = [NSMutableString string];
-                            for (NSString *propertyName in propertyNames) {
-                                [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
+                            for (NSString *attributeName in entityAttributes) {
+                                [locationValues appendFormat:@"%@,",[location valueForKey:attributeName]];
                             }
-                            [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
+                            if (locationValues.length > 0) [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
                             xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
                         xmlTextWriterEndElement(xmlTextWriter); //d
                     }
