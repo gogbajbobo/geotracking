@@ -12,7 +12,7 @@
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
 		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
-		2CB05309161392670041F9CD /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB05308161392670041F9CD /* Location.m */; };
+		2CB0530F161441900041F9CD /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB0530E161441900041F9CD /* Location.m */; };
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
@@ -37,8 +37,8 @@
 		2C417C6815E8280B00A3A83D /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		2C417C6915E8280B00A3A83D /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
 		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
-		2CB05307161392670041F9CD /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		2CB05308161392670041F9CD /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		2CB0530D161441900041F9CD /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		2CB0530E161441900041F9CD /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -125,8 +125,8 @@
 				2C417C6915E8280B00A3A83D /* MapAnnotation.m */,
 				2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */,
 				2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */,
-				2CB05307161392670041F9CD /* Location.h */,
-				2CB05308161392670041F9CD /* Location.m */,
+				2CB0530D161441900041F9CD /* Location.h */,
+				2CB0530E161441900041F9CD /* Location.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
@@ -217,7 +217,7 @@
 				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,
 				2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */,
-				2CB05309161392670041F9CD /* Location.m in Sources */,
+				2CB0530F161441900041F9CD /* Location.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
