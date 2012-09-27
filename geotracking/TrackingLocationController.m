@@ -26,6 +26,7 @@
 @property (nonatomic) CLLocationSpeed averageSpeed;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) NSMutableData *responseData;
+@property (nonatomic) BOOL syncing;
 
 @end
 
@@ -48,7 +49,14 @@
 @synthesize currentAccuracy = _currentAccuracy;
 @synthesize resultsController = _resultsController;
 @synthesize responseData = _responseData;
+@synthesize syncing = _syncing;
 
+- (void)setSyncing:(BOOL)syncing {
+    if (_syncing != syncing) {
+        _syncing = syncing;
+        [self updateInfoLabels];
+    }
+}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
@@ -171,7 +179,11 @@
 - (void)updateInfoLabels {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
     [numberFormatter setMaximumFractionDigits:0];
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]]];
+    NSString *syncStatus = @"";
+    if (self.syncing) {
+        syncStatus = @" SYNC";
+    }
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s%@",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
     self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
 }
 
@@ -271,7 +283,7 @@
     [request setHTTPMethod:@"POST"];
     NSData *requestData = [self requestData];
     if (requestData) {
-        NSLog(@"requestData");
+//        NSLog(@"requestData");
         [request setHTTPBody:requestData];
         [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
@@ -297,6 +309,8 @@
     NSArray *notSyncedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:notSynced];
     NSLog(@"notSyncedObjects.count %d",notSyncedObjects.count);
     if (notSyncedObjects.count > 0) {
+        
+        self.syncing = YES;
     
         xmlTextWriterPtr xmlTextWriter;
         xmlBufferPtr xmlBuffer;
@@ -354,7 +368,7 @@
         NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
         xmlBufferFree(xmlBuffer);
         
-        NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+//        NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
         
         return requestData;
     } else {
@@ -373,9 +387,9 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
-
+    
+//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
     NSXMLParser *responseParser = [[NSXMLParser alloc] initWithData:self.responseData];
     responseParser.delegate = self;
     if (![responseParser parse]) {
@@ -393,11 +407,17 @@
         NSArray *matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
         Location *location = [matchedObjects lastObject];
         location.synced = [NSNumber numberWithBool:YES];
-        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"setSynced UIDocumentSaveForOverwriting success");
-        }];
-        NSLog(@"%@", [matchedObjects lastObject]);
+//        NSLog(@"%@", [matchedObjects lastObject]);
     }
+
+}
+
+- (void)parserDidEndDocument:(NSXMLParser *)parser {
+    
+    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"setSynced UIDocumentSaveForOverwriting success");
+        self.syncing = NO;
+    }];
 
 }
 
