@@ -124,6 +124,7 @@
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
     [location setTimestamp:[currentLocation timestamp]];
+    [location setXid:[self newid]];
     
     NSLog(@"currentLocation %@",currentLocation);
 //    NSLog(@"latitude %f",[location.latitude doubleValue]);
@@ -289,7 +290,11 @@
 }
 
 - (NSData *)requestData {
-        
+    
+    NSPredicate *notSynced = [NSPredicate predicateWithFormat:@"SELF.synced == 0"];
+    NSArray *notSyncedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:notSynced];
+    NSLog(@"notSyncedObjects %@",notSyncedObjects);
+    
     xmlTextWriterPtr xmlTextWriter;
     xmlBufferPtr xmlBuffer;
 
@@ -306,19 +311,29 @@
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
                     NSArray *entityAttributes = [self.resultsController.fetchRequest.entity.attributesByName allKeys];
                     for (NSString *attributeName in entityAttributes) {
-                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
-                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[attributeName UTF8String]);
-                        xmlTextWriterEndElement(xmlTextWriter); //field
+                        if (!([attributeName isEqualToString:@"xid"]||[attributeName isEqualToString:@"synced"])) {
+                            xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
+                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[attributeName UTF8String]);
+                            xmlTextWriterEndElement(xmlTextWriter); //field
+                        }
                     }
                 xmlTextWriterEndElement(xmlTextWriter); //fields
 
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
-                    for (Location *location in self.resultsController.fetchedObjects) {
+                    for (Location *location in notSyncedObjects) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[self newid] UTF8String]);
+                            if (!location.xid) {
+                                [location setXid:[self newid]];
+                                [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                                    NSLog(@"addLocation UIDocumentSaveForOverwriting success");
+                                }];
+                            }
+                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[location.xid UTF8String]);
                             NSMutableString *locationValues = [NSMutableString string];
                             for (NSString *attributeName in entityAttributes) {
-                                [locationValues appendFormat:@"%@,",[location valueForKey:attributeName]];
+                                if (!([attributeName isEqualToString:@"xid"]||[attributeName isEqualToString:@"synced"])) {
+                                    [locationValues appendFormat:@"%@,",[location valueForKey:attributeName]];
+                                }
                             }
                             if (locationValues.length > 0) [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
                             xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
