@@ -22,6 +22,7 @@
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
+- (void)startConnection;
 
 @property (nonatomic, strong) NSMutableArray *locationsArray;
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;

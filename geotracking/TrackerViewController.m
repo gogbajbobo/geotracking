@@ -37,6 +37,9 @@
     }
     return _tracker;
 }
+- (IBAction)syncButtonPressed:(id)sender {
+    [self.tracker startConnection];
+}
 
 - (IBAction)showOptions:(id)sender {
     [self performSegueWithIdentifier:@"showSettings" sender:self];
