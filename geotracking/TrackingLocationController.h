@@ -13,7 +13,7 @@
 #import <libxml/xmlwriter.h>
 
 
-@interface TrackingLocationController : NSObject <CLLocationManagerDelegate,UITableViewDataSource>
+@interface TrackingLocationController : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
@@ -24,7 +24,7 @@
 - (void)clearLocations;
 - (void)startConnection;
 
-@property (nonatomic, strong) NSMutableArray *locationsArray;
+@property (nonatomic, strong) NSArray *locationsArray;
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 - (void)addLocation:(CLLocation *)currentLocation;

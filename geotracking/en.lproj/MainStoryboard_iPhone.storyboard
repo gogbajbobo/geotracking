@@ -260,11 +260,7 @@
                                             <segue destination="J3s-3h-Q2X" kind="modal" identifier="showSettings" modalTransitionStyle="coverVertical" id="8nw-66-dFm"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="pageCurl" id="KKA-sb-C5C">
-                                        <connections>
-                                            <segue destination="tND-F5-tUH" kind="modal" identifier="showMap" modalTransitionStyle="partialCurl" id="f3X-GH-Etn"/>
-                                        </connections>
-                                    </barButtonItem>
+                                    <barButtonItem systemItem="pageCurl" id="KKA-sb-C5C"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="LJS-oU-9AL"/>
                                     <barButtonItem title="Sync" id="PGh-Lk-ZYN">
                                         <connections>
@@ -333,6 +329,7 @@
                         <outlet property="startButton" destination="NqZ-7M-H0G" id="GOz-dm-gfr"/>
                         <outlet property="summary" destination="TqX-pt-8Lo" id="zmV-9T-sn4"/>
                         <outlet property="tableView" destination="EON-rK-JTk" id="m58-28-9di"/>
+                        <segue destination="tND-F5-tUH" kind="modal" identifier="showMap" modalTransitionStyle="partialCurl" id="qZd-v5-Gtu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a8Z-Az-Wv3" userLabel="First Responder" sceneMemberID="firstResponder"/>

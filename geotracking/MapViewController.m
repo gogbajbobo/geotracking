@@ -92,10 +92,10 @@
     [self updateMapView];
 }
 
+
 - (void)annotationsCreate
 {
     NSArray *locationsArray = self.tracker.locationsArray;
-
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         

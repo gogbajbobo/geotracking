@@ -14,14 +14,14 @@
 #import "TrackerViewController.h"
 
 //#define ENTITY_NAME @"Location"
-#define ENTITY_NAME @"Route"
+//#define ENTITY_NAME @"Route"
 //#define SORT_DESCRIPTOR @"timestamp"
-#define SORT_DESCRIPTOR @"startTime"
-#define SORT_ASCEND NO
+//#define SORT_DESCRIPTOR @"startTime"
+//#define SORT_ASCEND NO
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
 
-@interface TrackingLocationController() <NSFetchedResultsControllerDelegate,NSURLConnectionDataDelegate,NSXMLParserDelegate>
+@interface TrackingLocationController() <NSFetchedResultsControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) CLLocationDistance overallDistance;
@@ -75,10 +75,10 @@
     return _resultsController;
 }
 
-- (NSMutableArray *)locationsArray {
-    _locationsArray = [self.resultsController.fetchedObjects mutableCopy];
-    return _locationsArray;
-}
+//- (NSMutableArray *)locationsArray {
+//    _locationsArray = [self.resultsController.fetchedObjects mutableCopy];
+//    return _locationsArray;
+//}
 
 - (UIManagedDocument *)locationsDatabase {
     
@@ -100,7 +100,7 @@
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
                 NSLog(@"UIDocumentSaveForCreating success");
-                [self newRoute];
+                [self startNewRoute];
                 [self performFetch];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
@@ -123,8 +123,6 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
-        NSLog(@"self.currentRoute.xid %@", self.currentRoute.xid);
-        NSLog(@"self.currentRoute.locations.count %d", self.currentRoute.locations.count);
         [self.tableView reloadData];
 //        [self recalculateOverallDistance];
 //        [self recalculateAverageSpeed];
@@ -132,10 +130,11 @@
     }
 }
 
-- (void)newRoute {
+- (void)startNewRoute {
     Route *route = (Route *)[NSEntityDescription insertNewObjectForEntityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [route setXid:[self newid]];
     [route setStartTime:[NSDate date]];
+    [route setOveralDistance:[NSNumber numberWithDouble:0.0]];
     self.currentRoute = route;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newRoute UIDocumentSaveForOverwriting success");
@@ -144,7 +143,11 @@
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
-    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > 5) [self newRoute];
+    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > 5) {
+        [self startNewRoute];
+    } else {
+        self.currentRoute.overalDistance = [NSNumber numberWithDouble:[self.currentRoute.overalDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
+    }
     
     Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     CLLocationCoordinate2D coordinate = [currentLocation coordinate];
@@ -155,6 +158,7 @@
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
     [location setTimestamp:[currentLocation timestamp]];
     [location setXid:[self newid]];
+    
     if (self.currentRoute.locations.count == 0) {
         self.currentRoute.startTime = location.timestamp;
     }
@@ -282,12 +286,12 @@
 }
 
 - (void)clearLocations {
-    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    url = [url URLByAppendingPathComponent:DB_FILE];
-    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-    self.locationsDatabase = nil;
-    self.resultsController = nil;
-    [self.tableView reloadData];
+//    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//    url = [url URLByAppendingPathComponent:DB_FILE];
+//    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+//    self.locationsDatabase = nil;
+//    self.resultsController = nil;
+//    [self.tableView reloadData];
 }
 
 
@@ -327,14 +331,14 @@
     NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
     [request setHTTPMethod:@"POST"];
-    NSData *requestData = [self requestData];
-    if (requestData) {
+//    NSData *requestData = [self requestData];
+//    if (requestData) {
 //        NSLog(@"requestData");
-        [request setHTTPBody:requestData];
-        [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        if (!connection) NSLog(@"connection error");
-    }
+//        [request setHTTPBody:requestData];
+//        [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+//        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//        if (!connection) NSLog(@"connection error");
+//    }
 }
 
 - (NSString *)newid
@@ -369,7 +373,7 @@
             xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "post");
             
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
-                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[ENTITY_NAME UTF8String]);
+                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Location" UTF8String]);
 
                     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
                         NSArray *entityAttributes = [self.resultsController.fetchRequest.entity.attributesByName allKeys];
@@ -414,7 +418,7 @@
         NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
         xmlBufferFree(xmlBuffer);
         
-//        NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+        NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
         
         return requestData;
     } else {
@@ -472,14 +476,12 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[self.resultsController sections] count];
-//    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     return [sectionInfo numberOfObjects];
-//    return self.resultsController.fetchedObjects.count;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -497,12 +499,21 @@
 
 //    Location *location = (Location *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
 
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-    
-    cell.textLabel.text = [NSString stringWithFormat:@"%d %@", route.locations.count, route.xid];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ - %@", [dateFormatter stringFromDate:route.startTime], [dateFormatter stringFromDate:route.finishTime]];
+    NSDateFormatter *startDateFormatter = [[NSDateFormatter alloc] init];
+    [startDateFormatter setDateStyle:NSDateFormatterShortStyle];
+    [startDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    NSDateFormatter *finishDateFormatter = [[NSDateFormatter alloc] init];
+    [finishDateFormatter setDateStyle:NSDateFormatterNoStyle];
+    [finishDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    [numberFormatter setMaximumFractionDigits:0];
+    NSTimeInterval routeOveralTime = [route.finishTime timeIntervalSinceDate:route.startTime];
+    NSNumber *speed = [NSNumber numberWithDouble:0.0];
+    if (routeOveralTime != 0) {
+        speed = [NSNumber numberWithDouble:(3.6 * [route.overalDistance doubleValue] / routeOveralTime)];
+    }
+    cell.textLabel.text = [NSString stringWithFormat:@"%d %@m %@km/h", route.locations.count, [numberFormatter stringFromNumber:route.overalDistance], speed];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:route.startTime], [finishDateFormatter stringFromDate:route.finishTime]];
 
 //    cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
 //    
@@ -528,6 +539,14 @@
 //            NSLog(@"UIDocumentSaveForOverwriting success");
 //        }];
 //    }   
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    Route *route = (Route *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+    self.locationsArray = [route.locations allObjects];
+    [self.caller performSegueWithIdentifier:@"showMap" sender:self];
+
 }
 
 #pragma mark - NSFetchedResultsController delegate

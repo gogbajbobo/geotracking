@@ -79,6 +79,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     self.tableView.dataSource = self.tracker;
+    self.tableView.delegate = self.tracker;
 }
 
 - (void)viewDidLoad
@@ -107,6 +108,7 @@
     }
     if ([segue.identifier isEqualToString:@"showMap"]) {
         if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
+            NSLog(@"showMap");
             MapViewController *mapVC = segue.destinationViewController;
             mapVC.tracker = self.tracker;
         }
