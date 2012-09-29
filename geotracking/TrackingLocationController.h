@@ -25,6 +25,7 @@
 - (void)startConnection;
 
 @property (nonatomic, strong) NSArray *locationsArray;
+@property (nonatomic, strong) NSArray *allLocationsArray;
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 - (void)addLocation:(CLLocation *)currentLocation;

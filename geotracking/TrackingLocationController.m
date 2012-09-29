@@ -56,6 +56,7 @@
 @synthesize syncing = _syncing;
 @synthesize currentRoute = _currentRoute;
 @synthesize lastLocation = _lastLocation;
+@synthesize allLocationsArray = _allLocationsArray;
 
 
 - (void)setSyncing:(BOOL)syncing {
@@ -75,10 +76,14 @@
     return _resultsController;
 }
 
-//- (NSMutableArray *)locationsArray {
-//    _locationsArray = [self.resultsController.fetchedObjects mutableCopy];
-//    return _locationsArray;
-//}
+- (NSArray *)allLocationsArray {
+    NSMutableSet *allLocations = [NSMutableSet set];
+    for (Route *route in self.resultsController.fetchedObjects) {
+        [allLocations unionSet:route.locations];
+    }
+    return [allLocations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
+}
+
 
 - (UIManagedDocument *)locationsDatabase {
     
@@ -124,8 +129,6 @@
     } else {
         self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
         [self.tableView reloadData];
-//        [self recalculateOverallDistance];
-//        [self recalculateAverageSpeed];
         [self updateInfoLabels];
     }
 }
@@ -134,7 +137,7 @@
     Route *route = (Route *)[NSEntityDescription insertNewObjectForEntityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [route setXid:[self newid]];
     [route setStartTime:[NSDate date]];
-    [route setOveralDistance:[NSNumber numberWithDouble:0.0]];
+    [route setOverallDistance:[NSNumber numberWithDouble:0.0]];
     self.currentRoute = route;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newRoute UIDocumentSaveForOverwriting success");
@@ -146,8 +149,8 @@
     if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > 120) {
         [self startNewRoute];
     } else {
-        NSNumber *overalDistance = [NSNumber numberWithDouble:[self.currentRoute.overalDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
-        self.currentRoute.overalDistance = (overalDistance < 0) ? 0 : overalDistance;
+        NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentRoute.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
+        self.currentRoute.overallDistance = (overallDistance < 0) ? 0 : overallDistance;
     }
     
     Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
@@ -197,40 +200,11 @@
 }
 
 
-- (void)recalculateAverageSpeed {
-    if (self.resultsController.fetchedObjects.count > 0) {
-        self.averageSpeed = 0.0;
-        CLLocationSpeed integralSpeed = 0.0;
-        for (Location *location in self.resultsController.fetchedObjects) {
-            double speed = (location.speed < 0) ? 0.0 : [location.speed doubleValue];
-            integralSpeed = integralSpeed + speed;
-        }
-        self.averageSpeed = integralSpeed / self.resultsController.fetchedObjects.count;
-    } else {
-        self.averageSpeed = 0.0;
-    }
-}
-
-- (void)recalculateOverallDistance {
-    if (self.resultsController.fetchedObjects.count > 0) {
-        self.overallDistance = 0.0;
-        Location *temp = [self.resultsController.fetchedObjects objectAtIndex:0];
-        CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];     
-        for (Location *temp in self.resultsController.fetchedObjects) {
-            CLLocation *location = [[CLLocation alloc] initWithLatitude:[temp.latitude doubleValue] longitude:[temp.longitude doubleValue]];
-            self.overallDistance = self.overallDistance + [location distanceFromLocation:oldLocation];
-            oldLocation = location;
-        }
-    } else {
-        self.overallDistance = 0.0;
-    }
-}
-
 - (CLLocationDistance)overallDistance {
 
     CLLocationDistance overallDistance = 0.0;
     for (Route *route in self.resultsController.fetchedObjects) {
-        overallDistance = overallDistance + [route.overalDistance doubleValue];
+        overallDistance = overallDistance + [route.overallDistance doubleValue];
     }
     return overallDistance;
 
@@ -314,12 +288,12 @@
 }
 
 - (void)clearLocations {
-//    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-//    url = [url URLByAppendingPathComponent:DB_FILE];
-//    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-//    self.locationsDatabase = nil;
-//    self.resultsController = nil;
-//    [self.tableView reloadData];
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    url = [url URLByAppendingPathComponent:DB_FILE];
+    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
+    self.locationsDatabase = nil;
+    self.resultsController = nil;
+    [self.tableView reloadData];
 }
 
 
@@ -525,56 +499,54 @@
     
     Route *route = (Route *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
 
-//    Location *location = (Location *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-
     NSDateFormatter *startDateFormatter = [[NSDateFormatter alloc] init];
     [startDateFormatter setDateStyle:NSDateFormatterShortStyle];
     [startDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    
     NSDateFormatter *finishDateFormatter = [[NSDateFormatter alloc] init];
     [finishDateFormatter setDateStyle:NSDateFormatterNoStyle];
     [finishDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
+    
     NSNumberFormatter *distanceNumberFormatter = [[NSNumberFormatter alloc] init];
     [distanceNumberFormatter setMaximumFractionDigits:0];
+    
     NSNumberFormatter *speedNumberFormatter = [[NSNumberFormatter alloc] init];
     [speedNumberFormatter setMaximumFractionDigits:1];
+    
     NSTimeInterval routeOverallTime = [route.finishTime timeIntervalSinceDate:route.startTime];
     NSNumber *speed = [NSNumber numberWithDouble:0.0];
+    
     if (routeOverallTime != 0) {
-        speed = [NSNumber numberWithDouble:(3.6 * [route.overalDistance doubleValue] / routeOverallTime)];
+        speed = [NSNumber numberWithDouble:(3.6 * [route.overallDistance doubleValue] / routeOverallTime)];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%d %@m %@km/h", route.locations.count, [distanceNumberFormatter stringFromNumber:route.overalDistance], [speedNumberFormatter stringFromNumber:speed]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%d %@m %@km/h", route.locations.count, [distanceNumberFormatter stringFromNumber:route.overallDistance], [speedNumberFormatter stringFromNumber:speed]];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:route.startTime], [finishDateFormatter stringFromDate:route.finishTime]];
 
-//    cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
-//    
-//    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-//    [numberFormatter setMaximumFractionDigits:3];
-//            
-//    NSMutableString *detailTextString = [NSMutableString stringWithFormat:@"%@/%@ %@m %@m/s %@deg", [numberFormatter stringFromNumber:location.latitude], [numberFormatter stringFromNumber:location.longitude], [numberFormatter stringFromNumber:location.horizontalAccuracy], [numberFormatter stringFromNumber:location.speed], [numberFormatter stringFromNumber:location.course]];
-//    if (![location.synced boolValue]) {
-//        detailTextString = [NSMutableString stringWithFormat:@"! %@",detailTextString];
-//    }
-//    cell.detailTextLabel.text = detailTextString;
-    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//		
-//		NSManagedObject *location = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-//		[self.locationsDatabase.managedObjectContext deleteObject:location];
-//        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//            NSLog(@"UIDocumentSaveForOverwriting success");
-//        }];
-//    }   
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+		
+		Route *route = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        for (Location *location in route.locations) {
+            NSLog(@"location to delete %@", location);
+            [self.locationsDatabase.managedObjectContext deleteObject:location];
+        }
+        NSLog(@"route to delete %@", route);
+        [self.locationsDatabase.managedObjectContext deleteObject:route];
+        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"UIDocumentSaveForOverwriting success");
+        }];
+    }   
+
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
     Route *route = (Route *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-    self.locationsArray = [route.locations allObjects];
+    self.locationsArray = [route.locations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
     return indexPath;
 
 }
@@ -593,10 +565,8 @@
     
     if (type == NSFetchedResultsChangeDelete) {
                 
-//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-//        [self recalculateOverallDistance];
-//        [self recalculateAverageSpeed];
-//        [self updateInfoLabels];
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+        [self updateInfoLabels];
 
     } else if (type == NSFetchedResultsChangeInsert) {
         
@@ -604,18 +574,6 @@
 
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-
-//        if (self.resultsController.fetchedObjects.count > 1) {
-//            CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:[[[self.resultsController.fetchedObjects objectAtIndex:0] latitude] doubleValue] longitude:[[[self.resultsController.fetchedObjects objectAtIndex:0] longitude] doubleValue]];
-//            CLLocation *oldLocation = [[CLLocation alloc] initWithLatitude:[[[self.resultsController.fetchedObjects objectAtIndex:1] latitude] doubleValue] longitude:[[[self.resultsController.fetchedObjects objectAtIndex:1] longitude] doubleValue]];
-//            self.overallDistance = self.overallDistance + [currentLocation distanceFromLocation:oldLocation];
-//        }
-//        Location *location = (Location *)[self.resultsController.fetchedObjects objectAtIndex:0];
-//        CLLocationSpeed speed = [location.speed doubleValue];
-//        speed = (speed < 0) ? 0.0 : speed;
-//        self.averageSpeed = (self.averageSpeed * (self.resultsController.fetchedObjects.count - 1) + speed) / self.resultsController.fetchedObjects.count;
-//        
-//        [self updateInfoLabels];
 
     } else if (type == NSFetchedResultsChangeUpdate) {
 

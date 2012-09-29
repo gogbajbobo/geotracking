@@ -13,7 +13,7 @@
     </entity>
     <entity name="Route" representedClassName="Route" syncable="YES">
         <attribute name="finishTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="overalDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="overallDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="xid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="route" inverseEntity="Location" syncable="YES"/>

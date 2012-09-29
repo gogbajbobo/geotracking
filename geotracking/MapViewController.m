@@ -96,7 +96,7 @@
 - (void)annotationsCreate
 {
     NSArray *locationsArray = self.tracker.locationsArray;
-    NSLog(@"locationsArray %@", locationsArray);
+//    NSLog(@"locationsArray %@", locationsArray);
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         
@@ -110,23 +110,32 @@
             if ([location.longitude doubleValue] < minLon) minLon = [location.longitude doubleValue];
             if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
             if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
-            //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-            if (self.showPins.on) {
-                [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
-            }
+//            NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+//            if (self.showPins.on) {
+//                [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
+//            }
         }
         
 //        NSLog(@"annotations.count %d",self.mapView.annotations.count);
         
 //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
+
+        if (self.showPins.on) {
+            MapAnnotation *startPoint = [MapAnnotation createAnnotationFor:[locationsArray objectAtIndex:0]];
+            MapAnnotation *finishPoint = [MapAnnotation createAnnotationFor:[locationsArray lastObject]];
+            [self.mapView addAnnotation:startPoint];
+            [self.mapView addAnnotation:finishPoint];
+        }
+        
         CLLocationCoordinate2D center;
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;
         self.center = center;
         //    NSLog(@"center %f %f",center.longitude, center.latitude);
+        int zoomScale = 2;
         MKCoordinateSpan span;
-        span.longitudeDelta = maxLon - minLon;
-        span.latitudeDelta = maxLat - minLat;
+        span.longitudeDelta = zoomScale * (maxLon - minLon);
+        span.latitudeDelta = zoomScale * (maxLat - minLat);
         self.span = span;
         //    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);        
     } else {
@@ -153,13 +162,16 @@
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
     
-//    NSLog(@"viewForOverlay");
-    
     MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
-    pathView.strokeColor = [UIColor blueColor];
-    pathView.lineWidth = 5.0;
-
+    if (overlay.title == @"currentRoute") {
+        pathView.strokeColor = [UIColor blueColor];
+        pathView.lineWidth = 5.0;
+    } else if (overlay.title == @"allRoutes") {
+        pathView.strokeColor = [UIColor grayColor];
+        pathView.lineWidth = 5.0;
+    }
     return pathView;
+
 }
 
 - (MKPolyline *)pathLine {
@@ -175,7 +187,27 @@
             i++;
         }
     }
-    return [MKPolyline polylineWithCoordinates:annotationsCoordinates count:numberOfLocations];
+    MKPolyline *pathLine = [MKPolyline polylineWithCoordinates:annotationsCoordinates count:numberOfLocations];
+    pathLine.title = @"currentRoute";
+    return pathLine;
+}
+
+- (MKPolyline *)allPathLine {
+    
+    NSArray *locationsArray = self.tracker.allLocationsArray;
+    int numberOfLocations = locationsArray.count;
+    CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
+    if (numberOfLocations > 0) {
+        int i = 0;
+        for (Location *location in locationsArray) {
+            CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([location.latitude doubleValue], [location.longitude doubleValue]);
+            annotationsCoordinates[i] = coordinate;
+            i++;
+        }
+    }
+    MKPolyline *pathLine = [MKPolyline polylineWithCoordinates:annotationsCoordinates count:numberOfLocations];
+    pathLine.title = @"allRoutes";
+    return pathLine;
 }
 
 
@@ -232,7 +264,8 @@
         self.mapSwitch.selectedSegmentIndex = 2;
     }
     
-    [self.mapView addOverlay:(id<MKOverlay>)[self pathLine]];
+    [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
+    [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

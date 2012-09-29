@@ -255,13 +255,12 @@
                                             <action selector="trackerSwitchPressed:" destination="X39-dw-5jp" id="fdi-Xl-x9l"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="compose" id="STs-tV-Tnh">
+                                    <barButtonItem title="Settings" id="STs-tV-Tnh">
                                         <connections>
                                             <action selector="showOptions:" destination="X39-dw-5jp" id="efR-Mo-eLF"/>
                                             <segue destination="J3s-3h-Q2X" kind="modal" identifier="showSettings" modalTransitionStyle="coverVertical" id="8nw-66-dFm"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem systemItem="pageCurl" id="KKA-sb-C5C"/>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="LJS-oU-9AL"/>
                                     <barButtonItem title="Sync" id="PGh-Lk-ZYN">
                                         <connections>
