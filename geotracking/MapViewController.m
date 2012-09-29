@@ -95,8 +95,8 @@
 
 - (void)annotationsCreate
 {
-    NSArray *locationsArray = self.tracker.locationsArray;
-//    NSLog(@"locationsArray %@", locationsArray);
+    NSArray *locationsArray = self.tracker.allLocationsArray;
+
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         
@@ -121,8 +121,8 @@
 //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
 
         if (self.showPins.on) {
-            MapAnnotation *startPoint = [MapAnnotation createAnnotationFor:[locationsArray objectAtIndex:0]];
-            MapAnnotation *finishPoint = [MapAnnotation createAnnotationFor:[locationsArray lastObject]];
+            MapAnnotation *startPoint = [MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]];
+            MapAnnotation *finishPoint = [MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]];
             [self.mapView addAnnotation:startPoint];
             [self.mapView addAnnotation:finishPoint];
         }
@@ -165,7 +165,7 @@
     MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
     if (overlay.title == @"currentRoute") {
         pathView.strokeColor = [UIColor blueColor];
-        pathView.lineWidth = 5.0;
+        pathView.lineWidth = 10.0;
     } else if (overlay.title == @"allRoutes") {
         pathView.strokeColor = [UIColor grayColor];
         pathView.lineWidth = 5.0;
