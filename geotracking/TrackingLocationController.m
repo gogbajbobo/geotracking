@@ -13,11 +13,6 @@
 #import "MapAnnotation.h"
 #import "TrackerViewController.h"
 
-//#define ENTITY_NAME @"Location"
-//#define ENTITY_NAME @"Route"
-//#define SORT_DESCRIPTOR @"timestamp"
-//#define SORT_DESCRIPTOR @"startTime"
-//#define SORT_ASCEND NO
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
 
