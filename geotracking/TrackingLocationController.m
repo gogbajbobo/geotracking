@@ -126,7 +126,7 @@
         [self.tableView reloadData];
 //        [self recalculateOverallDistance];
 //        [self recalculateAverageSpeed];
-//        [self updateInfoLabels];
+        [self updateInfoLabels];
     }
 }
 
@@ -143,10 +143,11 @@
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
-    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > 5) {
+    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > 120) {
         [self startNewRoute];
     } else {
-        self.currentRoute.overalDistance = [NSNumber numberWithDouble:[self.currentRoute.overalDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
+        NSNumber *overalDistance = [NSNumber numberWithDouble:[self.currentRoute.overalDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
+        self.currentRoute.overalDistance = (overalDistance < 0) ? 0 : overalDistance;
     }
     
     Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
@@ -166,14 +167,13 @@
     [self.currentRoute addLocationsObject:location];
     
 //    NSLog(@"currentLocation %@",currentLocation);
-//    NSLog(@"latitude %f",[location.latitude doubleValue]);
-//    NSLog(@"longitude %f",[location.longitude doubleValue]);
 
 
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //        NSLog(@"addLocation UIDocumentSaveForOverwriting success");
         self.lastLocation = currentLocation;
     }];
+    [self updateInfoLabels];
 
 //    if (self.sendAnnotationsToMap) {
 //        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
@@ -226,15 +226,43 @@
     }
 }
 
+- (CLLocationDistance)overallDistance {
+
+    CLLocationDistance overallDistance = 0.0;
+    for (Route *route in self.resultsController.fetchedObjects) {
+        overallDistance = overallDistance + [route.overalDistance doubleValue];
+    }
+    return overallDistance;
+
+}
+
+- (CLLocationSpeed)averageSpeed {
+    
+    NSTimeInterval routeOverallTime = 0;
+    for (Route *route in self.resultsController.fetchedObjects) {
+        routeOverallTime = routeOverallTime + [route.finishTime timeIntervalSinceDate:route.startTime];
+    }
+    CLLocationSpeed averageSpeed = 0.0;
+    if (routeOverallTime != 0) {
+        averageSpeed = 3.6 * self.overallDistance / routeOverallTime;
+    }
+    return averageSpeed;
+    
+}
+
 - (void)updateInfoLabels {
     NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setMaximumFractionDigits:0];
+    [numberFormatter setMaximumFractionDigits:1];
     NSString *syncStatus = @"";
     if (self.syncing) {
         syncStatus = @" SYNC";
     }
     self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s%@",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
-    self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
+    if (self.currentAccuracy > 0) {
+        self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
+    } else {
+        self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
+    }
 }
 
 - (CLLocationAccuracy)desiredAccuracy {
@@ -505,14 +533,16 @@
     NSDateFormatter *finishDateFormatter = [[NSDateFormatter alloc] init];
     [finishDateFormatter setDateStyle:NSDateFormatterNoStyle];
     [finishDateFormatter setTimeStyle:NSDateFormatterMediumStyle];
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setMaximumFractionDigits:0];
-    NSTimeInterval routeOveralTime = [route.finishTime timeIntervalSinceDate:route.startTime];
+    NSNumberFormatter *distanceNumberFormatter = [[NSNumberFormatter alloc] init];
+    [distanceNumberFormatter setMaximumFractionDigits:0];
+    NSNumberFormatter *speedNumberFormatter = [[NSNumberFormatter alloc] init];
+    [speedNumberFormatter setMaximumFractionDigits:1];
+    NSTimeInterval routeOverallTime = [route.finishTime timeIntervalSinceDate:route.startTime];
     NSNumber *speed = [NSNumber numberWithDouble:0.0];
-    if (routeOveralTime != 0) {
-        speed = [NSNumber numberWithDouble:(3.6 * [route.overalDistance doubleValue] / routeOveralTime)];
+    if (routeOverallTime != 0) {
+        speed = [NSNumber numberWithDouble:(3.6 * [route.overalDistance doubleValue] / routeOverallTime)];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%d %@m %@km/h", route.locations.count, [numberFormatter stringFromNumber:route.overalDistance], speed];
+    cell.textLabel.text = [NSString stringWithFormat:@"%d %@m %@km/h", route.locations.count, [distanceNumberFormatter stringFromNumber:route.overalDistance], [speedNumberFormatter stringFromNumber:speed]];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:route.startTime], [finishDateFormatter stringFromDate:route.finishTime]];
 
 //    cell.textLabel.text = [dateFormatter stringFromDate:location.timestamp];
@@ -541,13 +571,14 @@
 //    }   
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
     Route *route = (Route *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
     self.locationsArray = [route.locations allObjects];
-    [self.caller performSegueWithIdentifier:@"showMap" sender:self];
+    return indexPath;
 
 }
+
 
 #pragma mark - NSFetchedResultsController delegate
 

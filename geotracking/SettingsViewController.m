@@ -28,6 +28,7 @@
 }
 
 - (void)distanceFilterSliderSetup {
+//    self.distanceFilterSlider.continuous = NO;
     self.distanceFilterSlider.maximumValue = 200.0;
     self.distanceFilterSlider.minimumValue = -1.0;
     [self.distanceFilterSlider setValue:self.tracker.distanceFilter animated:YES];    

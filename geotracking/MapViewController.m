@@ -96,6 +96,7 @@
 - (void)annotationsCreate
 {
     NSArray *locationsArray = self.tracker.locationsArray;
+    NSLog(@"locationsArray %@", locationsArray);
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         

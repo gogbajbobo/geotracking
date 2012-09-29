@@ -139,6 +139,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <action selector="distanceFilterChangeValue:" destination="J3s-3h-Q2X" eventType="valueChanged" id="MSc-5t-Pv2"/>
+                                    <action selector="distanceFilterValueChangingDidEnd:" destination="J3s-3h-Q2X" eventType="editingDidEnd" id="2Pu-9i-is8"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Desired accuracy:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="SNx-Xd-XaA">
@@ -304,6 +305,9 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <connections>
+                                            <segue destination="tND-F5-tUH" kind="modal" identifier="showMap" modalTransitionStyle="partialCurl" id="fHi-mk-01l"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -329,7 +333,6 @@
                         <outlet property="startButton" destination="NqZ-7M-H0G" id="GOz-dm-gfr"/>
                         <outlet property="summary" destination="TqX-pt-8Lo" id="zmV-9T-sn4"/>
                         <outlet property="tableView" destination="EON-rK-JTk" id="m58-28-9di"/>
-                        <segue destination="tND-F5-tUH" kind="modal" identifier="showMap" modalTransitionStyle="partialCurl" id="qZd-v5-Gtu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a8Z-Az-Wv3" userLabel="First Responder" sceneMemberID="firstResponder"/>
