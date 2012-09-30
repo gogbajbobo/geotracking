@@ -14,6 +14,5 @@
 @interface MapViewController : UIViewController
 @property (nonatomic, strong) NSArray *annotations;
 @property (nonatomic, strong) TrackingLocationController *tracker;
-@property (weak, nonatomic) IBOutlet UISwitch *showPins;
 
 @end

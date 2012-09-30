@@ -28,11 +28,14 @@
 @property (nonatomic, strong) CLLocation *lastLocation;
 @property (weak, nonatomic) UILabel *summary;
 @property (weak, nonatomic) UILabel *currentValues;
+@property (nonatomic) NSInteger selectedRouteNumber;
+@property (nonatomic) NSInteger numberOfRoutes;
+
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
 - (void)startConnection;
-
+- (NSArray *)locationsArrayForRoute:(NSInteger)routeNumber;
 
 @end

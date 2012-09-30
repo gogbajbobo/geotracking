@@ -44,7 +44,7 @@
 		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
-		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE471FF15E3FEEC00B092DB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE4720115E3FEEC00B092DB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -84,7 +84,6 @@
 		2CE471F015E3FEEB00B092DB = {
 			isa = PBXGroup;
 			children = (
-				2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */,
 				2C32A0A5161052E200713735 /* libxml2.dylib */,
 				2CE4720515E3FEEC00B092DB /* geotracking */,
 				2CE471FE15E3FEEC00B092DB /* Frameworks */,
@@ -143,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				2CE4720715E3FEEC00B092DB /* geotracking-Info.plist */,
+				2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */,
 				2CE4720815E3FEEC00B092DB /* InfoPlist.strings */,
 				2CE4720B15E3FEEC00B092DB /* main.m */,
 				2CE4720D15E3FEEC00B092DB /* geotracking-Prefix.pch */,

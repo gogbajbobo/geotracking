@@ -15,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *headingModeSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *routeNumberLabel;
+@property (weak, nonatomic) IBOutlet UIStepper *routeNumberSelector;
 
 @end
 
@@ -26,8 +28,30 @@
 @synthesize span = _span;
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
-@synthesize showPins = _showPins;
 
+
+- (IBAction)routeNumberChange:(id)sender {
+    self.tracker.selectedRouteNumber = self.tracker.numberOfRoutes - self.routeNumberSelector.value;
+    self.routeNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber)];
+    [self redrawPathLine];
+}
+
+- (void)routeNumberSelectorSetup {
+    self.routeNumberSelector.wraps = YES;
+    self.routeNumberSelector.stepValue = 1.0;
+    self.routeNumberSelector.minimumValue = 1.0;
+    self.routeNumberSelector.maximumValue = self.tracker.numberOfRoutes;
+    self.routeNumberSelector.value = self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber;
+}
+
+- (void)redrawPathLine {
+    [self.mapView removeOverlays:[self.mapView overlays]];
+    [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
+    [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
+    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
+}
 
 - (IBAction)headingModeSwitchSwitched:(id)sender {
     if ([sender isKindOfClass:[UISwitch class]]) {
@@ -35,26 +59,12 @@
         UISwitch *headingMode = sender;
         if (headingMode.on) {
             [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
+            self.mapView.showsUserLocation = YES;
         } else {
             [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+            self.mapView.showsUserLocation = NO;
         }
         [settings setObject:[NSNumber numberWithBool:headingMode.on] forKey:@"headingMode"];
-        [settings synchronize];
-    }
-}
-
-- (IBAction)showPinsSwitchSwitched:(id)sender {
-    if ([sender isKindOfClass:[UISwitch class]]) {
-        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-        UISwitch *showPins = sender;
-        if (showPins.on) {
-            [self annotationsCreate];
-//            self.tracker.sendAnnotationsToMap = self.showPins.on;
-        } else {
-            [self.mapView removeAnnotations:self.mapView.annotations];
-//            self.tracker.sendAnnotationsToMap = self.showPins.on;
-        }
-        [settings setObject:[NSNumber numberWithBool:self.showPins.on] forKey:@"showPins"];
         [settings synchronize];
     }
 }
@@ -95,8 +105,8 @@
 
 - (void)annotationsCreate
 {
+//    NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
     NSArray *locationsArray = self.tracker.allLocationsArray;
-
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         
@@ -111,22 +121,15 @@
             if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
             if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
 //            NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-//            if (self.showPins.on) {
-//                [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
-//            }
         }
         
 //        NSLog(@"annotations.count %d",self.mapView.annotations.count);
         
 //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
 
-        if (self.showPins.on) {
-            MapAnnotation *startPoint = [MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]];
-            MapAnnotation *finishPoint = [MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]];
-            [self.mapView addAnnotation:startPoint];
-            [self.mapView addAnnotation:finishPoint];
-        }
-        
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
+
         CLLocationCoordinate2D center;
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;
@@ -146,14 +149,15 @@
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
     MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
+
     if (annotation == mapView.userLocation){
         return nil;
     } else {
         if (!pinView) {
             pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
+//            pinView.animatesDrop = YES;
             pinView.pinColor = MKPinAnnotationColorPurple;
             pinView.canShowCallout = YES;
-//            pinView.animatesDrop = YES;
         }
         pinView.annotation = annotation;
         return pinView;
@@ -165,10 +169,10 @@
     MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
     if (overlay.title == @"currentRoute") {
         pathView.strokeColor = [UIColor blueColor];
-        pathView.lineWidth = 10.0;
+        pathView.lineWidth = 4.0;
     } else if (overlay.title == @"allRoutes") {
         pathView.strokeColor = [UIColor grayColor];
-        pathView.lineWidth = 5.0;
+        pathView.lineWidth = 2.0;
     }
     return pathView;
 
@@ -176,7 +180,7 @@
 
 - (MKPolyline *)pathLine {
     
-    NSArray *locationsArray = self.tracker.locationsArray;
+    NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
     int numberOfLocations = locationsArray.count;
     CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
     if (numberOfLocations > 0) {
@@ -223,23 +227,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.mapView.showsUserLocation = YES;
     self.mapView.delegate = self;
 	// Do any additional setup after loading the view.
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
-    
-    NSNumber *showPins = [[NSUserDefaults standardUserDefaults] objectForKey:@"showPins"];
-    if (!showPins) {
-        showPins = [NSNumber numberWithBool:YES];
-    }
-    [self.showPins setOn:[showPins boolValue] animated:NO];
-    if (self.showPins.on) {
-        [self annotationsCreate];
-    }
-//    self.tracker.sendAnnotationsToMap = self.showPins.on;
 
     BOOL headingMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"] boolValue];
     if (!headingMode) {
@@ -249,7 +242,9 @@
         [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
     }
     [self.headingModeSwitch setOn:headingMode animated:NO];
-
+    if (headingMode) {
+        self.mapView.showsUserLocation = YES;
+    }
 
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
     if (!mapType) {
@@ -264,8 +259,12 @@
         self.mapSwitch.selectedSegmentIndex = 2;
     }
     
+    self.routeNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
     [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
+    [self annotationsCreate];
+    [self routeNumberSelectorSetup];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -274,10 +273,11 @@
 
 - (void)viewDidUnload
 {
-    [self setMapSwitch:nil];
-    [self setShowPins:nil];
-    [self setHeadingModeSwitch:nil];
     self.mapView.delegate = nil;
+    [self setMapSwitch:nil];
+    [self setHeadingModeSwitch:nil];
+    [self setRouteNumberLabel:nil];
+    [self setRouteNumberSelector:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

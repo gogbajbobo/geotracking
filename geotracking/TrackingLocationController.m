@@ -31,6 +31,8 @@
 
 @implementation TrackingLocationController
 
+#pragma mark - synthesize
+
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;
 @synthesize locationManager = _locationManager;
@@ -52,7 +54,10 @@
 @synthesize lastLocation = _lastLocation;
 @synthesize allLocationsArray = _allLocationsArray;
 @synthesize routeDetectionTimeInterval = _routeDetectionTimeInterval;
+@synthesize selectedRouteNumber = _selectedRouteNumber;
+@synthesize numberOfRoutes = _numberOfRoutes;
 
+#pragma mark - methods
 
 - (void)setSyncing:(BOOL)syncing {
     if (_syncing != syncing) {
@@ -79,6 +84,16 @@
     return [allLocations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
 }
 
+- (NSArray *)locationsArrayForRoute:(NSInteger)routeNumber {
+    return [[[self.resultsController.fetchedObjects objectAtIndex:routeNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
+}
+
+- (void)setSelectedRouteNumber:(NSInteger)selectedRouteNumber {
+    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedRouteNumber inSection:0]] setSelected:NO];
+    _selectedRouteNumber = selectedRouteNumber;
+    self.locationsArray = [self locationsArrayForRoute:selectedRouteNumber];
+    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRouteNumber inSection:0]] setSelected:YES];
+}
 
 - (UIManagedDocument *)locationsDatabase {
     
@@ -123,6 +138,7 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
+        self.numberOfRoutes = self.resultsController.fetchedObjects.count;
         [self.tableView reloadData];
         [self updateInfoLabels];
     }
@@ -540,7 +556,7 @@
     if (routeOverallTime != 0) {
         speed = [NSNumber numberWithDouble:(3.6 * [route.overallDistance doubleValue] / routeOverallTime)];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%d %@m %@km/h", route.locations.count, [distanceNumberFormatter stringFromNumber:route.overallDistance], [speedNumberFormatter stringFromNumber:speed]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h", [distanceNumberFormatter stringFromNumber:route.overallDistance], [speedNumberFormatter stringFromNumber:speed]];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:route.startTime], [finishDateFormatter stringFromDate:route.finishTime]];
 
     return cell;
@@ -566,8 +582,8 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    Route *route = (Route *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-    self.locationsArray = [route.locations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
+    self.selectedRouteNumber = indexPath.row;
+    self.locationsArray = [self locationsArrayForRoute:indexPath.row];
     return indexPath;
 
 }
