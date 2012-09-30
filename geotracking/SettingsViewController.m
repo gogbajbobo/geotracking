@@ -12,6 +12,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *desiredAccuracyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *distanceFilterLabel;
 @property (weak, nonatomic) IBOutlet UISlider *distanceFilterSlider;
+@property (weak, nonatomic) IBOutlet UISlider *routeDetectionTimeIntervalSlider;
+@property (weak, nonatomic) IBOutlet UILabel *routeDetectionTimeIntervalLabel;
 
 @end
 
@@ -20,6 +22,18 @@
 @synthesize distanceFilterLabel = _distanceFilterLabel;
 @synthesize distanceFilterSlider = _distanceFilterSlider;
 @synthesize tracker = _tracker;
+
+- (IBAction)routeDetectionTimeIntervalChangeValue:(id)sender {
+    [self.routeDetectionTimeIntervalSlider setValue:floor(self.routeDetectionTimeIntervalSlider.value/60)*60];
+    self.tracker.routeDetectionTimeInterval = self.routeDetectionTimeIntervalSlider.value;
+    [self updateLabels];
+}
+
+- (void)routeDetectionTimeIntervalSliderSetup {
+    self.routeDetectionTimeIntervalSlider.maximumValue = 600.0;
+    self.routeDetectionTimeIntervalSlider.minimumValue = 0;
+    [self.routeDetectionTimeIntervalSlider setValue:self.tracker.routeDetectionTimeInterval animated:YES];
+}
 
 - (IBAction)distanceFilterChangeValue:(id)sender {
     [self.distanceFilterSlider setValue:floor(self.distanceFilterSlider.value/10)*10];
@@ -43,6 +57,7 @@
 - (void)updateLabels {
     self.desiredAccuracyLabel.text = [NSString stringWithFormat:@"%f", self.tracker.desiredAccuracy];
     self.distanceFilterLabel.text = [NSString stringWithFormat:@"%f", self.tracker.distanceFilter];
+    self.routeDetectionTimeIntervalLabel.text = [NSString stringWithFormat:@"%f", self.tracker.routeDetectionTimeInterval];
 }
 
 - (IBAction)mostBest:(id)sender {
@@ -81,6 +96,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [self distanceFilterSliderSetup];
+    [self routeDetectionTimeIntervalSliderSetup];
     [self updateLabels];
 }
 
@@ -98,6 +114,8 @@
     [self setDesiredAccuracyLabel:nil];
     [self setDistanceFilterLabel:nil];
     [self setDistanceFilterSlider:nil];
+    [self setRouteDetectionTimeIntervalSlider:nil];
+    [self setRouteDetectionTimeIntervalLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

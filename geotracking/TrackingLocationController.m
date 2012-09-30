@@ -25,7 +25,7 @@
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) Route *currentRoute;
-@property (nonatomic, strong) CLLocation *lastLocation;
+@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 @end
 
@@ -42,7 +42,6 @@
 @synthesize overallDistance = _overallDistance;
 @synthesize averageSpeed = _averageSpeed;
 @synthesize caller = _caller;
-@synthesize sendAnnotationsToMap = _sendAnnotationsToMap;
 @synthesize summary = _summary;
 @synthesize currentValues = _currentValues;
 @synthesize currentAccuracy = _currentAccuracy;
@@ -52,6 +51,7 @@
 @synthesize currentRoute = _currentRoute;
 @synthesize lastLocation = _lastLocation;
 @synthesize allLocationsArray = _allLocationsArray;
+@synthesize routeDetectionTimeInterval = _routeDetectionTimeInterval;
 
 
 - (void)setSyncing:(BOOL)syncing {
@@ -141,7 +141,7 @@
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
-    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > 120) {
+    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.routeDetectionTimeInterval) {
         [self startNewRoute];
     } else {
         NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentRoute.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
@@ -232,6 +232,28 @@
     } else {
         self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
     }
+}
+
+- (NSTimeInterval)routeDetectionTimeInterval {
+    if (!_routeDetectionTimeInterval) {
+        NSNumber *routeDetectionTimeInterval = [[NSUserDefaults standardUserDefaults] objectForKey:@"routeDetectionTimeInterval"];
+        if (routeDetectionTimeInterval == nil) {
+            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+            _routeDetectionTimeInterval = 300;
+            [settings setObject:[NSNumber numberWithDouble:_routeDetectionTimeInterval] forKey:@"routeDetectionTimeInterval"];
+            [settings synchronize];
+        } else {
+            _routeDetectionTimeInterval = [routeDetectionTimeInterval doubleValue];
+        }
+    }
+    return _routeDetectionTimeInterval;
+}
+
+- (void)setRouteDetectionTimeInterval:(NSTimeInterval)routeDetectionTimeInterval {
+    _routeDetectionTimeInterval = routeDetectionTimeInterval;
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    [settings setObject:[NSNumber numberWithDouble:_routeDetectionTimeInterval] forKey:@"routeDetectionTimeInterval"];
+    [settings synchronize];
 }
 
 - (CLLocationAccuracy)desiredAccuracy {

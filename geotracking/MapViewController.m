@@ -49,10 +49,10 @@
         UISwitch *showPins = sender;
         if (showPins.on) {
             [self annotationsCreate];
-            self.tracker.sendAnnotationsToMap = self.showPins.on;
+//            self.tracker.sendAnnotationsToMap = self.showPins.on;
         } else {
             [self.mapView removeAnnotations:self.mapView.annotations];
-            self.tracker.sendAnnotationsToMap = self.showPins.on;
+//            self.tracker.sendAnnotationsToMap = self.showPins.on;
         }
         [settings setObject:[NSNumber numberWithBool:self.showPins.on] forKey:@"showPins"];
         [settings synchronize];
@@ -239,7 +239,7 @@
     if (self.showPins.on) {
         [self annotationsCreate];
     }
-    self.tracker.sendAnnotationsToMap = self.showPins.on;
+//    self.tracker.sendAnnotationsToMap = self.showPins.on;
 
     BOOL headingMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"] boolValue];
     if (!headingMode) {

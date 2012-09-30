@@ -18,24 +18,21 @@
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationAccuracy currentAccuracy;
+@property (nonatomic) NSTimeInterval routeDetectionTimeInterval;
+@property (nonatomic, strong) NSArray *locationsArray;
+@property (nonatomic, strong) NSArray *allLocationsArray;
+@property (nonatomic) UITableView *tableView;
+@property (nonatomic) MKMapView *mapView;
+@property (nonatomic) BOOL locationManagerRunning;
+@property (nonatomic) id caller;
+@property (nonatomic, strong) CLLocation *lastLocation;
+@property (weak, nonatomic) UILabel *summary;
+@property (weak, nonatomic) UILabel *currentValues;
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
 - (void)startConnection;
 
-@property (nonatomic, strong) NSArray *locationsArray;
-@property (nonatomic, strong) NSArray *allLocationsArray;
-@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
-
-- (void)addLocation:(CLLocation *)currentLocation;
-
-@property (nonatomic) UITableView *tableView;
-@property (nonatomic) MKMapView *mapView;
-@property (weak, nonatomic) UILabel *summary;
-@property (weak, nonatomic) UILabel *currentValues;
-@property (nonatomic) BOOL locationManagerRunning;
-@property (nonatomic) id caller;
-@property (nonatomic) BOOL sendAnnotationsToMap;
 
 @end
