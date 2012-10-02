@@ -108,6 +108,11 @@
         
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
+        
+//        NSError *error;
+//        [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+//        NSLog(@"removeItemAtURL %@", error.localizedDescription);
+        
         _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
@@ -134,14 +139,19 @@
 
 - (void)performFetch {
     NSError *error;
-    if (![_resultsController performFetch:&error]) {
+    if (![self.resultsController performFetch:&error]) {
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
+//        NSLog(@"self.resultsController.fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
         self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
-        self.numberOfRoutes = self.resultsController.fetchedObjects.count;
+//        self.numberOfRoutes = self.resultsController.fetchedObjects.count;
         [self.tableView reloadData];
         [self updateInfoLabels];
     }
+}
+
+- (NSInteger)numberOfRoutes {
+    return self.resultsController.fetchedObjects.count;
 }
 
 - (void)startNewRoute {
@@ -149,6 +159,7 @@
     [route setXid:[self newid]];
     [route setStartTime:[NSDate date]];
     [route setOverallDistance:[NSNumber numberWithDouble:0.0]];
+//    NSLog(@"newRoute %@", route);
     self.currentRoute = route;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newRoute UIDocumentSaveForOverwriting success");
@@ -197,7 +208,12 @@
 
 - (CLLocation *)lastLocation {
     if (!_lastLocation) {
-        _lastLocation = [NSKeyedUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] objectForKey:@"lastLocation"]];
+        NSData *lastLocationData = [[NSUserDefaults standardUserDefaults] objectForKey:@"lastLocation"];
+        if (!lastLocationData) {
+            _lastLocation = nil;
+        } else {
+            _lastLocation = [NSKeyedUnarchiver unarchiveObjectWithData:lastLocationData];
+        }
     }
     return _lastLocation;
 }
@@ -242,7 +258,7 @@
     if (self.syncing) {
         syncStatus = @" SYNC";
     }
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@m/s%@",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h%@",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
     if (self.currentAccuracy > 0) {
         self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
     } else {
@@ -321,12 +337,22 @@
 }
 
 - (void)clearLocations {
-    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    url = [url URLByAppendingPathComponent:DB_FILE];
-    [[NSFileManager defaultManager] removeItemAtURL:url error:nil];
-    self.locationsDatabase = nil;
-    self.resultsController = nil;
-    [self.tableView reloadData];
+    if (!self.locationManagerRunning) {
+        //    NSLog(@"self.locationsDatabase %@, self.resultsController %@, self.lastLocation %@", self.locationsDatabase, self.resultsController, self.lastLocation);
+        [self.locationsDatabase closeWithCompletionHandler:^(BOOL success) {
+            self.locationsDatabase = nil;
+            self.resultsController = nil;
+            self.lastLocation = nil;
+            NSError *error;
+            NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+            url = [url URLByAppendingPathComponent:DB_FILE];
+            [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+//            NSLog(@"removeItemAtURL error %@", error.localizedDescription);
+            [self.tableView reloadData];
+        }];
+    } else {
+        NSLog(@"LocationManager is running, stop it first");
+    }
 }
 
 
@@ -562,11 +588,18 @@
     return cell;
 }
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) {
+        return UITableViewCellEditingStyleNone;
+    } else {
+        return UITableViewCellEditingStyleDelete;
+    }
+}
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-		
-		Route *route = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        Route *route = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         for (Location *location in route.locations) {
             NSLog(@"location to delete %@", location);
             [self.locationsDatabase.managedObjectContext deleteObject:location];
@@ -576,7 +609,7 @@
         [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"UIDocumentSaveForOverwriting success");
         }];
-    }   
+    }
 
 }
 

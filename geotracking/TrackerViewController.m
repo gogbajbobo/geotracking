@@ -46,10 +46,13 @@
 }
 
 - (IBAction)clearData:(id)sender {
-    
-    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle: @"Clear locations" message: @"Delete?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
-    
-    [clearAlert show];
+    if (!self.tracker.locationManagerRunning) {
+        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle: @"Clear locations" message: @"Delete?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
+        [clearAlert show];
+    } else {
+        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You should stop locations tracking for clear procedure" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+        [clearAlert show];
+    }
     
 }
 
