@@ -108,11 +108,7 @@
         
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
-        
-//        NSError *error;
-//        [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
-//        NSLog(@"removeItemAtURL %@", error.localizedDescription);
-        
+
         _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
@@ -142,9 +138,9 @@
     if (![self.resultsController performFetch:&error]) {
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
-//        NSLog(@"self.resultsController.fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
-        self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
-//        self.numberOfRoutes = self.resultsController.fetchedObjects.count;
+        if (self.resultsController.fetchedObjects.count > 0) {
+            self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
+        }
         [self.tableView reloadData];
         [self updateInfoLabels];
     }
@@ -157,8 +153,22 @@
 - (void)startNewRoute {
     Route *route = (Route *)[NSEntityDescription insertNewObjectForEntityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [route setXid:[self newid]];
-    [route setStartTime:[NSDate date]];
     [route setOverallDistance:[NSNumber numberWithDouble:0.0]];
+    if (self.currentRoute && self.lastLocation) {
+        Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+        [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
+        [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
+        [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
+        [location setSpeed:[NSNumber numberWithDouble:-1]];
+        [location setCourse:[NSNumber numberWithDouble:-1]];
+        [location setTimestamp:[NSDate date]];
+        [location setXid:[self newid]];
+        [route setStartTime:location.timestamp];
+        [route addLocationsObject:location];
+//        NSLog(@"copy lastLocation to new Route");
+    } else {
+        [route setStartTime:[NSDate date]];
+    }
 //    NSLog(@"newRoute %@", route);
     self.currentRoute = route;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
@@ -170,11 +180,10 @@
 
     if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.routeDetectionTimeInterval) {
         [self startNewRoute];
-    } else {
-        NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentRoute.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
-        self.currentRoute.overallDistance = (overallDistance < 0) ? 0 : overallDistance;
     }
-    
+    NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentRoute.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
+    self.currentRoute.overallDistance = ([overallDistance doubleValue] < 0) ? [NSNumber numberWithDouble:0.0] : overallDistance;
+
     Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     CLLocationCoordinate2D coordinate = [currentLocation coordinate];
     [location setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
@@ -199,10 +208,6 @@
         self.lastLocation = currentLocation;
     }];
     [self updateInfoLabels];
-
-//    if (self.sendAnnotationsToMap) {
-//        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:location]];
-//    }
 
 }
 
@@ -579,7 +584,7 @@
     NSTimeInterval routeOverallTime = [route.finishTime timeIntervalSinceDate:route.startTime];
     NSNumber *speed = [NSNumber numberWithDouble:0.0];
     
-    if (routeOverallTime != 0) {
+    if (routeOverallTime > 0) {
         speed = [NSNumber numberWithDouble:(3.6 * [route.overallDistance doubleValue] / routeOverallTime)];
     }
     cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h", [distanceNumberFormatter stringFromNumber:route.overallDistance], [speedNumberFormatter stringFromNumber:speed]];

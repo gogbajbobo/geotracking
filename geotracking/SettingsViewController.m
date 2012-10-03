@@ -24,7 +24,7 @@
 @synthesize tracker = _tracker;
 
 - (IBAction)routeDetectionTimeIntervalChangeValue:(id)sender {
-    [self.routeDetectionTimeIntervalSlider setValue:floor(self.routeDetectionTimeIntervalSlider.value/10)*10];
+    [self.routeDetectionTimeIntervalSlider setValue:floor(self.routeDetectionTimeIntervalSlider.value/30)*30];
     self.tracker.routeDetectionTimeInterval = self.routeDetectionTimeIntervalSlider.value;
     [self updateLabels];
 }
