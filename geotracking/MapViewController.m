@@ -34,10 +34,11 @@
     self.tracker.selectedRouteNumber = self.tracker.numberOfRoutes - self.routeNumberSelector.value;
     self.routeNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber)];
     [self redrawPathLine];
+    [self updateMapView];
 }
 
 - (void)routeNumberSelectorSetup {
-    self.routeNumberSelector.wraps = YES;
+    self.routeNumberSelector.wraps = NO;
     self.routeNumberSelector.stepValue = 1.0;
     self.routeNumberSelector.minimumValue = 1.0;
     self.routeNumberSelector.maximumValue = self.tracker.numberOfRoutes;
@@ -92,7 +93,8 @@
 {
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
     [self annotationsCreate];
-    self.mapView.region = MKCoordinateRegionMake(self.center, self.span);
+//    self.mapView.region = MKCoordinateRegionMake(self.center, self.span);
+    [self.mapView setRegion:MKCoordinateRegionMake(self.center, self.span) animated:YES];
 }
 
 - (void)setMapView:(MKMapView *)mapView
@@ -105,8 +107,8 @@
 
 - (void)annotationsCreate
 {
-//    NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
-    NSArray *locationsArray = self.tracker.allLocationsArray;
+    NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
+//    NSArray *locationsArray = self.tracker.allLocationsArray;
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         
@@ -148,18 +150,19 @@
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
 {
-    MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
 
     if (annotation == mapView.userLocation){
         return nil;
     } else {
+        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
         if (!pinView) {
             pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
-//            pinView.animatesDrop = YES;
+            pinView.animatesDrop = YES;
             pinView.pinColor = MKPinAnnotationColorPurple;
             pinView.canShowCallout = YES;
         }
         pinView.annotation = annotation;
+//        NSLog(@"pinColor %d", pinView.pinColor);
         return pinView;
     }
 }
@@ -181,6 +184,7 @@
 - (MKPolyline *)pathLine {
     
     NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
+//    NSLog(@"locationsArray %@", locationsArray);
     int numberOfLocations = locationsArray.count;
     CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
     if (numberOfLocations > 0) {

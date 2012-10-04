@@ -178,8 +178,10 @@
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
+    NSDate *timestamp = currentLocation.timestamp;
     if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.routeDetectionTimeInterval) {
         [self startNewRoute];
+        timestamp = [NSDate date];
     }
     NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentRoute.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
     self.currentRoute.overallDistance = ([overallDistance doubleValue] < 0) ? [NSNumber numberWithDouble:0.0] : overallDistance;
@@ -191,7 +193,7 @@
     [location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
-    [location setTimestamp:[currentLocation timestamp]];
+    [location setTimestamp:timestamp];
     [location setXid:[self newid]];
     
     if (self.currentRoute.locations.count == 0) {
