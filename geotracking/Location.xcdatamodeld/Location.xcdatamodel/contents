@@ -15,11 +15,12 @@
         <attribute name="finishTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="overallDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="synced" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="xid" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="route" inverseEntity="Location" syncable="YES"/>
     </entity>
     <elements>
         <element name="Location" positionX="-5895" positionY="-2196" width="128" height="180"/>
-        <element name="Route" positionX="-6149" positionY="-2175" width="128" height="120"/>
+        <element name="Route" positionX="-6149" positionY="-2175" width="128" height="135"/>
     </elements>
 </model>

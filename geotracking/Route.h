@@ -2,7 +2,7 @@
 //  Route.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 9/29/12.
+//  Created by Maxim Grigoriev on 10/4/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSNumber * overallDistance;
 @property (nonatomic, retain) NSDate * startTime;
 @property (nonatomic, retain) NSString * xid;
+@property (nonatomic, retain) NSNumber * synced;
 @property (nonatomic, retain) NSSet *locations;
 @end
 

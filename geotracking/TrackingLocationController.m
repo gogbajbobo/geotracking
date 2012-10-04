@@ -375,6 +375,8 @@
     self.locationManagerRunning = NO;
 }
 
+#pragma mark - CLLocationManager
+
 - (CLLocationManager *)locationManager {
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
@@ -389,11 +391,13 @@
     
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
-//    [self updateInfoLabels];
+    [self updateInfoLabels];
     if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
         [self addLocation:newLocation];
     }
 }
+
+#pragma mark - NSURLConnection
 
 - (void)startConnection {
     NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
@@ -423,9 +427,13 @@
 - (NSData *)requestData {
     
     NSPredicate *notSynced = [NSPredicate predicateWithFormat:@"SELF.synced == 0"];
-    NSArray *notSyncedObjects = [self.allLocationsArray filteredArrayUsingPredicate:notSynced];
-    NSLog(@"notSyncedObjects.count %d",notSyncedObjects.count);
-    if (notSyncedObjects.count > 0) {
+    NSArray *notSyncedLocations = [self.allLocationsArray filteredArrayUsingPredicate:notSynced];
+    NSLog(@"notSyncedLocations.count %d",notSyncedLocations.count);
+
+    NSArray *notSyncedRoutes = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:notSynced];
+    NSLog(@"notSyncedRoutes.count %d",notSyncedRoutes.count);
+
+    if (notSyncedLocations.count > 0) {
         
         self.syncing = YES;
     
@@ -438,7 +446,9 @@
         xmlTextWriterStartDocument(xmlTextWriter, "1.0", "UTF-8", NULL);
         
             xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "post");
-            
+        
+// Locations
+        
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
                 xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Location" UTF8String]);
 
@@ -455,38 +465,68 @@
                     xmlTextWriterEndElement(xmlTextWriter); //fields
 
                     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
-                        for (Location *location in notSyncedObjects) {
+                        for (Location *location in notSyncedLocations) {
                             xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-                                if (!location.xid) {
-                                    [location setXid:[self newid]];
-                                    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                                        NSLog(@"setXid UIDocumentSaveForOverwriting success");
-                                    }];
-                                }
-                                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[location.xid UTF8String]);
-                                NSMutableString *locationValues = [NSMutableString string];
-                                for (NSString *propertyName in entityProperties) {
-                                    if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
-                                        if ([propertyName isEqualToString:@"route"]) {
-                                            [locationValues appendFormat:@"%@,",location.route.xid];
-                                        } else {
-                                            [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
-                                        }
+                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[location.xid UTF8String]);
+                            NSMutableString *locationValues = [NSMutableString string];
+                            for (NSString *propertyName in entityProperties) {
+                                if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
+                                    if ([propertyName isEqualToString:@"route"]) {
+                                        [locationValues appendFormat:@"%@,",location.route.xid];
+                                    } else {
+                                        [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
                                     }
                                 }
-                                if (locationValues.length > 0) [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
-                                xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
+                            }
+                            if (locationValues.length > 0) [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
+                            xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
                             xmlTextWriterEndElement(xmlTextWriter); //d
                         }
                     xmlTextWriterEndElement(xmlTextWriter); //cvs
         
                 xmlTextWriterEndElement(xmlTextWriter); //set-of
+
+// Routes
+        
+                xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
+                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Route" UTF8String]);
+
+                    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
+                    NSEntityDescription *routeEntity = [NSEntityDescription entityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+                    entityProperties = [routeEntity.propertiesByName allKeys];
+                    for (NSString *propertyName in entityProperties) {
+                        if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"]||[propertyName isEqualToString:@"locations"])) {
+                            xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
+                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
+                            xmlTextWriterEndElement(xmlTextWriter); //field
+                        }
+                    }
+                    xmlTextWriterEndElement(xmlTextWriter); //fields
+
+                    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
+                    for (Route *route in notSyncedRoutes) {
+                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
+                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[route.xid UTF8String]);
+                        NSMutableString *routeValues = [NSMutableString string];
+                        for (NSString *propertyName in entityProperties) {
+                            if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"]||[propertyName isEqualToString:@"locations"])) {
+                                    [routeValues appendFormat:@"%@,",[route valueForKey:propertyName]];
+                            }
+                        }
+                        if (routeValues.length > 0) [routeValues deleteCharactersInRange:NSMakeRange([routeValues length] - 1, 1)];
+                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[routeValues UTF8String]);
+                        xmlTextWriterEndElement(xmlTextWriter); //d
+                    }
+                    xmlTextWriterEndElement(xmlTextWriter); //cvs
+//
+                xmlTextWriterEndElement(xmlTextWriter); //set-of
+        
         
             xmlTextWriterEndElement(xmlTextWriter); //post
-            
+        
         xmlTextWriterEndDocument(xmlTextWriter);
         xmlFreeTextWriter(xmlTextWriter);
-            
+        
         NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
         xmlBufferFree(xmlBuffer);
         
@@ -529,6 +569,11 @@
         NSArray *matchedObjects = [self.allLocationsArray filteredArrayUsingPredicate:matchedXid];
         Location *location = [matchedObjects lastObject];
         location.synced = [NSNumber numberWithBool:YES];
+        matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
+        Route *route = [matchedObjects lastObject];
+        if (![route.xid isEqualToString:self.currentRoute.xid]) {
+            route.synced = [NSNumber numberWithBool:YES];
+        }
 //        NSLog(@"%@", [matchedObjects lastObject]);
     }
 

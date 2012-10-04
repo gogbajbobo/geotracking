@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C1EB3991616FA0F006A6641 /* Route.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1EB3981616FA0F006A6641 /* Route.m */; };
-		2C1EB39D1616FA0F006A6641 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1EB39C1616FA0F006A6641 /* Location.m */; };
+		2C2BEE34161E0C320019A3EF /* Route.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C2BEE33161E0C310019A3EF /* Route.m */; };
+		2C2BEE37161E0C330019A3EF /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C2BEE36161E0C320019A3EF /* Location.m */; };
 		2C32A0A6161052E200713735 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32A0A5161052E200713735 /* libxml2.dylib */; };
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
@@ -30,10 +30,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2C1EB3971616FA0F006A6641 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Route.h; sourceTree = "<group>"; };
-		2C1EB3981616FA0F006A6641 /* Route.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Route.m; sourceTree = "<group>"; };
-		2C1EB39B1616FA0F006A6641 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		2C1EB39C1616FA0F006A6641 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		2C2BEE32161E0C310019A3EF /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Route.h; sourceTree = "<group>"; };
+		2C2BEE33161E0C310019A3EF /* Route.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Route.m; sourceTree = "<group>"; };
+		2C2BEE35161E0C320019A3EF /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		2C2BEE36161E0C320019A3EF /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		2C32A0A5161052E200713735 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		2C417C6215E80E3F00A3A83D /* TrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerViewController.h; sourceTree = "<group>"; };
 		2C417C6315E80E3F00A3A83D /* TrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerViewController.m; sourceTree = "<group>"; };
@@ -127,10 +127,10 @@
 				2C417C6915E8280B00A3A83D /* MapAnnotation.m */,
 				2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */,
 				2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */,
-				2C1EB3971616FA0F006A6641 /* Route.h */,
-				2C1EB3981616FA0F006A6641 /* Route.m */,
-				2C1EB39B1616FA0F006A6641 /* Location.h */,
-				2C1EB39C1616FA0F006A6641 /* Location.m */,
+				2C2BEE32161E0C310019A3EF /* Route.h */,
+				2C2BEE33161E0C310019A3EF /* Route.m */,
+				2C2BEE35161E0C320019A3EF /* Location.h */,
+				2C2BEE36161E0C320019A3EF /* Location.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
@@ -222,8 +222,8 @@
 				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,
 				2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */,
-				2C1EB3991616FA0F006A6641 /* Route.m in Sources */,
-				2C1EB39D1616FA0F006A6641 /* Location.m in Sources */,
+				2C2BEE34161E0C320019A3EF /* Route.m in Sources */,
+				2C2BEE37161E0C330019A3EF /* Location.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
