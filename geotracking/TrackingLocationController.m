@@ -382,19 +382,33 @@
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
         _locationManager.distanceFilter = self.distanceFilter;
-        _locationManager.desiredAccuracy = self.desiredAccuracy;        
+        _locationManager.desiredAccuracy = self.desiredAccuracy;
+        [_locationManager disallowDeferredLocationUpdates];
     }
     return _locationManager;
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    
+//- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
+
+//    NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
+//    self.currentAccuracy = newLocation.horizontalAccuracy;
+//    [self updateInfoLabels];
+//    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
+//        [self addLocation:newLocation];
+//    }
+
+//}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+
+    CLLocation *newLocation = [locations lastObject];
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
     if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
         [self addLocation:newLocation];
     }
+
 }
 
 #pragma mark - NSURLConnection
