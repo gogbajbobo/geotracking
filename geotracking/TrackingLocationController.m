@@ -176,6 +176,10 @@
     }];
 }
 
+//- (void)addLocations:(NSArray *)locations {
+//    NSLog(@"%d", self.locationManager.pausesLocationUpdatesAutomatically);
+//}
+
 - (void)addLocation:(CLLocation *)currentLocation {
 
     NSDate *timestamp = currentLocation.timestamp;
@@ -383,25 +387,15 @@
         _locationManager.delegate = self;
         _locationManager.distanceFilter = self.distanceFilter;
         _locationManager.desiredAccuracy = self.desiredAccuracy;
-        [_locationManager disallowDeferredLocationUpdates];
+        self.locationManager.pausesLocationUpdatesAutomatically = NO;
     }
     return _locationManager;
 }
 
-//- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-
-//    NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-//    self.currentAccuracy = newLocation.horizontalAccuracy;
-//    [self updateInfoLabels];
-//    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
-//        [self addLocation:newLocation];
-//    }
-
-//}
-
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
-    CLLocation *newLocation = [locations lastObject];
+//    CLLocation *newLocation = [locations lastObject];
+    CLLocation *newLocation = self.locationManager.location;
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
