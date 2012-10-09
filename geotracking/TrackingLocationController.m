@@ -85,7 +85,11 @@
 }
 
 - (NSArray *)locationsArrayForRoute:(NSInteger)routeNumber {
-    return [[[self.resultsController.fetchedObjects objectAtIndex:routeNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
+    if (routeNumber >= 0 && routeNumber < self.resultsController.fetchedObjects.count) {
+        return [[[self.resultsController.fetchedObjects objectAtIndex:routeNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
+    } else {
+        return nil;
+    }
 }
 
 - (void)setSelectedRouteNumber:(NSInteger)selectedRouteNumber {
@@ -154,22 +158,28 @@
     Route *route = (Route *)[NSEntityDescription insertNewObjectForEntityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [route setXid:[self newid]];
     [route setOverallDistance:[NSNumber numberWithDouble:0.0]];
-    if (self.currentRoute && self.lastLocation) {
-        Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-        [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
-        [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
-        [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
-        [location setSpeed:[NSNumber numberWithDouble:-1]];
-        [location setCourse:[NSNumber numberWithDouble:-1]];
-        [location setTimestamp:[NSDate date]];
-        [location setXid:[self newid]];
-        [route setStartTime:location.timestamp];
-        [route addLocationsObject:location];
+    
+//    uncomment if{}else{} to add lastLocation from currentRoute as firstLocation to newRoute
+    
+//    if (self.currentRoute && self.lastLocation) {
+//        Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+//        [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
+//        [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
+//        [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
+//        [location setSpeed:[NSNumber numberWithDouble:-1]];
+//        [location setCourse:[NSNumber numberWithDouble:-1]];
+//        [location setTimestamp:[NSDate date]];
+//        [location setXid:[self newid]];
+//        [route setStartTime:location.timestamp];
+//        [route addLocationsObject:location];
 //        NSLog(@"copy lastLocation to new Route");
-    } else {
+//    } else {
+
         [route setStartTime:[NSDate date]];
-    }
+
+//    }
 //    NSLog(@"newRoute %@", route);
+
     self.currentRoute = route;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newRoute UIDocumentSaveForOverwriting success");
@@ -394,12 +404,14 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
-//    CLLocation *newLocation = [locations lastObject];
-    CLLocation *newLocation = self.locationManager.location;
+    CLLocation *newLocation = [locations lastObject];
+//    CLLocation *newLocation = self.locationManager.location;
+    NSLog(@"newLocation %@",newLocation);
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
     if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
+        NSLog(@"addLocation");
         [self addLocation:newLocation];
     }
 

@@ -1,5 +1,5 @@
 //
-//  OptionsViewController.h
+//  SettingsViewController.h
 //  geotracking
 //
 //  Created by Григорьев Максим on 8/25/12.
