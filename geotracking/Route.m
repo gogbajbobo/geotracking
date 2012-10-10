@@ -2,7 +2,7 @@
 //  Route.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/4/12.
+//  Created by Maxim Grigoriev on 10/10/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -15,8 +15,8 @@
 @dynamic finishTime;
 @dynamic overallDistance;
 @dynamic startTime;
-@dynamic xid;
 @dynamic synced;
+@dynamic xid;
 @dynamic locations;
 
 @end

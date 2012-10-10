@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2840" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="X39-dw-5jp">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="11G63" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="X39-dw-5jp">
     <dependencies>
         <deployment defaultVersion="1536" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1926"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
     <scenes>
         <!--Settings View Controller-->
@@ -246,8 +246,8 @@
                                     <action selector="routeNumberChange:" destination="tND-F5-tUH" eventType="valueChanged" id="t1z-9L-9xr"/>
                                 </connections>
                             </stepper>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Route number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" highlighted="YES" adjustsFontSizeToFit="NO" id="awp-54-FfV">
-                                <rect key="frame" x="143" y="347" width="157" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Track number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" highlighted="YES" adjustsFontSizeToFit="NO" id="awp-54-FfV">
+                                <rect key="frame" x="143" y="347" width="157" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -382,46 +382,6 @@
             <point key="canvasLocation" x="1613" y="-109"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="MapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="headingModeSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="routeNumberLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="routeNumberSelector" candidateClass="UIStepper"/>
-            </relationships>
-        </class>
-        <class className="SettingsViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="best:"/>
-                <relationship kind="action" name="closeView:"/>
-                <relationship kind="action" name="distanceFilterChangeValue:"/>
-                <relationship kind="action" name="hundredMeters:"/>
-                <relationship kind="action" name="kilometer:"/>
-                <relationship kind="action" name="mostBest:"/>
-                <relationship kind="action" name="routeDetectionTimeIntervalChangeValue:"/>
-                <relationship kind="action" name="tenMeters:"/>
-                <relationship kind="action" name="threeKilometers:"/>
-                <relationship kind="outlet" name="desiredAccuracyLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="distanceFilterLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="distanceFilterSlider" candidateClass="UISlider"/>
-                <relationship kind="outlet" name="routeDetectionTimeIntervalLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="routeDetectionTimeIntervalSlider" candidateClass="UISlider"/>
-            </relationships>
-        </class>
-        <class className="TrackerViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/TrackerViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="currentValues" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="startButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="summary" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

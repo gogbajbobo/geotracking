@@ -406,12 +406,12 @@
 
     CLLocation *newLocation = [locations lastObject];
 //    CLLocation *newLocation = self.locationManager.location;
-    NSLog(@"newLocation %@",newLocation);
+//    NSLog(@"newLocation %@",newLocation);
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
     if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
-        NSLog(@"addLocation");
+//        NSLog(@"addLocation");
         [self addLocation:newLocation];
     }
 
