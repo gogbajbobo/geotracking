@@ -156,7 +156,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Route detection time interval, s" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gHd-Jl-e7L">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Track detection time interval, s" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gHd-Jl-e7L">
                                 <rect key="frame" x="20" y="297" width="280" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -382,6 +382,37 @@
             <point key="canvasLocation" x="1613" y="-109"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="headingModeSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+                <relationship kind="outlet" name="trackNumberLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="trackNumberSelector" candidateClass="UIStepper"/>
+            </relationships>
+        </class>
+        <class className="SettingsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="desiredAccuracyLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="distanceFilterLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="distanceFilterSlider" candidateClass="UISlider"/>
+                <relationship kind="outlet" name="trackDetectionTimeIntervalLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="trackDetectionTimeIntervalSlider" candidateClass="UISlider"/>
+            </relationships>
+        </class>
+        <class className="TrackerViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TrackerViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="currentValues" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="startButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="summary" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
