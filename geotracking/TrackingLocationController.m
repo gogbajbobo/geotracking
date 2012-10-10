@@ -119,14 +119,14 @@
         if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
-                NSLog(@"UIDocumentSaveForCreating success");
+                NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
                 [self startNewTrack];
                 [self performFetch];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
             [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
-                NSLog(@"openWithCompletionHandler success");
+                NSLog(@"locationsDatabase openWithCompletionHandler success");
                 [self performFetch];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
@@ -186,15 +186,28 @@
     }];
 }
 
-//- (void)addLocations:(NSArray *)locations {
-//    NSLog(@"%d", self.locationManager.pausesLocationUpdatesAutomatically);
-//}
-
 - (void)addLocation:(CLLocation *)currentLocation {
 
     NSDate *timestamp = currentLocation.timestamp;
     if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.trackDetectionTimeInterval) {
         [self startNewTrack];
+        NSLog(@"%f",[currentLocation distanceFromLocation:self.lastLocation]);
+        NSLog(@"%f",(2 * self.distanceFilter));
+        if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * self.distanceFilter)) {
+            Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+            [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
+            [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
+            [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
+            [location setSpeed:[NSNumber numberWithDouble:-1]];
+            [location setCourse:[NSNumber numberWithDouble:-1]];
+            [location setTimestamp:[NSDate date]];
+            [location setXid:[self newid]];
+            [self.currentTrack setStartTime:location.timestamp];
+            [self.currentTrack addLocationsObject:location];
+            NSLog(@"copy lastLocation to new Track as first location");
+        } else {
+            NSLog(@"no");
+        }
         timestamp = [NSDate date];
     }
     NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentTrack.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
@@ -273,13 +286,18 @@
 }
 
 - (void)updateInfoLabels {
-    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-    [numberFormatter setMaximumFractionDigits:1];
+    
+    NSNumberFormatter *distanceNumberFormatter = [[NSNumberFormatter alloc] init];
+    [distanceNumberFormatter setMaximumFractionDigits:0];
+    
+    NSNumberFormatter *speedNumberFormatter = [[NSNumberFormatter alloc] init];
+    [speedNumberFormatter setMaximumFractionDigits:1];
+
     NSString *syncStatus = @"";
     if (self.syncing) {
         syncStatus = @" SYNC";
     }
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h%@",[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[numberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h%@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
     if (self.currentAccuracy > 0) {
         self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
     } else {
@@ -654,7 +672,7 @@
     if (trackOverallTime > 0) {
         speed = [NSNumber numberWithDouble:(3.6 * [track.overallDistance doubleValue] / trackOverallTime)];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h", [distanceNumberFormatter stringFromNumber:track.overallDistance], [speedNumberFormatter stringFromNumber:speed]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h %dpoints", [distanceNumberFormatter stringFromNumber:track.overallDistance], [speedNumberFormatter stringFromNumber:speed], track.locations.count];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:track.startTime], [finishDateFormatter stringFromDate:track.finishTime]];
 
     return cell;
