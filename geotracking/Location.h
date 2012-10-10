@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-@class Route;
+@class Track;
 
 @interface Location : NSManagedObject
 
@@ -21,6 +21,6 @@
 @property (nonatomic, retain) NSNumber * synced;
 @property (nonatomic, retain) NSDate * timestamp;
 @property (nonatomic, retain) NSString * xid;
-@property (nonatomic, retain) Route *route;
+@property (nonatomic, retain) Track *track;
 
 @end

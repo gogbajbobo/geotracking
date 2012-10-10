@@ -18,7 +18,7 @@
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationAccuracy currentAccuracy;
-@property (nonatomic) NSTimeInterval routeDetectionTimeInterval;
+@property (nonatomic) NSTimeInterval trackDetectionTimeInterval;
 @property (nonatomic, strong) NSArray *locationsArray;
 @property (nonatomic, strong) NSArray *allLocationsArray;
 @property (nonatomic) UITableView *tableView;
@@ -28,14 +28,14 @@
 @property (nonatomic, strong) CLLocation *lastLocation;
 @property (weak, nonatomic) UILabel *summary;
 @property (weak, nonatomic) UILabel *currentValues;
-@property (nonatomic) NSInteger selectedRouteNumber;
-@property (nonatomic) NSInteger numberOfRoutes;
+@property (nonatomic) NSInteger selectedTrackNumber;
+@property (nonatomic) NSInteger numberOfTracks;
 
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
 - (void)startConnection;
-- (NSArray *)locationsArrayForRoute:(NSInteger)routeNumber;
+- (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 
 @end

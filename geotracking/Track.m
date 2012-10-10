@@ -1,16 +1,16 @@
 //
-//  Route.m
+//  Track.m
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 10/10/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Route.h"
+#import "Track.h"
 #import "Location.h"
 
 
-@implementation Route
+@implementation Track
 
 @dynamic finishTime;
 @dynamic overallDistance;

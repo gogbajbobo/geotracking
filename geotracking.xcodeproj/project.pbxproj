@@ -14,7 +14,7 @@
 		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
-		2CD4D7B2162563F5007CFE40 /* Route.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD4D7B1162563F5007CFE40 /* Route.m */; };
+		2CD4D7B2162563F5007CFE40 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD4D7B1162563F5007CFE40 /* Track.m */; };
 		2CD4D7B5162563F5007CFE40 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD4D7B4162563F5007CFE40 /* Location.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
@@ -41,8 +41,8 @@
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		2CD4D7B0162563F4007CFE40 /* Route.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Route.h; sourceTree = "<group>"; };
-		2CD4D7B1162563F5007CFE40 /* Route.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Route.m; sourceTree = "<group>"; };
+		2CD4D7B0162563F4007CFE40 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track.h; sourceTree = "<group>"; };
+		2CD4D7B1162563F5007CFE40 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track.m; sourceTree = "<group>"; };
 		2CD4D7B3162563F5007CFE40 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
 		2CD4D7B4162563F5007CFE40 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,8 +131,8 @@
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
 				2CD4D7B3162563F5007CFE40 /* Location.h */,
 				2CD4D7B4162563F5007CFE40 /* Location.m */,
-				2CD4D7B0162563F4007CFE40 /* Route.h */,
-				2CD4D7B1162563F5007CFE40 /* Route.m */,
+				2CD4D7B0162563F4007CFE40 /* Track.h */,
+				2CD4D7B1162563F5007CFE40 /* Track.m */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;
@@ -222,7 +222,7 @@
 				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,
 				2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */,
-				2CD4D7B2162563F5007CFE40 /* Route.m in Sources */,
+				2CD4D7B2162563F5007CFE40 /* Track.m in Sources */,
 				2CD4D7B5162563F5007CFE40 /* Location.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

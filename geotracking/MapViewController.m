@@ -15,8 +15,8 @@
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *headingModeSwitch;
-@property (weak, nonatomic) IBOutlet UILabel *routeNumberLabel;
-@property (weak, nonatomic) IBOutlet UIStepper *routeNumberSelector;
+@property (weak, nonatomic) IBOutlet UILabel *trackNumberLabel;
+@property (weak, nonatomic) IBOutlet UIStepper *trackNumberSelector;
 
 @end
 
@@ -30,19 +30,19 @@
 @synthesize tracker = _tracker;
 
 
-- (IBAction)routeNumberChange:(id)sender {
-    self.tracker.selectedRouteNumber = self.tracker.numberOfRoutes - self.routeNumberSelector.value;
-    self.routeNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber)];
+- (IBAction)trackNumberChange:(id)sender {
+    self.tracker.selectedTrackNumber = self.tracker.numberOfTracks - self.trackNumberSelector.value;
+    self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self redrawPathLine];
     [self updateMapView];
 }
 
-- (void)routeNumberSelectorSetup {
-    self.routeNumberSelector.wraps = NO;
-    self.routeNumberSelector.stepValue = 1.0;
-    self.routeNumberSelector.minimumValue = 1.0;
-    self.routeNumberSelector.maximumValue = self.tracker.numberOfRoutes;
-    self.routeNumberSelector.value = self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber;
+- (void)trackNumberSelectorSetup {
+    self.trackNumberSelector.wraps = NO;
+    self.trackNumberSelector.stepValue = 1.0;
+    self.trackNumberSelector.minimumValue = 1.0;
+    self.trackNumberSelector.maximumValue = self.tracker.numberOfTracks;
+    self.trackNumberSelector.value = self.tracker.numberOfTracks - self.tracker.selectedTrackNumber;
 }
 
 - (void)redrawPathLine {
@@ -107,7 +107,7 @@
 
 - (void)annotationsCreate
 {
-    NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
+    NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
 //    NSArray *locationsArray = self.tracker.allLocationsArray;
     if (locationsArray.count > 0) {
         Location *location = (Location *)[locationsArray objectAtIndex:0];
@@ -170,10 +170,10 @@
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
     
     MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
-    if (overlay.title == @"currentRoute") {
+    if (overlay.title == @"currentTrack") {
         pathView.strokeColor = [UIColor blueColor];
         pathView.lineWidth = 4.0;
-    } else if (overlay.title == @"allRoutes") {
+    } else if (overlay.title == @"allTracks") {
         pathView.strokeColor = [UIColor grayColor];
         pathView.lineWidth = 2.0;
     }
@@ -183,7 +183,7 @@
 
 - (MKPolyline *)pathLine {
     
-    NSArray *locationsArray = [self.tracker locationsArrayForRoute:self.tracker.selectedRouteNumber];
+    NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
 //    NSLog(@"locationsArray %@", locationsArray);
     int numberOfLocations = locationsArray.count;
     CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
@@ -196,7 +196,7 @@
         }
     }
     MKPolyline *pathLine = [MKPolyline polylineWithCoordinates:annotationsCoordinates count:numberOfLocations];
-    pathLine.title = @"currentRoute";
+    pathLine.title = @"currentTrack";
     return pathLine;
 }
 
@@ -214,7 +214,7 @@
         }
     }
     MKPolyline *pathLine = [MKPolyline polylineWithCoordinates:annotationsCoordinates count:numberOfLocations];
-    pathLine.title = @"allRoutes";
+    pathLine.title = @"allTracks";
     return pathLine;
 }
 
@@ -263,11 +263,11 @@
         self.mapSwitch.selectedSegmentIndex = 2;
     }
     
-    self.routeNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfRoutes - self.tracker.selectedRouteNumber)];
+    self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
     [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
     [self annotationsCreate];
-    [self routeNumberSelectorSetup];
+    [self trackNumberSelectorSetup];
 
 }
 
@@ -280,8 +280,8 @@
     self.mapView.delegate = nil;
     [self setMapSwitch:nil];
     [self setHeadingModeSwitch:nil];
-    [self setRouteNumberLabel:nil];
-    [self setRouteNumberSelector:nil];
+    [self setTrackNumberLabel:nil];
+    [self setTrackNumberSelector:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }

@@ -1,5 +1,5 @@
 //
-//  Route.h
+//  Track.h
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 10/10/12.
@@ -11,7 +11,7 @@
 
 @class Location;
 
-@interface Route : NSManagedObject
+@interface Track : NSManagedObject
 
 @property (nonatomic, retain) NSDate * finishTime;
 @property (nonatomic, retain) NSNumber * overallDistance;
@@ -21,7 +21,7 @@
 @property (nonatomic, retain) NSSet *locations;
 @end
 
-@interface Route (CoreDataGeneratedAccessors)
+@interface Track (CoreDataGeneratedAccessors)
 
 - (void)addLocationsObject:(Location *)value;
 - (void)removeLocationsObject:(Location *)value;

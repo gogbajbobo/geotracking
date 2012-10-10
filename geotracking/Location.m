@@ -7,7 +7,7 @@
 //
 
 #import "Location.h"
-#import "Route.h"
+#import "Track.h"
 
 
 @implementation Location
@@ -20,6 +20,6 @@
 @dynamic synced;
 @dynamic timestamp;
 @dynamic xid;
-@dynamic route;
+@dynamic track;
 
 @end

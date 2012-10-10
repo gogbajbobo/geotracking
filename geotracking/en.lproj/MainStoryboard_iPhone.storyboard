@@ -167,7 +167,7 @@
                                 <rect key="frame" x="18" y="326" width="284" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="routeDetectionTimeIntervalChangeValue:" destination="J3s-3h-Q2X" eventType="valueChanged" id="TaK-fJ-GvQ"/>
+                                    <action selector="trackDetectionTimeIntervalChangeValue:" destination="J3s-3h-Q2X" eventType="valueChanged" id="pPZ-Ww-jqg"/>
                                 </connections>
                             </slider>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rGO-gC-cku">
@@ -186,8 +186,8 @@
                         <outlet property="desiredAccuracyLabel" destination="mQC-6K-xmV" id="Eoc-h2-zE0"/>
                         <outlet property="distanceFilterLabel" destination="d3g-hU-vwI" id="tsx-jE-wTK"/>
                         <outlet property="distanceFilterSlider" destination="ZRJ-7h-pl1" id="7vV-Zp-bsi"/>
-                        <outlet property="routeDetectionTimeIntervalLabel" destination="rGO-gC-cku" id="yEl-ef-JZR"/>
-                        <outlet property="routeDetectionTimeIntervalSlider" destination="Xsu-rk-5Iv" id="acN-ht-qGi"/>
+                        <outlet property="trackDetectionTimeIntervalLabel" destination="rGO-gC-cku" id="8qZ-w7-rnT"/>
+                        <outlet property="trackDetectionTimeIntervalSlider" destination="Xsu-rk-5Iv" id="0VY-Uh-iFW"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jrz-Eh-j7o" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -243,7 +243,7 @@
                                 <rect key="frame" x="206" y="376" width="94" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <connections>
-                                    <action selector="routeNumberChange:" destination="tND-F5-tUH" eventType="valueChanged" id="t1z-9L-9xr"/>
+                                    <action selector="trackNumberChange:" destination="tND-F5-tUH" eventType="valueChanged" id="rgX-At-gvR"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Track number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" highlighted="YES" adjustsFontSizeToFit="NO" id="awp-54-FfV">
@@ -273,8 +273,8 @@
                         <outlet property="headingModeSwitch" destination="3NF-Xd-b6f" id="Ar2-5N-MR6"/>
                         <outlet property="mapSwitch" destination="e6X-Iq-7HB" id="DqX-O3-snF"/>
                         <outlet property="mapView" destination="DOi-n5-e9c" id="XI9-Y0-Bnw"/>
-                        <outlet property="routeNumberLabel" destination="Tnc-BE-auB" id="KeI-34-7UH"/>
-                        <outlet property="routeNumberSelector" destination="cfv-gg-Gqn" id="HRK-ev-CML"/>
+                        <outlet property="trackNumberLabel" destination="Tnc-BE-auB" id="uYs-eO-chs"/>
+                        <outlet property="trackNumberSelector" destination="cfv-gg-Gqn" id="DMq-PP-DP6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diD-SM-aEE" userLabel="First Responder" sceneMemberID="firstResponder"/>

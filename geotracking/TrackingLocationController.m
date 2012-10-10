@@ -9,7 +9,7 @@
 #import "TrackingLocationController.h"
 #import "AppDelegate.h"
 #import "Location.h"
-#import "Route.h"
+#import "Track.h"
 #import "MapAnnotation.h"
 #import "TrackerViewController.h"
 
@@ -24,7 +24,7 @@
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) BOOL syncing;
-@property (nonatomic, strong) Route *currentRoute;
+@property (nonatomic, strong) Track *currentTrack;
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 @end
@@ -50,12 +50,12 @@
 @synthesize resultsController = _resultsController;
 @synthesize responseData = _responseData;
 @synthesize syncing = _syncing;
-@synthesize currentRoute = _currentRoute;
+@synthesize currentTrack = _currentTrack;
 @synthesize lastLocation = _lastLocation;
 @synthesize allLocationsArray = _allLocationsArray;
-@synthesize routeDetectionTimeInterval = _routeDetectionTimeInterval;
-@synthesize selectedRouteNumber = _selectedRouteNumber;
-@synthesize numberOfRoutes = _numberOfRoutes;
+@synthesize trackDetectionTimeInterval = _trackDetectionTimeInterval;
+@synthesize selectedTrackNumber = _selectedTrackNumber;
+@synthesize numberOfTracks = _numberOfTracks;
 
 #pragma mark - methods
 
@@ -68,7 +68,7 @@
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Route"];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Track"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:NO selector:@selector(compare:)]];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
@@ -78,25 +78,25 @@
 
 - (NSArray *)allLocationsArray {
     NSMutableSet *allLocations = [NSMutableSet set];
-    for (Route *route in self.resultsController.fetchedObjects) {
-        [allLocations unionSet:route.locations];
+    for (Track *track in self.resultsController.fetchedObjects) {
+        [allLocations unionSet:track.locations];
     }
     return [allLocations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
 }
 
-- (NSArray *)locationsArrayForRoute:(NSInteger)routeNumber {
-    if (routeNumber >= 0 && routeNumber < self.resultsController.fetchedObjects.count) {
-        return [[[self.resultsController.fetchedObjects objectAtIndex:routeNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
+- (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber {
+    if (trackNumber >= 0 && trackNumber < self.resultsController.fetchedObjects.count) {
+        return [[[self.resultsController.fetchedObjects objectAtIndex:trackNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
     } else {
         return nil;
     }
 }
 
-- (void)setSelectedRouteNumber:(NSInteger)selectedRouteNumber {
-    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedRouteNumber inSection:0]] setSelected:NO];
-    _selectedRouteNumber = selectedRouteNumber;
-    self.locationsArray = [self locationsArrayForRoute:selectedRouteNumber];
-    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedRouteNumber inSection:0]] setSelected:YES];
+- (void)setSelectedTrackNumber:(NSInteger)selectedTrackNumber {
+    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedTrackNumber inSection:0]] setSelected:NO];
+    _selectedTrackNumber = selectedTrackNumber;
+    self.locationsArray = [self locationsArrayForTrack:selectedTrackNumber];
+    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedTrackNumber inSection:0]] setSelected:YES];
 }
 
 - (UIManagedDocument *)locationsDatabase {
@@ -120,7 +120,7 @@
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
                 NSLog(@"UIDocumentSaveForCreating success");
-                [self startNewRoute];
+                [self startNewTrack];
                 [self performFetch];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
@@ -143,25 +143,25 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         if (self.resultsController.fetchedObjects.count > 0) {
-            self.currentRoute = [self.resultsController.fetchedObjects objectAtIndex:0];
+            self.currentTrack = [self.resultsController.fetchedObjects objectAtIndex:0];
         }
         [self.tableView reloadData];
         [self updateInfoLabels];
     }
 }
 
-- (NSInteger)numberOfRoutes {
+- (NSInteger)numberOfTracks {
     return self.resultsController.fetchedObjects.count;
 }
 
-- (void)startNewRoute {
-    Route *route = (Route *)[NSEntityDescription insertNewObjectForEntityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-    [route setXid:[self newid]];
-    [route setOverallDistance:[NSNumber numberWithDouble:0.0]];
+- (void)startNewTrack {
+    Track *track = (Track *)[NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+    [track setXid:[self newid]];
+    [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     
-//    uncomment if{}else{} to add lastLocation from currentRoute as firstLocation to newRoute
+//    uncomment if{}else{} to add lastLocation from currentTrack as firstLocation to newTrack
     
-//    if (self.currentRoute && self.lastLocation) {
+//    if (self.currentTrack && self.lastLocation) {
 //        Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
 //        [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
 //        [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
@@ -170,19 +170,19 @@
 //        [location setCourse:[NSNumber numberWithDouble:-1]];
 //        [location setTimestamp:[NSDate date]];
 //        [location setXid:[self newid]];
-//        [route setStartTime:location.timestamp];
-//        [route addLocationsObject:location];
-//        NSLog(@"copy lastLocation to new Route");
+//        [track setStartTime:location.timestamp];
+//        [track addLocationsObject:location];
+//        NSLog(@"copy lastLocation to new Track");
 //    } else {
 
-        [route setStartTime:[NSDate date]];
+        [track setStartTime:[NSDate date]];
 
 //    }
-//    NSLog(@"newRoute %@", route);
+//    NSLog(@"newTrack %@", track);
 
-    self.currentRoute = route;
+    self.currentTrack = track;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"newRoute UIDocumentSaveForOverwriting success");
+        NSLog(@"newTrack UIDocumentSaveForOverwriting success");
     }];
 }
 
@@ -193,12 +193,12 @@
 - (void)addLocation:(CLLocation *)currentLocation {
 
     NSDate *timestamp = currentLocation.timestamp;
-    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.routeDetectionTimeInterval) {
-        [self startNewRoute];
+    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.trackDetectionTimeInterval) {
+        [self startNewTrack];
         timestamp = [NSDate date];
     }
-    NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentRoute.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
-    self.currentRoute.overallDistance = ([overallDistance doubleValue] < 0) ? [NSNumber numberWithDouble:0.0] : overallDistance;
+    NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentTrack.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
+    self.currentTrack.overallDistance = ([overallDistance doubleValue] < 0) ? [NSNumber numberWithDouble:0.0] : overallDistance;
 
     Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     CLLocationCoordinate2D coordinate = [currentLocation coordinate];
@@ -210,11 +210,11 @@
     [location setTimestamp:timestamp];
     [location setXid:[self newid]];
     
-    if (self.currentRoute.locations.count == 0) {
-        self.currentRoute.startTime = location.timestamp;
+    if (self.currentTrack.locations.count == 0) {
+        self.currentTrack.startTime = location.timestamp;
     }
-    self.currentRoute.finishTime = location.timestamp;
-    [self.currentRoute addLocationsObject:location];
+    self.currentTrack.finishTime = location.timestamp;
+    [self.currentTrack addLocationsObject:location];
     
 //    NSLog(@"currentLocation %@",currentLocation);
 
@@ -251,8 +251,8 @@
 - (CLLocationDistance)overallDistance {
 
     CLLocationDistance overallDistance = 0.0;
-    for (Route *route in self.resultsController.fetchedObjects) {
-        overallDistance = overallDistance + [route.overallDistance doubleValue];
+    for (Track *track in self.resultsController.fetchedObjects) {
+        overallDistance = overallDistance + [track.overallDistance doubleValue];
     }
     return overallDistance;
 
@@ -260,13 +260,13 @@
 
 - (CLLocationSpeed)averageSpeed {
     
-    NSTimeInterval routeOverallTime = 0;
-    for (Route *route in self.resultsController.fetchedObjects) {
-        routeOverallTime = routeOverallTime + [route.finishTime timeIntervalSinceDate:route.startTime];
+    NSTimeInterval trackOverallTime = 0;
+    for (Track *track in self.resultsController.fetchedObjects) {
+        trackOverallTime = trackOverallTime + [track.finishTime timeIntervalSinceDate:track.startTime];
     }
     CLLocationSpeed averageSpeed = 0.0;
-    if (routeOverallTime != 0) {
-        averageSpeed = 3.6 * self.overallDistance / routeOverallTime;
+    if (trackOverallTime != 0) {
+        averageSpeed = 3.6 * self.overallDistance / trackOverallTime;
     }
     return averageSpeed;
     
@@ -287,25 +287,25 @@
     }
 }
 
-- (NSTimeInterval)routeDetectionTimeInterval {
-    if (!_routeDetectionTimeInterval) {
-        NSNumber *routeDetectionTimeInterval = [[NSUserDefaults standardUserDefaults] objectForKey:@"routeDetectionTimeInterval"];
-        if (routeDetectionTimeInterval == nil) {
+- (NSTimeInterval)trackDetectionTimeInterval {
+    if (!_trackDetectionTimeInterval) {
+        NSNumber *trackDetectionTimeInterval = [[NSUserDefaults standardUserDefaults] objectForKey:@"trackDetectionTimeInterval"];
+        if (trackDetectionTimeInterval == nil) {
             NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _routeDetectionTimeInterval = 300;
-            [settings setObject:[NSNumber numberWithDouble:_routeDetectionTimeInterval] forKey:@"routeDetectionTimeInterval"];
+            _trackDetectionTimeInterval = 300;
+            [settings setObject:[NSNumber numberWithDouble:_trackDetectionTimeInterval] forKey:@"trackDetectionTimeInterval"];
             [settings synchronize];
         } else {
-            _routeDetectionTimeInterval = [routeDetectionTimeInterval doubleValue];
+            _trackDetectionTimeInterval = [trackDetectionTimeInterval doubleValue];
         }
     }
-    return _routeDetectionTimeInterval;
+    return _trackDetectionTimeInterval;
 }
 
-- (void)setRouteDetectionTimeInterval:(NSTimeInterval)routeDetectionTimeInterval {
-    _routeDetectionTimeInterval = routeDetectionTimeInterval;
+- (void)setTrackDetectionTimeInterval:(NSTimeInterval)trackDetectionTimeInterval {
+    _trackDetectionTimeInterval = trackDetectionTimeInterval;
     NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [settings setObject:[NSNumber numberWithDouble:_routeDetectionTimeInterval] forKey:@"routeDetectionTimeInterval"];
+    [settings setObject:[NSNumber numberWithDouble:_trackDetectionTimeInterval] forKey:@"trackDetectionTimeInterval"];
     [settings synchronize];
 }
 
@@ -450,8 +450,8 @@
     NSArray *notSyncedLocations = [self.allLocationsArray filteredArrayUsingPredicate:notSynced];
     NSLog(@"notSyncedLocations.count %d",notSyncedLocations.count);
 
-    NSArray *notSyncedRoutes = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:notSynced];
-    NSLog(@"notSyncedRoutes.count %d",notSyncedRoutes.count);
+    NSArray *notSyncedTracks = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:notSynced];
+    NSLog(@"notSyncedTracks.count %d",notSyncedTracks.count);
 
     if (notSyncedLocations.count > 0) {
         
@@ -491,8 +491,8 @@
                             NSMutableString *locationValues = [NSMutableString string];
                             for (NSString *propertyName in entityProperties) {
                                 if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
-                                    if ([propertyName isEqualToString:@"route"]) {
-                                        [locationValues appendFormat:@"%@,",location.route.xid];
+                                    if ([propertyName isEqualToString:@"track"]) {
+                                        [locationValues appendFormat:@"%@,",location.track.xid];
                                     } else {
                                         [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
                                     }
@@ -506,14 +506,14 @@
         
                 xmlTextWriterEndElement(xmlTextWriter); //set-of
 
-// Routes
+// Tracks
         
                 xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
-                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Route" UTF8String]);
+                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Track" UTF8String]);
 
                     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
-                    NSEntityDescription *routeEntity = [NSEntityDescription entityForName:@"Route" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-                    entityProperties = [routeEntity.propertiesByName allKeys];
+                    NSEntityDescription *trackEntity = [NSEntityDescription entityForName:@"Track" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+                    entityProperties = [trackEntity.propertiesByName allKeys];
                     for (NSString *propertyName in entityProperties) {
                         if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"]||[propertyName isEqualToString:@"locations"])) {
                             xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
@@ -524,17 +524,17 @@
                     xmlTextWriterEndElement(xmlTextWriter); //fields
 
                     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
-                    for (Route *route in notSyncedRoutes) {
+                    for (Track *track in notSyncedTracks) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[route.xid UTF8String]);
-                        NSMutableString *routeValues = [NSMutableString string];
+                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[track.xid UTF8String]);
+                        NSMutableString *trackValues = [NSMutableString string];
                         for (NSString *propertyName in entityProperties) {
                             if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"]||[propertyName isEqualToString:@"locations"])) {
-                                    [routeValues appendFormat:@"%@,",[route valueForKey:propertyName]];
+                                    [trackValues appendFormat:@"%@,",[track valueForKey:propertyName]];
                             }
                         }
-                        if (routeValues.length > 0) [routeValues deleteCharactersInRange:NSMakeRange([routeValues length] - 1, 1)];
-                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[routeValues UTF8String]);
+                        if (trackValues.length > 0) [trackValues deleteCharactersInRange:NSMakeRange([trackValues length] - 1, 1)];
+                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[trackValues UTF8String]);
                         xmlTextWriterEndElement(xmlTextWriter); //d
                     }
                     xmlTextWriterEndElement(xmlTextWriter); //cvs
@@ -590,9 +590,9 @@
         Location *location = [matchedObjects lastObject];
         location.synced = [NSNumber numberWithBool:YES];
         matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
-        Route *route = [matchedObjects lastObject];
-        if (![route.xid isEqualToString:self.currentRoute.xid]) {
-            route.synced = [NSNumber numberWithBool:YES];
+        Track *track = [matchedObjects lastObject];
+        if (![track.xid isEqualToString:self.currentTrack.xid]) {
+            track.synced = [NSNumber numberWithBool:YES];
         }
 //        NSLog(@"%@", [matchedObjects lastObject]);
     }
@@ -623,7 +623,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return @"Routes";
+    return @"Tracks";
 }
 
 
@@ -632,7 +632,7 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    Route *route = (Route *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+    Track *track = (Track *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
 
     NSDateFormatter *startDateFormatter = [[NSDateFormatter alloc] init];
     [startDateFormatter setDateStyle:NSDateFormatterShortStyle];
@@ -648,14 +648,14 @@
     NSNumberFormatter *speedNumberFormatter = [[NSNumberFormatter alloc] init];
     [speedNumberFormatter setMaximumFractionDigits:1];
     
-    NSTimeInterval routeOverallTime = [route.finishTime timeIntervalSinceDate:route.startTime];
+    NSTimeInterval trackOverallTime = [track.finishTime timeIntervalSinceDate:track.startTime];
     NSNumber *speed = [NSNumber numberWithDouble:0.0];
     
-    if (routeOverallTime > 0) {
-        speed = [NSNumber numberWithDouble:(3.6 * [route.overallDistance doubleValue] / routeOverallTime)];
+    if (trackOverallTime > 0) {
+        speed = [NSNumber numberWithDouble:(3.6 * [track.overallDistance doubleValue] / trackOverallTime)];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h", [distanceNumberFormatter stringFromNumber:route.overallDistance], [speedNumberFormatter stringFromNumber:speed]];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:route.startTime], [finishDateFormatter stringFromDate:route.finishTime]];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h", [distanceNumberFormatter stringFromNumber:track.overallDistance], [speedNumberFormatter stringFromNumber:speed]];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:track.startTime], [finishDateFormatter stringFromDate:track.finishTime]];
 
     return cell;
 }
@@ -671,13 +671,13 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Route *route = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        for (Location *location in route.locations) {
-            NSLog(@"location to delete %@", location);
+        Track *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        for (Location *location in track.locations) {
+//            NSLog(@"location to delete %@", location);
             [self.locationsDatabase.managedObjectContext deleteObject:location];
         }
-        NSLog(@"route to delete %@", route);
-        [self.locationsDatabase.managedObjectContext deleteObject:route];
+//        NSLog(@"track to delete %@", track);
+        [self.locationsDatabase.managedObjectContext deleteObject:track];
         [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"UIDocumentSaveForOverwriting success");
         }];
@@ -687,8 +687,8 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    self.selectedRouteNumber = indexPath.row;
-    self.locationsArray = [self locationsArrayForRoute:indexPath.row];
+    self.selectedTrackNumber = indexPath.row;
+    self.locationsArray = [self locationsArrayForTrack:indexPath.row];
     return indexPath;
 
 }
