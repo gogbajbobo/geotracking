@@ -12,10 +12,14 @@
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
 		2C81523115E6A7D300A886E1 /* Location.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */; };
+		2CB24B541637F02F0040A211 /* Network.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B531637F02F0040A211 /* Network.m */; };
+		2CB24B571637F02F0040A211 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B561637F02F0040A211 /* Location.m */; };
+		2CB24B5A1637F02F0040A211 /* Datum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B591637F02F0040A211 /* Datum.m */; };
+		2CB24B5D1637F02F0040A211 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B5C1637F02F0040A211 /* Track.m */; };
+		2CB24B601637F02F0040A211 /* Interest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B5F1637F02F0040A211 /* Interest.m */; };
+		2CB24B631637F02F0040A211 /* Spot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B621637F02F0040A211 /* Spot.m */; };
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
-		2CD4D7B2162563F5007CFE40 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD4D7B1162563F5007CFE40 /* Track.m */; };
-		2CD4D7B5162563F5007CFE40 /* Location.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD4D7B4162563F5007CFE40 /* Location.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
@@ -38,13 +42,21 @@
 		2C417C6815E8280B00A3A83D /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		2C417C6915E8280B00A3A83D /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
 		2C81523015E6A7D300A886E1 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
+		2CB24B521637F02F0040A211 /* Network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Network.h; sourceTree = "<group>"; };
+		2CB24B531637F02F0040A211 /* Network.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Network.m; sourceTree = "<group>"; };
+		2CB24B551637F02F0040A211 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
+		2CB24B561637F02F0040A211 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
+		2CB24B581637F02F0040A211 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
+		2CB24B591637F02F0040A211 /* Datum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datum.m; sourceTree = "<group>"; };
+		2CB24B5B1637F02F0040A211 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track.h; sourceTree = "<group>"; };
+		2CB24B5C1637F02F0040A211 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track.m; sourceTree = "<group>"; };
+		2CB24B5E1637F02F0040A211 /* Interest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Interest.h; sourceTree = "<group>"; };
+		2CB24B5F1637F02F0040A211 /* Interest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Interest.m; sourceTree = "<group>"; };
+		2CB24B611637F02F0040A211 /* Spot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spot.h; sourceTree = "<group>"; };
+		2CB24B621637F02F0040A211 /* Spot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spot.m; sourceTree = "<group>"; };
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		2CD4D7B0162563F4007CFE40 /* Track.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track.h; sourceTree = "<group>"; };
-		2CD4D7B1162563F5007CFE40 /* Track.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track.m; sourceTree = "<group>"; };
-		2CD4D7B3162563F5007CFE40 /* Location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Location.h; sourceTree = "<group>"; };
-		2CD4D7B4162563F5007CFE40 /* Location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Location.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracking.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE471FF15E3FEEC00B092DB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE4720115E3FEEC00B092DB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -129,10 +141,18 @@
 				2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */,
 				2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
-				2CD4D7B3162563F5007CFE40 /* Location.h */,
-				2CD4D7B4162563F5007CFE40 /* Location.m */,
-				2CD4D7B0162563F4007CFE40 /* Track.h */,
-				2CD4D7B1162563F5007CFE40 /* Track.m */,
+				2CB24B611637F02F0040A211 /* Spot.h */,
+				2CB24B621637F02F0040A211 /* Spot.m */,
+				2CB24B5E1637F02F0040A211 /* Interest.h */,
+				2CB24B5F1637F02F0040A211 /* Interest.m */,
+				2CB24B5B1637F02F0040A211 /* Track.h */,
+				2CB24B5C1637F02F0040A211 /* Track.m */,
+				2CB24B581637F02F0040A211 /* Datum.h */,
+				2CB24B591637F02F0040A211 /* Datum.m */,
+				2CB24B551637F02F0040A211 /* Location.h */,
+				2CB24B561637F02F0040A211 /* Location.m */,
+				2CB24B521637F02F0040A211 /* Network.h */,
+				2CB24B531637F02F0040A211 /* Network.m */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;
@@ -222,8 +242,12 @@
 				2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */,
 				2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */,
-				2CD4D7B2162563F5007CFE40 /* Track.m in Sources */,
-				2CD4D7B5162563F5007CFE40 /* Location.m in Sources */,
+				2CB24B541637F02F0040A211 /* Network.m in Sources */,
+				2CB24B571637F02F0040A211 /* Location.m in Sources */,
+				2CB24B5A1637F02F0040A211 /* Datum.m in Sources */,
+				2CB24B5D1637F02F0040A211 /* Track.m in Sources */,
+				2CB24B601637F02F0040A211 /* Interest.m in Sources */,
+				2CB24B631637F02F0040A211 /* Spot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

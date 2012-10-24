@@ -2,7 +2,7 @@
 //  Location.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/10/12.
+//  Created by Maxim Grigoriev on 10/24/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -18,8 +18,6 @@
 @dynamic longitude;
 @dynamic speed;
 @dynamic synced;
-@dynamic timestamp;
-@dynamic xid;
 @dynamic track;
 
 @end

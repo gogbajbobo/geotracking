@@ -137,7 +137,7 @@
         center.latitude = (maxLat + minLat)/2;
         self.center = center;
         //    NSLog(@"center %f %f",center.longitude, center.latitude);
-        int zoomScale = 2;
+        int zoomScale = 4;
         MKCoordinateSpan span;
         span.longitudeDelta = zoomScale * (maxLon - minLon);
         span.latitudeDelta = zoomScale * (maxLat - minLat);
