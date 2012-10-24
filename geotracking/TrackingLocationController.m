@@ -605,12 +605,19 @@
     if ([elementName isEqualToString:@"ok"]) {
         NSPredicate *matchedXid = [NSPredicate predicateWithFormat:@"SELF.xid == %@",[attributeDict valueForKey:@"xid"]];
         NSArray *matchedObjects = [self.allLocationsArray filteredArrayUsingPredicate:matchedXid];
-        Location *location = [matchedObjects lastObject];
-        location.synced = [NSNumber numberWithBool:YES];
-        matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
-        Track *track = [matchedObjects lastObject];
-        if (![track.xid isEqualToString:self.currentTrack.xid]) {
-            track.synced = [NSNumber numberWithBool:YES];
+        if (matchedObjects.count > 0) {
+            Location *location = [matchedObjects lastObject];
+            location.synced = [NSNumber numberWithBool:YES];
+            location.lastSyncTimestamp = [NSDate date];
+        } else {
+            matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
+            if (matchedObjects.count > 0) {
+                Track *track = [matchedObjects lastObject];
+                if (![track.xid isEqualToString:self.currentTrack.xid]) {
+                    track.synced = [NSNumber numberWithBool:YES];
+                }
+                track.lastSyncTimestamp = [NSDate date];
+            }
         }
 //        NSLog(@"%@", [matchedObjects lastObject]);
     }
