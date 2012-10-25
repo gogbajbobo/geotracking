@@ -18,6 +18,8 @@
 		2CB24B5D1637F02F0040A211 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B5C1637F02F0040A211 /* Track.m */; };
 		2CB24B601637F02F0040A211 /* Interest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B5F1637F02F0040A211 /* Interest.m */; };
 		2CB24B631637F02F0040A211 /* Spot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B621637F02F0040A211 /* Spot.m */; };
+		2CB24B66163866600040A211 /* NewSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B65163866600040A211 /* NewSpotViewController.m */; };
+		2CB24B6D163921780040A211 /* SpotPropertiesTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6C163921780040A211 /* SpotPropertiesTableViewController.m */; };
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
@@ -54,6 +56,10 @@
 		2CB24B5F1637F02F0040A211 /* Interest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Interest.m; sourceTree = "<group>"; };
 		2CB24B611637F02F0040A211 /* Spot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Spot.h; sourceTree = "<group>"; };
 		2CB24B621637F02F0040A211 /* Spot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spot.m; sourceTree = "<group>"; };
+		2CB24B64163866600040A211 /* NewSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSpotViewController.h; sourceTree = "<group>"; };
+		2CB24B65163866600040A211 /* NewSpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewSpotViewController.m; sourceTree = "<group>"; };
+		2CB24B6B163921780040A211 /* SpotPropertiesTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotPropertiesTableViewController.h; sourceTree = "<group>"; };
+		2CB24B6C163921780040A211 /* SpotPropertiesTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotPropertiesTableViewController.m; sourceTree = "<group>"; };
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
@@ -140,6 +146,10 @@
 				2C417C6915E8280B00A3A83D /* MapAnnotation.m */,
 				2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */,
 				2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */,
+				2CB24B64163866600040A211 /* NewSpotViewController.h */,
+				2CB24B65163866600040A211 /* NewSpotViewController.m */,
+				2CB24B6B163921780040A211 /* SpotPropertiesTableViewController.h */,
+				2CB24B6C163921780040A211 /* SpotPropertiesTableViewController.m */,
 				2C81522F15E6A7D300A886E1 /* Location.xcdatamodeld */,
 				2CB24B611637F02F0040A211 /* Spot.h */,
 				2CB24B621637F02F0040A211 /* Spot.m */,
@@ -248,6 +258,8 @@
 				2CB24B5D1637F02F0040A211 /* Track.m in Sources */,
 				2CB24B601637F02F0040A211 /* Interest.m in Sources */,
 				2CB24B631637F02F0040A211 /* Spot.m in Sources */,
+				2CB24B66163866600040A211 /* NewSpotViewController.m in Sources */,
+				2CB24B6D163921780040A211 /* SpotPropertiesTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
