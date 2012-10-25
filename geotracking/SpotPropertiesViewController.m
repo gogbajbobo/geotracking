@@ -1,27 +1,23 @@
 //
-//  NewSpotViewController.m
+//  SpotPropertiesViewController.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/24/12.
+//  Created by Maxim Grigoriev on 10/25/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "NewSpotViewController.h"
+#import "SpotPropertiesViewController.h"
 
-@interface NewSpotViewController ()
+@interface SpotPropertiesViewController ()
 
 @end
 
-@implementation NewSpotViewController
+@implementation SpotPropertiesViewController
 
-- (IBAction)doneButtonPressed:(id)sender {
+- (IBAction)closeButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
         //        NSLog(@"NewSpot dismissViewControllerAnimated");
     }];
-}
-
-- (IBAction)editInterests:(id)sender {
-    [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

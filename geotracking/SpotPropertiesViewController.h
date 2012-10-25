@@ -1,5 +1,5 @@
 //
-//  SpotPropertiesTableViewController.h
+//  SpotPropertiesViewController.h
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 10/25/12.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SpotPropertiesTableViewController : UITableViewController
+@interface SpotPropertiesViewController : UIViewController
 
 @end
