@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tableView.dataSource = self.tableViewDataSource;
 	// Do any additional setup after loading the view.
 }
 
@@ -41,4 +42,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewDidUnload {
+    [self setTableView:nil];
+    [super viewDidUnload];
+}
 @end

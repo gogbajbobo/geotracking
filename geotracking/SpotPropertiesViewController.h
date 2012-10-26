@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SpotPropertiesViewController : UIViewController
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) id <UITableViewDataSource> tableViewDataSource;
 
 @end
