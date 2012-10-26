@@ -11,6 +11,7 @@
 
 @interface NewSpotViewController () <UITableViewDataSource>
 @property (strong, nonatomic) NSString *tableDataType;
+@property (strong, nonatomic) NSArray *tableData;
 
 @end
 
@@ -24,11 +25,15 @@
 
 - (IBAction)editInterests:(id)sender {
     self.tableDataType = @"Interests";
+    self.tableData = [self.tracker interestsList];
+    NSLog(@"Interest array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
 - (IBAction)editNetworks:(id)sender {
     self.tableDataType = @"Networks";
+    self.tableData = [self.tracker networkList];
+    NSLog(@"Network array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
@@ -51,11 +56,16 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return self.tableData.count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperties"];
+    UITableViewCell *cell;
+    if (indexPath.row < self.tableData.count) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"newProperty"];
+    }
     return cell;
 }
 
