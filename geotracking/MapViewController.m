@@ -8,6 +8,7 @@
 
 #import "MapViewController.h"
 #import "MapAnnotation.h"
+#import "NewSpotViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
@@ -29,6 +30,18 @@
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
 
+- (IBAction)addNewSpotButtonPressed:(id)sender {
+    [self performSegueWithIdentifier:@"addNewSpot" sender:self];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"addNewSpot"]) {
+        if ([segue.destinationViewController isKindOfClass:[NewSpotViewController class]]) {
+            NewSpotViewController *newSpotVC = segue.destinationViewController;
+            newSpotVC.tracker = self.tracker;
+        }
+    }
+}
 
 - (IBAction)trackNumberChange:(id)sender {
     self.tracker.selectedTrackNumber = self.tracker.numberOfTracks - self.trackNumberSelector.value;

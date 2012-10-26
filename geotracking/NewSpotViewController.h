@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TrackingLocationController.h"
 
 @interface NewSpotViewController : UIViewController
+@property (nonatomic, strong) TrackingLocationController *tracker;
 
 @end
