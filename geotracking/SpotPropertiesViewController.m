@@ -7,6 +7,7 @@
 //
 
 #import "SpotPropertiesViewController.h"
+#import "NewSpotViewController.h"
 
 @interface SpotPropertiesViewController ()
 
@@ -14,10 +15,15 @@
 
 @implementation SpotPropertiesViewController
 
-- (IBAction)closeButtonPressed:(id)sender {
+- (IBAction)doneButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
         //        NSLog(@"NewSpot dismissViewControllerAnimated");
     }];
+}
+
+- (IBAction)editButtonPressed:(id)sender {
+    [self.tableView setEditing:!self.tableView.editing animated:YES];
+    [self.tableView reloadData];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -33,6 +39,7 @@
 {
     [super viewDidLoad];
     self.tableView.dataSource = self.tableViewDataSource;
+    self.tableView.delegate = self.tableViewDataSource;
 	// Do any additional setup after loading the view.
 }
 

@@ -12,4 +12,5 @@
 @interface NewSpotViewController : UIViewController
 @property (nonatomic, strong) TrackingLocationController *tracker;
 
+
 @end
