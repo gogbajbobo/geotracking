@@ -38,6 +38,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    NSLog(@"self.tableView %@", self.tableView);
     self.tableView.dataSource = self.tableViewDataSource;
     self.tableView.delegate = self.tableViewDataSource;
 	// Do any additional setup after loading the view.

@@ -10,6 +10,7 @@
 #import "SpotPropertiesViewController.h"
 
 @interface NewSpotViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSString *tableDataType;
 @property (strong, nonatomic) NSMutableArray *tableData;
 
@@ -46,11 +47,16 @@
 
         if ([segue.identifier isEqualToString:@"showProperties"]) {
 //            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
+//            self.tableView = [[UITableView alloc] init];
+//            spotPropertiesVC.tableView = self.tableView;
+//            NSLog(@"self.tableView %@", self.tableView);
             spotPropertiesVC.tableViewDataSource = self;
         }
     }
 
 }
+
+#pragma mark - Table view data source & delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
@@ -88,6 +94,7 @@
         textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", placeholder];
     } else {
         cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
+        cell.textLabel.tag = 2;
         textField.text = cell.textLabel.text;
     }
     [cell.contentView addSubview:textField];
@@ -109,19 +116,39 @@
 //        NSLog(@"UITableViewCellEditingStyleInsert");
         if (tableView.editing) {
 //            NSLog(@"tableView.editing");
-//            NSLog(@"cell.textLabel.text %@",[tableView cellForRowAtIndexPath:indexPath].textLabel.text);
             [self.tableData addObject:[tableView cellForRowAtIndexPath:indexPath].textLabel.text];
             [tableView reloadData];
         }
+    } else if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.tableData removeObjectAtIndex:indexPath.row];
+        [tableView reloadData];
     }
 }
 
+- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSLog(@"HERE!");
+//
+//    if ([[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1] isKindOfClass:[UITextField class]]) {
+//        NSLog(@"HERE!");
+//        UITextField *textField = (UITextField *)[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1];
+//        [self.tableData replaceObjectAtIndex:indexPath.row withObject:textField.text];
+//    }
+}
+
+#pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    if ([textField.superview isKindOfClass:[UITableViewCell class]]) {
-//        NSLog(@"textFieldDidEndEditing");
-        UITableViewCell *cell = (UITableViewCell *)textField.superview;
+    NSLog(@"textField.superview.superview %@", textField.superview.superview);
+    if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
+        NSLog(@"textFieldDidEndEditing");
+        UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
         cell.textLabel.text = textField.text;
+        if ([cell.superview isKindOfClass:[UITableView class]]) {
+            UITableView *tableView = (UITableView *)cell.superview;
+            if ([tableView indexPathForCell:cell].row == self.tableData.count) {
+                [self.tableData addObject:textField.text];
+            }
+        }
     }
     return YES;
 }
@@ -130,6 +157,8 @@
     [textField resignFirstResponder];
     return YES;
 }
+
+#pragma mark - view lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
