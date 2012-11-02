@@ -1,23 +1,37 @@
 //
-//  NewSpotViewController.m
+//  SpotViewController.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/24/12.
+//  Created by Maxim Grigoriev on 11/2/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "NewSpotViewController.h"
+#import "SpotViewController.h"
 #import "SpotPropertiesViewController.h"
 
-@interface NewSpotViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
+@interface SpotViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, NSFetchedResultsControllerDelegate>
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSString *tableDataType;
 @property (strong, nonatomic) NSMutableArray *tableData;
+@property (nonatomic, strong) NSFetchedResultsController *resultsController;
+@property (nonatomic, strong) NSString *entityName;
+@property (weak, nonatomic) IBOutlet UILabel *spotInfo;
+@property (weak, nonatomic) IBOutlet UITextField *spotLabel;
+
 
 @end
 
-@implementation NewSpotViewController
+@implementation SpotViewController
 
+- (NSFetchedResultsController *)resultsController {
+    if (!_resultsController) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:self.entityName];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController.delegate = self;
+    }
+    return _resultsController;
+}
 
 - (IBAction)doneButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
@@ -26,34 +40,49 @@
 }
 
 - (IBAction)editInterests:(id)sender {
-    self.tableDataType = @"Interests";
-//    self.tableData = [[self.tracker interestsList] mutableCopy];
+    self.tableDataType = @"Interest";
+    //    self.tableData = [[self.tracker interestsList] mutableCopy];
     NSLog(@"Interest array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
 - (IBAction)editNetworks:(id)sender {
-    self.tableDataType = @"Networks";
-//    self.tableData = [[self.tracker networkList] mutableCopy];
+    self.tableDataType = @"Network";
+    //    self.tableData = [[self.tracker networkList] mutableCopy];
     NSLog(@"Network array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
+}
+
+- (void)showSpotInfo {
+    CLLocationDegrees longitude = self.userLocation.location.coordinate.longitude;
+    CLLocationDegrees latitude = self.userLocation.location.coordinate.latitude;
+    self.spotInfo.text = [NSString stringWithFormat:@"lon/lat %.2f/%.2f", longitude, latitude];
+}
+
+- (void)showSpotLabel {
+    self.spotLabel.font = [UIFont boldSystemFontOfSize:20];
+    self.spotLabel.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.spotLabel.returnKeyType = UIReturnKeyDone;
+    self.spotLabel.tag = 1;
+    self.spotLabel.delegate = self;
+    self.spotLabel.placeholder = @"Spot label";
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.destinationViewController isKindOfClass:[SpotPropertiesViewController class]]) {
         SpotPropertiesViewController *spotPropertiesVC = segue.destinationViewController;
-//        NSLog(@"spotPropertiesVC %@", spotPropertiesVC);
-
+        //        NSLog(@"spotPropertiesVC %@", spotPropertiesVC);
+        
         if ([segue.identifier isEqualToString:@"showProperties"]) {
-//            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
-//            self.tableView = [[UITableView alloc] init];
-//            spotPropertiesVC.tableView = self.tableView;
-//            NSLog(@"self.tableView %@", self.tableView);
+            //            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
+            //            self.tableView = [[UITableView alloc] init];
+            //            spotPropertiesVC.tableView = self.tableView;
+            //            NSLog(@"self.tableView %@", self.tableView);
             spotPropertiesVC.tableViewDataSource = self;
         }
     }
-
+    
 }
 
 #pragma mark - Table view data source & delegate
@@ -72,35 +101,31 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return self.tableDataType;
+    return [NSString stringWithFormat:@"%@s", self.tableDataType];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
-    UITextField *textField;
-    if (![cell.contentView viewWithTag:1]) {
-        textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 9, 270, 24)];
-        textField.font = [UIFont boldSystemFontOfSize:20];
-        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-        textField.returnKeyType = UIReturnKeyDone;
-        textField.tag = 1;
-        textField.delegate = self;
-    } else {
-        textField = (UITextField *)[cell.contentView viewWithTag:1];
-    }
-    if (indexPath.row == self.tableData.count) {
-        NSMutableString *placeholder = [self.tableDataType mutableCopy];
-        [placeholder deleteCharactersInRange:NSMakeRange([placeholder length] - 1, 1)];
-        textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", placeholder];
-    } else {
+    cell.textLabel.text = @"";
+    UIView *viewToDelete = [cell.contentView viewWithTag:1];
+    if (viewToDelete) [viewToDelete removeFromSuperview];
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 9, 270, 24)];
+    textField.font = [UIFont boldSystemFontOfSize:20];
+    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+    textField.returnKeyType = UIReturnKeyDone;
+    textField.tag = 1;
+    textField.delegate = self;
+    textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.tableDataType];
+    if (indexPath.row != self.tableData.count) {
         cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
-        cell.textLabel.tag = 2;
         textField.text = cell.textLabel.text;
     }
     [cell.contentView addSubview:textField];
     [cell.textLabel setHidden:tableView.editing];
     [textField setHidden:!tableView.editing];
     return cell;
+    
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -113,9 +138,9 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleInsert) {
-//        NSLog(@"UITableViewCellEditingStyleInsert");
+        //        NSLog(@"UITableViewCellEditingStyleInsert");
         if (tableView.editing) {
-//            NSLog(@"tableView.editing");
+            //            NSLog(@"tableView.editing");
             [self.tableData addObject:[tableView cellForRowAtIndexPath:indexPath].textLabel.text];
             [tableView reloadData];
         }
@@ -125,28 +150,18 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSLog(@"HERE!");
-//
-//    if ([[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1] isKindOfClass:[UITextField class]]) {
-//        NSLog(@"HERE!");
-//        UITextField *textField = (UITextField *)[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1];
-//        [self.tableData replaceObjectAtIndex:indexPath.row withObject:textField.text];
-//    }
-}
-
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    NSLog(@"textField.superview.superview %@", textField.superview.superview);
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
         NSLog(@"textFieldDidEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
-        cell.textLabel.text = textField.text;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
             if ([tableView indexPathForCell:cell].row == self.tableData.count) {
                 [self.tableData addObject:textField.text];
+            } else {
+                [self.tableData replaceObjectAtIndex:[tableView indexPathForCell:cell].row withObject:textField.text];
             }
         }
     }
@@ -170,6 +185,8 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self showSpotInfo];
+    [self showSpotLabel];
     self.tableData = [NSMutableArray arrayWithObjects:@"Test1", nil];
 }
 
@@ -183,6 +200,12 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidUnload {
+    [self setSpotInfo:nil];
+    [self setSpotLabel:nil];
+    [super viewDidUnload];
 }
 
 @end

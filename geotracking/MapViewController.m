@@ -8,7 +8,7 @@
 
 #import "MapViewController.h"
 #import "MapAnnotation.h"
-#import "NewSpotViewController.h"
+#import "SpotViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
@@ -36,9 +36,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"addNewSpot"]) {
-        if ([segue.destinationViewController isKindOfClass:[NewSpotViewController class]]) {
-            NewSpotViewController *newSpotVC = segue.destinationViewController;
+        if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
+            SpotViewController *newSpotVC = segue.destinationViewController;
             newSpotVC.tracker = self.tracker;
+            newSpotVC.userLocation = self.mapView.userLocation;
         }
     }
 }
@@ -73,10 +74,10 @@
         UISwitch *headingMode = sender;
         if (headingMode.on) {
             [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
-            self.mapView.showsUserLocation = YES;
+//            self.mapView.showsUserLocation = YES;
         } else {
             [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
-            self.mapView.showsUserLocation = NO;
+//            self.mapView.showsUserLocation = NO;
         }
         [settings setObject:[NSNumber numberWithBool:headingMode.on] forKey:@"headingMode"];
         [settings synchronize];
@@ -245,6 +246,7 @@
 {
     [super viewDidLoad];
     self.mapView.delegate = self;
+    self.mapView.showsUserLocation = YES;
 	// Do any additional setup after loading the view.
 }
 

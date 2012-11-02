@@ -7,7 +7,7 @@
 //
 
 #import "SpotPropertiesViewController.h"
-#import "NewSpotViewController.h"
+#import "SpotViewController.h"
 
 @interface SpotPropertiesViewController ()
 

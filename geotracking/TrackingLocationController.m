@@ -25,7 +25,6 @@
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) Track *currentTrack;
-@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 @end
 
@@ -66,27 +65,27 @@
     }
 }
 
-- (NSArray *)interestsList {
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Interest"];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
-    NSError *error;
-    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-    if (!result) {
-        NSLog(@"fetchRequestWithEntityName:@\"Interest\" error %@", error.localizedDescription);
-    }
-    return result;
-}
-
-- (NSArray *)networkList {
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Network"];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
-    NSError *error;
-    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-    if (!result) {
-        NSLog(@"fetchRequestWithEntityName:@\"Network\" error %@", error.localizedDescription);
-    }
-    return result;
-}
+//- (NSArray *)interestsList {
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Interest"];
+//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
+//    NSError *error;
+//    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+//    if (!result) {
+//        NSLog(@"fetchRequestWithEntityName:@\"Interest\" error %@", error.localizedDescription);
+//    }
+//    return result;
+//}
+//
+//- (NSArray *)networkList {
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Network"];
+//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
+//    NSError *error;
+//    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+//    if (!result) {
+//        NSLog(@"fetchRequestWithEntityName:@\"Network\" error %@", error.localizedDescription);
+//    }
+//    return result;
+//}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {

@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import <CoreLocation/CoreLocation.h>
+#import <CoreData/CoreData.h>
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
 
@@ -30,6 +31,7 @@
 @property (weak, nonatomic) UILabel *currentValues;
 @property (nonatomic) NSInteger selectedTrackNumber;
 @property (nonatomic) NSInteger numberOfTracks;
+@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 
 
 - (void)startTrackingLocation;
@@ -37,7 +39,7 @@
 - (void)clearLocations;
 - (void)startConnection;
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
-- (NSArray *)interestsList;
-- (NSArray *)networkList;
+//- (NSArray *)interestsList;
+//- (NSArray *)networkList;
 
 @end
