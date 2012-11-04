@@ -2,7 +2,7 @@
 //  Spot.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/24/12.
+//  Created by Maxim Grigoriev on 11/2/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -10,29 +10,23 @@
 #import <CoreData/CoreData.h>
 #import "Datum.h"
 
-@class Interest, Network;
+@class SpotProperty;
 
 @interface Spot : Datum
 
-@property (nonatomic, retain) NSNumber * longitude;
-@property (nonatomic, retain) NSNumber * latitude;
-@property (nonatomic, retain) NSString * label;
-@property (nonatomic, retain) NSData * image;
 @property (nonatomic, retain) NSString * address;
-@property (nonatomic, retain) NSSet *interests;
-@property (nonatomic, retain) NSSet *networks;
+@property (nonatomic, retain) NSData * image;
+@property (nonatomic, retain) NSString * label;
+@property (nonatomic, retain) NSNumber * latitude;
+@property (nonatomic, retain) NSNumber * longitude;
+@property (nonatomic, retain) NSSet *properties;
 @end
 
 @interface Spot (CoreDataGeneratedAccessors)
 
-- (void)addInterestsObject:(Interest *)value;
-- (void)removeInterestsObject:(Interest *)value;
-- (void)addInterests:(NSSet *)values;
-- (void)removeInterests:(NSSet *)values;
-
-- (void)addNetworksObject:(Network *)value;
-- (void)removeNetworksObject:(Network *)value;
-- (void)addNetworks:(NSSet *)values;
-- (void)removeNetworks:(NSSet *)values;
+- (void)addPropertiesObject:(SpotProperty *)value;
+- (void)removePropertiesObject:(SpotProperty *)value;
+- (void)addProperties:(NSSet *)values;
+- (void)removeProperties:(NSSet *)values;
 
 @end

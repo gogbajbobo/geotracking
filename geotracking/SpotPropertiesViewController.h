@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface SpotPropertiesViewController : UIViewController
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) id caller;
 @property (strong, nonatomic) id <UITableViewDataSource, UITableViewDelegate> tableViewDataSource;
 
 @end

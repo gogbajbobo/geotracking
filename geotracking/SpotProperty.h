@@ -1,8 +1,8 @@
 //
-//  Network.h
+//  SpotProperty.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/24/12.
+//  Created by Maxim Grigoriev on 11/2/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -12,14 +12,15 @@
 
 @class Spot;
 
-@interface Network : Datum
+@interface SpotProperty : Datum
 
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSData * image;
+@property (nonatomic, retain) NSString * type;
 @property (nonatomic, retain) NSSet *points;
 @end
 
-@interface Network (CoreDataGeneratedAccessors)
+@interface SpotProperty (CoreDataGeneratedAccessors)
 
 - (void)addPointsObject:(Spot *)value;
 - (void)removePointsObject:(Spot *)value;

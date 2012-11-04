@@ -39,7 +39,6 @@
 - (void)clearLocations;
 - (void)startConnection;
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
-//- (NSArray *)interestsList;
-//- (NSArray *)networkList;
+- (NSString *)newid;
 
 @end

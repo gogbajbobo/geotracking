@@ -25,6 +25,7 @@
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) Track *currentTrack;
+@property (nonatomic, strong) NSTimer *syncingTimer;
 
 @end
 
@@ -65,28 +66,6 @@
     }
 }
 
-//- (NSArray *)interestsList {
-//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Interest"];
-//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
-//    NSError *error;
-//    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-//    if (!result) {
-//        NSLog(@"fetchRequestWithEntityName:@\"Interest\" error %@", error.localizedDescription);
-//    }
-//    return result;
-//}
-//
-//- (NSArray *)networkList {
-//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Network"];
-//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
-//    NSError *error;
-//    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-//    if (!result) {
-//        NSLog(@"fetchRequestWithEntityName:@\"Network\" error %@", error.localizedDescription);
-//    }
-//    return result;
-//}
-
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Track"];
@@ -94,6 +73,8 @@
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
+//    NSLog(@"self.locationsDatabase.managedObjectContext %@", self.locationsDatabase.managedObjectContext);
+//    NSLog(@"_resultsController.fetchedObjects %@", _resultsController.fetchedObjects);
     return _resultsController;
 }
 
@@ -179,28 +160,8 @@
     Track *track = (Track *)[NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [track setXid:[self newid]];
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
-    
-//    uncomment if{}else{} to add lastLocation from currentTrack as firstLocation to newTrack
-    
-//    if (self.currentTrack && self.lastLocation) {
-//        Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-//        [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
-//        [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
-//        [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
-//        [location setSpeed:[NSNumber numberWithDouble:-1]];
-//        [location setCourse:[NSNumber numberWithDouble:-1]];
-//        [location setTimestamp:[NSDate date]];
-//        [location setXid:[self newid]];
-//        [track setStartTime:location.timestamp];
-//        [track addLocationsObject:location];
-//        NSLog(@"copy lastLocation to new Track");
-//    } else {
-
-        [track setStartTime:[NSDate date]];
-
-//    }
+    [track setStartTime:[NSDate date]];
 //    NSLog(@"newTrack %@", track);
-
     self.currentTrack = track;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newTrack UIDocumentSaveForOverwriting success");
@@ -212,8 +173,8 @@
     NSDate *timestamp = currentLocation.timestamp;
     if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.trackDetectionTimeInterval) {
         [self startNewTrack];
-        NSLog(@"%f",[currentLocation distanceFromLocation:self.lastLocation]);
-        NSLog(@"%f",(2 * self.distanceFilter));
+//        NSLog(@"%f",[currentLocation distanceFromLocation:self.lastLocation]);
+//        NSLog(@"%f",(2 * self.distanceFilter));
         if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * self.distanceFilter)) {
             Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
             [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
@@ -225,9 +186,9 @@
             [location setXid:[self newid]];
             [self.currentTrack setStartTime:location.timestamp];
             [self.currentTrack addLocationsObject:location];
-            NSLog(@"copy lastLocation to new Track as first location");
+//            NSLog(@"copy lastLocation to new Track as first location");
         } else {
-            NSLog(@"no");
+//            NSLog(@"no");
         }
         timestamp = [NSDate date];
     }
@@ -419,6 +380,9 @@
 - (void)startTrackingLocation {
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
+    self.syncingTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:1800 target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
+    NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
+    [currentRunLoop addTimer:self.syncingTimer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)stopTrackingLocation {
@@ -426,7 +390,26 @@
     self.locationManager.delegate = nil;
     self.locationManager = nil;
     self.locationManagerRunning = NO;
+    [self.syncingTimer invalidate];
 }
+
+- (void)onTimerTick:(NSTimer *)timer {
+//    NSLog(@"timer tick at %@", [NSDate date]);
+    [self startConnection];
+}
+
+- (NSString *)newid
+{
+    NSString *uuidString = nil;
+    CFUUIDRef uuid = CFUUIDCreate(nil);
+    if (uuid) {
+        uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuid);
+        CFRelease(uuid);
+    }
+    
+    return uuidString;
+}
+
 
 #pragma mark - CLLocationManager
 
@@ -459,28 +442,18 @@
 #pragma mark - NSURLConnection
 
 - (void)startConnection {
-    NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
-    [request setHTTPMethod:@"POST"];
     NSData *requestData = [self requestData];
     if (requestData) {
+        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+        [request setHTTPMethod:@"POST"];
         [request setHTTPBody:requestData];
         [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         if (!connection) NSLog(@"connection error");
+    } else {
+        NSLog(@"No data to sync");
     }
-}
-
-- (NSString *)newid
-{
-    NSString *uuidString = nil;
-    CFUUIDRef uuid = CFUUIDCreate(nil);
-    if (uuid) {
-        uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuid);
-        CFRelease(uuid);
-    }
-    
-    return uuidString;
 }
 
 - (NSData *)requestData {
@@ -650,6 +623,9 @@
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"setSynced UIDocumentSaveForOverwriting success");
         self.syncing = NO;
+        if (!self.locationManagerRunning) {
+            [self startConnection];
+        }
     }];
 
 }

@@ -10,6 +10,7 @@
 #import "SpotViewController.h"
 
 @interface SpotPropertiesViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
@@ -38,9 +39,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    NSLog(@"self.tableView %@", self.tableView);
+    NSLog(@"self.tableView %@", self.tableView);
     self.tableView.dataSource = self.tableViewDataSource;
     self.tableView.delegate = self.tableViewDataSource;
+    if ([self.caller isKindOfClass:[SpotViewController class]]) {
+        SpotViewController *caller = self.caller;
+        caller.tableView = self.tableView;
+    }
 	// Do any additional setup after loading the view.
 }
 

@@ -8,13 +8,13 @@
 
 #import "SpotViewController.h"
 #import "SpotPropertiesViewController.h"
+#import "Spot.h"
+#import "SpotProperty.h"
 
 @interface SpotViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, NSFetchedResultsControllerDelegate>
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) NSString *tableDataType;
 @property (strong, nonatomic) NSMutableArray *tableData;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
-@property (nonatomic, strong) NSString *entityName;
+@property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
 
@@ -23,15 +23,28 @@
 
 @implementation SpotViewController
 
+
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:self.entityName];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SpotProperty"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
+        //    request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
+//    NSLog(@"self.tracker.locationsDatabase.managedObjectContext %@", self.tracker.locationsDatabase.managedObjectContext);
+//    NSLog(@"self.resultsController.fetchedObjects %@", _resultsController.fetchedObjects);
     return _resultsController;
 }
+
+//- (void)performFetch {
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Track"];
+//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:NO selector:@selector(compare:)]];
+////    request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
+//    self.resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+//    self.resultsController.delegate = self;
+//    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
+//}
 
 - (IBAction)doneButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
@@ -40,16 +53,16 @@
 }
 
 - (IBAction)editInterests:(id)sender {
-    self.tableDataType = @"Interest";
+    self.typeOfProperty = @"Interest";
     //    self.tableData = [[self.tracker interestsList] mutableCopy];
-    NSLog(@"Interest array %@", self.tableData);
+//    NSLog(@"Interest array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
 - (IBAction)editNetworks:(id)sender {
-    self.tableDataType = @"Network";
+    self.typeOfProperty = @"Network";
     //    self.tableData = [[self.tracker networkList] mutableCopy];
-    NSLog(@"Network array %@", self.tableData);
+//    NSLog(@"Network array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
@@ -75,33 +88,51 @@
         //        NSLog(@"spotPropertiesVC %@", spotPropertiesVC);
         
         if ([segue.identifier isEqualToString:@"showProperties"]) {
-            //            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
-            //            self.tableView = [[UITableView alloc] init];
-            //            spotPropertiesVC.tableView = self.tableView;
-            //            NSLog(@"self.tableView %@", self.tableView);
+//            [self performFetch];
+//            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
+//            self.tableView = spotPropertiesVC.tableView;
+//            spotPropertiesVC.tableView = self.tableView;
+//            NSLog(@"self.tableView %@", self.tableView);
+            spotPropertiesVC.caller = self;
             spotPropertiesVC.tableViewDataSource = self;
         }
     }
     
 }
 
+- (void)addNewPropertyWithName:(NSString *)name {
+    SpotProperty *newProperty = (SpotProperty *)[NSEntityDescription insertNewObjectForEntityForName:@"SpotProperty" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    [newProperty setXid:[self.tracker newid]];
+    [newProperty setType:self.typeOfProperty];
+    [newProperty setName:name];
+    NSLog(@"newProperty %@", newProperty);
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"newProperty UIDocumentSaveForOverwriting success");
+        NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
+    }];
+}
+
 #pragma mark - Table view data source & delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//    return [[self.resultsController sections] count];
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
     if (tableView.editing) {
-        return self.tableData.count + 1;
+        return [sectionInfo numberOfObjects] + 1;
+//        return self.tableData.count + 1;
     } else {
-        return self.tableData.count;
+        return [sectionInfo numberOfObjects];
+//        return self.tableData.count;
     }
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [NSString stringWithFormat:@"%@s", self.tableDataType];
+    return [NSString stringWithFormat:@"%@s", self.typeOfProperty];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -116,9 +147,9 @@
     textField.returnKeyType = UIReturnKeyDone;
     textField.tag = 1;
     textField.delegate = self;
-    textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.tableDataType];
-    if (indexPath.row != self.tableData.count) {
-        cell.textLabel.text = [self.tableData objectAtIndex:indexPath.row];
+    textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
+    if (indexPath.row != self.resultsController.fetchedObjects.count) {
+        cell.textLabel.text = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         textField.text = cell.textLabel.text;
     }
     [cell.contentView addSubview:textField];
@@ -129,7 +160,7 @@
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == self.tableData.count) {
+    if (indexPath.row == self.resultsController.fetchedObjects.count) {
         return UITableViewCellEditingStyleInsert;
     } else {
         return UITableViewCellEditingStyleDelete;
@@ -138,15 +169,21 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleInsert) {
-        //        NSLog(@"UITableViewCellEditingStyleInsert");
+        NSLog(@"UITableViewCellEditingStyleInsert");
         if (tableView.editing) {
-            //            NSLog(@"tableView.editing");
-            [self.tableData addObject:[tableView cellForRowAtIndexPath:indexPath].textLabel.text];
-            [tableView reloadData];
+            UITextField *textField = (UITextField *)[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1];
+            if (![textField.text isEqualToString:@""]) {
+                NSLog(@"addNewPropertyWithName");
+                [self addNewPropertyWithName:textField.text];
+            } else {
+                NSLog(@"textField.text isEqualToString:@\"\"");
+            }
+//            [self.tableData addObject:[tableView cellForRowAtIndexPath:indexPath].textLabel.text];
+//            [tableView reloadData];
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.tableData removeObjectAtIndex:indexPath.row];
-        [tableView reloadData];
+//        [self.tableData removeObjectAtIndex:indexPath.row];
+//        [tableView reloadData];
     }
 }
 
@@ -159,9 +196,10 @@
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
             if ([tableView indexPathForCell:cell].row == self.tableData.count) {
-                [self.tableData addObject:textField.text];
+//                [self addNewPropertyWithName:textField.text];
+//                [self.tableData addObject:textField.text];
             } else {
-                [self.tableData replaceObjectAtIndex:[tableView indexPathForCell:cell].row withObject:textField.text];
+//                [self.tableData replaceObjectAtIndex:[tableView indexPathForCell:cell].row withObject:textField.text];
             }
         }
     }
@@ -172,6 +210,39 @@
     [textField resignFirstResponder];
     return YES;
 }
+
+#pragma mark - NSFetchedResultsController delegate
+
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    //    NSLog(@"controllerDidChangeContent");
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    NSLog(@"controller didChangeObject");
+    
+    if (type == NSFetchedResultsChangeDelete) {
+        
+//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+//        [self updateInfoLabels];
+        
+    } else if (type == NSFetchedResultsChangeInsert) {
+        
+        NSLog(@"NSFetchedResultsChangeInsert");
+        
+        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+    } else if (type == NSFetchedResultsChangeUpdate) {
+        
+        NSLog(@"NSFetchedResultsChangeUpdate");
+        
+        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+    }
+}
+
 
 #pragma mark - view lifecycle
 
@@ -187,7 +258,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self showSpotInfo];
     [self showSpotLabel];
-    self.tableData = [NSMutableArray arrayWithObjects:@"Test1", nil];
+//    NSLog(@"spotVC self.tracker %@", self.tracker);
+//    self.tableData = [NSMutableArray arrayWithObjects:@"Test1", nil];
 }
 
 - (void)viewDidLoad

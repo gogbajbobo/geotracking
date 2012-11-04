@@ -37,9 +37,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"addNewSpot"]) {
         if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
-            SpotViewController *newSpotVC = segue.destinationViewController;
-            newSpotVC.tracker = self.tracker;
-            newSpotVC.userLocation = self.mapView.userLocation;
+            SpotViewController *spotVC = segue.destinationViewController;
+//            NSLog(@"mapVC self.tracker %@", self.tracker);
+            spotVC.tracker = self.tracker;
+            spotVC.userLocation = self.mapView.userLocation;
+            spotVC.newSpotMode = YES;
         }
     }
 }

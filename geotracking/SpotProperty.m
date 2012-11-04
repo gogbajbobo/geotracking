@@ -1,19 +1,20 @@
 //
-//  Network.m
+//  SpotProperty.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/24/12.
+//  Created by Maxim Grigoriev on 11/2/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Network.h"
+#import "SpotProperty.h"
 #import "Spot.h"
 
 
-@implementation Network
+@implementation SpotProperty
 
 @dynamic name;
 @dynamic image;
+@dynamic type;
 @dynamic points;
 
 @end

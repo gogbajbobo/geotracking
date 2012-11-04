@@ -2,7 +2,7 @@
 //  Datum.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 10/24/12.
+//  Created by Maxim Grigoriev on 11/2/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -12,8 +12,8 @@
 
 @interface Datum : NSManagedObject
 
-@property (nonatomic, retain) NSString * xid;
-@property (nonatomic, retain) NSDate * timestamp;
 @property (nonatomic, retain) NSDate * lastSyncTimestamp;
+@property (nonatomic, retain) NSDate * timestamp;
+@property (nonatomic, retain) NSString * xid;
 
 @end

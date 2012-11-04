@@ -12,5 +12,7 @@
 @interface SpotViewController : UIViewController
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) MKUserLocation *userLocation;
+@property (nonatomic) BOOL newSpotMode;
+@property (strong, nonatomic) UITableView *tableView;
 
 @end
