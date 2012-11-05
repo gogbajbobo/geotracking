@@ -28,7 +28,7 @@
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SpotProperty"];
-        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
@@ -118,20 +118,20 @@
     NSLog(@"newProperty %@", newProperty);
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newProperty UIDocumentSaveForOverwriting success");
-        NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
+//        NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
     }];
 }
 
 #pragma mark - Table view data source & delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return [[self.resultsController sections] count];
-    return 1;
+    return [[self.resultsController sections] count];
+//    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
-    NSLog(@"[sectionInfo numberOfObjects] %d", [sectionInfo numberOfObjects]);
+//    NSLog(@"[sectionInfo numberOfObjects] %d", [sectionInfo numberOfObjects]);
     if (tableView.editing) {
         return [sectionInfo numberOfObjects] + 1;
 //        return self.tableData.count + 1;
@@ -159,6 +159,7 @@
     textField.tag = 1;
     textField.delegate = self;
     textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
+    textField.text = nil;
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
@@ -172,10 +173,14 @@
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == self.resultsController.fetchedObjects.count) {
-        return UITableViewCellEditingStyleInsert;
+    if (tableView.editing) {
+        if (indexPath.row == self.resultsController.fetchedObjects.count) {
+            return UITableViewCellEditingStyleInsert;
+        } else {
+            return UITableViewCellEditingStyleDelete;
+        }
     } else {
-        return UITableViewCellEditingStyleDelete;
+        return UITableViewCellEditingStyleNone;
     }
 }
 
@@ -190,12 +195,12 @@
             } else {
                 NSLog(@"textField.text isEqualToString:@\"\"");
             }
-//            [self.tableData addObject:[tableView cellForRowAtIndexPath:indexPath].textLabel.text];
-//            [tableView reloadData];
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        [self.tableData removeObjectAtIndex:indexPath.row];
-//        [tableView reloadData];
+        [self.tracker.locationsDatabase.managedObjectContext deleteObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
+        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"deleteObject UIDocumentSaveForOverwriting success");
+        }];
     }
 }
 
@@ -203,13 +208,18 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
-        NSLog(@"textFieldDidEndEditing");
+        NSLog(@"textFieldShouldEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
-            if ([tableView indexPathForCell:cell].row == self.tableData.count) {
-//                [self addNewPropertyWithName:textField.text];
-//                [self.tableData addObject:textField.text];
+            if ([tableView indexPathForCell:cell].row == self.resultsController.fetchedObjects.count) {
+                if (![textField.text isEqualToString:@""]) {
+                    NSLog(@"addNewPropertyWithName");
+                    [self addNewPropertyWithName:textField.text];
+                    textField.text = nil;
+                } else {
+                    NSLog(@"textField.text isEqualToString:@\"\"");
+                }
             } else {
 //                [self.tableData replaceObjectAtIndex:[tableView indexPathForCell:cell].row withObject:textField.text];
             }
@@ -236,20 +246,19 @@
     
     if (type == NSFetchedResultsChangeDelete) {
         
-//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-//        [self updateInfoLabels];
+        NSLog(@"NSFetchedResultsChangeDelete");
+        NSLog(@"indexPath %@", indexPath);
+        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         
     } else if (type == NSFetchedResultsChangeInsert) {
         
-    NSLog(@"NSFetchedResultsChangeInsert");
-        
+        NSLog(@"NSFetchedResultsChangeInsert");
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
     } else if (type == NSFetchedResultsChangeUpdate) {
         
-    NSLog(@"NSFetchedResultsChangeUpdate");
-        
+        NSLog(@"NSFetchedResultsChangeUpdate");
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
     }
