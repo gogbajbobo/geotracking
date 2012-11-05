@@ -10,6 +10,7 @@
 #import "SpotPropertiesViewController.h"
 #import "Spot.h"
 #import "SpotProperty.h"
+#import "Track.h"
 
 @interface SpotViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, NSFetchedResultsControllerDelegate>
 @property (strong, nonatomic) NSMutableArray *tableData;
@@ -28,23 +29,32 @@
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SpotProperty"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(compare:)]];
-        //    request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
 //    NSLog(@"self.tracker.locationsDatabase.managedObjectContext %@", self.tracker.locationsDatabase.managedObjectContext);
 //    NSLog(@"self.resultsController.fetchedObjects %@", _resultsController.fetchedObjects);
+//    NSLog(@"self.tracker.locationsDatabase.managedObjectContext.registeredObjects %@", self.tracker.locationsDatabase.managedObjectContext.registeredObjects);
+//    NSLog(@"self.tracker.locationsDatabase.managedObjectModel %@", self.tracker.locationsDatabase.managedObjectModel);
     return _resultsController;
 }
 
-//- (void)performFetch {
-//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Track"];
-//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:NO selector:@selector(compare:)]];
-////    request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
-//    self.resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
-//    self.resultsController.delegate = self;
-//    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
-//}
+- (void)performFetch {
+    if (self.resultsController) {
+        self.resultsController.delegate = nil;
+        self.resultsController = nil;
+    }
+    NSError *error;
+    if (![self.resultsController performFetch:&error]) {
+        NSLog(@"performFetch error %@", error.localizedDescription);
+    } else {
+        if (self.resultsController.fetchedObjects.count > 0) {
+//            self.currentTrack = [self.resultsController.fetchedObjects objectAtIndex:0];
+        }
+//        [self.tableView reloadData];
+    }
+}
 
 - (IBAction)doneButtonPressed:(id)sender {
     [self dismissViewControllerAnimated:YES completion:^{
@@ -88,7 +98,7 @@
         //        NSLog(@"spotPropertiesVC %@", spotPropertiesVC);
         
         if ([segue.identifier isEqualToString:@"showProperties"]) {
-//            [self performFetch];
+            [self performFetch];
 //            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
 //            self.tableView = spotPropertiesVC.tableView;
 //            spotPropertiesVC.tableView = self.tableView;
@@ -121,6 +131,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
+    NSLog(@"[sectionInfo numberOfObjects] %d", [sectionInfo numberOfObjects]);
     if (tableView.editing) {
         return [sectionInfo numberOfObjects] + 1;
 //        return self.tableData.count + 1;
@@ -149,7 +160,8 @@
     textField.delegate = self;
     textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
-        cell.textLabel.text = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
         textField.text = cell.textLabel.text;
     }
     [cell.contentView addSubview:textField];
@@ -215,7 +227,7 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    //    NSLog(@"controllerDidChangeContent");
+    NSLog(@"controllerDidChangeContent");
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
@@ -229,14 +241,14 @@
         
     } else if (type == NSFetchedResultsChangeInsert) {
         
-        NSLog(@"NSFetchedResultsChangeInsert");
+    NSLog(@"NSFetchedResultsChangeInsert");
         
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
     } else if (type == NSFetchedResultsChangeUpdate) {
         
-        NSLog(@"NSFetchedResultsChangeUpdate");
+    NSLog(@"NSFetchedResultsChangeUpdate");
         
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         

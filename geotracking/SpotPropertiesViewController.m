@@ -39,7 +39,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"self.tableView %@", self.tableView);
+//    NSLog(@"self.tableView %@", self.tableView);
     self.tableView.dataSource = self.tableViewDataSource;
     self.tableView.delegate = self.tableViewDataSource;
     if ([self.caller isKindOfClass:[SpotViewController class]]) {
