@@ -9,9 +9,24 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>geotrackingTests.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
+		<key>2C32D40F164ACC9100A2ADB7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>2C32D42A164ACF0800A2ADB7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>2CE471FA15E3FEEC00B092DB</key>
 		<dict>
 			<key>primary</key>

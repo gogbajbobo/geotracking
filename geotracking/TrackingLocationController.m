@@ -442,17 +442,21 @@
 #pragma mark - NSURLConnection
 
 - (void)startConnection {
-    NSData *requestData = [self requestData];
-    if (requestData) {
-        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:requestData];
-        [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        if (!connection) NSLog(@"connection error");
+    if (!self.syncing) {
+        NSData *requestData = [self requestData];
+        if (requestData) {
+            NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
+            NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+            [request setHTTPMethod:@"POST"];
+            [request setHTTPBody:requestData];
+            [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+            NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+            if (!connection) NSLog(@"connection error");
+        } else {
+            NSLog(@"No data to sync");
+        }
     } else {
-        NSLog(@"No data to sync");
+        NSLog(@"Already in syncing proccess");
     }
 }
 

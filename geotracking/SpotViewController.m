@@ -115,10 +115,9 @@
     [newProperty setXid:[self.tracker newid]];
     [newProperty setType:self.typeOfProperty];
     [newProperty setName:name];
-    NSLog(@"newProperty %@", newProperty);
+//    NSLog(@"newProperty %@", newProperty);
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newProperty UIDocumentSaveForOverwriting success");
-//        NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
     }];
 }
 
@@ -192,6 +191,7 @@
             if (![textField.text isEqualToString:@""]) {
                 NSLog(@"addNewPropertyWithName");
                 [self addNewPropertyWithName:textField.text];
+                textField.text = nil;
             } else {
                 NSLog(@"textField.text isEqualToString:@\"\"");
             }
@@ -212,7 +212,10 @@
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
-            if ([tableView indexPathForCell:cell].row == self.resultsController.fetchedObjects.count) {
+            NSLog(@"[tableView numberOfRowsInSection:0] %d", [tableView numberOfRowsInSection:0]);
+            NSLog(@"[tableView indexPathForCell:cell].row %d", [tableView indexPathForCell:cell].row);
+            if ([tableView indexPathForCell:cell].row == [tableView numberOfRowsInSection:0] - 1) {
+                NSLog(@"Last row");
                 if (![textField.text isEqualToString:@""]) {
                     NSLog(@"addNewPropertyWithName");
                     [self addNewPropertyWithName:textField.text];
@@ -221,7 +224,19 @@
                     NSLog(@"textField.text isEqualToString:@\"\"");
                 }
             } else {
-//                [self.tableData replaceObjectAtIndex:[tableView indexPathForCell:cell].row withObject:textField.text];
+                NSLog(@"Not last row");
+                if (![textField.text isEqualToString:cell.textLabel.text]) {
+                    if ([textField.text isEqualToString:@""]) {
+                        textField.text = cell.textLabel.text;
+                    } else {
+                        SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
+                        spotProperty.name = textField.text;
+                        cell.textLabel.text = textField.text;
+                        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
+                        }];
+                    }
+                }
             }
         }
     }
@@ -247,7 +262,7 @@
     if (type == NSFetchedResultsChangeDelete) {
         
         NSLog(@"NSFetchedResultsChangeDelete");
-        NSLog(@"indexPath %@", indexPath);
+//        NSLog(@"indexPath %@", indexPath);
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         
     } else if (type == NSFetchedResultsChangeInsert) {
@@ -259,6 +274,7 @@
     } else if (type == NSFetchedResultsChangeUpdate) {
         
         NSLog(@"NSFetchedResultsChangeUpdate");
+        NSLog(@"indexPath %@", indexPath);
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
     }
