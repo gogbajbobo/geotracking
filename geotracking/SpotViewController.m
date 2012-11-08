@@ -163,6 +163,8 @@
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
         textField.text = cell.textLabel.text;
+    } else {
+//        [textField becomeFirstResponder];
     }
     [cell.contentView addSubview:textField];
     [cell.textLabel setHidden:tableView.editing];
@@ -212,12 +214,12 @@
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
-            NSLog(@"[tableView numberOfRowsInSection:0] %d", [tableView numberOfRowsInSection:0]);
-            NSLog(@"[tableView indexPathForCell:cell].row %d", [tableView indexPathForCell:cell].row);
+//            NSLog(@"[tableView numberOfRowsInSection:0] %d", [tableView numberOfRowsInSection:0]);
+//            NSLog(@"[tableView indexPathForCell:cell].row %d", [tableView indexPathForCell:cell].row);
             if ([tableView indexPathForCell:cell].row == [tableView numberOfRowsInSection:0] - 1) {
-                NSLog(@"Last row");
+//                NSLog(@"Last row");
                 if (![textField.text isEqualToString:@""]) {
-                    NSLog(@"addNewPropertyWithName");
+//                    NSLog(@"addNewPropertyWithName");
                     [self addNewPropertyWithName:textField.text];
                     textField.text = nil;
                 } else {
@@ -232,6 +234,7 @@
                         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
                         spotProperty.name = textField.text;
                         cell.textLabel.text = textField.text;
+                        [textField resignFirstResponder];
                         [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                             NSLog(@"updateObject UIDocumentSaveForOverwriting success");
                         }];
@@ -244,6 +247,24 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+//    if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
+//        NSLog(@"textFieldShouldReturn");
+//        UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
+//        if ([cell.superview isKindOfClass:[UITableView class]]) {
+//            UITableView *tableView = (UITableView *)cell.superview;
+//            if ([tableView indexPathForCell:cell].row == [tableView numberOfRowsInSection:0] - 1) {
+//                NSLog(@"Last row");
+//                if (![textField.text isEqualToString:@""]) {
+//                    NSLog(@"addNewPropertyWithName");
+//                    [self addNewPropertyWithName:textField.text];
+//                    textField.text = nil;
+//                } else {
+//                    NSLog(@"textField.text isEqualToString:@\"\"");
+//                }
+//            } else {
+//            }
+//        }
+//    }
     [textField resignFirstResponder];
     return YES;
 }
@@ -274,8 +295,8 @@
     } else if (type == NSFetchedResultsChangeUpdate) {
         
         NSLog(@"NSFetchedResultsChangeUpdate");
-        NSLog(@"indexPath %@", indexPath);
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+// reloadRowsAtIndexPaths causes strange error don't know why
+//        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
     }
 }
