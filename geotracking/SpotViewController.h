@@ -14,5 +14,8 @@
 @property (nonatomic, strong) MKUserLocation *userLocation;
 @property (nonatomic) BOOL newSpotMode;
 @property (strong, nonatomic) UITableView *tableView;
+@property (nonatomic, strong) NSFetchedResultsController *resultsController;
+
+- (void)addNewPropertyWithName:(NSString *)name;
 
 @end

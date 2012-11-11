@@ -13,11 +13,10 @@
 #import "Track.h"
 
 @interface SpotViewController () <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, NSFetchedResultsControllerDelegate>
-@property (strong, nonatomic) NSMutableArray *tableData;
-@property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
+@property (weak, nonatomic) id <UITextFieldDelegate> textFieldDelegate;
 
 
 @end
@@ -64,15 +63,11 @@
 
 - (IBAction)editInterests:(id)sender {
     self.typeOfProperty = @"Interest";
-    //    self.tableData = [[self.tracker interestsList] mutableCopy];
-//    NSLog(@"Interest array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
 - (IBAction)editNetworks:(id)sender {
     self.typeOfProperty = @"Network";
-    //    self.tableData = [[self.tracker networkList] mutableCopy];
-//    NSLog(@"Network array %@", self.tableData);
     [self performSegueWithIdentifier:@"showProperties" sender:self];
 }
 
@@ -94,17 +89,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.destinationViewController isKindOfClass:[SpotPropertiesViewController class]]) {
-        SpotPropertiesViewController *spotPropertiesVC = segue.destinationViewController;
-        //        NSLog(@"spotPropertiesVC %@", spotPropertiesVC);
-        
+        SpotPropertiesViewController *spotPropertiesVC = segue.destinationViewController;        
         if ([segue.identifier isEqualToString:@"showProperties"]) {
             [self performFetch];
-//            NSLog(@"segue.identifier isEqualToString:@\"showProperties\"");
-//            self.tableView = spotPropertiesVC.tableView;
-//            spotPropertiesVC.tableView = self.tableView;
-//            NSLog(@"self.tableView %@", self.tableView);
             spotPropertiesVC.caller = self;
             spotPropertiesVC.tableViewDataSource = self;
+            self.textFieldDelegate = spotPropertiesVC;
         }
     }
     
@@ -133,10 +123,8 @@
 //    NSLog(@"[sectionInfo numberOfObjects] %d", [sectionInfo numberOfObjects]);
     if (tableView.editing) {
         return [sectionInfo numberOfObjects] + 1;
-//        return self.tableData.count + 1;
     } else {
         return [sectionInfo numberOfObjects];
-//        return self.tableData.count;
     }
 }
 
@@ -156,7 +144,8 @@
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.returnKeyType = UIReturnKeyDone;
     textField.tag = 1;
-    textField.delegate = self;
+//    textField.delegate = self;
+    textField.delegate = self.textFieldDelegate;
     textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
     textField.text = nil;
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
@@ -208,10 +197,20 @@
 
 #pragma mark - UITextFieldDelegate
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
+        NSLog(@"textFieldShouldBeginEditing");
+        UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
+        cell.selected = YES;
+    }
+    return YES;
+}
+
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
         NSLog(@"textFieldShouldEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
+        cell.selected = NO;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
 //            NSLog(@"[tableView numberOfRowsInSection:0] %d", [tableView numberOfRowsInSection:0]);
