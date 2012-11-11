@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SpotPropertiesViewController : UIViewController <UITextFieldDelegate>
+@interface SpotPropertiesViewController : UIViewController
 @property (nonatomic) id caller;
 @property (strong, nonatomic) id <UITableViewDataSource, UITableViewDelegate> tableViewDataSource;
 

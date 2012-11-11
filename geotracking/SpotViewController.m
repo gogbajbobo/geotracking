@@ -16,7 +16,6 @@
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
-@property (weak, nonatomic) id <UITextFieldDelegate> textFieldDelegate;
 
 
 @end
@@ -94,7 +93,6 @@
             [self performFetch];
             spotPropertiesVC.caller = self;
             spotPropertiesVC.tableViewDataSource = self;
-            self.textFieldDelegate = spotPropertiesVC;
         }
     }
     
@@ -135,17 +133,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
-    cell.textLabel.text = @"";
-    UIView *viewToDelete = [cell.contentView viewWithTag:1];
-    if (viewToDelete) [viewToDelete removeFromSuperview];
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+//    cell.textLabel.text = @"";
+//    UIView *viewToDelete = [cell.contentView viewWithTag:1];
+//    if (viewToDelete) [viewToDelete removeFromSuperview];
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 9, 270, 24)];
     textField.font = [UIFont boldSystemFontOfSize:20];
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.returnKeyType = UIReturnKeyDone;
     textField.tag = 1;
-//    textField.delegate = self;
-    textField.delegate = self.textFieldDelegate;
+    textField.delegate = self;
     textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
     textField.text = nil;
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
@@ -157,6 +155,7 @@
     }
     [cell.contentView addSubview:textField];
     [cell.textLabel setHidden:tableView.editing];
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [textField setHidden:!tableView.editing];
     return cell;
     
@@ -176,7 +175,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleInsert) {
-        NSLog(@"UITableViewCellEditingStyleInsert");
+//        NSLog(@"UITableViewCellEditingStyleInsert");
         if (tableView.editing) {
             UITextField *textField = (UITextField *)[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1];
             if (![textField.text isEqualToString:@""]) {
@@ -197,20 +196,10 @@
 
 #pragma mark - UITextFieldDelegate
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
-        NSLog(@"textFieldShouldBeginEditing");
-        UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
-        cell.selected = YES;
-    }
-    return YES;
-}
-
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
-        NSLog(@"textFieldShouldEndEditing");
+//        NSLog(@"textFieldShouldEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
-        cell.selected = NO;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
 //            NSLog(@"[tableView numberOfRowsInSection:0] %d", [tableView numberOfRowsInSection:0]);
@@ -225,7 +214,7 @@
                     NSLog(@"textField.text isEqualToString:@\"\"");
                 }
             } else {
-                NSLog(@"Not last row");
+//                NSLog(@"Not last row");
                 if (![textField.text isEqualToString:cell.textLabel.text]) {
                     if ([textField.text isEqualToString:@""]) {
                         textField.text = cell.textLabel.text;
@@ -246,24 +235,6 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-//    if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
-//        NSLog(@"textFieldShouldReturn");
-//        UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
-//        if ([cell.superview isKindOfClass:[UITableView class]]) {
-//            UITableView *tableView = (UITableView *)cell.superview;
-//            if ([tableView indexPathForCell:cell].row == [tableView numberOfRowsInSection:0] - 1) {
-//                NSLog(@"Last row");
-//                if (![textField.text isEqualToString:@""]) {
-//                    NSLog(@"addNewPropertyWithName");
-//                    [self addNewPropertyWithName:textField.text];
-//                    textField.text = nil;
-//                } else {
-//                    NSLog(@"textField.text isEqualToString:@\"\"");
-//                }
-//            } else {
-//            }
-//        }
-//    }
     [textField resignFirstResponder];
     return YES;
 }
@@ -272,29 +243,30 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    NSLog(@"controllerDidChangeContent");
+//    NSLog(@"controllerDidChangeContent");
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
-    NSLog(@"controller didChangeObject");
+//    NSLog(@"controller didChangeObject");
     
     if (type == NSFetchedResultsChangeDelete) {
         
-        NSLog(@"NSFetchedResultsChangeDelete");
+//        NSLog(@"NSFetchedResultsChangeDelete");
 //        NSLog(@"indexPath %@", indexPath);
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         
     } else if (type == NSFetchedResultsChangeInsert) {
         
-        NSLog(@"NSFetchedResultsChangeInsert");
+//        NSLog(@"NSFetchedResultsChangeInsert");
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
     } else if (type == NSFetchedResultsChangeUpdate) {
         
-        NSLog(@"NSFetchedResultsChangeUpdate");
+//        NSLog(@"NSFetchedResultsChangeUpdate");
 // reloadRowsAtIndexPaths causes strange error don't know why
+//        [self.tableView reloadData];
 //        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
     }
