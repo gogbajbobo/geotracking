@@ -109,6 +109,17 @@
     }];
 }
 
+- (void)imageTap:(UITapGestureRecognizer *)gesture
+{
+    if ((gesture.state == UIGestureRecognizerStateChanged) ||
+        (gesture.state == UIGestureRecognizerStateEnded)) {
+        if (self.tableView.editing) {
+            NSLog(@"imageTap");
+        }
+    }
+}
+
+
 #pragma mark - Table view data source & delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -133,12 +144,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
-//    cell.textLabel.text = @"";
-//    UIView *viewToDelete = [cell.contentView viewWithTag:1];
-//    if (viewToDelete) [viewToDelete removeFromSuperview];
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(10, 9, 270, 24)];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
+//    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cell.textLabel.text = @"";
+    UIView *viewToDelete = [cell.contentView viewWithTag:1];
+    if (viewToDelete) [viewToDelete removeFromSuperview];
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(54, 9, 270, 24)];
     textField.font = [UIFont boldSystemFontOfSize:20];
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.returnKeyType = UIReturnKeyDone;
@@ -157,6 +168,10 @@
     [cell.textLabel setHidden:tableView.editing];
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [textField setHidden:!tableView.editing];
+
+    UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
+    [cell.imageView addGestureRecognizer:imageTap];
+
     return cell;
     
 }

@@ -393,19 +393,23 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="spotProperty" textLabel="rPb-s2-ij8" style="IBUITableViewCellStyleDefault" id="8pR-9M-k6j">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" indentationWidth="10" reuseIdentifier="spotProperty" textLabel="rPb-s2-ij8" imageView="eJI-Jc-Utz" style="IBUITableViewCellStyleDefault" id="8pR-9M-k6j">
                                         <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rPb-s2-ij8">
-                                                    <rect key="frame" x="10" y="0.0" width="300" height="43"/>
+                                                <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rPb-s2-ij8">
+                                                    <rect key="frame" x="53" y="0.0" width="257" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" image="blank_image_44_44.png" id="eJI-Jc-Utz">
+                                                    <rect key="frame" x="0.0" y="0.0" width="43" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -542,6 +546,62 @@
             <point key="canvasLocation" x="1613" y="-109"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="blank_image_44_44.png" width="44" height="44"/>
+    </resources>
+    <classes>
+        <class className="MapViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/MapViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="addNewSpotButtonPressed:"/>
+                <relationship kind="action" name="headingModeSwitchSwitched:"/>
+                <relationship kind="action" name="mapSwitchPressed:"/>
+                <relationship kind="action" name="trackNumberChange:"/>
+                <relationship kind="outlet" name="headingModeSwitch" candidateClass="UISwitch"/>
+                <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
+                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
+                <relationship kind="outlet" name="trackNumberLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="trackNumberSelector" candidateClass="UIStepper"/>
+            </relationships>
+        </class>
+        <class className="SettingsViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SettingsViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="desiredAccuracyLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="distanceFilterLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="distanceFilterSlider" candidateClass="UISlider"/>
+                <relationship kind="outlet" name="trackDetectionTimeIntervalLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="trackDetectionTimeIntervalSlider" candidateClass="UISlider"/>
+            </relationships>
+        </class>
+        <class className="SpotPropertiesViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SpotPropertiesViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+                <relationship kind="outlet" name="toolbar" candidateClass="UIToolbar"/>
+            </relationships>
+        </class>
+        <class className="SpotViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/SpotViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="doneButtonPressed:"/>
+                <relationship kind="action" name="editInterests:"/>
+                <relationship kind="action" name="editNetworks:"/>
+                <relationship kind="outlet" name="spotInfo" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="spotLabel" candidateClass="UITextField"/>
+            </relationships>
+        </class>
+        <class className="TrackerViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/TrackerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="trackerSwitchPressed:" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="currentValues" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="startButton" candidateClass="UIBarButtonItem"/>
+                <relationship kind="outlet" name="summary" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
