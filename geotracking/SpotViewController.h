@@ -16,6 +16,5 @@
 @property (strong, nonatomic) UITableView *tableView;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 
-- (void)addNewPropertyWithName:(NSString *)name;
 
 @end

@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TrackingLocationController.h"
 
 @interface SpotPropertiesViewController : UIViewController
 @property (nonatomic) id caller;
-@property (strong, nonatomic) id <UITableViewDataSource, UITableViewDelegate> tableViewDataSource;
+@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) NSString *typeOfProperty;
 
 @end
