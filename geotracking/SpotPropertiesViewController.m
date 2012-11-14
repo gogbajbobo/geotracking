@@ -149,8 +149,9 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
 //    NSLog(@"info %@", info);
-    NSLog(@"UIImagePickerControllerOriginalImage %@", [info objectForKey:UIImagePickerControllerOriginalImage]);
+//    NSLog(@"UIImagePickerControllerOriginalImage %@", [info objectForKey:UIImagePickerControllerOriginalImage]);
     self.tappedImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+    [self addSpotPropertyImageFrom:self.tappedImageView];
     [picker dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
     }];
@@ -164,6 +165,20 @@
     UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return resultImage;
+}
+
+- (void)addSpotPropertyImageFrom:(UIImageView *)imageView {
+    
+    if ([imageView.superview.superview isKindOfClass:[UITableViewCell class]]) {
+        UITableViewCell *cell = (UITableViewCell *)imageView.superview.superview;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        spotProperty.image = UIImagePNGRepresentation(imageView.image);
+        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
+        }];
+    }
+    
 }
 
 #pragma mark - Table view data source & delegate
@@ -195,7 +210,7 @@
     cell.textLabel.text = @"";
     UIView *viewToDelete = [cell.contentView viewWithTag:1];
     if (viewToDelete) [viewToDelete removeFromSuperview];
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(54, 9, 270, 24)];
+    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(64, 9, 270, 24)];
     textField.font = [UIFont boldSystemFontOfSize:20];
     textField.clearButtonMode = UITextFieldViewModeWhileEditing;
     textField.returnKeyType = UIReturnKeyDone;
@@ -207,6 +222,11 @@
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
         textField.text = cell.textLabel.text;
+        if (spotProperty.image) {
+            cell.imageView.image = [UIImage imageWithData:spotProperty.image];
+        }
+        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
+        [cell.imageView addGestureRecognizer:imageTap];
     } else {
         //        [textField becomeFirstResponder];
     }
@@ -214,10 +234,7 @@
     [cell.textLabel setHidden:tableView.editing];
 //    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [textField setHidden:!tableView.editing];
-    
-    UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
-    [cell.imageView addGestureRecognizer:imageTap];
-    
+
     return cell;
     
 }
