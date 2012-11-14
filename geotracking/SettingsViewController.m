@@ -48,11 +48,6 @@
     [self.distanceFilterSlider setValue:self.tracker.distanceFilter animated:YES];    
 }
 
-- (IBAction)closeView:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:^{
-//        NSLog(@"dismissViewControllerAnimated");
-    }];
-}
 
 - (void)updateLabels {
     self.desiredAccuracyLabel.text = [NSString stringWithFormat:@"%f", self.tracker.desiredAccuracy];
