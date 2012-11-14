@@ -23,13 +23,6 @@
 @implementation SpotViewController
 
 
-
-- (IBAction)doneButtonPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:^{
-        //        NSLog(@"NewSpot dismissViewControllerAnimated");
-    }];
-}
-
 - (IBAction)editInterests:(id)sender {
     self.typeOfProperty = @"Interest";
     [self performSegueWithIdentifier:@"showProperties" sender:self];
