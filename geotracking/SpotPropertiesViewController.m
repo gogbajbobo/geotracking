@@ -10,10 +10,11 @@
 #import "SpotViewController.h"
 #import "SpotProperty.h"
 
-@interface SpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate>
+@interface SpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
+@property (nonatomic, strong) UIImageView *tappedImageView;
 
 
 @end
@@ -116,19 +117,54 @@
     if ((gesture.state == UIGestureRecognizerStateChanged) ||
         (gesture.state == UIGestureRecognizerStateEnded)) {
         if (self.tableView.editing) {
-            NSLog(@"imageTap");
-            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
-                UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
-                imagePickerController.delegate = self;
-                imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                [self presentViewController:imagePickerController animated:YES completion:^{
-                    NSLog(@"presentViewController:UIImagePickerController");
-                }];
-            }
+//            NSLog(@"imageTap");
+            self.tappedImageView = (UIImageView *)gesture.view;
+            UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Camera" otherButtonTitles:@"PhotoLibrary", nil];
+            [sourceSelectAlert show];
         }
     }
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.title isEqualToString:@"SourceSelect"]) {
+        if (buttonIndex == 0) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        } else {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }
+    }
+}
+
+- (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)imageSourceType {
+    if ([UIImagePickerController isSourceTypeAvailable:imageSourceType]) {
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        imagePickerController.delegate = self;
+        imagePickerController.sourceType = imageSourceType;
+        [self presentViewController:imagePickerController animated:YES completion:^{
+            NSLog(@"presentViewController:UIImagePickerController");
+        }];
+    }
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//    NSLog(@"info %@", info);
+    NSLog(@"UIImagePickerControllerOriginalImage %@", [info objectForKey:UIImagePickerControllerOriginalImage]);
+    self.tappedImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"dismissViewControllerAnimated");
+    }];
+}
+
+-(UIImage *)resizeImage:(UIImage *)image {
+    CGFloat width = 44;
+    CGFloat height = 44;
+    UIGraphicsBeginImageContext(CGSizeMake(width ,height));
+    [image drawInRect:CGRectMake(0, 0, width, height)];
+    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return resultImage;
+}
 
 #pragma mark - Table view data source & delegate
 
@@ -176,7 +212,7 @@
     }
     [cell.contentView addSubview:textField];
     [cell.textLabel setHidden:tableView.editing];
-    //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     [textField setHidden:!tableView.editing];
     
     UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
@@ -314,10 +350,7 @@
     [super viewDidLoad];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-    if ([self.caller isKindOfClass:[SpotViewController class]]) {
-        SpotViewController *caller = self.caller;
-        caller.tableView = self.tableView;
-    }
+//    self.tableView.allowsSelectionDuringEditing = YES;
 //    [self keyboardNotificationsRegistration];
     [self performFetch];
 	// Do any additional setup after loading the view.

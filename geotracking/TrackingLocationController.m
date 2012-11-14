@@ -116,6 +116,7 @@
         url = [url URLByAppendingPathComponent:DB_FILE];
 
         _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+        _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {

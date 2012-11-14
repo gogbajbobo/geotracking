@@ -109,7 +109,6 @@
 {
     if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
     [self annotationsCreate];
-//    self.mapView.region = MKCoordinateRegionMake(self.center, self.span);
     [self.mapView setRegion:MKCoordinateRegionMake(self.center, self.span) animated:YES];
 }
 
@@ -152,15 +151,35 @@
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;
         self.center = center;
-        //    NSLog(@"center %f %f",center.longitude, center.latitude);
+//        NSLog(@"center %f %f", center.longitude, center.latitude);
         int zoomScale = 4;
         MKCoordinateSpan span;
         span.longitudeDelta = zoomScale * (maxLon - minLon);
         span.latitudeDelta = zoomScale * (maxLat - minLat);
+        if (span.longitudeDelta == 0) {
+            span.longitudeDelta = 0.01;
+        }
+        if (span.latitudeDelta == 0) {
+            span.latitudeDelta = 0.01;
+        }
         self.span = span;
-        //    NSLog(@"span %f %f",span.longitudeDelta, span.latitudeDelta);        
+//        NSLog(@"span %f %f", span.longitudeDelta, span.latitudeDelta);
     } else {
         self.center = self.mapView.userLocation.location.coordinate;
+//        NSLog(@"self.mapView.userLocation.location %@", self.mapView.userLocation.location);
+//        NSLog(@"center %f %f", self.center.longitude, self.center.latitude);
+        MKCoordinateSpan span;
+        span.longitudeDelta = 0.01;
+        span.latitudeDelta = 0.01;
+        self.span = span;
+//        NSLog(@"span %f %f", span.longitudeDelta, span.latitudeDelta);
+    }
+}
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+    NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
+    if (locationsArray.count == 0) {
+        [self updateMapView];
     }
 }
 
@@ -267,6 +286,8 @@
         self.mapView.showsUserLocation = YES;
     }
 
+    self.mapView.showsUserLocation = YES;
+    
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
     if (!mapType) {
         self.mapView.mapType = MKMapTypeStandard;
