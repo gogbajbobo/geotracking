@@ -40,7 +40,7 @@
             SpotViewController *spotVC = segue.destinationViewController;
 //            NSLog(@"mapVC self.tracker %@", self.tracker);
             spotVC.tracker = self.tracker;
-            spotVC.userLocation = self.mapView.userLocation;
+            spotVC.location = self.mapView.userLocation.location;
             spotVC.newSpotMode = YES;
         }
     }

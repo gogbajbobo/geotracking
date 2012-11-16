@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "TrackingLocationController.h"
+#import "Spot.h"
 
 @interface SpotViewController : UIViewController
 @property (nonatomic, strong) TrackingLocationController *tracker;
-@property (nonatomic, strong) MKUserLocation *userLocation;
+@property (nonatomic, strong) CLLocation *location;
 @property (nonatomic) BOOL newSpotMode;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
+@property (nonatomic, strong) Spot *spot;
 
 
 @end

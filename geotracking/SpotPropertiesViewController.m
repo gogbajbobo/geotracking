@@ -228,13 +228,15 @@
         UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
         [cell.imageView addGestureRecognizer:imageTap];
     } else {
-        //        [textField becomeFirstResponder];
+//        [textField becomeFirstResponder];
     }
     [cell.contentView addSubview:textField];
     [cell.textLabel setHidden:tableView.editing];
-//    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [textField setHidden:!tableView.editing];
-
+    if (!tableView.editing) {
+//        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
     return cell;
     
 }
@@ -271,6 +273,18 @@
         }];
     }
 }
+
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSLog(@"indexPath %@", indexPath);
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    } else if (cell.accessoryType == UITableViewCellAccessoryNone) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    return indexPath;
+}
+
 
 #pragma mark - UITextFieldDelegate
 
@@ -338,13 +352,14 @@
         
         //        NSLog(@"NSFetchedResultsChangeInsert");
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
         //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         
     } else if (type == NSFetchedResultsChangeUpdate) {
         
         //        NSLog(@"NSFetchedResultsChangeUpdate");
         // reloadRowsAtIndexPaths causes strange error don't know why
-        //        [self.tableView reloadData];
+        [self.tableView reloadData];
         //        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
     }

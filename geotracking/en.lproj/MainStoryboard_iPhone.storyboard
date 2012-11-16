@@ -281,7 +281,7 @@
             </objects>
             <point key="canvasLocation" x="2035" y="471"/>
         </scene>
-        <!--Spot View Controller - Spot properties-->
+        <!--Spot View Controller - Spot-->
         <scene sceneID="bMO-u4-Mdt">
             <objects>
                 <viewController id="Ekf-eM-AEE" customClass="SpotViewController" sceneMemberID="viewController">
@@ -289,7 +289,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Spot properties:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NdI-eT-7lI">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Spot:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NdI-eT-7lI">
                                 <rect key="frame" x="20" y="76" width="280" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -342,7 +342,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Spot properties" id="Btv-LN-vhD"/>
+                    <navigationItem key="navigationItem" title="Spot" id="Btv-LN-vhD">
+                        <barButtonItem key="rightBarButtonItem" systemItem="trash" id="sP7-f5-JhP">
+                            <connections>
+                                <action selector="deleteSpot:" destination="Ekf-eM-AEE" id="0lS-6N-iRp"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="spotInfo" destination="HwA-Vt-4GS" id="6uY-Zl-m1b"/>
                         <outlet property="spotLabel" destination="nWb-hk-WmC" id="cmJ-dv-Ndj"/>

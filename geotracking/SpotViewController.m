@@ -8,11 +8,10 @@
 
 #import "SpotViewController.h"
 #import "SpotPropertiesViewController.h"
-#import "Spot.h"
 #import "SpotProperty.h"
 #import "Track.h"
 
-@interface SpotViewController ()
+@interface SpotViewController () <UIAlertViewDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
@@ -21,6 +20,24 @@
 @end
 
 @implementation SpotViewController
+
+- (IBAction)deleteSpot:(id)sender {
+    UIAlertView *deleteSpotAlert = [[UIAlertView alloc] initWithTitle:@"Delete spot" message:@"Delete spot?" delegate:self cancelButtonTitle:@"YES"  otherButtonTitles:@"NO",nil];
+    [deleteSpotAlert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.title isEqualToString:@"Delete spot"]) {
+        if (buttonIndex == 0) {
+            [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot];
+            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                NSLog(@"deleteObject:self.spot UIDocumentSaveForOverwriting success");
+            }];
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+}
 
 
 - (IBAction)editInterests:(id)sender {
@@ -34,8 +51,8 @@
 }
 
 - (void)showSpotInfo {
-    CLLocationDegrees longitude = self.userLocation.location.coordinate.longitude;
-    CLLocationDegrees latitude = self.userLocation.location.coordinate.latitude;
+    CLLocationDegrees longitude = self.location.coordinate.longitude;
+    CLLocationDegrees latitude = self.location.coordinate.latitude;
     self.spotInfo.text = [NSString stringWithFormat:@"lon/lat %.2f/%.2f", longitude, latitude];
 }
 
@@ -76,6 +93,16 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self showSpotInfo];
     [self showSpotLabel];
+    if (self.newSpotMode) {
+        Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        [newSpot setXid:[self.tracker newid]];
+        newSpot.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
+        newSpot.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
+        self.spot = newSpot;
+        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"newSpot UIDocumentSaveForOverwriting success");
+        }];
+    }
 }
 
 - (void)viewDidLoad
