@@ -7,7 +7,6 @@
 //
 
 #import "SpotPropertiesViewController.h"
-#import "SpotViewController.h"
 #import "SpotProperty.h"
 
 @interface SpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
@@ -107,9 +106,9 @@
     [newProperty setType:self.typeOfProperty];
     [newProperty setName:name];
     //    NSLog(@"newProperty %@", newProperty);
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"newProperty UIDocumentSaveForOverwriting success");
-    }];
+//    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//        NSLog(@"newProperty UIDocumentSaveForOverwriting success");
+//    }];
 }
 
 - (void)imageTap:(UITapGestureRecognizer *)gesture
@@ -119,7 +118,7 @@
         if (self.tableView.editing) {
 //            NSLog(@"imageTap");
             self.tappedImageView = (UIImageView *)gesture.view;
-            UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Camera" otherButtonTitles:@"PhotoLibrary", nil];
+            UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
             [sourceSelectAlert show];
         }
     }
@@ -128,9 +127,9 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView.title isEqualToString:@"SourceSelect"]) {
-        if (buttonIndex == 0) {
+        if (buttonIndex == 1) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
-        } else {
+        } else if (buttonIndex == 2) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
         }
     }
@@ -174,9 +173,9 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         spotProperty.image = UIImagePNGRepresentation(imageView.image);
-        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
-        }];
+//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
+//        }];
     }
     
 }
@@ -224,6 +223,11 @@
         textField.text = cell.textLabel.text;
         if (spotProperty.image) {
             cell.imageView.image = [UIImage imageWithData:spotProperty.image];
+        } else {
+            spotProperty.image = UIImagePNGRepresentation(cell.imageView.image);
+//            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//                NSLog(@"set default image to SpotProperty UIDocumentSaveForOverwriting success");
+//            }];
         }
         UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
         [cell.imageView addGestureRecognizer:imageTap];
@@ -235,7 +239,10 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [textField setHidden:!tableView.editing];
     if (!tableView.editing) {
-//        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        NSLog(@"self.caller.spot.properties %@", self.caller.spot.properties);
+        if ([self.caller.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        }
     }
     return cell;
     
@@ -268,9 +275,9 @@
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.tracker.locationsDatabase.managedObjectContext deleteObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
-        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"deleteObject UIDocumentSaveForOverwriting success");
-        }];
+//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//            NSLog(@"deleteObject UIDocumentSaveForOverwriting success");
+//        }];
     }
 }
 
@@ -279,8 +286,16 @@
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
         cell.accessoryType = UITableViewCellAccessoryNone;
+        [self.caller.spot removePropertiesObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
+//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//            NSLog(@"removePropertiesObject UIDocumentSaveForOverwriting success");
+//        }];
     } else if (cell.accessoryType == UITableViewCellAccessoryNone) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        [self.caller.spot addPropertiesObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
+//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//            NSLog(@"addPropertiesObject UIDocumentSaveForOverwriting success");
+//        }];
     }
     return indexPath;
 }
@@ -315,9 +330,9 @@
                         spotProperty.name = textField.text;
                         cell.textLabel.text = textField.text;
                         [textField resignFirstResponder];
-                        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
-                        }];
+//                        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//                            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
+//                        }];
                     }
                 }
             }
@@ -335,6 +350,9 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"controllerDidChangeContent UIDocumentSaveForOverwriting success");
+    }];
     //    NSLog(@"controllerDidChangeContent");
 }
 

@@ -93,7 +93,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self showSpotInfo];
     [self showSpotLabel];
-    if (self.newSpotMode) {
+    if (!self.spot) {
         Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         [newSpot setXid:[self.tracker newid]];
         newSpot.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
