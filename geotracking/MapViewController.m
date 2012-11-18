@@ -9,8 +9,9 @@
 #import "MapViewController.h"
 #import "MapAnnotation.h"
 #import "SpotViewController.h"
+#import "Spot.h"
 
-@interface MapViewController () <MKMapViewDelegate>
+@interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) MKCoordinateSpan span;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
@@ -18,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UISwitch *headingModeSwitch;
 @property (weak, nonatomic) IBOutlet UILabel *trackNumberLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *trackNumberSelector;
+@property (strong, nonatomic) NSFetchedResultsController *resultsController;
 
 @end
 
@@ -29,6 +31,33 @@
 @synthesize span = _span;
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
+
+
+- (NSFetchedResultsController *)resultsController {
+    if (!_resultsController) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Spot"];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+//        request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController.delegate = self;
+    }
+    return _resultsController;
+}
+
+- (void)performFetch {
+    if (self.resultsController) {
+        self.resultsController.delegate = nil;
+        self.resultsController = nil;
+    }
+    NSError *error;
+    if (![self.resultsController performFetch:&error]) {
+        NSLog(@"performFetch error %@", error.localizedDescription);
+    } else {
+        if (self.resultsController.fetchedObjects.count > 0) {
+            // do something
+        }
+    }
+}
 
 - (IBAction)addNewSpotButtonPressed:(id)sender {
     [self performSegueWithIdentifier:@"addNewSpot" sender:self];
@@ -65,9 +94,9 @@
     [self.mapView removeOverlays:[self.mapView overlays]];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
     [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
-    [self.mapView removeAnnotations:self.mapView.annotations];
-    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
-    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
+//    [self.mapView removeAnnotations:self.mapView.annotations];
+//    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
+//    [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
 }
 
 - (IBAction)headingModeSwitchSwitched:(id)sender {
@@ -107,7 +136,7 @@
 
 - (void)updateMapView
 {
-    if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
+//    if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
     [self annotationsCreate];
     [self.mapView setRegion:MKCoordinateRegionMake(self.center, self.span) animated:YES];
 }
@@ -144,9 +173,10 @@
         
 //        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
 
-        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
-        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
-
+//        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
+//        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
+        
+        
         CLLocationCoordinate2D center;
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;
@@ -174,6 +204,12 @@
         self.span = span;
 //        NSLog(@"span %f %f", span.longitudeDelta, span.latitudeDelta);
     }
+
+    for (Spot *spot in self.resultsController.fetchedObjects) {
+        NSLog(@"spot %@", spot);
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:spot]];
+    }
+
 }
 
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
@@ -254,6 +290,43 @@
 }
 
 
+#pragma mark - NSFetchedResultsController delegate
+
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+//    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//        NSLog(@"controllerDidChangeContent UIDocumentSaveForOverwriting success");
+//    }];
+//    NSLog(@"controllerDidChangeContent");
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    
+//    NSLog(@"controller didChangeObject");
+    
+    if (type == NSFetchedResultsChangeDelete) {
+        
+    //        NSLog(@"NSFetchedResultsChangeDelete");
+//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+        
+    } else if (type == NSFetchedResultsChangeInsert) {
+        
+//        NSLog(@"NSFetchedResultsChangeInsert");
+//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        [self.tableView reloadData];
+        
+    } else if (type == NSFetchedResultsChangeUpdate) {
+        
+//        NSLog(@"NSFetchedResultsChangeUpdate");
+// reloadRowsAtIndexPaths causes strange error don't know why
+//        [self.tableView reloadData];
+//        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+    }
+}
+
+#pragma mark - view lifecycle
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -266,8 +339,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
+    [self performFetch];
+    [self annotationsCreate];
 	// Do any additional setup after loading the view.
 }
 
@@ -282,11 +356,11 @@
         [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
     }
     [self.headingModeSwitch setOn:headingMode animated:NO];
-    if (headingMode) {
-        self.mapView.showsUserLocation = YES;
-    }
+//    if (headingMode) {
+//        self.mapView.showsUserLocation = YES;
+//    }
 
-    self.mapView.showsUserLocation = YES;
+//    self.mapView.showsUserLocation = YES;
     
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
     if (!mapType) {
@@ -300,11 +374,11 @@
     } else if ([mapType integerValue] == MKMapTypeHybrid) {
         self.mapSwitch.selectedSegmentIndex = 2;
     }
-    
+    self.mapView.delegate = self;
+
     self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
     [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
-    [self annotationsCreate];
     [self trackNumberSelectorSetup];
 
 }

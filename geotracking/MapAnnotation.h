@@ -9,10 +9,13 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "Location.h"
+#import "Spot.h"
 
 @interface MapAnnotation : NSObject <MKAnnotation>
 
-+ (MapAnnotation *)createAnnotationFor:(Location *)location;
++ (MapAnnotation *)createAnnotationForLocation:(Location *)location;
++ (MapAnnotation *)createAnnotationForSpot:(Spot *)spot;
 @property (nonatomic, strong) Location *location;
+@property (nonatomic, strong) Spot *spot;
 
 @end

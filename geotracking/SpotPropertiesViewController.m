@@ -42,7 +42,7 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         if (self.resultsController.fetchedObjects.count > 0) {
-            // do something else
+            // do something
         }
     }
 }
@@ -105,10 +105,7 @@
     [newProperty setXid:[self.tracker newid]];
     [newProperty setType:self.typeOfProperty];
     [newProperty setName:name];
-    //    NSLog(@"newProperty %@", newProperty);
-//    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//        NSLog(@"newProperty UIDocumentSaveForOverwriting success");
-//    }];
+//    NSLog(@"newProperty %@", newProperty);
 }
 
 - (void)imageTap:(UITapGestureRecognizer *)gesture
@@ -147,8 +144,6 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-//    NSLog(@"info %@", info);
-//    NSLog(@"UIImagePickerControllerOriginalImage %@", [info objectForKey:UIImagePickerControllerOriginalImage]);
     self.tappedImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     [self addSpotPropertyImageFrom:self.tappedImageView];
     [picker dismissViewControllerAnimated:YES completion:^{
@@ -173,9 +168,6 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         spotProperty.image = UIImagePNGRepresentation(imageView.image);
-//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
-//        }];
     }
     
 }
@@ -189,7 +181,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
-    //    NSLog(@"[sectionInfo numberOfObjects] %d", [sectionInfo numberOfObjects]);
     if (tableView.editing) {
         return [sectionInfo numberOfObjects] + 1;
     } else {
@@ -205,7 +196,6 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"spotProperty"];
-    //    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
     cell.textLabel.text = @"";
     UIView *viewToDelete = [cell.contentView viewWithTag:1];
     if (viewToDelete) [viewToDelete removeFromSuperview];
@@ -225,9 +215,6 @@
             cell.imageView.image = [UIImage imageWithData:spotProperty.image];
         } else {
             spotProperty.image = UIImagePNGRepresentation(cell.imageView.image);
-//            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//                NSLog(@"set default image to SpotProperty UIDocumentSaveForOverwriting success");
-//            }];
         }
         UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
         [cell.imageView addGestureRecognizer:imageTap];
@@ -239,7 +226,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [textField setHidden:!tableView.editing];
     if (!tableView.editing) {
-        NSLog(@"self.caller.spot.properties %@", self.caller.spot.properties);
+//        NSLog(@"self.caller.spot.properties %@", self.caller.spot.properties);
         if ([self.caller.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
@@ -262,7 +249,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleInsert) {
-        //        NSLog(@"UITableViewCellEditingStyleInsert");
+//        NSLog(@"UITableViewCellEditingStyleInsert");
         if (tableView.editing) {
             UITextField *textField = (UITextField *)[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1];
             if (![textField.text isEqualToString:@""]) {
@@ -275,9 +262,6 @@
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.tracker.locationsDatabase.managedObjectContext deleteObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
-//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//            NSLog(@"deleteObject UIDocumentSaveForOverwriting success");
-//        }];
     }
 }
 
@@ -287,15 +271,9 @@
     if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
         cell.accessoryType = UITableViewCellAccessoryNone;
         [self.caller.spot removePropertiesObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
-//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//            NSLog(@"removePropertiesObject UIDocumentSaveForOverwriting success");
-//        }];
     } else if (cell.accessoryType == UITableViewCellAccessoryNone) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
         [self.caller.spot addPropertiesObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
-//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//            NSLog(@"addPropertiesObject UIDocumentSaveForOverwriting success");
-//        }];
     }
     return indexPath;
 }
@@ -305,23 +283,21 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
-        //        NSLog(@"textFieldShouldEndEditing");
+//        NSLog(@"textFieldShouldEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
         if ([cell.superview isKindOfClass:[UITableView class]]) {
             UITableView *tableView = (UITableView *)cell.superview;
-            //            NSLog(@"[tableView numberOfRowsInSection:0] %d", [tableView numberOfRowsInSection:0]);
-            //            NSLog(@"[tableView indexPathForCell:cell].row %d", [tableView indexPathForCell:cell].row);
             if ([tableView indexPathForCell:cell].row == [tableView numberOfRowsInSection:0] - 1) {
-                //                NSLog(@"Last row");
+//                NSLog(@"Last row");
                 if (![textField.text isEqualToString:@""]) {
-                    //                    NSLog(@"addNewPropertyWithName");
+//                    NSLog(@"addNewPropertyWithName");
                     [self addNewPropertyWithName:textField.text];
                     textField.text = nil;
                 } else {
                     NSLog(@"textField.text isEqualToString:@\"\"");
                 }
             } else {
-                //                NSLog(@"Not last row");
+//                NSLog(@"Not last row");
                 if (![textField.text isEqualToString:cell.textLabel.text]) {
                     if ([textField.text isEqualToString:@""]) {
                         textField.text = cell.textLabel.text;
@@ -330,9 +306,6 @@
                         spotProperty.name = textField.text;
                         cell.textLabel.text = textField.text;
                         [textField resignFirstResponder];
-//                        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//                            NSLog(@"updateObject UIDocumentSaveForOverwriting success");
-//                        }];
                     }
                 }
             }
@@ -353,32 +326,30 @@
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"controllerDidChangeContent UIDocumentSaveForOverwriting success");
     }];
-    //    NSLog(@"controllerDidChangeContent");
+//    NSLog(@"controllerDidChangeContent");
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
-    //    NSLog(@"controller didChangeObject");
+//    NSLog(@"controller didChangeObject");
     
     if (type == NSFetchedResultsChangeDelete) {
         
-        //        NSLog(@"NSFetchedResultsChangeDelete");
-        //        NSLog(@"indexPath %@", indexPath);
+//        NSLog(@"NSFetchedResultsChangeDelete");
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         
     } else if (type == NSFetchedResultsChangeInsert) {
         
-        //        NSLog(@"NSFetchedResultsChangeInsert");
+//        NSLog(@"NSFetchedResultsChangeInsert");
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView reloadData];
-        //        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+//        [self.tableView reloadData];
         
     } else if (type == NSFetchedResultsChangeUpdate) {
         
-        //        NSLog(@"NSFetchedResultsChangeUpdate");
-        // reloadRowsAtIndexPaths causes strange error don't know why
-        [self.tableView reloadData];
-        //        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        NSLog(@"NSFetchedResultsChangeUpdate");
+// reloadRowsAtIndexPaths causes strange error don't know why
+//        [self.tableView reloadData];
+//        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
     }
 }
