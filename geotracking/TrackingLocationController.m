@@ -26,6 +26,7 @@
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) Track *currentTrack;
 @property (nonatomic, strong) NSTimer *syncingTimer;
+@property (nonatomic, strong) NSString *trackerStatus;
 
 @end
 
@@ -276,11 +277,7 @@
     NSNumberFormatter *speedNumberFormatter = [[NSNumberFormatter alloc] init];
     [speedNumberFormatter setMaximumFractionDigits:1];
 
-    NSString *syncStatus = @"";
-    if (self.syncing) {
-        syncStatus = @" SYNC";
-    }
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h%@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], syncStatus];
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus];
     if (self.currentAccuracy > 0) {
         self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
     } else {
@@ -391,6 +388,7 @@
     self.locationManager.delegate = nil;
     self.locationManager = nil;
     self.locationManagerRunning = NO;
+    [self startConnection];
     [self.syncingTimer invalidate];
 }
 
@@ -452,7 +450,12 @@
             [request setHTTPBody:requestData];
             [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
             NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-            if (!connection) NSLog(@"connection error");
+            if (!connection) {
+                NSLog(@"connection error");
+                self.trackerStatus = @"SYNC FAIL";
+                [self updateInfoLabels];
+                self.syncing = NO;
+            }
         } else {
             NSLog(@"No data to sync");
         }
@@ -472,8 +475,9 @@
 
     if (notSyncedLocations.count > 0) {
         
+        self.trackerStatus = @"SYNC";
         self.syncing = YES;
-    
+
         xmlTextWriterPtr xmlTextWriter;
         xmlBufferPtr xmlBuffer;
 
@@ -593,6 +597,9 @@
     responseParser.delegate = self;
     if (![responseParser parse]) {
         NSLog(@"[responseParser parserError] %@", [responseParser parserError].localizedDescription);
+        self.trackerStatus = @"PARSER FAIL";
+        [self updateInfoLabels];
+        self.syncing = NO;
     }
     responseParser = nil;
 }
@@ -627,6 +634,8 @@
     
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"setSynced UIDocumentSaveForOverwriting success");
+        self.trackerStatus = @"";
+        [self updateInfoLabels];
         self.syncing = NO;
         if (!self.locationManagerRunning) {
             [self startConnection];

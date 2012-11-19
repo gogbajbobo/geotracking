@@ -51,8 +51,8 @@
 }
 
 - (void)showSpotInfo {
-    CLLocationDegrees longitude = self.location.coordinate.longitude;
-    CLLocationDegrees latitude = self.location.coordinate.latitude;
+    CLLocationDegrees longitude = [self.spot.longitude doubleValue];
+    CLLocationDegrees latitude = [self.spot.latitude doubleValue];
     self.spotInfo.text = [NSString stringWithFormat:@"lon/lat %.2f/%.2f", longitude, latitude];
 }
 
@@ -93,7 +93,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self showSpotInfo];
     [self showSpotLabel];
-    NSLog(@"self.spot %@", self.spot);
+//    NSLog(@"self.spot %@", self.spot);
     if (!self.spot) {
         Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         [newSpot setXid:[self.tracker newid]];

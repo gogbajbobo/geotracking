@@ -70,6 +70,7 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton *)sender {
     if ([segue.identifier isEqualToString:@"showSpot"]) {
+        NSLog(@"prepareForSegue showSpot");
         if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
             SpotViewController *spotVC = segue.destinationViewController;
 //            NSLog(@"mapVC self.tracker %@", self.tracker);
@@ -79,7 +80,7 @@
                 spotVC.newSpotMode = YES;
             } else if (sender.buttonType == UIButtonTypeDetailDisclosure) {
                 spotVC.spot = self.selectedSpot;
-                NSLog(@"self.selectedSpot %@", self.selectedSpot);
+//                NSLog(@"self.selectedSpot %@", self.selectedSpot);
                 spotVC.newSpotMode = NO;
             }
         }
@@ -209,6 +210,7 @@
 //        NSLog(@"spot %@", spot);
         [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:spot]];
     }
+//    NSLog(@"self.mapView.annotations %@", self.mapView.annotations);
 
 }
 
@@ -234,9 +236,7 @@
         }
         pinView.annotation = annotation;
         UIButton *detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-//        [detailDisclosureButton addTarget:self action:@selector(showSpot:) forControlEvents:UIControlEventTouchUpInside];
         pinView.rightCalloutAccessoryView = detailDisclosureButton;
-//        NSLog(@"pinColor %d", pinView.pinColor);
         return pinView;
     }
 }
@@ -261,7 +261,7 @@
         MapAnnotation *mapAnnotation = view.annotation;
         self.selectedSpot = mapAnnotation.spot;
     }
-    NSLog(@"calloutAccessoryControlTapped self.selectedSpot %@", self.selectedSpot);
+//    NSLog(@"calloutAccessoryControlTapped self.selectedSpot %@", self.selectedSpot);
     if ([control isKindOfClass:[UIButton class]]) {
         [self showSpot:(UIButton *)control];
     }
@@ -321,23 +321,18 @@
     
     if (type == NSFetchedResultsChangeDelete) {
         
-    //        NSLog(@"NSFetchedResultsChangeDelete");
-//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-        
+        NSLog(@"NSFetchedResultsChangeDelete");
+        [self.mapView removeAnnotation:[self.mapView.selectedAnnotations lastObject]];
+
     } else if (type == NSFetchedResultsChangeInsert) {
         
         NSLog(@"NSFetchedResultsChangeInsert");
         [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]]];
-//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-//        [self.tableView reloadData];
         
-    } else if (type == NSFetchedResultsChangeUpdate) {
+    } else if (type == NSFetchedResultsChangeUpdate || type == NSFetchedResultsChangeMove) {
         
-//        NSLog(@"NSFetchedResultsChangeUpdate");
-// reloadRowsAtIndexPaths causes strange error don't know why
-//        [self.tableView reloadData];
-//        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
+//        NSLog(@"NSFetchedResultsChangeUpdate or Move");
+
     }
 }
 
@@ -354,17 +349,6 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-    self.mapView.showsUserLocation = YES;
-    [self performFetch];
-    [self updateMapView];
-    [self annotationsCreate];
-	// Do any additional setup after loading the view.
-}
-
-
-- (void)viewWillAppear:(BOOL)animated {
-
     BOOL headingMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"] boolValue];
     if (!headingMode) {
         headingMode = NO;
@@ -386,16 +370,27 @@
     } else if ([mapType integerValue] == MKMapTypeHybrid) {
         self.mapSwitch.selectedSegmentIndex = 2;
     }
-
+    
     self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
     [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
     [self trackNumberSelectorSetup];
+    self.mapView.showsUserLocation = YES;
+    [self performFetch];
+    [self updateMapView];
+    [self annotationsCreate];
+    
+    [super viewDidLoad];
 
+
+	// Do any additional setup after loading the view.
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+//    NSLog(@"viewWillAppear");
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-    self.mapView.delegate = nil;
 }
 
 - (void)viewDidUnload
