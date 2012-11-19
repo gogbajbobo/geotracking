@@ -147,8 +147,7 @@
 
 - (void)updateMapView
 {
-//    if (self.mapView.annotations) [self.mapView removeAnnotations:self.mapView.annotations];
-    [self annotationsCreate];
+    [self mapScaleCenterSet];
     [self.mapView setRegion:MKCoordinateRegionMake(self.center, self.span) animated:YES];
 }
 
@@ -157,15 +156,13 @@
     _mapView = mapView;
     _mapView.delegate = self;
     self.tracker.mapView = _mapView;
-    [self updateMapView];
 }
 
-
-- (void)annotationsCreate
-{
+-(void)mapScaleCenterSet {
+    NSLog(@"mapScaleCenterSet");
     NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
-//    NSArray *locationsArray = self.tracker.allLocationsArray;
     if (locationsArray.count > 0) {
+        NSLog(@"locationsArray.count > 0");
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         
         double maxLon = [location.longitude doubleValue];
@@ -178,22 +175,13 @@
             if ([location.longitude doubleValue] < minLon) minLon = [location.longitude doubleValue];
             if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
             if ([location.latitude doubleValue] < minLat) minLat = [location.latitude doubleValue];
-//            NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
         }
-        
-//        NSLog(@"annotations.count %d",self.mapView.annotations.count);
-        
-//        NSLog(@"maxLon %f minLon %f maxLat %f minLat %f", maxLon, minLon, maxLat, minLat);
-
-//        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray objectAtIndex:0]]];
-//        [self.mapView addAnnotation:[MapAnnotation createAnnotationFor:[self.tracker.locationsArray lastObject]]];
-        
         
         CLLocationCoordinate2D center;
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;
         self.center = center;
-//        NSLog(@"center %f %f", center.longitude, center.latitude);
+        NSLog(@"self.center %f %f", self.center.longitude, self.center.latitude);
         int zoomScale = 4;
         MKCoordinateSpan span;
         span.longitudeDelta = zoomScale * (maxLon - minLon);
@@ -205,18 +193,18 @@
             span.latitudeDelta = 0.01;
         }
         self.span = span;
-//        NSLog(@"span %f %f", span.longitudeDelta, span.latitudeDelta);
     } else {
         self.center = self.mapView.userLocation.location.coordinate;
-//        NSLog(@"self.mapView.userLocation.location %@", self.mapView.userLocation.location);
-//        NSLog(@"center %f %f", self.center.longitude, self.center.latitude);
         MKCoordinateSpan span;
         span.longitudeDelta = 0.01;
         span.latitudeDelta = 0.01;
         self.span = span;
-//        NSLog(@"span %f %f", span.longitudeDelta, span.latitudeDelta);
     }
 
+}
+
+- (void)annotationsCreate
+{
     for (Spot *spot in self.resultsController.fetchedObjects) {
 //        NSLog(@"spot %@", spot);
         [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:spot]];
@@ -338,7 +326,7 @@
         
     } else if (type == NSFetchedResultsChangeInsert) {
         
-//        NSLog(@"NSFetchedResultsChangeInsert");
+        NSLog(@"NSFetchedResultsChangeInsert");
         [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]]];
 //        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView reloadData];
@@ -369,6 +357,7 @@
     [super viewDidLoad];
     self.mapView.showsUserLocation = YES;
     [self performFetch];
+    [self updateMapView];
     [self annotationsCreate];
 	// Do any additional setup after loading the view.
 }
@@ -384,11 +373,6 @@
         [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
     }
     [self.headingModeSwitch setOn:headingMode animated:NO];
-//    if (headingMode) {
-//        self.mapView.showsUserLocation = YES;
-//    }
-
-//    self.mapView.showsUserLocation = YES;
     
     NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
     if (!mapType) {
