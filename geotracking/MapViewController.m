@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *trackNumberLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *trackNumberSelector;
 @property (strong, nonatomic) NSFetchedResultsController *resultsController;
+@property (strong, nonatomic) Spot *selectedSpot;
 
 @end
 
@@ -59,18 +60,28 @@
     }
 }
 
-- (IBAction)addNewSpotButtonPressed:(id)sender {
-    [self performSegueWithIdentifier:@"addNewSpot" sender:self];
+- (IBAction)addNewSpotButtonPressed:(UIButton *)sender {
+    [self performSegueWithIdentifier:@"showSpot" sender:sender];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"addNewSpot"]) {
+- (void)showSpot:(UIButton *)sender {
+    [self performSegueWithIdentifier:@"showSpot" sender:sender];
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton *)sender {
+    if ([segue.identifier isEqualToString:@"showSpot"]) {
         if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
             SpotViewController *spotVC = segue.destinationViewController;
 //            NSLog(@"mapVC self.tracker %@", self.tracker);
             spotVC.tracker = self.tracker;
-            spotVC.location = self.mapView.userLocation.location;
-            spotVC.newSpotMode = YES;
+            if (sender.buttonType == UIButtonTypeContactAdd) {
+                spotVC.location = self.mapView.userLocation.location;
+                spotVC.newSpotMode = YES;
+            } else if (sender.buttonType == UIButtonTypeDetailDisclosure) {
+                spotVC.spot = self.selectedSpot;
+                NSLog(@"self.selectedSpot %@", self.selectedSpot);
+                spotVC.newSpotMode = NO;
+            }
         }
     }
 }
@@ -144,7 +155,8 @@
 - (void)setMapView:(MKMapView *)mapView
 {
     _mapView = mapView;
-    self.tracker.mapView = self.mapView;
+    _mapView.delegate = self;
+    self.tracker.mapView = _mapView;
     [self updateMapView];
 }
 
@@ -206,7 +218,7 @@
     }
 
     for (Spot *spot in self.resultsController.fetchedObjects) {
-        NSLog(@"spot %@", spot);
+//        NSLog(@"spot %@", spot);
         [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:spot]];
     }
 
@@ -233,10 +245,14 @@
             pinView.canShowCallout = YES;
         }
         pinView.annotation = annotation;
+        UIButton *detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+//        [detailDisclosureButton addTarget:self action:@selector(showSpot:) forControlEvents:UIControlEventTouchUpInside];
+        pinView.rightCalloutAccessoryView = detailDisclosureButton;
 //        NSLog(@"pinColor %d", pinView.pinColor);
         return pinView;
     }
 }
+
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
     
@@ -250,6 +266,17 @@
     }
     return pathView;
 
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    if ([view.annotation isKindOfClass:[MapAnnotation class]]) {
+        MapAnnotation *mapAnnotation = view.annotation;
+        self.selectedSpot = mapAnnotation.spot;
+    }
+    NSLog(@"calloutAccessoryControlTapped self.selectedSpot %@", self.selectedSpot);
+    if ([control isKindOfClass:[UIButton class]]) {
+        [self showSpot:(UIButton *)control];
+    }
 }
 
 - (MKPolyline *)pathLine {
@@ -312,6 +339,7 @@
     } else if (type == NSFetchedResultsChangeInsert) {
         
 //        NSLog(@"NSFetchedResultsChangeInsert");
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]]];
 //        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView reloadData];
         
@@ -374,7 +402,6 @@
     } else if ([mapType integerValue] == MKMapTypeHybrid) {
         self.mapSwitch.selectedSegmentIndex = 2;
     }
-    self.mapView.delegate = self;
 
     self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];

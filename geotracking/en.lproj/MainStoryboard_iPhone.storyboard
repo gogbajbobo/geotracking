@@ -274,7 +274,7 @@
                         <outlet property="mapView" destination="DOi-n5-e9c" id="XI9-Y0-Bnw"/>
                         <outlet property="trackNumberLabel" destination="Tnc-BE-auB" id="uYs-eO-chs"/>
                         <outlet property="trackNumberSelector" destination="cfv-gg-Gqn" id="DMq-PP-DP6"/>
-                        <segue destination="Ekf-eM-AEE" kind="push" identifier="addNewSpot" id="78X-pl-nSX"/>
+                        <segue destination="Ekf-eM-AEE" kind="push" identifier="showSpot" id="78X-pl-nSX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="diD-SM-aEE" userLabel="First Responder" sceneMemberID="firstResponder"/>

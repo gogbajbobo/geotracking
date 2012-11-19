@@ -93,6 +93,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self showSpotInfo];
     [self showSpotLabel];
+    NSLog(@"self.spot %@", self.spot);
     if (!self.spot) {
         Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         [newSpot setXid:[self.tracker newid]];
