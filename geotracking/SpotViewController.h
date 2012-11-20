@@ -12,7 +12,7 @@
 
 @interface SpotViewController : UIViewController
 @property (nonatomic, strong) TrackingLocationController *tracker;
-@property (nonatomic, strong) CLLocation *location;
+@property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) BOOL newSpotMode;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) Spot *spot;

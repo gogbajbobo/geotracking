@@ -91,19 +91,19 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    [self showSpotInfo];
-    [self showSpotLabel];
 //    NSLog(@"self.spot %@", self.spot);
     if (!self.spot) {
         Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         [newSpot setXid:[self.tracker newid]];
-        newSpot.latitude = [NSNumber numberWithDouble:self.location.coordinate.latitude];
-        newSpot.longitude = [NSNumber numberWithDouble:self.location.coordinate.longitude];
+        newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
+        newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
         self.spot = newSpot;
         [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"newSpot UIDocumentSaveForOverwriting success");
         }];
     }
+    [self showSpotInfo];
+    [self showSpotLabel];
 }
 
 - (void)viewDidLoad

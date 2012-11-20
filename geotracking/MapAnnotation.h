@@ -15,6 +15,7 @@
 
 + (MapAnnotation *)createAnnotationForLocation:(Location *)location;
 + (MapAnnotation *)createAnnotationForSpot:(Spot *)spot;
++ (MapAnnotation *)createAnnotationForCoordinate:(CLLocationCoordinate2D)coordinate;
 @property (nonatomic, strong) Location *location;
 @property (nonatomic, strong) Spot *spot;
 

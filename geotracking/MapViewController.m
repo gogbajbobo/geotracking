@@ -13,6 +13,7 @@
 
 @interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
+@property (nonatomic) CLLocationCoordinate2D newSpotCoordinate;
 @property (nonatomic) MKCoordinateSpan span;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
@@ -61,6 +62,7 @@
 }
 
 - (IBAction)addNewSpotButtonPressed:(UIButton *)sender {
+    self.newSpotCoordinate = self.mapView.userLocation.coordinate;
     [self performSegueWithIdentifier:@"showSpot" sender:sender];
 }
 
@@ -73,14 +75,14 @@
         NSLog(@"prepareForSegue showSpot");
         if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
             SpotViewController *spotVC = segue.destinationViewController;
-//            NSLog(@"mapVC self.tracker %@", self.tracker);
             spotVC.tracker = self.tracker;
             if (sender.buttonType == UIButtonTypeContactAdd) {
-                spotVC.location = self.mapView.userLocation.location;
+                NSLog(@"UIButtonTypeContactAdd");
+                spotVC.coordinate = self.newSpotCoordinate;
                 spotVC.newSpotMode = YES;
             } else if (sender.buttonType == UIButtonTypeDetailDisclosure) {
+                NSLog(@"UIButtonTypeDetailDisclosure");
                 spotVC.spot = self.selectedSpot;
-//                NSLog(@"self.selectedSpot %@", self.selectedSpot);
                 spotVC.newSpotMode = NO;
             }
         }
@@ -213,58 +215,6 @@
 
 }
 
-- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
-    NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
-    if (locationsArray.count == 0) {
-        [self updateMapView];
-    }
-}
-
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
-{
-
-    if (annotation == mapView.userLocation){
-        return nil;
-    } else {
-        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
-        if (!pinView) {
-            pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
-            pinView.animatesDrop = YES;
-            pinView.pinColor = MKPinAnnotationColorPurple;
-            pinView.canShowCallout = YES;
-        }
-        pinView.annotation = annotation;
-        UIButton *detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-        pinView.rightCalloutAccessoryView = detailDisclosureButton;
-        return pinView;
-    }
-}
-
-
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
-    
-    MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
-    if (overlay.title == @"currentTrack") {
-        pathView.strokeColor = [UIColor blueColor];
-        pathView.lineWidth = 4.0;
-    } else if (overlay.title == @"allTracks") {
-        pathView.strokeColor = [UIColor grayColor];
-        pathView.lineWidth = 2.0;
-    }
-    return pathView;
-
-}
-
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    if ([view.annotation isKindOfClass:[MapAnnotation class]]) {
-        MapAnnotation *mapAnnotation = view.annotation;
-        self.selectedSpot = mapAnnotation.spot;
-    }
-//    NSLog(@"calloutAccessoryControlTapped self.selectedSpot %@", self.selectedSpot);
-    if ([control isKindOfClass:[UIButton class]]) {
-        [self showSpot:(UIButton *)control];
-    }
-}
 
 - (MKPolyline *)pathLine {
     
@@ -303,6 +253,88 @@
     return pathLine;
 }
 
+- (void)longTap:(UILongPressGestureRecognizer *)gesture {
+//    NSLog(@"UILongPressGestureRecognizer");
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+//        NSLog(@"UIGestureRecognizerStateBegan");
+        CGPoint longTapPoint = [gesture locationInView:self.mapView];
+        CLLocationCoordinate2D longTapCoordinate = [self.mapView convertPoint:longTapPoint toCoordinateFromView:self.mapView];
+        NSLog(@"coordinate %f %f", longTapCoordinate.latitude, longTapCoordinate.longitude);
+        self.newSpotCoordinate = longTapCoordinate;
+        [self.mapView addAnnotation:[MapAnnotation createAnnotationForCoordinate:longTapCoordinate]];
+    }
+}
+
+
+#pragma mark - MKMapViewDelegate
+
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
+    NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
+    if (locationsArray.count == 0) {
+        [self updateMapView];
+    }
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation
+{
+    
+    if (annotation == mapView.userLocation){
+        return nil;
+    } else {
+        MKPinAnnotationView *pinView = (MKPinAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"MapPinAnnotation"];
+        if (!pinView) {
+            pinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"MapPinAnnotation"];
+            pinView.animatesDrop = YES;
+            pinView.pinColor = MKPinAnnotationColorPurple;
+            pinView.canShowCallout = YES;
+        }
+        pinView.annotation = annotation;
+        UIButton *detailDisclosureButton;
+        if ([[pinView.annotation title] isEqualToString:@"Add new spot…"]) {
+            detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
+        } else {
+            detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+        }
+        pinView.rightCalloutAccessoryView = detailDisclosureButton;
+        return pinView;
+    }
+}
+
+
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
+    
+    MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
+    if (overlay.title == @"currentTrack") {
+        pathView.strokeColor = [UIColor blueColor];
+        pathView.lineWidth = 4.0;
+    } else if (overlay.title == @"allTracks") {
+        pathView.strokeColor = [UIColor grayColor];
+        pathView.lineWidth = 2.0;
+    }
+    return pathView;
+    
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    if ([view.annotation isKindOfClass:[MapAnnotation class]]) {
+        MapAnnotation *mapAnnotation = view.annotation;
+        self.selectedSpot = mapAnnotation.spot;
+    }
+    if ([control isKindOfClass:[UIButton class]]) {
+        UIButton *button = (UIButton *)control;
+        if (button.buttonType == UIButtonTypeContactAdd) {
+            [self.mapView removeAnnotation:view.annotation];
+        }
+        [self showSpot:button];
+    }
+}
+
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
+    if ([[view.annotation title] isEqualToString:@"Add new spot…"]) {
+        [mapView removeAnnotation:view.annotation];
+    }
+}
 
 #pragma mark - NSFetchedResultsController delegate
 
@@ -379,6 +411,9 @@
     [self updateMapView];
     [self annotationsCreate];
     
+    UILongPressGestureRecognizer *longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTap:)];
+    [self.mapView addGestureRecognizer:longTap];
+
     [super viewDidLoad];
 
 
