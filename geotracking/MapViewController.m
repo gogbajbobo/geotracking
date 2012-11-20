@@ -73,16 +73,16 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton *)sender {
     if ([segue.identifier isEqualToString:@"showSpot"]) {
-        NSLog(@"prepareForSegue showSpot");
+//        NSLog(@"prepareForSegue showSpot");
         if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
             SpotViewController *spotVC = segue.destinationViewController;
             spotVC.tracker = self.tracker;
             if (sender.buttonType == UIButtonTypeContactAdd) {
-                NSLog(@"UIButtonTypeContactAdd");
+//                NSLog(@"UIButtonTypeContactAdd");
                 spotVC.coordinate = self.newSpotCoordinate;
                 spotVC.newSpotMode = YES;
             } else if (sender.buttonType == UIButtonTypeDetailDisclosure) {
-                NSLog(@"UIButtonTypeDetailDisclosure");
+//                NSLog(@"UIButtonTypeDetailDisclosure");
                 spotVC.spot = self.selectedSpot;
                 spotVC.newSpotMode = NO;
             }
@@ -162,10 +162,10 @@
 }
 
 -(void)mapScaleCenterSet {
-    NSLog(@"mapScaleCenterSet");
+//    NSLog(@"mapScaleCenterSet");
     NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
     if (locationsArray.count > 0) {
-        NSLog(@"locationsArray.count > 0");
+//        NSLog(@"locationsArray.count > 0");
         Location *location = (Location *)[locationsArray objectAtIndex:0];
         
         double maxLon = [location.longitude doubleValue];
@@ -184,7 +184,7 @@
         center.longitude = (maxLon + minLon)/2;
         center.latitude = (maxLat + minLat)/2;
         self.center = center;
-        NSLog(@"self.center %f %f", self.center.longitude, self.center.latitude);
+//        NSLog(@"self.center %f %f", self.center.longitude, self.center.latitude);
         int zoomScale = 4;
         MKCoordinateSpan span;
         span.longitudeDelta = zoomScale * (maxLon - minLon);
@@ -267,7 +267,7 @@
 //        NSLog(@"UIGestureRecognizerStateBegan");
         CGPoint longTapPoint = [gesture locationInView:self.mapView];
         CLLocationCoordinate2D longTapCoordinate = [self.mapView convertPoint:longTapPoint toCoordinateFromView:self.mapView];
-        NSLog(@"coordinate %f %f", longTapCoordinate.latitude, longTapCoordinate.longitude);
+//        NSLog(@"coordinate %f %f", longTapCoordinate.latitude, longTapCoordinate.longitude);
         self.newSpotCoordinate = longTapCoordinate;
         [self.mapView addAnnotation:[MapAnnotation createAnnotationForCoordinate:longTapCoordinate]];
     }
@@ -339,7 +339,7 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    NSLog(@"didSelectAnnotationView");
+//    NSLog(@"didSelectAnnotationView");
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
@@ -365,7 +365,7 @@
     
     if (type == NSFetchedResultsChangeDelete) {
         
-        NSLog(@"NSFetchedResultsChangeDelete");
+//        NSLog(@"NSFetchedResultsChangeDelete");
         
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
@@ -376,7 +376,7 @@
 
     } else if (type == NSFetchedResultsChangeInsert) {
         
-        NSLog(@"NSFetchedResultsChangeInsert");
+//        NSLog(@"NSFetchedResultsChangeInsert");
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
             MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]];
@@ -387,7 +387,7 @@
         
     } else if (type == NSFetchedResultsChangeUpdate || type == NSFetchedResultsChangeMove) {
         
-        NSLog(@"NSFetchedResultsChangeUpdate or Move");
+//        NSLog(@"NSFetchedResultsChangeUpdate or Move");
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
             MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
