@@ -40,13 +40,17 @@
 
 - (NSString *)title
 {
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     if (self.location) {
-        return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.location.timestamp]];
+        CLLocationDegrees latitude = [self.location.latitude doubleValue];
+        CLLocationDegrees longitude = [self.location.longitude doubleValue];
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+        return [NSString stringWithFormat:@"%@",[location description]];
     } else if (self.spot) {
-        return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.spot.timestamp]];
+        if (!self.spot.label) {
+            return @"untitled";
+        } else {
+            return self.spot.label;
+        }
     } else if (self.addNewSpot) {
         return @"Add new spot…";
     } else {
@@ -57,20 +61,16 @@
 
 - (NSString *)subtitle
 {
-    CLLocationDegrees latitude;
-    CLLocationDegrees longitude;
-    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+    [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     if (self.location) {
-        latitude = [self.location.latitude doubleValue];
-        longitude = [self.location.longitude doubleValue];
+        return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.location.timestamp]];
     } else if (self.spot) {
-        latitude = [self.spot.latitude doubleValue];
-        longitude = [self.spot.longitude doubleValue];
+        return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.spot.timestamp]];
+    } else {
+        return nil;
     }
-    
-//    CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-//    return [NSString stringWithFormat:@"%@",[location description]];
-    return nil;
 }
 
 - (CLLocationCoordinate2D)coordinate

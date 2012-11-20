@@ -11,7 +11,7 @@
 #import "SpotProperty.h"
 #import "Track.h"
 
-@interface SpotViewController () <UIAlertViewDelegate>
+@interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
@@ -61,8 +61,9 @@
     self.spotLabel.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.spotLabel.returnKeyType = UIReturnKeyDone;
     self.spotLabel.tag = 1;
-//    self.spotLabel.delegate = self;
+    self.spotLabel.delegate = self;
     self.spotLabel.placeholder = @"Spot label";
+    self.spotLabel.text = self.spot.label;
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -76,6 +77,23 @@
         }
     }
     
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    if (![textField.text isEqualToString:self.spot.label]) {
+        self.spot.label = textField.text;
+        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"spot.label UIDocumentSaveForOverwriting success");
+        }];
+    }
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return YES;
 }
 
 
@@ -97,6 +115,7 @@
         [newSpot setXid:[self.tracker newid]];
         newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
         newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
+        newSpot.timestamp = [NSDate date];
         self.spot = newSpot;
         [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"newSpot UIDocumentSaveForOverwriting success");

@@ -22,6 +22,7 @@
 @property (weak, nonatomic) IBOutlet UIStepper *trackNumberSelector;
 @property (strong, nonatomic) NSFetchedResultsController *resultsController;
 @property (strong, nonatomic) Spot *selectedSpot;
+@property (strong, nonatomic) NSMutableDictionary *annotationsDictionary;
 
 @end
 
@@ -207,10 +208,17 @@
 
 - (void)annotationsCreate
 {
+//    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
+    self.annotationsDictionary = [NSMutableDictionary dictionary];
     for (Spot *spot in self.resultsController.fetchedObjects) {
+        MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:spot];
+        [self.mapView addAnnotation:annotation];
+        [self.annotationsDictionary setObject:annotation forKey:spot.xid];
 //        NSLog(@"spot %@", spot);
-        [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:spot]];
+//        NSLog(@"annotation %@", annotation);
     }
+//    NSLog(@"self.annotationsDictionary %@", self.annotationsDictionary);
+
 //    NSLog(@"self.mapView.annotations %@", self.mapView.annotations);
 
 }
@@ -330,10 +338,15 @@
     }
 }
 
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    NSLog(@"didSelectAnnotationView");
+}
+
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     if ([[view.annotation title] isEqualToString:@"Add new spot…"]) {
         [mapView removeAnnotation:view.annotation];
     }
+    self.selectedSpot = nil;
 }
 
 #pragma mark - NSFetchedResultsController delegate
@@ -353,17 +366,36 @@
     if (type == NSFetchedResultsChangeDelete) {
         
         NSLog(@"NSFetchedResultsChangeDelete");
-        [self.mapView removeAnnotation:[self.mapView.selectedAnnotations lastObject]];
+        
+        if ([anObject isKindOfClass:[Spot class]]) {
+            Spot *spot = (Spot *)anObject;
+            MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+            [self.annotationsDictionary removeObjectForKey:spot.xid];
+            [self.mapView removeAnnotation:annotation];
+        }
 
     } else if (type == NSFetchedResultsChangeInsert) {
         
         NSLog(@"NSFetchedResultsChangeInsert");
-        [self.mapView addAnnotation:[MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]]];
+        if ([anObject isKindOfClass:[Spot class]]) {
+            Spot *spot = (Spot *)anObject;
+            MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]];
+            [self.annotationsDictionary setObject:annotation forKey:spot.xid];
+            [self.mapView addAnnotation:annotation];
+            [self.mapView selectAnnotation:annotation animated:NO];
+        }
         
     } else if (type == NSFetchedResultsChangeUpdate || type == NSFetchedResultsChangeMove) {
         
-//        NSLog(@"NSFetchedResultsChangeUpdate or Move");
-
+        NSLog(@"NSFetchedResultsChangeUpdate or Move");
+        if ([anObject isKindOfClass:[Spot class]]) {
+            Spot *spot = (Spot *)anObject;
+            MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+            [self.mapView removeAnnotation:annotation];
+            annotation = [MapAnnotation createAnnotationForSpot:spot];
+            [self.mapView addAnnotation:annotation];
+            [self.mapView selectAnnotation:annotation animated:NO];
+        }
     }
 }
 
