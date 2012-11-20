@@ -82,12 +82,12 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    self.tableView.dataSource = self.tracker;
-    self.tableView.delegate = self.tracker;
 }
 
 - (void)viewDidLoad
 {
+    self.tableView.dataSource = self.tracker;
+    self.tableView.delegate = self.tracker;
     [super viewDidLoad];
 }
 

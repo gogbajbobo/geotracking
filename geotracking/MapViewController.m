@@ -156,7 +156,6 @@
 {
     _mapView = mapView;
     _mapView.delegate = self;
-    self.tracker.mapView = _mapView;
 }
 
 -(void)mapScaleCenterSet {
@@ -395,6 +394,7 @@
 
 - (void)viewDidUnload
 {
+    NSLog(@"viewDidUnload");
     self.mapView.delegate = nil;
     [self setMapSwitch:nil];
     [self setHeadingModeSwitch:nil];

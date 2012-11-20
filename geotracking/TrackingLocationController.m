@@ -40,7 +40,6 @@
 @synthesize locationsDatabase = _locationsDatabase;
 @synthesize locationsArray = _locationsArray;
 @synthesize tableView = _tableView;
-@synthesize mapView = _mapView;
 @synthesize locationManagerRunning = _locationManagerRunning;
 @synthesize overallDistance = _overallDistance;
 @synthesize averageSpeed = _averageSpeed;
@@ -277,6 +276,9 @@
     NSNumberFormatter *speedNumberFormatter = [[NSNumberFormatter alloc] init];
     [speedNumberFormatter setMaximumFractionDigits:1];
 
+    if (!self.trackerStatus) {
+        self.trackerStatus = @"";
+    }
     self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus];
     if (self.currentAccuracy > 0) {
         self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];

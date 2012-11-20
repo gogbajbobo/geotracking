@@ -23,7 +23,6 @@
 @property (nonatomic, strong) NSArray *locationsArray;
 @property (nonatomic, strong) NSArray *allLocationsArray;
 @property (nonatomic) UITableView *tableView;
-@property (nonatomic) MKMapView *mapView;
 @property (nonatomic) BOOL locationManagerRunning;
 @property (nonatomic) id caller;
 @property (nonatomic, strong) CLLocation *lastLocation;
