@@ -41,7 +41,6 @@
     }
 }
 
-
 - (IBAction)editInterests:(id)sender {
     self.typeOfProperty = @"Interest";
     [self performSegueWithIdentifier:@"showProperties" sender:self];
@@ -96,10 +95,11 @@
     }
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
     NSUInteger count = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
-    return count;
+    return count+1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+
     NSString *predicateString;
     NSString *cellIdentifier;
     if (collectionView.tag == 1) {
@@ -109,13 +109,24 @@
         predicateString = @"Network";
         cellIdentifier = @"networkCell";
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
-    SpotProperty *spotProperty = [[[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]] objectAtIndex:indexPath.row];
 
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, cell.contentView.frame.size.height)];
-    [cell.contentView addSubview:imageView];
-    imageView.image = [UIImage imageWithData:spotProperty.image];
+    UICollectionViewCell *cell;
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
+    NSArray *spotPropertiesArray = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]];
+    
+    if (indexPath.row == spotPropertiesArray.count) {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"%@%@", @"add", predicateString] forIndexPath:indexPath];
+    } else {
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+        [[cell.contentView viewWithTag:1] removeFromSuperview];
+        SpotProperty *spotProperty = [spotPropertiesArray objectAtIndex:indexPath.row];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, cell.contentView.frame.size.height)];
+        imageView.image = [UIImage imageWithData:spotProperty.image];
+        imageView.tag = 1;
+        [cell.contentView addSubview:imageView];
+    }
+    
     return cell;
 }
 
