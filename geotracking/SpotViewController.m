@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *interestsCollectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *networkCollectionView;
 
 
 @end
@@ -87,24 +88,47 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", @"Interest"];
+    NSString *predicateString;
+    if (collectionView.tag == 1) {
+        predicateString = @"Interest";
+    } else if (collectionView.tag == 2) {
+        predicateString = @"Network";
+    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
     NSUInteger count = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
     return count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", @"Interest"];
+    NSString *predicateString;
+    NSString *cellIdentifier;
+    if (collectionView.tag == 1) {
+        predicateString = @"Interest";
+        cellIdentifier = @"interestCell";
+    } else if (collectionView.tag == 2) {
+        predicateString = @"Network";
+        cellIdentifier = @"networkCell";
+    }
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
     SpotProperty *spotProperty = [[[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]] objectAtIndex:indexPath.row];
 
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"interestCell" forIndexPath:indexPath];
-    [cell.contentView addSubview:[[UIImageView alloc] initWithImage:[UIImage imageWithData:spotProperty.image]]];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, cell.contentView.frame.size.height)];
+    [cell.contentView addSubview:imageView];
+    imageView.image = [UIImage imageWithData:spotProperty.image];
     return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     UICollectionReusableView *view;
+    NSString *viewIdentifier;
+    if (collectionView.tag == 1) {
+        viewIdentifier = @"interestHeader";
+    } else if (collectionView.tag == 2) {
+        viewIdentifier = @"networkHeader";
+    }
     if (kind == UICollectionElementKindSectionHeader) {
-        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"interestHeader" forIndexPath:indexPath];
+        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:viewIdentifier forIndexPath:indexPath];
     } else if (kind == UICollectionElementKindSectionFooter) {
 //        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"interestFooter" forIndexPath:indexPath];
     }
@@ -155,26 +179,32 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-//    NSLog(@"self.spot %@", self.spot);
-    if (!self.spot) {
-        Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-        [newSpot setXid:[self.tracker newid]];
-        newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
-        newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
-        newSpot.timestamp = [NSDate date];
-        self.spot = newSpot;
-        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"newSpot UIDocumentSaveForOverwriting success");
-        }];
-    }
-    self.interestsCollectionView.dataSource = self;
-    self.interestsCollectionView.delegate = self;
-    [self showSpotInfo];
-    [self showSpotLabel];
+    [self.interestsCollectionView reloadData];
+    [self.networkCollectionView reloadData];
 }
 
 - (void)viewDidLoad
 {
+    if (!self.spot) {
+    Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    [newSpot setXid:[self.tracker newid]];
+    newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
+    newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
+    newSpot.timestamp = [NSDate date];
+    self.spot = newSpot;
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"newSpot UIDocumentSaveForOverwriting success");
+    }];
+}
+    self.interestsCollectionView.dataSource = self;
+    self.interestsCollectionView.delegate = self;
+    self.interestsCollectionView.tag = 1;
+    self.networkCollectionView.dataSource = self;
+    self.networkCollectionView.delegate = self;
+    self.networkCollectionView.tag = 2;
+    [self showSpotInfo];
+    [self showSpotLabel];
+
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 }
