@@ -105,6 +105,8 @@
     [newProperty setXid:[self.tracker newid]];
     [newProperty setType:self.typeOfProperty];
     [newProperty setName:name];
+    [newProperty setTimestamp:[NSDate date]];
+    [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"blank_image_44_44.png"])];
 //    NSLog(@"newProperty %@", newProperty);
 }
 
@@ -214,7 +216,7 @@
         if (spotProperty.image) {
             cell.imageView.image = [UIImage imageWithData:spotProperty.image];
         } else {
-            spotProperty.image = UIImagePNGRepresentation(cell.imageView.image);
+            cell.imageView.image = [UIImage imageNamed:@"blank_image_44_44.png"];
         }
         UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
         [cell.imageView addGestureRecognizer:imageTap];
