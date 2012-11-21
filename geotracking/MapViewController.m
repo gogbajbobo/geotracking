@@ -305,6 +305,15 @@
             detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
         }
         pinView.rightCalloutAccessoryView = detailDisclosureButton;
+
+        MapAnnotation *mapAnnotation = annotation;
+        UIImage *spotImage = [UIImage imageWithData:mapAnnotation.spot.image];
+        if (spotImage) {
+            CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
+            UIImageView *spotImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 32)];
+            spotImageView.image = spotImage;
+            pinView.leftCalloutAccessoryView = spotImageView;
+        }
         return pinView;
     }
 }
