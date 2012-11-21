@@ -11,10 +11,11 @@
 #import "SpotProperty.h"
 #import "Track.h"
 
-@interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate>
+@interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
+@property (weak, nonatomic) IBOutlet UICollectionView *interestsCollectionView;
 
 
 @end
@@ -79,6 +80,51 @@
     
 }
 
+#pragma mark - UICollectionViewDataSource, Delegate, DelegateFlowLayout
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", @"Interest"];
+    NSUInteger count = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
+    return count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", @"Interest"];
+    SpotProperty *spotProperty = [[[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]] objectAtIndex:indexPath.row];
+
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"interestCell" forIndexPath:indexPath];
+    [cell.contentView addSubview:[[UIImageView alloc] initWithImage:[UIImage imageWithData:spotProperty.image]]];
+    return cell;
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+    UICollectionReusableView *view;
+    if (kind == UICollectionElementKindSectionHeader) {
+        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"interestHeader" forIndexPath:indexPath];
+    } else if (kind == UICollectionElementKindSectionFooter) {
+//        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"interestFooter" forIndexPath:indexPath];
+    }
+    return view;
+}
+
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+//    CGSize headerSize;
+//    headerSize.height = 50;
+//    headerSize.width = 100;
+//    return headerSize;
+//}
+//
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
+//    CGSize footerSize;
+//    footerSize.height = 50;
+//    footerSize.width = 100;
+//    return footerSize;
+//}
+
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
@@ -121,6 +167,8 @@
             NSLog(@"newSpot UIDocumentSaveForOverwriting success");
         }];
     }
+    self.interestsCollectionView.dataSource = self;
+    self.interestsCollectionView.delegate = self;
     [self showSpotInfo];
     [self showSpotLabel];
 }
