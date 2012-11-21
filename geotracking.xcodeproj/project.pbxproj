@@ -20,6 +20,7 @@
 		2C32D42F164ACF0800A2ADB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2C32D435164ACF0800A2ADB7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C32D433164ACF0800A2ADB7 /* InfoPlist.strings */; };
 		2C32D438164ACF0800A2ADB7 /* geotrackingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C32D437164ACF0800A2ADB7 /* geotrackingTests.m */; };
+		2C3B3D03165D3B20003F2347 /* blank_spotImage_132_85.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C3B3D02165D3B20003F2347 /* blank_spotImage_132_85.png */; };
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
@@ -72,6 +73,7 @@
 		2C32D436164ACF0800A2ADB7 /* geotrackingTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = geotrackingTests.h; sourceTree = "<group>"; };
 		2C32D437164ACF0800A2ADB7 /* geotrackingTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = geotrackingTests.m; sourceTree = "<group>"; };
 		2C32D439164ACF0800A2ADB7 /* geotrackingTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "geotrackingTests-Prefix.pch"; sourceTree = "<group>"; };
+		2C3B3D02165D3B20003F2347 /* blank_spotImage_132_85.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank_spotImage_132_85.png; sourceTree = "<group>"; };
 		2C417C6215E80E3F00A3A83D /* TrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerViewController.h; sourceTree = "<group>"; };
 		2C417C6315E80E3F00A3A83D /* TrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerViewController.m; sourceTree = "<group>"; };
 		2C417C6515E81E6000A3A83D /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -223,6 +225,7 @@
 		2CE4720615E3FEEC00B092DB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2C3B3D02165D3B20003F2347 /* blank_spotImage_132_85.png */,
 				2C29FC0F16510FFB007E86E0 /* blank_image_44_44.png */,
 				2CE4720715E3FEEC00B092DB /* geotracking-Info.plist */,
 				2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */,
@@ -316,6 +319,7 @@
 				2CE4721315E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard in Resources */,
 				2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */,
 				2C29FC1016510FFB007E86E0 /* blank_image_44_44.png in Resources */,
+				2C3B3D03165D3B20003F2347 /* blank_spotImage_132_85.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

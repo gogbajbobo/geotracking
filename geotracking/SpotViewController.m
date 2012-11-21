@@ -11,12 +11,13 @@
 #import "SpotProperty.h"
 #import "Track.h"
 
-@interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
 @property (weak, nonatomic) IBOutlet UICollectionView *interestsCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *networkCollectionView;
+@property (weak, nonatomic) IBOutlet UIImageView *spotImageView;
 
 
 @end
@@ -38,7 +39,14 @@
             }];
             [self.navigationController popViewControllerAnimated:YES];
         }
+    } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
+        if (buttonIndex == 1) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        } else if (buttonIndex == 2) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }
     }
+
 }
 
 - (IBAction)editInterests:(id)sender {
@@ -79,6 +87,48 @@
     }
     
 }
+
+- (void)spotImageLongTap:(UILongPressGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+        [sourceSelectAlert show];
+    }
+}
+
+- (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)imageSourceType {
+    if ([UIImagePickerController isSourceTypeAvailable:imageSourceType]) {
+        UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+        imagePickerController.delegate = self;
+        imagePickerController.sourceType = imageSourceType;
+        [self presentViewController:imagePickerController animated:YES completion:^{
+            NSLog(@"presentViewController:UIImagePickerController");
+        }];
+    }
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+    self.spot.image = UIImagePNGRepresentation(self.spotImageView.image);
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+    }];
+    [picker dismissViewControllerAnimated:YES completion:^{
+        NSLog(@"dismissViewControllerAnimated");
+    }];
+}
+
+-(UIImage *)resizeImage:(UIImage *)image {
+    CGFloat scale = image.size.width / self.spotImageView.bounds.size.width;
+    CGFloat width = image.size.width / scale;
+    CGFloat height = image.size.height / scale;
+    UIGraphicsBeginImageContext(CGSizeMake(width ,height));
+    [image drawInRect:CGRectMake(0, 0, width, height)];
+    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return resultImage;
+}
+
 
 #pragma mark - UICollectionViewDataSource, Delegate, DelegateFlowLayout
 
@@ -130,21 +180,21 @@
     return cell;
 }
 
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    UICollectionReusableView *view;
-    NSString *viewIdentifier;
-    if (collectionView.tag == 1) {
-        viewIdentifier = @"interestHeader";
-    } else if (collectionView.tag == 2) {
-        viewIdentifier = @"networkHeader";
-    }
-    if (kind == UICollectionElementKindSectionHeader) {
-        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:viewIdentifier forIndexPath:indexPath];
-    } else if (kind == UICollectionElementKindSectionFooter) {
-//        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"interestFooter" forIndexPath:indexPath];
-    }
-    return view;
-}
+//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionReusableView *view;
+//    NSString *viewIdentifier;
+//    if (collectionView.tag == 1) {
+//        viewIdentifier = @"interestHeader";
+//    } else if (collectionView.tag == 2) {
+//        viewIdentifier = @"networkHeader";
+//    }
+//    if (kind == UICollectionElementKindSectionHeader) {
+//        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:viewIdentifier forIndexPath:indexPath];
+//    } else if (kind == UICollectionElementKindSectionFooter) {
+////        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"interestFooter" forIndexPath:indexPath];
+//    }
+//    return view;
+//}
 
 //- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
 //    CGSize headerSize;
@@ -215,6 +265,12 @@
     self.networkCollectionView.tag = 2;
     [self showSpotInfo];
     [self showSpotLabel];
+    if (self.spot.image) {
+        self.spotImageView.image = [UIImage imageWithData:self.spot.image];
+    }
+    UILongPressGestureRecognizer *spotImageLongTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageLongTap:)];
+    [self.spotImageView addGestureRecognizer:spotImageLongTap];
+
 
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
