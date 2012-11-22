@@ -44,6 +44,9 @@
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         } else if (buttonIndex == 2) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        } else if (buttonIndex == 3) {
+            self.spotImageView.image = nil;
+            [self.spotImageView setNeedsDisplay];
         }
     }
 
@@ -91,7 +94,7 @@
 - (void)spotImageLongTap:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", @"Delete photo", nil];
         [sourceSelectAlert show];
     }
 }
@@ -108,6 +111,7 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+//    self.spotImageView.image = [info objectForKey:UIImagePickerControllerOriginalImage];
     self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     self.spot.image = UIImagePNGRepresentation(self.spotImageView.image);
     self.spot.timestamp = [NSDate date];
@@ -120,9 +124,18 @@
 }
 
 -(UIImage *)resizeImage:(UIImage *)image {
-    CGFloat scale = image.size.width / self.spotImageView.bounds.size.width;
-    CGFloat width = image.size.width / scale;
-    CGFloat height = image.size.height / scale;
+    CGFloat width = self.spotImageView.bounds.size.width;
+    CGFloat height = self.spotImageView.bounds.size.height;
+    NSLog(@"width, height %f %f", width, height);
+    NSLog(@"spotImage.size.height, spotImage.size.width %f %f", image.size.height, image.size.width);
+    if (image.size.width >= image.size.height) {
+        NSLog(@">=");
+        height = width * image.size.height / image.size.width;
+    } else {
+        NSLog(@"<");
+        width = height * image.size.width / image.size.height;
+    }
+    NSLog(@"width, height %f %f", width, height);
     UIGraphicsBeginImageContext(CGSizeMake(width ,height));
     [image drawInRect:CGRectMake(0, 0, width, height)];
     UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -267,9 +280,15 @@
     self.networkCollectionView.tag = 2;
     [self showSpotInfo];
     [self showSpotLabel];
-    if (self.spot.image) {
-        self.spotImageView.image = [UIImage imageWithData:self.spot.image];
+    UIImage *spotImage = [UIImage imageWithData:self.spot.image];
+    if (spotImage) {
+        self.spotImageView.image = spotImage;
+    } else {
+        self.spotImageView.image = [UIImage imageNamed:@"blank_spotImage_132_85"];
     }
+
+    self.spotImageView.contentMode = UIViewContentModeScaleAspectFit;
+    
     UILongPressGestureRecognizer *spotImageLongTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageLongTap:)];
     [self.spotImageView addGestureRecognizer:spotImageLongTap];
 
