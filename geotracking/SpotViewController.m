@@ -110,6 +110,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     self.spot.image = UIImagePNGRepresentation(self.spotImageView.image);
+    self.spot.timestamp = [NSDate date];
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spot.image UIDocumentSaveForOverwriting success");
     }];
@@ -215,6 +216,7 @@
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
     if (![textField.text isEqualToString:self.spot.label]) {
         self.spot.label = textField.text;
+        self.spot.timestamp = [NSDate date];
         [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"spot.label UIDocumentSaveForOverwriting success");
         }];

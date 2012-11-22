@@ -170,6 +170,7 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         spotProperty.image = UIImagePNGRepresentation(imageView.image);
+        spotProperty.timestamp = [NSDate date];
     }
     
 }
@@ -209,6 +210,7 @@
     textField.delegate = self;
     textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
     textField.text = nil;
+    cell.imageView.image = [UIImage imageNamed:@"blank_image_44_44.png"];
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
@@ -216,16 +218,17 @@
         if (spotProperty.image) {
             cell.imageView.image = [UIImage imageWithData:spotProperty.image];
         } else {
-            cell.imageView.image = [UIImage imageNamed:@"blank_image_44_44.png"];
         }
-        UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
-        [cell.imageView addGestureRecognizer:imageTap];
-    } else {
-//        [textField becomeFirstResponder];
+    } else {        
     }
+
+    UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
+    [cell.imageView addGestureRecognizer:imageTap];
+
     [cell.contentView addSubview:textField];
     [cell.textLabel setHidden:tableView.editing];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.accessoryType = UITableViewCellAccessoryNone;
     [textField setHidden:!tableView.editing];
     if (!tableView.editing) {
 //        NSLog(@"self.caller.spot.properties %@", self.caller.spot.properties);
@@ -269,13 +272,17 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //    NSLog(@"indexPath %@", indexPath);
+    SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+    NSDate *timestamp = [NSDate date];
+    spotProperty.timestamp = timestamp;
+    self.caller.spot.timestamp = timestamp;
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
         cell.accessoryType = UITableViewCellAccessoryNone;
-        [self.caller.spot removePropertiesObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
+        [self.caller.spot removePropertiesObject:spotProperty];
     } else if (cell.accessoryType == UITableViewCellAccessoryNone) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [self.caller.spot addPropertiesObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
+        [self.caller.spot addPropertiesObject:spotProperty];
     }
     return indexPath;
 }
@@ -306,6 +313,7 @@
                     } else {
                         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
                         spotProperty.name = textField.text;
+                        spotProperty.timestamp = [NSDate date];
                         cell.textLabel.text = textField.text;
                         [textField resignFirstResponder];
                     }
@@ -346,9 +354,10 @@
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
 //        [self.tableView reloadData];
         
-    } else if (type == NSFetchedResultsChangeUpdate) {
+    } else if (type == NSFetchedResultsChangeUpdate || type == NSFetchedResultsChangeMove) {
         
 //        NSLog(@"NSFetchedResultsChangeUpdate");
+        
 // reloadRowsAtIndexPaths causes strange error don't know why
 //        [self.tableView reloadData];
 //        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];

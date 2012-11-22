@@ -210,6 +210,7 @@
         self.currentTrack.startTime = location.timestamp;
     }
     self.currentTrack.finishTime = location.timestamp;
+    self.currentTrack.timestamp = location.timestamp;
     [self.currentTrack addLocationsObject:location];
     
 //    NSLog(@"currentLocation %@",currentLocation);
