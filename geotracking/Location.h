@@ -2,7 +2,7 @@
 //  Location.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 11/2/12.
+//  Created by Maxim Grigoriev on 11/25/12.
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -19,7 +19,6 @@
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSNumber * speed;
-@property (nonatomic, retain) NSNumber * synced;
 @property (nonatomic, retain) Track *track;
 
 @end

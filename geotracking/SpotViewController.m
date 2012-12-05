@@ -115,6 +115,7 @@
     self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     self.spot.image = UIImagePNGRepresentation(self.spotImageView.image);
     self.spot.timestamp = [NSDate date];
+    self.spot.synced = [NSNumber numberWithBool:NO];
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spot.image UIDocumentSaveForOverwriting success");
     }];
@@ -177,7 +178,7 @@
     UICollectionViewCell *cell;
 
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
-    NSArray *spotPropertiesArray = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]];
+    NSArray *spotPropertiesArray = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]]];
     
     if (indexPath.row == spotPropertiesArray.count) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"%@%@", @"add", predicateString] forIndexPath:indexPath];
@@ -230,6 +231,7 @@
     if (![textField.text isEqualToString:self.spot.label]) {
         self.spot.label = textField.text;
         self.spot.timestamp = [NSDate date];
+        self.spot.synced = [NSNumber numberWithBool:NO];
         [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
             NSLog(@"spot.label UIDocumentSaveForOverwriting success");
         }];

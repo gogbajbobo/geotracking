@@ -2,6 +2,7 @@
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Datum" representedClassName="Datum" isAbstract="YES" syncable="YES">
         <attribute name="lastSyncTimestamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="synced" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="xid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
@@ -11,7 +12,6 @@
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="synced" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="track" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="locations" inverseEntity="Track" syncable="YES"/>
     </entity>
     <entity name="Spot" representedClassName="Spot" parentEntity="Datum" syncable="YES">
@@ -32,14 +32,13 @@
         <attribute name="finishTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="overallDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="synced" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="track" inverseEntity="Location" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Datum" positionX="4590" positionY="1377" width="128" height="88"/>
-        <element name="Location" positionX="4984" positionY="1346" width="128" height="148"/>
+        <element name="Datum" positionX="4590" positionY="1377" width="128" height="103"/>
+        <element name="Location" positionX="4984" positionY="1346" width="128" height="133"/>
         <element name="Spot" positionX="4464" positionY="1566" width="128" height="133"/>
-        <element name="Track" positionX="4813" positionY="1439" width="128" height="118"/>
         <element name="SpotProperty" positionX="4660" positionY="1598" width="128" height="103"/>
+        <element name="Track" positionX="4813" positionY="1439" width="128" height="103"/>
     </elements>
 </model>

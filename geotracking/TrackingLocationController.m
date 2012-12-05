@@ -12,6 +12,7 @@
 #import "Track.h"
 #import "MapAnnotation.h"
 #import "TrackerViewController.h"
+#import "UDOAuthBasic.h"
 
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
@@ -211,6 +212,7 @@
     }
     self.currentTrack.finishTime = location.timestamp;
     self.currentTrack.timestamp = location.timestamp;
+    self.currentTrack.synced = [NSNumber numberWithBool:NO];
     [self.currentTrack addLocationsObject:location];
     
 //    NSLog(@"currentLocation %@",currentLocation);
@@ -452,13 +454,15 @@
             [request setHTTPMethod:@"POST"];
             [request setHTTPBody:requestData];
             [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-            NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-            if (!connection) {
-                NSLog(@"connection error");
-                self.trackerStatus = @"SYNC FAIL";
-                [self updateInfoLabels];
-                self.syncing = NO;
-            }
+            NSLog(@"request %@", request);
+            NSLog(@"authenticateRequest %@", [[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request]);
+//            NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//            if (!connection) {
+//                NSLog(@"connection error");
+//                self.trackerStatus = @"SYNC FAIL";
+//                [self updateInfoLabels];
+//                self.syncing = NO;
+//            }
         } else {
             NSLog(@"No data to sync");
         }
@@ -622,9 +626,9 @@
             matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
             if (matchedObjects.count > 0) {
                 Track *track = [matchedObjects lastObject];
-                if (![track.xid isEqualToString:self.currentTrack.xid]) {
+//                if (![track.xid isEqualToString:self.currentTrack.xid]) {
                     track.synced = [NSNumber numberWithBool:YES];
-                }
+//                }
                 track.lastSyncTimestamp = [NSDate date];
             }
         }

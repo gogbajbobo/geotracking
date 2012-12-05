@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "TrackerViewController.h"
 #import "TrackingLocationController.h"
 #import "Location.h"
@@ -39,6 +40,8 @@
     return _tracker;
 }
 - (IBAction)syncButtonPressed:(id)sender {
+//    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+//    [appDelegate.syncer fireTimer];
     [self.tracker startConnection];
 }
 

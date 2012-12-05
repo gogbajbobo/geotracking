@@ -7,11 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DataSyncController.h"
+#import "UDPushNotificationCenter.h"
+#import "UDPushAuthCodeRetriever.h"
+#import "UDAuthTokenRetriever.h"
+#import "UDOAuthBasic.h"
+#import "Reachability.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate> {
     
 }
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property (nonatomic, strong) DataSyncController *syncer;
+@property (strong, nonatomic) UDPushNotificationCenter *pushNotificatonCenter;
+@property (strong, nonatomic) UDPushAuthCodeRetriever *authCodeRetriever;
+@property (strong, nonatomic) Reachability *reachability;
 @end

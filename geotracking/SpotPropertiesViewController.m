@@ -171,6 +171,7 @@
         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         spotProperty.image = UIImagePNGRepresentation(imageView.image);
         spotProperty.timestamp = [NSDate date];
+        spotProperty.synced = [NSNumber numberWithBool:NO];
     }
     
 }
@@ -276,6 +277,8 @@
     NSDate *timestamp = [NSDate date];
     spotProperty.timestamp = timestamp;
     self.caller.spot.timestamp = timestamp;
+    spotProperty.synced = [NSNumber numberWithBool:NO];
+    self.caller.spot.synced = [NSNumber numberWithBool:NO];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
         cell.accessoryType = UITableViewCellAccessoryNone;
@@ -314,6 +317,7 @@
                         SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
                         spotProperty.name = textField.text;
                         spotProperty.timestamp = [NSDate date];
+                        spotProperty.synced = [NSNumber numberWithBool:NO];
                         cell.textLabel.text = textField.text;
                         [textField resignFirstResponder];
                     }
