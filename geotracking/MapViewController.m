@@ -10,6 +10,7 @@
 #import "MapAnnotation.h"
 #import "SpotViewController.h"
 #import "Spot.h"
+#import "FilterSpotViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
@@ -63,6 +64,10 @@
     }
 }
 
+- (IBAction)filterSpotButtonPressed:(id)sender {
+    [self performSegueWithIdentifier:@"filterSpots" sender:sender];
+}
+
 - (IBAction)addNewSpotButtonPressed:(UIButton *)sender {
     self.newSpotCoordinate = self.mapView.userLocation.coordinate;
     [self performSegueWithIdentifier:@"showSpot" sender:sender];
@@ -87,6 +92,11 @@
                 spotVC.spot = self.selectedSpot;
                 spotVC.newSpotMode = NO;
             }
+        }
+    } else if ([segue.identifier isEqualToString:@"filterSpots"]) {
+        if ([segue.destinationViewController isKindOfClass:[FilterSpotViewController class]]) {
+            FilterSpotViewController *filterVC = segue.destinationViewController;
+            filterVC.tracker = self.tracker;
         }
     }
 }

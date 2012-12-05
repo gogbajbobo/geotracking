@@ -21,8 +21,6 @@
 		2C3EAFF31662168700748C23 /* Track.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFF21662168700748C23 /* Track.m */; };
 		2C3EAFF61662168700748C23 /* Spot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFF51662168700748C23 /* Spot.m */; };
 		2C3EAFF91662168700748C23 /* SpotProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFF81662168700748C23 /* SpotProperty.m */; };
-		2C3EAFFC1662168800748C23 /* Datum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFFB1662168700748C23 /* Datum.m */; };
-		2C3EAFFE1662491100748C23 /* Location.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFFD1662491100748C23 /* Location.xcdatamodel */; };
 		2C3EB0F4166CD6BD00748C23 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0AC166CD6BD00748C23 /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2C3EB0F5166CD6BD00748C23 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0AE166CD6BD00748C23 /* Reachability.m */; };
 		2C3EB0F9166CD6BD00748C23 /* UDAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0B7166CD6BD00748C23 /* UDAuthToken.m */; };
@@ -45,6 +43,9 @@
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
+		2C94D71B166F92B60019A0C7 /* Location.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71A166F92B60019A0C7 /* Location.xcdatamodel */; };
+		2C94D71E166F92C50019A0C7 /* Datum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71D166F92C50019A0C7 /* Datum.m */; };
+		2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */; };
 		2CB24B701639A7A90040A211 /* SpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */; };
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
@@ -94,9 +95,6 @@
 		2C3EAFF51662168700748C23 /* Spot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Spot.m; sourceTree = "<group>"; };
 		2C3EAFF71662168700748C23 /* SpotProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotProperty.h; sourceTree = "<group>"; };
 		2C3EAFF81662168700748C23 /* SpotProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotProperty.m; sourceTree = "<group>"; };
-		2C3EAFFA1662168700748C23 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
-		2C3EAFFB1662168700748C23 /* Datum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datum.m; sourceTree = "<group>"; };
-		2C3EAFFD1662491100748C23 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
 		2C3EB0AB166CD6BD00748C23 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataXMLNode.h; path = ../UDPushAuth/pushauth/lib/GDataXMLNode.h; sourceTree = "<group>"; };
 		2C3EB0AC166CD6BD00748C23 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataXMLNode.m; path = ../UDPushAuth/pushauth/lib/GDataXMLNode.m; sourceTree = "<group>"; };
 		2C3EB0AD166CD6BD00748C23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../UDPushAuth/pushauth/lib/Reachability.h; sourceTree = "<group>"; };
@@ -149,6 +147,11 @@
 		2C417C6615E81E6000A3A83D /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		2C417C6815E8280B00A3A83D /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		2C417C6915E8280B00A3A83D /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
+		2C94D71A166F92B60019A0C7 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
+		2C94D71C166F92C50019A0C7 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
+		2C94D71D166F92C50019A0C7 /* Datum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datum.m; sourceTree = "<group>"; };
+		2C94D720166FC00D0019A0C7 /* FilterSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterSpotViewController.h; sourceTree = "<group>"; };
+		2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterSpotViewController.m; sourceTree = "<group>"; };
 		2CB24B6E1639A7A90040A211 /* SpotPropertiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotPropertiesViewController.h; sourceTree = "<group>"; };
 		2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotPropertiesViewController.m; sourceTree = "<group>"; };
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -322,6 +325,24 @@
 			name = UDAuthTokenRetriever;
 			sourceTree = "<group>";
 		};
+		2C94D71F166F92D00019A0C7 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				2C94D71A166F92B60019A0C7 /* Location.xcdatamodel */,
+				2C94D71C166F92C50019A0C7 /* Datum.h */,
+				2C94D71D166F92C50019A0C7 /* Datum.m */,
+				2C3EAFF71662168700748C23 /* SpotProperty.h */,
+				2C3EAFF81662168700748C23 /* SpotProperty.m */,
+				2C3EAFF41662168700748C23 /* Spot.h */,
+				2C3EAFF51662168700748C23 /* Spot.m */,
+				2C3EAFF11662168700748C23 /* Track.h */,
+				2C3EAFF21662168700748C23 /* Track.m */,
+				2C3EAFEE1662168600748C23 /* Location.h */,
+				2C3EAFEF1662168600748C23 /* Location.m */,
+			);
+			name = DataModel;
+			sourceTree = "<group>";
+		};
 		2CE471F015E3FEEB00B092DB = {
 			isa = PBXGroup;
 			children = (
@@ -361,6 +382,7 @@
 		2CE4720515E3FEEC00B092DB /* geotracking */ = {
 			isa = PBXGroup;
 			children = (
+				2C94D71F166F92D00019A0C7 /* DataModel */,
 				2CE4721115E3FEEC00B092DB /* MainStoryboard_iPhone.storyboard */,
 				2CE4720E15E3FEEC00B092DB /* AppDelegate.h */,
 				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
@@ -380,17 +402,8 @@
 				2C32D33C1643A99700A2ADB7 /* SpotViewController.m */,
 				2CB24B6E1639A7A90040A211 /* SpotPropertiesViewController.h */,
 				2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */,
-				2C3EAFFD1662491100748C23 /* Location.xcdatamodel */,
-				2C3EAFFA1662168700748C23 /* Datum.h */,
-				2C3EAFFB1662168700748C23 /* Datum.m */,
-				2C3EAFF71662168700748C23 /* SpotProperty.h */,
-				2C3EAFF81662168700748C23 /* SpotProperty.m */,
-				2C3EAFF41662168700748C23 /* Spot.h */,
-				2C3EAFF51662168700748C23 /* Spot.m */,
-				2C3EAFF11662168700748C23 /* Track.h */,
-				2C3EAFF21662168700748C23 /* Track.m */,
-				2C3EAFEE1662168600748C23 /* Location.h */,
-				2C3EAFEF1662168600748C23 /* Location.m */,
+				2C94D720166FC00D0019A0C7 /* FilterSpotViewController.h */,
+				2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;
@@ -542,8 +555,6 @@
 				2C3EAFF31662168700748C23 /* Track.m in Sources */,
 				2C3EAFF61662168700748C23 /* Spot.m in Sources */,
 				2C3EAFF91662168700748C23 /* SpotProperty.m in Sources */,
-				2C3EAFFC1662168800748C23 /* Datum.m in Sources */,
-				2C3EAFFE1662491100748C23 /* Location.xcdatamodel in Sources */,
 				2C3EB0F4166CD6BD00748C23 /* GDataXMLNode.m in Sources */,
 				2C3EB0F5166CD6BD00748C23 /* Reachability.m in Sources */,
 				2C3EB0F9166CD6BD00748C23 /* UDAuthToken.m in Sources */,
@@ -562,6 +573,9 @@
 				2C3EB106166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m in Sources */,
 				2C3EB107166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m in Sources */,
 				2C3EB108166CD6BD00748C23 /* UDPushObject.m in Sources */,
+				2C94D71B166F92B60019A0C7 /* Location.xcdatamodel in Sources */,
+				2C94D71E166F92C50019A0C7 /* Datum.m in Sources */,
+				2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
