@@ -233,7 +233,8 @@
     [textField setHidden:!tableView.editing];
     if (!tableView.editing) {
 //        NSLog(@"self.caller.spot.properties %@", self.caller.spot.properties);
-        if ([self.caller.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
+//        if ([self.caller.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
+        if ([self.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
     }
@@ -276,16 +277,20 @@
     SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
     NSDate *timestamp = [NSDate date];
     spotProperty.timestamp = timestamp;
-    self.caller.spot.timestamp = timestamp;
+//    self.caller.spot.timestamp = timestamp;
+    self.spot.timestamp = timestamp;
     spotProperty.synced = [NSNumber numberWithBool:NO];
-    self.caller.spot.synced = [NSNumber numberWithBool:NO];
+//    self.caller.spot.synced = [NSNumber numberWithBool:NO];
+    self.spot.synced = [NSNumber numberWithBool:NO];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
         cell.accessoryType = UITableViewCellAccessoryNone;
-        [self.caller.spot removePropertiesObject:spotProperty];
+//        [self.caller.spot removePropertiesObject:spotProperty];
+        [self.spot removePropertiesObject:spotProperty];
     } else if (cell.accessoryType == UITableViewCellAccessoryNone) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [self.caller.spot addPropertiesObject:spotProperty];
+//        [self.caller.spot addPropertiesObject:spotProperty];
+        [self.spot addPropertiesObject:spotProperty];
     }
     return indexPath;
 }
@@ -384,6 +389,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"self.spot %@", self.spot);
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
 //    self.tableView.allowsSelectionDuringEditing = YES;

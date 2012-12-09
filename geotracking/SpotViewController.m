@@ -83,6 +83,7 @@
     if ([segue.destinationViewController isKindOfClass:[SpotPropertiesViewController class]]) {
         SpotPropertiesViewController *spotPropertiesVC = segue.destinationViewController;        
         if ([segue.identifier isEqualToString:@"showProperties"]) {
+            spotPropertiesVC.spot = self.spot;
             spotPropertiesVC.caller = self;
             spotPropertiesVC.tracker = self.tracker;
             spotPropertiesVC.typeOfProperty = self.typeOfProperty;
