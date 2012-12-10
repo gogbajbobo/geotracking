@@ -9,14 +9,42 @@
 #import "FilterSpotViewController.h"
 #import "SpotPropertiesViewController.h"
 #import "SpotViewController.h"
-#import "Spot.h"
 #import "SpotProperty.h"
 
 @interface FilterSpotViewController ()
+@property (strong,nonatomic) NSSet *currentFilterProperties;
 
 @end
 
 @implementation FilterSpotViewController
+@synthesize currentFilterProperties = _currentFilterProperties;
+
+- (NSSet *)currentFilterProperties {
+    if (!_currentFilterProperties) {
+        NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"currentFilterProperties"];
+        if (!data) {
+            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+            _currentFilterProperties = [self allSpotProperties];
+            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_currentFilterProperties];
+            [settings setObject:data forKey:@"currentFilterProperties"];
+            [settings synchronize];
+        } else {
+            _currentFilterProperties = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        }
+    }
+    return _currentFilterProperties;
+}
+
+- (void)setCurrentFilterProperties:(NSSet *)currentFilterProperties {
+    if (_currentFilterProperties != currentFilterProperties) {
+        _currentFilterProperties = currentFilterProperties;
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_currentFilterProperties];
+        [settings setObject:data forKey:@"currentFilterProperties"];
+        [settings synchronize];
+    }
+}
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,7 +59,7 @@
     NSEntityDescription *spotEntity = [NSEntityDescription entityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     Spot *filterSpot = (Spot *)[[NSManagedObject alloc] initWithEntity:spotEntity insertIntoManagedObjectContext:nil];
 //    NSEntityDescription *spotPropertyEntity = [NSEntityDescription entityForName:@"SpotProperty" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    [filterSpot addProperties:[self allSpotProperties]];
+    [filterSpot addProperties:self.currentFilterProperties];
     filterSpot.label = @"filterSpot";
     NSLog(@"filterSpot %@", filterSpot);
     for (int i = 0; i < self.viewControllers.count; i++) {

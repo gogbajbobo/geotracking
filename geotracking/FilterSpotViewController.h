@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "TrackingLocationController.h"
+#import "Spot.h"
 
 
 @interface FilterSpotViewController : UITabBarController
 @property (nonatomic) id caller;
 @property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) Spot *filterSpot;
 
 @end
