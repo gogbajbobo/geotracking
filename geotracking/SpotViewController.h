@@ -16,6 +16,7 @@
 @property (nonatomic) BOOL newSpotMode;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) Spot *spot;
+@property (nonatomic, strong) Spot *filterSpot;
 
 
 @end

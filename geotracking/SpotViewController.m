@@ -87,6 +87,7 @@
             spotPropertiesVC.caller = self;
             spotPropertiesVC.tracker = self.tracker;
             spotPropertiesVC.typeOfProperty = self.typeOfProperty;
+            spotPropertiesVC.filterSpot = self.filterSpot;
         }
     }
     

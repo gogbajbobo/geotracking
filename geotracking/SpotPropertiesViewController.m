@@ -107,6 +107,7 @@
     [newProperty setName:name];
     [newProperty setTimestamp:[NSDate date]];
     [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"blank_image_44_44.png"])];
+    [self.filterSpot addPropertiesObject:newProperty];
 //    NSLog(@"newProperty %@", newProperty);
 }
 
@@ -268,7 +269,9 @@
             }
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.tracker.locationsDatabase.managedObjectContext deleteObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]];
+        SpotProperty *propertyToDelete = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        [self.filterSpot removePropertiesObject:propertyToDelete];
+        [self.tracker.locationsDatabase.managedObjectContext deleteObject:propertyToDelete];
     }
 }
 

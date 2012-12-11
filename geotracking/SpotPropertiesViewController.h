@@ -16,5 +16,6 @@
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (nonatomic, strong) Spot *spot;
+@property (nonatomic, strong) Spot *filterSpot;
 
 @end

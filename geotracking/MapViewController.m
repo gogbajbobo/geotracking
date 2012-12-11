@@ -82,6 +82,7 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     NSError *error;
     NSArray *allProperties = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"allProperties %@", allProperties);
     [filterSpot addProperties:[NSSet setWithArray:allProperties]];
     self.filterSpot = filterSpot;
     NSLog(@"filterSpot %@", filterSpot);
@@ -109,6 +110,7 @@
         if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
             SpotViewController *spotVC = segue.destinationViewController;
             spotVC.tracker = self.tracker;
+            spotVC.filterSpot = self.filterSpot;
             if (sender.buttonType == UIButtonTypeContactAdd) {
 //                NSLog(@"UIButtonTypeContactAdd");
                 spotVC.coordinate = self.newSpotCoordinate;
@@ -123,6 +125,7 @@
         if ([segue.destinationViewController isKindOfClass:[FilterSpotViewController class]]) {
             FilterSpotViewController *filterVC = segue.destinationViewController;
             filterVC.tracker = self.tracker;
+            filterVC.filterSpot = self.filterSpot;
         }
     }
 }
