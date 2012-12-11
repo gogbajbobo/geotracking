@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UIStepper *trackNumberSelector;
 @property (strong, nonatomic) NSFetchedResultsController *resultsController;
 @property (strong, nonatomic) Spot *selectedSpot;
+@property (strong, nonatomic) Spot *filterSpot;
 @property (strong, nonatomic) NSMutableDictionary *annotationsDictionary;
 
 @end
@@ -59,9 +60,34 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         if (self.resultsController.fetchedObjects.count > 0) {
-            // do something
+            NSArray *filterSpotArray = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"]];
+            NSLog(@"filterSpotArray %@", filterSpotArray);
+            if (filterSpotArray.count > 0) {
+                self.filterSpot = [filterSpotArray lastObject];
+            } else {
+                [self createFilterSpot];
+            }
+        } else {
+            [self createFilterSpot];
         }
     }
+}
+
+- (void)createFilterSpot {
+    Spot *filterSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    [filterSpot setXid:[self.tracker newid]];
+    filterSpot.timestamp = [NSDate date];
+    filterSpot.label = @"@filter";
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SpotProperty"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    NSError *error;
+    NSArray *allProperties = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    [filterSpot addProperties:[NSSet setWithArray:allProperties]];
+    self.filterSpot = filterSpot;
+    NSLog(@"filterSpot %@", filterSpot);
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"newSpot UIDocumentSaveForOverwriting success");
+    }];
 }
 
 - (IBAction)filterSpotButtonPressed:(id)sender {
@@ -222,11 +248,13 @@
 //    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
     self.annotationsDictionary = [NSMutableDictionary dictionary];
     for (Spot *spot in self.resultsController.fetchedObjects) {
-        MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:spot];
-        [self.mapView addAnnotation:annotation];
-        [self.annotationsDictionary setObject:annotation forKey:spot.xid];
-//        NSLog(@"spot %@", spot);
-//        NSLog(@"annotation %@", annotation);
+        if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
+            MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:spot];
+            [self.mapView addAnnotation:annotation];
+            [self.annotationsDictionary setObject:annotation forKey:spot.xid];
+            //        NSLog(@"spot %@", spot);
+            //        NSLog(@"annotation %@", annotation);
+        }
     }
 //    NSLog(@"self.annotationsDictionary %@", self.annotationsDictionary);
 
@@ -389,9 +417,11 @@
         
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
-            MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
-            [self.annotationsDictionary removeObjectForKey:spot.xid];
-            [self.mapView removeAnnotation:annotation];
+            if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
+                MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+                [self.annotationsDictionary removeObjectForKey:spot.xid];
+                [self.mapView removeAnnotation:annotation];
+            }
         }
 
     } else if (type == NSFetchedResultsChangeInsert) {
@@ -399,10 +429,12 @@
 //        NSLog(@"NSFetchedResultsChangeInsert");
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
-            MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]];
-            [self.annotationsDictionary setObject:annotation forKey:spot.xid];
-            [self.mapView addAnnotation:annotation];
-            [self.mapView selectAnnotation:annotation animated:NO];
+            if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
+                MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:[self.resultsController.fetchedObjects objectAtIndex:newIndexPath.row]];
+                [self.annotationsDictionary setObject:annotation forKey:spot.xid];
+                [self.mapView addAnnotation:annotation];
+                [self.mapView selectAnnotation:annotation animated:NO];
+            }
         }
         
     } else if (type == NSFetchedResultsChangeUpdate || type == NSFetchedResultsChangeMove) {
@@ -410,11 +442,13 @@
 //        NSLog(@"NSFetchedResultsChangeUpdate or Move");
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
-            MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
-            [self.mapView removeAnnotation:annotation];
-            annotation = [MapAnnotation createAnnotationForSpot:spot];
-            [self.mapView addAnnotation:annotation];
-            [self.mapView selectAnnotation:annotation animated:NO];
+            if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
+                MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+                [self.mapView removeAnnotation:annotation];
+                annotation = [MapAnnotation createAnnotationForSpot:spot];
+                [self.mapView addAnnotation:annotation];
+                [self.mapView selectAnnotation:annotation animated:NO];
+            }
         }
     }
 }
