@@ -42,7 +42,13 @@
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Spot"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-//        request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"];
+        NSError *error;
+        self.filterSpot = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+        if (!self.filterSpot) {
+            [self createFilterSpot];
+        }
+        request.predicate = nil;
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
@@ -60,15 +66,15 @@
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
         if (self.resultsController.fetchedObjects.count > 0) {
-            NSArray *filterSpotArray = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"]];
-            NSLog(@"filterSpotArray %@", filterSpotArray);
-            if (filterSpotArray.count > 0) {
-                self.filterSpot = [filterSpotArray lastObject];
-            } else {
-                [self createFilterSpot];
-            }
+//            NSArray *filterSpotArray = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"]];
+//            NSLog(@"filterSpotArray %@", filterSpotArray);
+//            if (filterSpotArray.count > 0) {
+//                self.filterSpot = [filterSpotArray lastObject];
+//            } else {
+//                [self createFilterSpot];
+//            }
         } else {
-            [self createFilterSpot];
+//            [self createFilterSpot];
         }
     }
 }
