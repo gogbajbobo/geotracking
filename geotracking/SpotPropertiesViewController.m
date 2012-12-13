@@ -118,8 +118,13 @@
         if (self.tableView.editing) {
 //            NSLog(@"imageTap");
             self.tappedImageView = (UIImageView *)gesture.view;
-            UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
-            [sourceSelectAlert show];
+            UITableViewCell *cell = (UITableViewCell *)self.tappedImageView.superview.superview;
+            [[cell.contentView viewWithTag:1] resignFirstResponder];
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+            if (indexPath.row != self.resultsController.fetchedObjects.count) {
+                UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+                [sourceSelectAlert show];
+            }
         }
     }
 }
@@ -221,7 +226,7 @@
             cell.imageView.image = [UIImage imageWithData:spotProperty.image];
         } else {
         }
-    } else {        
+    } else {
     }
 
     UITapGestureRecognizer *imageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageTap:)];
@@ -302,6 +307,7 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    NSLog(@"textFieldShouldEndEditing");
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
 //        NSLog(@"textFieldShouldEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
