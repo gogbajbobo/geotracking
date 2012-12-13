@@ -392,7 +392,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSLog(@"self.spot %@", self.spot);
+//    NSLog(@"self.spot %@", self.spot);
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
 //    self.tableView.allowsSelectionDuringEditing = YES;
