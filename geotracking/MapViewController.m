@@ -49,7 +49,7 @@
             [self createFilterSpot];
         }
         request.predicate = nil;
-        request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.properties IN %@", self.filterSpot.properties];
+        request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.properties IN %@ || SELF.properties.@count == 0", self.filterSpot.properties];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
