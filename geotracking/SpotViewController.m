@@ -33,6 +33,10 @@
 {
     if ([alertView.title isEqualToString:@"Delete spot"]) {
         if (buttonIndex == 0) {
+            if ([self.spotLabel isFirstResponder]) {
+                self.spotLabel.text = @"";
+                [self.spotLabel resignFirstResponder];
+            }
             [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot];
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"deleteObject:self.spot UIDocumentSaveForOverwriting success");
@@ -230,13 +234,15 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    if (![textField.text isEqualToString:self.spot.label]) {
-        self.spot.label = textField.text;
-        self.spot.timestamp = [NSDate date];
-        self.spot.synced = [NSNumber numberWithBool:NO];
-        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"spot.label UIDocumentSaveForOverwriting success");
-        }];
+    if (![textField.text isEqualToString:@""]) {
+        if (![textField.text isEqualToString:self.spot.label]) {
+            self.spot.label = textField.text;
+            self.spot.timestamp = [NSDate date];
+            self.spot.synced = [NSNumber numberWithBool:NO];
+            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                NSLog(@"spot.label UIDocumentSaveForOverwriting success");
+            }];
+        }
     }
     return YES;
 }
