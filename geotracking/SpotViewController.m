@@ -67,18 +67,21 @@
 }
 
 - (void)showSpotInfo {
-    CLLocationDegrees longitude = [self.spot.longitude doubleValue];
-    CLLocationDegrees latitude = [self.spot.latitude doubleValue];
-    CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-    CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
-    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSLog(@"placemarks %@", placemarks);
-        NSLog(@"error %@", error.localizedDescription);
-        CLPlacemark *place = [placemarks lastObject];
-        self.spotInfo.text = place.name;
-        self.spot.address = place.name;
-    }];
-//    self.spotInfo.text = [NSString stringWithFormat:@"lon/lat %.2f/%.2f", longitude, latitude];
+    if ([self.spot.address isEqualToString:@""]) {
+        CLLocationDegrees longitude = [self.spot.longitude doubleValue];
+        CLLocationDegrees latitude = [self.spot.latitude doubleValue];
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+        CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
+        [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+            NSLog(@"placemarks %@", placemarks);
+            NSLog(@"error %@", error.localizedDescription);
+            CLPlacemark *place = [placemarks lastObject];
+            self.spotInfo.text = place.name;
+            self.spot.address = place.name;
+        }];
+    } else {
+        self.spotInfo.text = self.spot.address;
+    }
 }
 
 - (void)showSpotLabel {
