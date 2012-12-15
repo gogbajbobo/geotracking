@@ -303,7 +303,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Spot Info Spot Info Spot Info Spot Info Spot Info Spot Info Spot Info " textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HwA-Vt-4GS">
-                                <rect key="frame" x="168" y="87" width="132" height="21"/>
+                                <rect key="frame" x="168" y="87" width="132" height="52"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -782,6 +782,9 @@
         <class className="SpotViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/SpotViewController.h"/>
             <relationships>
+                <relationship kind="action" name="deleteSpot:"/>
+                <relationship kind="action" name="editInterests:"/>
+                <relationship kind="action" name="editNetworks:"/>
                 <relationship kind="outlet" name="interestsCollectionView" candidateClass="UICollectionView"/>
                 <relationship kind="outlet" name="networkCollectionView" candidateClass="UICollectionView"/>
                 <relationship kind="outlet" name="spotImageView" candidateClass="UIImageView"/>

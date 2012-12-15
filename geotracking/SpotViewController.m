@@ -69,7 +69,16 @@
 - (void)showSpotInfo {
     CLLocationDegrees longitude = [self.spot.longitude doubleValue];
     CLLocationDegrees latitude = [self.spot.latitude doubleValue];
-    self.spotInfo.text = [NSString stringWithFormat:@"lon/lat %.2f/%.2f", longitude, latitude];
+    CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+    CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
+    [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        NSLog(@"placemarks %@", placemarks);
+        NSLog(@"error %@", error.localizedDescription);
+        CLPlacemark *place = [placemarks lastObject];
+        self.spotInfo.text = place.name;
+        self.spot.address = place.name;
+    }];
+//    self.spotInfo.text = [NSString stringWithFormat:@"lon/lat %.2f/%.2f", longitude, latitude];
 }
 
 - (void)showSpotLabel {
@@ -277,6 +286,7 @@
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
     newSpot.timestamp = [NSDate date];
+    newSpot.address = @"";
     self.spot = newSpot;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newSpot UIDocumentSaveForOverwriting success");
