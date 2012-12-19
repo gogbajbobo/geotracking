@@ -12,7 +12,7 @@
 @interface AddressSearchViewController () <UISearchDisplayDelegate>
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
-@property (nonatomic, strong) NSMutableArray *filteredListContent;
+@property (nonatomic, strong) NSArray *filteredListContent;
 @property (nonatomic, strong) NSArray *listContent;
 
 @end
@@ -94,7 +94,7 @@
     }
 	
 	cell.textLabel.text = spot.address;
-    NSLog(@"cell %@", cell);
+//    NSLog(@"cell %@", cell);
 	return cell;
 
 }
@@ -155,21 +155,9 @@
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
-    [self.filteredListContent removeAllObjects];
-	
-    for (Spot *spot in self.listContent)
-	{
-        NSComparisonResult result = [spot.address compare:searchString options:(NSCaseInsensitiveSearch|NSDiacriticInsensitiveSearch) range:NSMakeRange(0, [searchString length])];
-//        NSLog(@"%@ result %d", spot.address, result);
-        if (result == NSOrderedSame)
-        {
-//            NSLog(@"NSOrderedSame");
-            [self.filteredListContent addObject:spot];
-        }
-	}
-//    NSLog(@"self.filteredListContent %@",self.filteredListContent);
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.address CONTAINS[cd] %@", searchString];
+    self.filteredListContent = [self.listContent filteredArrayUsingPredicate:predicate];
 
-    // Return YES to cause the search result table view to be reloaded.
     return YES;
 }
 
