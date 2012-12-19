@@ -10,9 +10,11 @@
 #import <MapKit/MapKit.h>
 #import "Location.h"
 #import "TrackingLocationController.h"
+#import "Spot.h"
 
 @interface MapViewController : UIViewController
 @property (nonatomic, strong) NSArray *annotations;
 @property (nonatomic, strong) TrackingLocationController *tracker;
+@property (strong, nonatomic) Spot *filteredSpot;
 
 @end

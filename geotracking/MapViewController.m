@@ -9,7 +9,6 @@
 #import "MapViewController.h"
 #import "MapAnnotation.h"
 #import "SpotViewController.h"
-#import "Spot.h"
 #import "FilterSpotViewController.h"
 
 @interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
@@ -128,6 +127,7 @@
             FilterSpotViewController *filterVC = segue.destinationViewController;
             filterVC.tracker = self.tracker;
             filterVC.filterSpot = self.filterSpot;
+            filterVC.caller = self;
         }
     }
 }
@@ -419,6 +419,7 @@
         [mapView removeAnnotation:view.annotation];
     }
     self.selectedSpot = nil;
+    self.filteredSpot = nil;
 }
 
 #pragma mark - NSFetchedResultsController delegate
@@ -533,6 +534,16 @@
 - (void)viewWillAppear:(BOOL)animated {
     NSLog(@"viewWillAppear");
     [self performFetch];
+    if (self.filteredSpot) {
+        CLLocationCoordinate2D center;
+        center.latitude = [self.filteredSpot.latitude doubleValue];
+        center.longitude = [self.filteredSpot.longitude doubleValue];
+        self.center = center;
+        [self.mapView setRegion:MKCoordinateRegionMake(self.center, self.span) animated:YES];
+        self.selectedSpot = self.filteredSpot;
+        MapAnnotation *filteredAnnotation = [self.annotationsDictionary objectForKey:self.filteredSpot.xid];
+        [self.mapView selectAnnotation:filteredAnnotation animated:NO];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

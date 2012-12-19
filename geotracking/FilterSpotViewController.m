@@ -40,6 +40,9 @@
         } else if ([[self.viewControllers objectAtIndex:i] isKindOfClass:[AddressSearchViewController class]]) {
             AddressSearchViewController *asvc = (AddressSearchViewController *)[self.viewControllers objectAtIndex:i];
             asvc.tracker = self.tracker;
+            if ([self.caller isKindOfClass:[MapViewController class]]) {
+                asvc.mapVC = (MapViewController *)self.caller;
+            }
         }
     }
 }

@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "TrackingLocationController.h"
+#import "MapViewController.h"
 
 @interface AddressSearchViewController : UITableViewController
 @property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) MapViewController *mapVC;
 
 @end
