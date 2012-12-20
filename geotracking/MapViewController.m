@@ -532,7 +532,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    NSLog(@"viewWillAppear");
+//    NSLog(@"viewWillAppear");
     [self performFetch];
     if (self.filteredSpot) {
         CLLocationCoordinate2D center;
@@ -551,7 +551,7 @@
 
 - (void)viewDidUnload
 {
-    NSLog(@"viewDidUnload");
+//    NSLog(@"viewDidUnload");
     self.mapView.delegate = nil;
     [self setMapSwitch:nil];
     [self setHeadingModeSwitch:nil];

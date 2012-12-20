@@ -14,6 +14,7 @@
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, strong) NSArray *filteredListContent;
 @property (nonatomic, strong) NSArray *listContent;
+@property (nonatomic, strong) Spot *filterSpot;
 
 @end
 
@@ -40,8 +41,11 @@
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Spot"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-    request.predicate = [NSPredicate predicateWithFormat:@"SELF.address != NIL"];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"];
     NSError *error;
+    self.filterSpot = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+    request.predicate = nil;
+    request.predicate = [NSPredicate predicateWithFormat:@"(SELF.address != NIL) AND (ANY SELF.properties IN %@ || SELF.properties.@count == 0)", self.filterSpot.properties];
     self.listContent = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     self.filteredListContent = [NSMutableArray array];
     
