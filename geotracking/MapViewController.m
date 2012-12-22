@@ -11,9 +11,12 @@
 #import "SpotViewController.h"
 #import "FilterSpotViewController.h"
 
-@interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate>
+@interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIWebViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) CLLocationCoordinate2D newSpotCoordinate;
+@property (nonatomic) CLLocationCoordinate2D routeStartPoint;
+@property (nonatomic) CLLocationCoordinate2D routeFinishPoint;
+@property (nonatomic, strong) UIWebView *routeBuiderWebView;
 @property (nonatomic) MKCoordinateSpan span;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *mapSwitch;
@@ -24,6 +27,7 @@
 @property (strong, nonatomic) Spot *selectedSpot;
 @property (strong, nonatomic) Spot *filterSpot;
 @property (strong, nonatomic) NSMutableDictionary *annotationsDictionary;
+
 
 @end
 
@@ -36,6 +40,13 @@
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
 
+- (UIWebView *)routeBuiderWebView {
+    if (!_routeBuiderWebView) {
+        _routeBuiderWebView = [[UIWebView alloc] init];
+        _routeBuiderWebView.delegate = self;
+    }
+    return _routeBuiderWebView;
+}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
@@ -336,6 +347,45 @@
     }
 }
 
+- (void)buildRouteFrom:(CLLocationCoordinate2D)startPoint to:(CLLocationCoordinate2D)finishPoint {
+    NSLog(@"startPoint %f %f, finishPoint %f %f", startPoint.latitude, startPoint.longitude, finishPoint.latitude, finishPoint.longitude);
+    self.routeStartPoint = startPoint;
+    self.routeFinishPoint = finishPoint;
+    NSError *error;
+    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"route" ofType:@"html"];
+    NSString *htmlContent = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:&error];
+    [self.routeBuiderWebView loadHTMLString:htmlContent baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
+}
+
+#pragma mark - UIWebViewDelegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    NSLog(@"webViewDidFinishLoad");
+    NSError *error;
+    NSString *jsPath = [[NSBundle mainBundle] pathForResource:@"route" ofType:@"js"];
+    NSString *jsContent = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:&error];
+    NSString *startPoint = [NSString stringWithFormat:@"[%f,%f]",self.routeStartPoint.latitude, self.routeStartPoint.longitude];
+    NSString *finishPoint = [NSString stringWithFormat:@"[%f,%f]",self.routeFinishPoint.latitude, self.routeFinishPoint.longitude];
+    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"@startPoint" withString:startPoint];
+    jsContent = [jsContent stringByReplacingOccurrencesOfString:@"@finishPoint" withString:finishPoint];
+    [webView stringByEvaluatingJavaScriptFromString:jsContent];
+}
+
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    NSString *requestString = [[request URL] absoluteString];
+    if ([requestString hasPrefix:@"route:"]) {
+        NSString *message = [[requestString componentsSeparatedByString:@":"] objectAtIndex:1];
+        NSLog(@"route message %@", message);
+        return NO;
+    } else if ([requestString hasPrefix:@"error:"]) {
+        NSString *message = [[requestString componentsSeparatedByString:@":"] objectAtIndex:1];
+        NSLog(@"error message %@", message);
+        return NO;
+    }
+
+    return YES;
+}
+
 
 #pragma mark - MKMapViewDelegate
 
@@ -412,6 +462,7 @@
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
 //    NSLog(@"didSelectAnnotationView");
+    [self buildRouteFrom:self.mapView.userLocation.coordinate to:[view.annotation coordinate]];
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
