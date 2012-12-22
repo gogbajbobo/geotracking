@@ -298,6 +298,22 @@
     [self annotationsCreateForSpots:annotationsToAdd];
 }
 
+- (void)drawPathFor:(NSString *)routePoints {
+    NSArray *points = [routePoints componentsSeparatedByString:@","];
+    int numberOfPoints = lrint(floor(points.count/2));
+    CLLocationCoordinate2D coordinatesArray[numberOfPoints];
+    for (int i = 0; i < points.count; i+=2) {
+        CLLocationDegrees latitude = [[points objectAtIndex:i] doubleValue];
+        CLLocationDegrees longitude = [[points objectAtIndex:i+1] doubleValue];
+        coordinatesArray[lrint(i/2)] = CLLocationCoordinate2DMake(latitude, longitude);
+//        NSLog(@"latitude %f, longitude %f", latitude, longitude);
+    }
+    MKPolyline *routeLine = [MKPolyline polylineWithCoordinates:coordinatesArray count:numberOfPoints];
+    routeLine.title = @"route";
+
+    [self.mapView addOverlay:(id<MKOverlay>)routeLine];
+}
+
 - (MKPolyline *)pathLine {
     
     NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
@@ -348,7 +364,7 @@
 }
 
 - (void)buildRouteFrom:(CLLocationCoordinate2D)startPoint to:(CLLocationCoordinate2D)finishPoint {
-    NSLog(@"startPoint %f %f, finishPoint %f %f", startPoint.latitude, startPoint.longitude, finishPoint.latitude, finishPoint.longitude);
+//    NSLog(@"startPoint %f %f, finishPoint %f %f", startPoint.latitude, startPoint.longitude, finishPoint.latitude, finishPoint.longitude);
     self.routeStartPoint = startPoint;
     self.routeFinishPoint = finishPoint;
     NSError *error;
@@ -360,7 +376,7 @@
 #pragma mark - UIWebViewDelegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    NSLog(@"webViewDidFinishLoad");
+//    NSLog(@"webViewDidFinishLoad");
     NSError *error;
     NSString *jsPath = [[NSBundle mainBundle] pathForResource:@"route" ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:&error];
@@ -374,12 +390,13 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     NSString *requestString = [[request URL] absoluteString];
     if ([requestString hasPrefix:@"route:"]) {
-        NSString *message = [[requestString componentsSeparatedByString:@":"] objectAtIndex:1];
-        NSLog(@"route message %@", message);
+        NSString *routePoints = [[requestString componentsSeparatedByString:@":"] objectAtIndex:1];
+//        NSLog(@"route message %@", routePoints);
+        [self drawPathFor:routePoints];
         return NO;
     } else if ([requestString hasPrefix:@"error:"]) {
-        NSString *message = [[requestString componentsSeparatedByString:@":"] objectAtIndex:1];
-        NSLog(@"error message %@", message);
+        NSString *errorMessage = [[requestString componentsSeparatedByString:@":"] objectAtIndex:1];
+        NSLog(@"error message %@", errorMessage);
         return NO;
     }
 
@@ -435,12 +452,15 @@
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
     
     MKPolylineView *pathView = [[MKPolylineView alloc] initWithPolyline:overlay];
-    if (overlay.title == @"currentTrack") {
+    if ([overlay.title isEqualToString:@"currentTrack"]) {
         pathView.strokeColor = [UIColor blueColor];
         pathView.lineWidth = 4.0;
-    } else if (overlay.title == @"allTracks") {
+    } else if ([overlay.title isEqualToString:@"allTracks"]) {
         pathView.strokeColor = [UIColor grayColor];
         pathView.lineWidth = 2.0;
+    } else if ([overlay.title isEqualToString:@"route"]) {
+        pathView.strokeColor = [UIColor greenColor];
+        pathView.lineWidth = 6.0;
     }
     return pathView;
     
@@ -471,6 +491,14 @@
     }
     self.selectedSpot = nil;
     self.filteredSpot = nil;
+    for (id overlay in self.mapView.overlays) {
+        if ([overlay isKindOfClass:[MKPolyline class]]) {
+            MKPolyline *polylineOverlay = (MKPolyline *)overlay;
+            if ([polylineOverlay.title isEqualToString:@"route"]) {
+                [self.mapView removeOverlay:polylineOverlay];
+            }
+        }
+    }
 }
 
 #pragma mark - NSFetchedResultsController delegate
