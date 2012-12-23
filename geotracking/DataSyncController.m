@@ -24,11 +24,14 @@
 }
 
 - (void)fireTimer {
+    NSLog(@"timer fire at %@", [NSDate date]);
     [self.timer fire];
 }
 
 - (void)onTimerTick:(NSTimer *)timer {
     NSLog(@"timer tick at %@", [NSDate date]);
+    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+    [self syncDataFromDocument:app.tracker.locationsDatabase];
 }
 
 - (NSTimer *)timer {
@@ -56,10 +59,10 @@
     self.timer = nil;
 }
 
-+ (void)syncDataFromDocument:(UIManagedDocument *)document {
+- (void)syncDataFromDocument:(UIManagedDocument *)document {
 
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    NSLog(@"app.syncer %@", app.syncer);
+//    AppDelegate *app = [[UIApplication sharedApplication] delegate];
+//    NSLog(@"app.syncer %@", app.syncer);
     
     NSDictionary *allEntities = document.managedObjectModel.entitiesByName;
     NSArray *allEntityNames = [allEntities allKeys];
@@ -94,43 +97,53 @@
                     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
                     xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[entityName UTF8String]);
                     
-                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
-                            NSArray *entityProperties = [entityDescription.propertiesByName allKeys];
-                            for (NSString *propertyName in entityProperties) {
-                                if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
-                                    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
-                                    xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
-                                    xmlTextWriterEndElement(xmlTextWriter); //field
+                    NSArray *entityProperties = [entityDescription.propertiesByName allKeys];
+                    for (NSManagedObject *datum in notSyncedData) {
+                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
+                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[datum valueForKey:@"xid"] UTF8String]);
+                        
+                        for (NSString *propertyName in entityProperties) {
+                            if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
+                                id value = [datum valueForKey:propertyName];
+                                if (value) {
+                                    if ([value isKindOfClass:[NSString class]]) {
+                                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "string");
+                                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
+                                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[value UTF8String]);
+                                        xmlTextWriterEndElement(xmlTextWriter); //string
+                                    } else if ([value isKindOfClass:[NSDate class]]) {
+                                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "date");
+                                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
+                                        NSString *date = [NSString stringWithFormat:@"%@", value];
+                                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[date UTF8String]);
+                                        xmlTextWriterEndElement(xmlTextWriter); //date
+                                    } else if ([value isKindOfClass:[NSNumber class]]) {
+                                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "double");
+                                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
+                                        NSString *number = [NSString stringWithFormat:@"%@", value];
+                                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[number UTF8String]);
+                                        xmlTextWriterEndElement(xmlTextWriter); //double
+                                    } else if ([value isKindOfClass:[NSData class]]) {
+                                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "png");
+                                        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
+                                        NSString *data = [NSString stringWithFormat:@"%@", value];
+                                        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[data UTF8String]);
+                                        xmlTextWriterEndElement(xmlTextWriter); //png
+                                    } else if ([value isKindOfClass:[NSSet class]]) {
+                                        for (NSManagedObject *object in value) {
+                                            xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
+                                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[object.entity.name UTF8String]);
+                                            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[object valueForKey:@"xid"] UTF8String]);
+                                            xmlTextWriterEndElement(xmlTextWriter); //d
+                                        }
+                                    }
                                 }
                             }
-                        xmlTextWriterEndElement(xmlTextWriter); //fields
+                        }
+                        
+                        xmlTextWriterEndElement(xmlTextWriter); //d
+                    }
                     
-                        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
-                            for (NSManagedObject *datum in notSyncedData) {
-                                for (NSString *propertyName in entityProperties) {
-                                    NSLog(@"datum valueForKey:%@ %@", propertyName, [datum valueForKey:propertyName]);
-                                }
-//                                xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-//                                xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[location.xid UTF8String]);
-//                                NSMutableString *locationValues = [NSMutableString string];
-//                                for (NSString *propertyName in entityProperties) {
-//                                    if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
-//                                        if ([propertyName isEqualToString:@"track"]) {
-//                                            [locationValues appendFormat:@"%@,",location.track.xid];
-//                                        } else {
-//                                            [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
-//                                        }
-//                                    }
-//                                }
-//                                if (locationValues.length > 0) [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
-//                                xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
-//                                xmlTextWriterEndElement(xmlTextWriter); //d
-                            }
-
-//                        NSLog(@"notSyncedData %@", notSyncedData);
-                    
-                        xmlTextWriterEndElement(xmlTextWriter); //cvs
-
                     xmlTextWriterEndElement(xmlTextWriter); //set-of
                 }
             }
@@ -149,94 +162,6 @@
     
     NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
 
-}
-
-- (NSData *)requestData {
-            
-    xmlTextWriterPtr xmlTextWriter;
-    xmlBufferPtr xmlBuffer;
-    
-    xmlBuffer = xmlBufferCreate();
-    xmlTextWriter = xmlNewTextWriterMemory(xmlBuffer, 0);
-    
-    xmlTextWriterStartDocument(xmlTextWriter, "1.0", "UTF-8", NULL);
-    
-    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "post");
-    
-    // Locations
-    
-    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
-    xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Location" UTF8String]);
-        
-    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
-//    for (Location *location in notSyncedLocations) {
-//        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-//        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[location.xid UTF8String]);
-//        NSMutableString *locationValues = [NSMutableString string];
-//        for (NSString *propertyName in entityProperties) {
-//            if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"])) {
-//                if ([propertyName isEqualToString:@"track"]) {
-//                    [locationValues appendFormat:@"%@,",location.track.xid];
-//                } else {
-//                    [locationValues appendFormat:@"%@,",[location valueForKey:propertyName]];
-//                }
-//            }
-//        }
-//        if (locationValues.length > 0) [locationValues deleteCharactersInRange:NSMakeRange([locationValues length] - 1, 1)];
-//        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[locationValues UTF8String]);
-//        xmlTextWriterEndElement(xmlTextWriter); //d
-//    }
-    xmlTextWriterEndElement(xmlTextWriter); //cvs
-    
-    xmlTextWriterEndElement(xmlTextWriter); //set-of
-    
-    // Tracks
-    
-    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
-    xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[@"Track" UTF8String]);
-    
-    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "fields");
-//    NSEntityDescription *trackEntity = [NSEntityDescription entityForName:@"Track" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-//    entityProperties = [trackEntity.propertiesByName allKeys];
-//    for (NSString *propertyName in entityProperties) {
-//        if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"]||[propertyName isEqualToString:@"locations"])) {
-//            xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "field");
-//            xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"name", (xmlChar *)[propertyName UTF8String]);
-//            xmlTextWriterEndElement(xmlTextWriter); //field
-//        }
-//    }
-    xmlTextWriterEndElement(xmlTextWriter); //fields
-    
-    xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "csv");
-//    for (Track *track in notSyncedTracks) {
-//        xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
-//        xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[track.xid UTF8String]);
-//        NSMutableString *trackValues = [NSMutableString string];
-//        for (NSString *propertyName in entityProperties) {
-//            if (!([propertyName isEqualToString:@"xid"]||[propertyName isEqualToString:@"synced"]||[propertyName isEqualToString:@"locations"])) {
-//                [trackValues appendFormat:@"%@,",[track valueForKey:propertyName]];
-//            }
-//        }
-//        if (trackValues.length > 0) [trackValues deleteCharactersInRange:NSMakeRange([trackValues length] - 1, 1)];
-//        xmlTextWriterWriteString(xmlTextWriter, (xmlChar *)[trackValues UTF8String]);
-//        xmlTextWriterEndElement(xmlTextWriter); //d
-//    }
-    xmlTextWriterEndElement(xmlTextWriter); //cvs
-    //
-    xmlTextWriterEndElement(xmlTextWriter); //set-of
-    
-    
-    xmlTextWriterEndElement(xmlTextWriter); //post
-    
-    xmlTextWriterEndDocument(xmlTextWriter);
-    xmlFreeTextWriter(xmlTextWriter);
-    
-    NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
-    xmlBufferFree(xmlBuffer);
-    
-    //        NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
-    
-    return requestData;
 }
 
 

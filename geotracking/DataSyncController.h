@@ -13,8 +13,6 @@
 
 @interface DataSyncController : NSObject
 
-//+ (void)syncDataFromDocument:(UIManagedDocument *)document;
-
 - (void)addEventToSyncer:(NSDictionary *)event;
 - (void)startSyncer;
 - (void)stopSyncer;

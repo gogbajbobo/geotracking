@@ -30,19 +30,22 @@
 - (TrackingLocationController *)tracker
 {
     if(!_tracker) {
-        _tracker = [[TrackingLocationController alloc] init];
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        _tracker = app.tracker;
+//        _tracker = [[TrackingLocationController alloc] init];
         _tracker.tableView = self.tableView;
         _tracker.summary = self.summary;
         _tracker.currentValues = self.currentValues;
         _tracker.caller = self;
-//        NSLog(@"_tracker %@", _tracker);
+        NSLog(@"_tracker %@", _tracker);
     }
     return _tracker;
 }
+
 - (IBAction)syncButtonPressed:(id)sender {
-//    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-//    [appDelegate.syncer fireTimer];
-    [self.tracker startConnection];
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    [appDelegate.syncer fireTimer];
+//    [self.tracker startConnection];
 }
 
 - (IBAction)showOptions:(id)sender {

@@ -12,10 +12,14 @@
 
 @synthesize window = _window;
 
-- (void)applicationDidFinishLaunching:(UIApplication *)application {
+
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.syncer = [[DataSyncController alloc] init];
-    [self.syncer startSyncer];
+    self.tracker = [[TrackingLocationController alloc] init];
+    //    [self.syncer startSyncer];
     NSLog(@"self.syncer %@", self.syncer);
+    NSLog(@"self.tracker %@", self.tracker);
+    return YES;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
