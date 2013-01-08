@@ -13,6 +13,7 @@
 #import "MapAnnotation.h"
 #import "TrackerViewController.h"
 #import "UDOAuthBasic.h"
+#import "TrackerManagedDocument.h"
 
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
@@ -28,6 +29,7 @@
 @property (nonatomic, strong) Track *currentTrack;
 @property (nonatomic, strong) NSTimer *syncingTimer;
 @property (nonatomic, strong) NSString *trackerStatus;
+@property (nonatomic, strong) TrackerManagedDocument *locDB;
 
 @end
 
@@ -102,6 +104,15 @@
     [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedTrackNumber inSection:0]] setSelected:YES];
 }
 
+- (TrackerManagedDocument *)locDB {
+    if (!_locDB) {
+        NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+        url = [url URLByAppendingPathComponent:DB_FILE];
+        _locDB = [[TrackerManagedDocument alloc] initWithFileURL:url];
+    }
+    return _locDB;
+}
+
 - (UIManagedDocument *)locationsDatabase {
     
     if (!_locationsDatabase) {
@@ -116,9 +127,15 @@
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
 
-        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+//        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+        _locationsDatabase = [[TrackerManagedDocument alloc] initWithFileURL:url];
         _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+        
+        NSLog(@"_locationsDatabase %@", [_locationsDatabase.managedObjectModel.entitiesByName allKeys]);
+
+        //        NSLog(@"_locationsDatabase %@", [_locationsDatabase.managedObjectModel.entitiesByName allValues]);
+//        NSLog(@"self.locDB %@", [self.locDB.managedObjectModel.entitiesByName allKeys]);
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {

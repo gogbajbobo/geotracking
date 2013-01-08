@@ -8,11 +8,14 @@
 
 #import "DataSyncController.h"
 #import "AppDelegate.h"
+#import "UDOAuthBasic.h"
 
-@interface DataSyncController()
+
+@interface DataSyncController() <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) NSTimeInterval timerInterval;
 @property (nonatomic, strong) NSDictionary *eventsToSync;
+@property (nonatomic, strong) NSMutableData *responseData;
 
 @end
 
@@ -161,7 +164,59 @@
     xmlBufferFree(xmlBuffer);
     
     NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+    
+    
+    
+    if (requestData) {
+        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
+//        NSURL *requestURL = [NSURL URLWithString:@"http://lamac.local/~sasha/ud/?--show-headers"];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:requestData];
+        [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+        NSLog(@"request %@", request);
+        [[UDOAuthBasic sharedOAuth] checkToken];
+//        NSLog(@"[UDOAuthBasic sharedOAuth] checkToken %@", [[UDOAuthBasic sharedOAuth] checkToken]);
+//        NSLog(@"authenticateRequest %@", [[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request]);
+        request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
+        NSLog(@"[request allHTTPHeaderFields] %@", [request allHTTPHeaderFields]);
+            NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+            if (!connection) {
+                NSLog(@"connection error");
+//                self.trackerStatus = @"SYNC FAIL";
+//                [self updateInfoLabels];
+//                self.syncing = NO;
+            }
+    } else {
+        NSLog(@"No data to sync");
+    }
 
+
+}
+
+#pragma mark - NSURLConnectionDataDelegate
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    self.responseData = [NSMutableData data];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [self.responseData appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    
+    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+//    NSXMLParser *responseParser = [[NSXMLParser alloc] initWithData:self.responseData];
+//    responseParser.delegate = self;
+//    if (![responseParser parse]) {
+//        NSLog(@"[responseParser parserError] %@", [responseParser parserError].localizedDescription);
+//        self.trackerStatus = @"PARSER FAIL";
+//        [self updateInfoLabels];
+//        self.syncing = NO;
+//    }
+//    responseParser = nil;
 }
 
 

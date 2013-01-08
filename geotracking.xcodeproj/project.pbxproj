@@ -44,13 +44,14 @@
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
-		2C94D71B166F92B60019A0C7 /* Location.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71A166F92B60019A0C7 /* Location.xcdatamodel */; };
+		2C94D71B166F92B60019A0C7 /* Tracker.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71A166F92B60019A0C7 /* Tracker.xcdatamodel */; };
 		2C94D71E166F92C50019A0C7 /* Datum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71D166F92C50019A0C7 /* Datum.m */; };
 		2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */; };
 		2CB24B701639A7A90040A211 /* SpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */; };
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CD0371E1685D1A700BBEDD5 /* route.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860E1685BDC30081B9DC /* route.js */; };
+		2CD0372816888F1600BBEDD5 /* TrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* TrackerManagedDocument.m */; };
 		2CD07D77167CE91500E76B81 /* AddressSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD07D76167CE91500E76B81 /* AddressSearchViewController.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
@@ -152,7 +153,7 @@
 		2C417C6615E81E6000A3A83D /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		2C417C6815E8280B00A3A83D /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		2C417C6915E8280B00A3A83D /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
-		2C94D71A166F92B60019A0C7 /* Location.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Location.xcdatamodel; sourceTree = "<group>"; };
+		2C94D71A166F92B60019A0C7 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
 		2C94D71C166F92C50019A0C7 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
 		2C94D71D166F92C50019A0C7 /* Datum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datum.m; sourceTree = "<group>"; };
 		2C94D720166FC00D0019A0C7 /* FilterSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterSpotViewController.h; sourceTree = "<group>"; };
@@ -162,6 +163,8 @@
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		2CD0372616888F1500BBEDD5 /* TrackerManagedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerManagedDocument.h; sourceTree = "<group>"; };
+		2CD0372716888F1500BBEDD5 /* TrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerManagedDocument.m; sourceTree = "<group>"; };
 		2CD07D75167CE91500E76B81 /* AddressSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddressSearchViewController.h; sourceTree = "<group>"; };
 		2CD07D76167CE91500E76B81 /* AddressSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddressSearchViewController.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -335,7 +338,7 @@
 		2C94D71F166F92D00019A0C7 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				2C94D71A166F92B60019A0C7 /* Location.xcdatamodel */,
+				2C94D71A166F92B60019A0C7 /* Tracker.xcdatamodel */,
 				2C94D71C166F92C50019A0C7 /* Datum.h */,
 				2C94D71D166F92C50019A0C7 /* Datum.m */,
 				2C3EAFF71662168700748C23 /* SpotProperty.h */,
@@ -397,6 +400,8 @@
 				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
+				2CD0372616888F1500BBEDD5 /* TrackerManagedDocument.h */,
+				2CD0372716888F1500BBEDD5 /* TrackerManagedDocument.m */,
 				2C417C6215E80E3F00A3A83D /* TrackerViewController.h */,
 				2C417C6315E80E3F00A3A83D /* TrackerViewController.m */,
 				2C3B3D09165E64E6003F2347 /* DataSyncController.h */,
@@ -586,10 +591,11 @@
 				2C3EB106166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m in Sources */,
 				2C3EB107166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m in Sources */,
 				2C3EB108166CD6BD00748C23 /* UDPushObject.m in Sources */,
-				2C94D71B166F92B60019A0C7 /* Location.xcdatamodel in Sources */,
+				2C94D71B166F92B60019A0C7 /* Tracker.xcdatamodel in Sources */,
 				2C94D71E166F92C50019A0C7 /* Datum.m in Sources */,
 				2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */,
 				2CD07D77167CE91500E76B81 /* AddressSearchViewController.m in Sources */,
+				2CD0372816888F1600BBEDD5 /* TrackerManagedDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

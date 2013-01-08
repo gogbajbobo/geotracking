@@ -27,18 +27,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-//    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-//    
-//    self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
-//    self.authCodeRetriever = [UDPushAuthCodeRetriever codeRetriever];
-//    
-//    [UDOAuthBasic sharedOAuth];
-//    
-//    // allocate a reachability object
-//    self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
-//    self.reachability.reachableOnWWAN = YES;
-//    
-//    [self.reachability startNotifier];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    
+    self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
+    self.authCodeRetriever = [UDPushAuthCodeRetriever codeRetriever];
+    
+    [UDOAuthBasic sharedOAuth];
+    
+    // allocate a reachability object
+    self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
+    self.reachability.reachableOnWWAN = YES;
+    
+    [self.reachability startNotifier];
     
     return YES;
 

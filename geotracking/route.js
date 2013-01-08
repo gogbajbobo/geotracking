@@ -1,6 +1,6 @@
 ymaps.ready(function(){
 
-    ymaps.route([@startPoint, @finishPoint]).then(
+    ymaps.route([@startPoint, @finishPoint], {avoidTrafficJams: true}).then(
         function (route) {
             var routePath = '';
             var path = route.getPaths().get(0);
