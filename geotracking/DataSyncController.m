@@ -21,6 +21,30 @@
 @end
 
 @implementation DataSyncController
+@synthesize changesCount = _changesCount;
+
+- (int)changesCount {
+    if (!_changesCount) {
+        NSNumber *requiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"changesCount"];
+        if (requiredAccuracy == nil) {
+            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+            _changesCount = 0;
+            [settings setObject:[NSNumber numberWithDouble:_changesCount] forKey:@"changesCount"];
+            [settings synchronize];
+        } else {
+            _changesCount = [requiredAccuracy intValue];
+        }
+    }
+    return _changesCount;
+}
+
+- (void)setChangesCount:(int)changesCount {
+    _changesCount = changesCount;
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    [settings setObject:[NSNumber numberWithDouble:changesCount] forKey:@"changesCount"];
+    [settings synchronize];
+}
+
 
 - (void)changesCountPlusOne {
     self.changesCount = self.changesCount + 1;

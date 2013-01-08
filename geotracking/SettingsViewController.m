@@ -14,6 +14,8 @@
 @property (weak, nonatomic) IBOutlet UISlider *distanceFilterSlider;
 @property (weak, nonatomic) IBOutlet UISlider *trackDetectionTimeIntervalSlider;
 @property (weak, nonatomic) IBOutlet UILabel *trackDetectionTimeIntervalLabel;
+@property (weak, nonatomic) IBOutlet UISlider *requiredAccuracySlider;
+@property (weak, nonatomic) IBOutlet UILabel *requiredAccuracyLabel;
 
 @end
 
@@ -23,6 +25,19 @@
 @synthesize distanceFilterSlider = _distanceFilterSlider;
 @synthesize tracker = _tracker;
 
+- (IBAction)requiredAccuracyChangeValue:(id)sender {
+    [self.requiredAccuracySlider setValue:floor(self.requiredAccuracySlider.value/10)*10];
+    self.tracker.requiredAccuracy = self.requiredAccuracySlider.value;
+    [self updateLabels];
+}
+
+- (void)requiredAccuracySliderSetup {
+    self.requiredAccuracySlider.maximumValue = 500.0;
+    self.requiredAccuracySlider.minimumValue = 5.0;
+    [self.requiredAccuracySlider setValue:self.tracker.requiredAccuracy animated:YES];
+}
+
+
 - (IBAction)trackDetectionTimeIntervalChangeValue:(id)sender {
     [self.trackDetectionTimeIntervalSlider setValue:floor(self.trackDetectionTimeIntervalSlider.value/30)*30];
     self.tracker.trackDetectionTimeInterval = self.trackDetectionTimeIntervalSlider.value;
@@ -31,7 +46,7 @@
 
 - (void)trackDetectionTimeIntervalSliderSetup {
     self.trackDetectionTimeIntervalSlider.maximumValue = 600.0;
-    self.trackDetectionTimeIntervalSlider.minimumValue = 0;
+    self.trackDetectionTimeIntervalSlider.minimumValue = 0.0;
     [self.trackDetectionTimeIntervalSlider setValue:self.tracker.trackDetectionTimeInterval animated:YES];
 }
 
@@ -51,6 +66,7 @@
 
 - (void)updateLabels {
     self.desiredAccuracyLabel.text = [NSString stringWithFormat:@"%f", self.tracker.desiredAccuracy];
+    self.requiredAccuracyLabel.text = [NSString stringWithFormat:@"%f", self.tracker.requiredAccuracy];
     self.distanceFilterLabel.text = [NSString stringWithFormat:@"%f", self.tracker.distanceFilter];
     self.trackDetectionTimeIntervalLabel.text = [NSString stringWithFormat:@"%f", self.tracker.trackDetectionTimeInterval];
 }
@@ -92,6 +108,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self distanceFilterSliderSetup];
     [self trackDetectionTimeIntervalSliderSetup];
+    [self requiredAccuracySliderSetup];
     [self updateLabels];
 }
 

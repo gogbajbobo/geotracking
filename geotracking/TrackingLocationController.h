@@ -19,6 +19,7 @@
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationAccuracy currentAccuracy;
+@property (nonatomic) CLLocationAccuracy requiredAccuracy;
 @property (nonatomic) NSTimeInterval trackDetectionTimeInterval;
 @property (nonatomic, strong) NSArray *locationsArray;
 @property (nonatomic, strong) NSArray *allLocationsArray;

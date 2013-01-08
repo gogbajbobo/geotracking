@@ -17,7 +17,7 @@
 #import "DataSyncController.h"
 
 #define DB_FILE @"geoTracker.sqlite"
-#define REQUIRED_ACCURACY 15.0
+//#define REQUIRED_ACCURACY 15.0
 
 @interface TrackingLocationController() <NSFetchedResultsControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, CLLocationManagerDelegate>
 
@@ -38,6 +38,7 @@
 
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;
+@synthesize requiredAccuracy = _requiredAccuracy;
 @synthesize locationManager = _locationManager;
 @synthesize locationsDatabase = _locationsDatabase;
 @synthesize locationsArray = _locationsArray;
@@ -300,9 +301,9 @@
     }
     self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus];
     if (self.currentAccuracy > 0) {
-        self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm, CurrAcc %gm",self.desiredAccuracy, self.distanceFilter, self.currentAccuracy];
+        self.currentValues.text = [NSString stringWithFormat:@"DA %gm, RA %gm, DF %gm, CA %gm", self.desiredAccuracy, self.requiredAccuracy, self.distanceFilter, self.currentAccuracy];
     } else {
-        self.currentValues.text = [NSString stringWithFormat:@"Accuracy %gm, Distance %gm",self.desiredAccuracy, self.distanceFilter];
+        self.currentValues.text = [NSString stringWithFormat:@"DA %gm, RA %gm, DF %gm", self.desiredAccuracy, self.requiredAccuracy, self.distanceFilter];
     }
 }
 
@@ -349,6 +350,29 @@
     [settings setObject:[NSNumber numberWithDouble:desiredAccuracy] forKey:@"desiredAccuracy"];
     [settings synchronize];
     self.locationManager.desiredAccuracy = desiredAccuracy;
+    [self updateInfoLabels];
+}
+
+- (CLLocationAccuracy)requiredAccuracy {
+    if (!_requiredAccuracy) {
+        NSNumber *requiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"requiredAccuracy"];
+        if (requiredAccuracy == nil) {
+            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+            _requiredAccuracy = 15.0;
+            [settings setObject:[NSNumber numberWithDouble:_requiredAccuracy] forKey:@"requiredAccuracy"];
+            [settings synchronize];
+        } else {
+            _requiredAccuracy = [requiredAccuracy doubleValue];
+        }
+    }
+    return _requiredAccuracy;
+}
+
+- (void)setRequiredAccuracy:(CLLocationAccuracy)requiredAccuracy {
+    _requiredAccuracy = requiredAccuracy;
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    [settings setObject:[NSNumber numberWithDouble:requiredAccuracy] forKey:@"requiredAccuracy"];
+    [settings synchronize];
     [self updateInfoLabels];
 }
 
@@ -452,7 +476,7 @@
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < REQUIRED_ACCURACY) {
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < self.requiredAccuracy) {
 //        NSLog(@"addLocation");
         [self addLocation:newLocation];
     }
