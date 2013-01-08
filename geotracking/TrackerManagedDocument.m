@@ -14,8 +14,13 @@
 - (NSManagedObjectModel *)myManagedObjectModel {
     if (!_myManagedObjectModel) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"Tracker" ofType:@"momd"];
-        NSURL *momURL = [NSURL fileURLWithPath:path];
-        _myManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:momURL];
+        if (!path) {
+            path = [[NSBundle mainBundle] pathForResource:@"Tracker" ofType:@"mom"];
+        }
+        NSLog(@"path %@", path);
+        NSURL *url = [NSURL fileURLWithPath:path];
+        NSLog(@"url %@", url);
+        _myManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];
     }
     return _myManagedObjectModel;
 }

@@ -127,6 +127,7 @@
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
 
+//        NSLog(@"url %@", url);
 //        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
         _locationsDatabase = [[TrackerManagedDocument alloc] initWithFileURL:url];
         _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
