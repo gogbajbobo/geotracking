@@ -359,7 +359,7 @@
         NSNumber *requiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"requiredAccuracy"];
         if (requiredAccuracy == nil) {
             NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _requiredAccuracy = 15.0;
+            _requiredAccuracy = 10.0;
             [settings setObject:[NSNumber numberWithDouble:_requiredAccuracy] forKey:@"requiredAccuracy"];
             [settings synchronize];
         } else {
@@ -477,7 +477,7 @@
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy < self.requiredAccuracy) {
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy <= self.requiredAccuracy) {
 //        NSLog(@"addLocation");
         [self addLocation:newLocation];
     }
