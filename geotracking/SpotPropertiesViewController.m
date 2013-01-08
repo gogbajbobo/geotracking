@@ -8,18 +8,27 @@
 
 #import "SpotPropertiesViewController.h"
 #import "SpotProperty.h"
+#import "AppDelegate.h"
+#import "DataSyncController.h"
 
 @interface SpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) UIImageView *tappedImageView;
-
+@property (nonatomic, strong) DataSyncController *syncer;
 
 @end
 
 @implementation SpotPropertiesViewController
 
+- (DataSyncController *)syncer {
+    if (!_syncer) {
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        _syncer = app.syncer;
+    }
+    return _syncer;
+}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
@@ -107,6 +116,7 @@
     [newProperty setName:name];
     [newProperty setTimestamp:[NSDate date]];
     [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"blank_image_44_44.png"])];
+    [self.syncer changesCountPlusOne];
     [self.filterSpot addPropertiesObject:newProperty];
 //    NSLog(@"newProperty %@", newProperty);
 }

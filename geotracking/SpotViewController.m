@@ -6,10 +6,12 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "SpotViewController.h"
 #import "SpotPropertiesViewController.h"
 #import "SpotProperty.h"
 #import "Track.h"
+#import "DataSyncController.h"
 
 @interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
@@ -18,11 +20,20 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *interestsCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *networkCollectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *spotImageView;
+@property (nonatomic, strong) DataSyncController *syncer;
 
 
 @end
 
 @implementation SpotViewController
+
+- (DataSyncController *)syncer {
+    if (!_syncer) {
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        _syncer = app.syncer;
+    }
+    return _syncer;
+}
 
 - (IBAction)deleteSpot:(id)sender {
     UIAlertView *deleteSpotAlert = [[UIAlertView alloc] initWithTitle:@"Delete spot" message:@"Delete spot?" delegate:self cancelButtonTitle:@"YES"  otherButtonTitles:@"NO",nil];
@@ -290,6 +301,7 @@
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
     newSpot.timestamp = [NSDate date];
     newSpot.address = @"";
+    [self.syncer changesCountPlusOne];
     self.spot = newSpot;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newSpot UIDocumentSaveForOverwriting success");

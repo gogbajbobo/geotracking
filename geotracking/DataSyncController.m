@@ -11,19 +11,24 @@
 #import "UDOAuthBasic.h"
 
 
-@interface DataSyncController() <NSURLConnectionDataDelegate>
+@interface DataSyncController() <NSURLConnectionDataDelegate, NSXMLParserDelegate>
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) NSTimeInterval timerInterval;
 @property (nonatomic, strong) NSDictionary *eventsToSync;
 @property (nonatomic, strong) NSMutableData *responseData;
+@property (nonatomic) int changesCount;
 
 @end
 
 @implementation DataSyncController
 
-
-- (void)addEventToSyncer:(NSDictionary *)event {
-    
+- (void)changesCountPlusOne {
+    self.changesCount = self.changesCount + 1;
+    NSLog(@"self.changesCount %d", self.changesCount);
+    if (self.changesCount == 20) {
+        [self fireTimer];
+        self.changesCount = 0;
+    }
 }
 
 - (void)fireTimer {
@@ -101,6 +106,7 @@
                     xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[entityName UTF8String]);
                     
                     NSArray *entityProperties = [entityDescription.propertiesByName allKeys];
+                    NSLog(@"entityProperties %@", entityProperties);
                     for (NSManagedObject *datum in notSyncedData) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
                         xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[datum valueForKey:@"xid"] UTF8String]);
@@ -163,7 +169,7 @@
     NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
     xmlBufferFree(xmlBuffer);
     
-    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+//    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
     
     
     
@@ -217,6 +223,46 @@
 //        self.syncing = NO;
 //    }
 //    responseParser = nil;
+}
+
+#pragma mark - NSXMLParserDelegate
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+
+//    if ([elementName isEqualToString:@"ok"]) {
+//        NSPredicate *matchedXid = [NSPredicate predicateWithFormat:@"SELF.xid == %@",[attributeDict valueForKey:@"xid"]];
+//        NSArray *matchedObjects = [self.allLocationsArray filteredArrayUsingPredicate:matchedXid];
+//        if (matchedObjects.count > 0) {
+//            Location *location = [matchedObjects lastObject];
+//            location.synced = [NSNumber numberWithBool:YES];
+//            location.lastSyncTimestamp = [NSDate date];
+//        } else {
+//            matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
+//            if (matchedObjects.count > 0) {
+//                Track *track = [matchedObjects lastObject];
+////                if (![track.xid isEqualToString:self.currentTrack.xid]) {
+//                    track.synced = [NSNumber numberWithBool:YES];
+////                }
+//                track.lastSyncTimestamp = [NSDate date];
+//            }
+//        }
+////        NSLog(@"%@", [matchedObjects lastObject]);
+//    }
+
+}
+
+- (void)parserDidEndDocument:(NSXMLParser *)parser {
+
+//    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//        NSLog(@"setSynced UIDocumentSaveForOverwriting success");
+//        self.trackerStatus = @"";
+//        [self updateInfoLabels];
+//        self.syncing = NO;
+//        if (!self.locationManagerRunning) {
+//            [self startConnection];
+//        }
+//    }];
+
 }
 
 

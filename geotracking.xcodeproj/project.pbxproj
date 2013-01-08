@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C13398D169C36F400E841C6 /* Tracker.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C13398C169C36F400E841C6 /* Tracker.xcdatamodel */; };
 		2C29FC1016510FFB007E86E0 /* blank_image_44_44.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C29FC0F16510FFB007E86E0 /* blank_image_44_44.png */; };
 		2C32860F1685BDC30081B9DC /* route.html in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860D1685BDC30081B9DC /* route.html */; };
 		2C32A0A6161052E200713735 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32A0A5161052E200713735 /* libxml2.dylib */; };
@@ -44,7 +45,6 @@
 		2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* TrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* MapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* MapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* MapAnnotation.m */; };
-		2C94D71B166F92B60019A0C7 /* Tracker.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71A166F92B60019A0C7 /* Tracker.xcdatamodel */; };
 		2C94D71E166F92C50019A0C7 /* Datum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71D166F92C50019A0C7 /* Datum.m */; };
 		2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */; };
 		2CB24B701639A7A90040A211 /* SpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */; };
@@ -77,6 +77,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2C13398C169C36F400E841C6 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
 		2C29FC0F16510FFB007E86E0 /* blank_image_44_44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank_image_44_44.png; sourceTree = "<group>"; };
 		2C32860D1685BDC30081B9DC /* route.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = route.html; sourceTree = "<group>"; };
 		2C32860E1685BDC30081B9DC /* route.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = route.js; sourceTree = "<group>"; };
@@ -153,7 +154,6 @@
 		2C417C6615E81E6000A3A83D /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		2C417C6815E8280B00A3A83D /* MapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapAnnotation.h; sourceTree = "<group>"; };
 		2C417C6915E8280B00A3A83D /* MapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapAnnotation.m; sourceTree = "<group>"; };
-		2C94D71A166F92B60019A0C7 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
 		2C94D71C166F92C50019A0C7 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
 		2C94D71D166F92C50019A0C7 /* Datum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datum.m; sourceTree = "<group>"; };
 		2C94D720166FC00D0019A0C7 /* FilterSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterSpotViewController.h; sourceTree = "<group>"; };
@@ -338,7 +338,7 @@
 		2C94D71F166F92D00019A0C7 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				2C94D71A166F92B60019A0C7 /* Tracker.xcdatamodel */,
+				2C13398C169C36F400E841C6 /* Tracker.xcdatamodel */,
 				2C94D71C166F92C50019A0C7 /* Datum.h */,
 				2C94D71D166F92C50019A0C7 /* Datum.m */,
 				2C3EAFF71662168700748C23 /* SpotProperty.h */,
@@ -591,11 +591,11 @@
 				2C3EB106166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m in Sources */,
 				2C3EB107166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m in Sources */,
 				2C3EB108166CD6BD00748C23 /* UDPushObject.m in Sources */,
-				2C94D71B166F92B60019A0C7 /* Tracker.xcdatamodel in Sources */,
 				2C94D71E166F92C50019A0C7 /* Datum.m in Sources */,
 				2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */,
 				2CD07D77167CE91500E76B81 /* AddressSearchViewController.m in Sources */,
 				2CD0372816888F1600BBEDD5 /* TrackerManagedDocument.m in Sources */,
+				2C13398D169C36F400E841C6 /* Tracker.xcdatamodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

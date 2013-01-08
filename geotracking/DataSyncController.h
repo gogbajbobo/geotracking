@@ -13,10 +13,9 @@
 
 @interface DataSyncController : NSObject
 
-- (void)addEventToSyncer:(NSDictionary *)event;
 - (void)startSyncer;
 - (void)stopSyncer;
 - (void)fireTimer;
-
+- (void)changesCountPlusOne;
 
 @end
