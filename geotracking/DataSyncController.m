@@ -9,6 +9,8 @@
 #import "DataSyncController.h"
 #import "AppDelegate.h"
 #import "UDOAuthBasic.h"
+#import "TrackingLocationController.h"
+#import "Datum.h"
 
 
 @interface DataSyncController() <NSURLConnectionDataDelegate, NSXMLParserDelegate>
@@ -17,11 +19,24 @@
 @property (nonatomic, strong) NSDictionary *eventsToSync;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) int changesCount;
+@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) NSString *pEntityName;
+@property (nonatomic, strong) NSMutableArray *pEntityXids;
 
 @end
 
 @implementation DataSyncController
 @synthesize changesCount = _changesCount;
+
+- (TrackingLocationController *)tracker
+{
+    if(!_tracker) {
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        _tracker = app.tracker;
+    }
+    return _tracker;
+}
+
 
 - (int)changesCount {
     if (!_changesCount) {
@@ -47,9 +62,9 @@
 
 
 - (void)changesCountPlusOne {
-    self.changesCount = self.changesCount + 1;
+    self.changesCount += 1;
     NSLog(@"self.changesCount %d", self.changesCount);
-    if (self.changesCount == 20) {
+    if (self.changesCount >= 20) {
         [self fireTimer];
         self.changesCount = 0;
     }
@@ -62,14 +77,15 @@
 
 - (void)onTimerTick:(NSTimer *)timer {
     NSLog(@"timer tick at %@", [NSDate date]);
-    AppDelegate *app = [[UIApplication sharedApplication] delegate];
-    [self syncDataFromDocument:app.tracker.locationsDatabase];
+    if (!self.tracker.syncing) {
+        [self syncDataFromDocument:self.tracker.locationsDatabase];
+    }
 }
 
 - (NSTimer *)timer {
     if (!_timer) {
         _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:self.timerInterval target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
-        NSLog(@"_timer %@", _timer);
+//        NSLog(@"_timer %@", _timer);
     }
     return _timer;
 }
@@ -98,6 +114,9 @@
     
     NSDictionary *allEntities = document.managedObjectModel.entitiesByName;
     NSArray *allEntityNames = [allEntities allKeys];
+
+    BOOL dataToSync = NO;
+    NSData *requestData;
     
     xmlTextWriterPtr xmlTextWriter;
     xmlBufferPtr xmlBuffer;
@@ -109,7 +128,6 @@
     
     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "post");
 
-    
     for (NSString *entityName in allEntityNames) {
         NSEntityDescription *entityDescription = [allEntities objectForKey:entityName];
         if (![entityDescription isAbstract]) {
@@ -121,16 +139,19 @@
             if (!fetchedData) {
                 NSLog(@"executeFetchRequest error %@", error.localizedDescription);
             } else {
-                NSLog(@"fetchedData.count %d", fetchedData.count);
+//                NSLog(@"fetchedData.count %d", fetchedData.count);
                 NSPredicate *notSynced = [NSPredicate predicateWithFormat:@"SELF.synced == 0"];
                 NSArray *notSyncedData = [fetchedData filteredArrayUsingPredicate:notSynced];
                 NSLog(@"notSyncedData.count %d", notSyncedData.count);
                 if (notSyncedData.count > 0) {
+                    
+                    dataToSync = YES;
+                    
                     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "set-of");
                     xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "name", (xmlChar *)[entityName UTF8String]);
                     
                     NSArray *entityProperties = [entityDescription.propertiesByName allKeys];
-                    NSLog(@"entityProperties %@", entityProperties);
+//                    NSLog(@"entityProperties %@", entityProperties);
                     for (NSManagedObject *datum in notSyncedData) {
                         xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "d");
                         xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *)"xid", (xmlChar *)[[datum valueForKey:@"xid"] UTF8String]);
@@ -178,6 +199,9 @@
                     }
                     
                     xmlTextWriterEndElement(xmlTextWriter); //set-of
+                    
+                } else {
+                    NSLog(@"No data to sync");
                 }
             }
         } else {
@@ -190,15 +214,17 @@
     xmlTextWriterEndDocument(xmlTextWriter);
     xmlFreeTextWriter(xmlTextWriter);
     
-    NSData *requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
+    requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
     xmlBufferFree(xmlBuffer);
     
 //    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+
     
-    
-    
-    if (requestData) {
-        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
+    if (dataToSync) {
+        self.tracker.trackerStatus = @"SYNC";
+        self.tracker.syncing = YES;
+        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/reflect/?--mirror"];
+//        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
 //        NSURL *requestURL = [NSURL URLWithString:@"http://lamac.local/~sasha/ud/?--show-headers"];
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
         [request setHTTPMethod:@"POST"];
@@ -213,12 +239,12 @@
             NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
             if (!connection) {
                 NSLog(@"connection error");
-//                self.trackerStatus = @"SYNC FAIL";
-//                [self updateInfoLabels];
-//                self.syncing = NO;
+                self.tracker.trackerStatus = @"SYNC FAIL";
+                self.tracker.syncing = NO;
             }
     } else {
         NSLog(@"No data to sync");
+        self.changesCount = 0;
     }
 
 
@@ -236,56 +262,56 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
-//    NSXMLParser *responseParser = [[NSXMLParser alloc] initWithData:self.responseData];
-//    responseParser.delegate = self;
-//    if (![responseParser parse]) {
-//        NSLog(@"[responseParser parserError] %@", [responseParser parserError].localizedDescription);
-//        self.trackerStatus = @"PARSER FAIL";
-//        [self updateInfoLabels];
-//        self.syncing = NO;
-//    }
-//    responseParser = nil;
+//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+    NSXMLParser *responseParser = [[NSXMLParser alloc] initWithData:self.responseData];
+    responseParser.delegate = self;
+    self.pEntityName = @"";
+    self.pEntityXids = [NSMutableArray array];
+    if (![responseParser parse]) {
+        NSLog(@"[responseParser parserError] %@", [responseParser parserError].localizedDescription);
+        self.tracker.trackerStatus = @"PARSER FAIL";
+        self.tracker.syncing = NO;
+    }
+    responseParser.delegate = nil;
+    responseParser = nil;
 }
 
 #pragma mark - NSXMLParserDelegate
 
 - (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
 
-//    if ([elementName isEqualToString:@"ok"]) {
-//        NSPredicate *matchedXid = [NSPredicate predicateWithFormat:@"SELF.xid == %@",[attributeDict valueForKey:@"xid"]];
-//        NSArray *matchedObjects = [self.allLocationsArray filteredArrayUsingPredicate:matchedXid];
-//        if (matchedObjects.count > 0) {
-//            Location *location = [matchedObjects lastObject];
-//            location.synced = [NSNumber numberWithBool:YES];
-//            location.lastSyncTimestamp = [NSDate date];
-//        } else {
-//            matchedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:matchedXid];
-//            if (matchedObjects.count > 0) {
-//                Track *track = [matchedObjects lastObject];
-////                if (![track.xid isEqualToString:self.currentTrack.xid]) {
-//                    track.synced = [NSNumber numberWithBool:YES];
-////                }
-//                track.lastSyncTimestamp = [NSDate date];
-//            }
-//        }
-////        NSLog(@"%@", [matchedObjects lastObject]);
-//    }
+    if ([elementName isEqualToString:@"set-of"]) {
+        self.pEntityName = [attributeDict valueForKey:@"name"];
+    }
+    if ([elementName isEqualToString:@"d"] && ![[attributeDict allKeys] containsObject:@"name"]) {
+//        NSLog(@"%@", self.pEntityName);
+//        NSLog(@"xid %@", [attributeDict valueForKey:@"xid"]);
+        [self.pEntityXids addObject:[attributeDict valueForKey:@"xid"]];
+    }
 
 }
 
 - (void)parserDidEndDocument:(NSXMLParser *)parser {
 
-//    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//        NSLog(@"setSynced UIDocumentSaveForOverwriting success");
-//        self.trackerStatus = @"";
-//        [self updateInfoLabels];
-//        self.syncing = NO;
-//        if (!self.locationManagerRunning) {
-//            [self startConnection];
-//        }
-//    }];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Datum"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.xid IN %@", self.pEntityXids];
+    NSError *error;
+    NSArray *result = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"result.count %d", result.count);
+    for (Datum *datum in result) {
+        datum.synced = [NSNumber numberWithBool:YES];
+        datum.lastSyncTimestamp = [NSDate date];
+    }
+    self.changesCount = 0;
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"setSynced UIDocumentSaveForOverwriting success");
+        self.tracker.trackerStatus = @"";
+        self.tracker.syncing = NO;
+        self.pEntityName = @"";
+        self.pEntityXids = [NSMutableArray array];
+    }];
 
 }
 

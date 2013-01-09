@@ -26,10 +26,8 @@
 @property (nonatomic) CLLocationSpeed averageSpeed;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) NSMutableData *responseData;
-@property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) Track *currentTrack;
 @property (nonatomic, strong) NSTimer *syncingTimer;
-@property (nonatomic, strong) NSString *trackerStatus;
 @property (nonatomic, strong) DataSyncController *syncer;
 
 @end
@@ -133,7 +131,7 @@
         _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
-        NSLog(@"_locationsDatabase %@", [_locationsDatabase.managedObjectModel.entitiesByName allKeys]);
+//        NSLog(@"_locationsDatabase %@", [_locationsDatabase.managedObjectModel.entitiesByName allKeys]);
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {

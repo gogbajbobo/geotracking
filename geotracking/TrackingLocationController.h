@@ -32,6 +32,9 @@
 @property (nonatomic) NSInteger selectedTrackNumber;
 @property (nonatomic) NSInteger numberOfTracks;
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;
+@property (nonatomic) BOOL syncing;
+@property (nonatomic, strong) NSString *trackerStatus;
+
 
 
 - (void)startTrackingLocation;

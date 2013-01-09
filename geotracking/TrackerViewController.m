@@ -37,7 +37,7 @@
         _tracker.summary = self.summary;
         _tracker.currentValues = self.currentValues;
         _tracker.caller = self;
-        NSLog(@"_tracker %@", _tracker);
+//        NSLog(@"_tracker %@", _tracker);
     }
     return _tracker;
 }
