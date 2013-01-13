@@ -11,7 +11,6 @@
 #import "UDOAuthBasic.h"
 #import "TrackingLocationController.h"
 #import "GDataXMLNode.h"
-#import "Datum.h"
 
 
 @interface DataSyncController() <NSURLConnectionDataDelegate>
@@ -303,6 +302,36 @@
                 NSLog(@"insertNewObjectForEntity");
             }
             
+            if ([entityName isEqualToString:@"Spot"]) {
+                NSArray *itemProperties = [entityItem nodesForXPath:@"./d" error:nil];
+                NSMutableSet *propertiesSet = [NSMutableSet set];
+                
+                for (GDataXMLElement *itemProperty in itemProperties) {
+                    NSLog(@"itemProperty %@", itemProperty);
+                    NSString *propertyName = [[[itemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
+                    NSString *propertyXid = [[[itemProperty nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
+                    
+                    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:propertyName];
+                    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+                    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", propertyXid];
+                    NSArray *result = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+                    NSManagedObject *property;
+                    
+                    if ([result lastObject]) {
+                        property = [result lastObject];
+                        NSLog(@"result lastObject");
+                    } else {
+                        property = [NSEntityDescription insertNewObjectForEntityForName:propertyName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+                        [property setValue:propertyXid forKey:@"xid"];
+                        [property setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lastSyncTimestamp"];
+                        NSLog(@"insertNewObjectForEntity");
+                    }
+                    [propertiesSet addObject:property];
+                }
+                [self.syncObject setValue:[propertiesSet copy] forKey:@"properties"];
+            }
+            
+            
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
             NSString *timestamp = [[[entityItem nodesForXPath:@"./date[@name='timestamp']" error:nil] lastObject] stringValue];
@@ -347,6 +376,18 @@
             
         }
     }
+    
+//    GDataXMLElement *spotEntity = [[xmlDoc nodesForXPath:@"//set-of[@name='Spot']" error:nil] lastObject];
+//    NSArray *spotItems = [spotEntity nodesForXPath:@"./d" error:nil];
+//    
+//    for (GDataXMLElement *spotItem in spotItems) {
+//        NSArray *spotProperties = [spotItem nodesForXPath:@"./d" error:nil];
+//        
+//        for (GDataXMLElement *spotProperty in spotProperties) {
+//            
+//        }
+//
+//    }
     
     self.changesCount = 0;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
