@@ -216,7 +216,7 @@
     requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
     xmlBufferFree(xmlBuffer);
     
-//    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
 
     [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
     
@@ -358,7 +358,20 @@
                         NSNumber *number = [[[NSNumberFormatter alloc] init] numberFromString:value];
                         [self.syncObject setValue:number forKey:name];
                     } else if ([type isEqualToString:@"png"]) {
-                        [self.syncObject setValue:[value dataUsingEncoding:NSUTF8StringEncoding] forKey:name];
+                        NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
+                        NSString *dataString = [[value stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+//                        NSLog(@"dataString %@", dataString);
+                        NSMutableData *data = [NSMutableData data];
+                        int i;
+                        for (i = 0; i+2 <= dataString.length; i+=2) {
+                            NSRange range = NSMakeRange(i, 2);
+                            NSString* hexString = [dataString substringWithRange:range];
+                            NSScanner* scanner = [NSScanner scannerWithString:hexString];
+                            unsigned int intValue;
+                            [scanner scanHexInt:&intValue];
+                            [data appendBytes:&intValue length:1];
+                        }
+                        [self.syncObject setValue:data forKey:name];
                     }
                     
                 }
