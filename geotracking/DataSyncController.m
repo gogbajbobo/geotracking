@@ -239,10 +239,10 @@
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:requestData];
     [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-    NSLog(@"request %@", request);
+//    NSLog(@"request %@", request);
     [[UDOAuthBasic sharedOAuth] checkToken];
     request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
-    NSLog(@"[request allHTTPHeaderFields] %@", [request allHTTPHeaderFields]);
+//    NSLog(@"[request allHTTPHeaderFields] %@", [request allHTTPHeaderFields]);
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     if (!connection) {
         NSLog(@"connection error");
@@ -265,8 +265,8 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
     
 //    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"];
 //    self.responseData = [NSData dataWithContentsOfFile:dataPath];
@@ -284,12 +284,12 @@
 
     for (GDataXMLElement *entityNode in entityNodes) {
         NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
-        NSLog(@"entityName %@", entityName);
+//        NSLog(@"entityName %@", entityName);
         NSArray *entityItems = [entityNode nodesForXPath:@"./ns:d" namespaces:namespaces error:nil];
 
         for (GDataXMLElement *entityItem in entityItems) {
             NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
-            NSLog(@"entityXid.stringValue %@", entityXid);
+//            NSLog(@"entityXid.stringValue %@", entityXid);
             
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
             request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
@@ -298,12 +298,12 @@
 
             if ([result lastObject]) {
                 self.syncObject = [result lastObject];
-                NSLog(@"result lastObject");
+//                NSLog(@"result lastObject");
             } else {
                 self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
                 [self.syncObject setValue:entityXid forKey:@"xid"];
                 [self.syncObject setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lastSyncTimestamp"];
-                NSLog(@"insertNewObjectForEntity");
+//                NSLog(@"insertNewObjectForEntity");
             }
             
             if ([entityName isEqualToString:@"Spot"]) {
@@ -311,7 +311,7 @@
                 NSMutableSet *propertiesSet = [NSMutableSet set];
                 
                 for (GDataXMLElement *itemProperty in itemProperties) {
-                    NSLog(@"itemProperty %@", itemProperty);
+//                    NSLog(@"itemProperty %@", itemProperty);
                     NSString *propertyName = [[[itemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
                     NSString *propertyXid = [[[itemProperty nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
                     
@@ -323,12 +323,12 @@
                     
                     if ([result lastObject]) {
                         property = [result lastObject];
-                        NSLog(@"result lastObject");
+//                        NSLog(@"result lastObject");
                     } else {
                         property = [NSEntityDescription insertNewObjectForEntityForName:propertyName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
                         [property setValue:propertyXid forKey:@"xid"];
                         [property setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lastSyncTimestamp"];
-                        NSLog(@"insertNewObjectForEntity");
+//                        NSLog(@"insertNewObjectForEntity");
                     }
                     [propertiesSet addObject:property];
                 }
@@ -343,14 +343,14 @@
             NSDate *serverDate = [dateFormatter dateFromString:timestamp];
             NSDate *localDate = [self.syncObject valueForKey:@"lastSyncTimestamp"];
             
-            NSLog(@"serverDate %@", serverDate);
-            NSLog(@"localDate %@", localDate);
+//            NSLog(@"serverDate %@", serverDate);
+//            NSLog(@"localDate %@", localDate);
             
             if ([localDate compare:serverDate] == NSOrderedAscending) {
-                NSLog(@"serverDate > localDate");
+//                NSLog(@"serverDate > localDate");
                 NSArray *entityItemProperties = [entityItem nodesForXPath:@"./ns:*" namespaces:namespaces error:nil];
                 for (GDataXMLElement *entityItemProperty in entityItemProperties) {
-                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
+//                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
                     
                     NSString *type = [entityItemProperty name];
                     NSString *name = [[[entityItemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
@@ -382,14 +382,14 @@
                 [self.syncObject setValue:serverDate forKey:@"timestamp"];
 
             } else {
-                NSLog(@"serverDate <= localDate");
+//                NSLog(@"serverDate <= localDate");
             }
             
             [self.syncObject setValue:[NSNumber numberWithBool:YES] forKey:@"synced"];
             [self.syncObject setValue:[NSDate date] forKey:@"lastSyncTimestamp"];
 
             
-            NSLog(@"self.syncObject %@", self.syncObject);
+//            NSLog(@"self.syncObject %@", self.syncObject);
             
         }
     }
