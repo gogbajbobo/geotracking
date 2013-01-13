@@ -73,6 +73,7 @@
         self.resultsController = nil;
     }
     NSError *error;
+
     if (![self.resultsController performFetch:&error]) {
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
@@ -283,6 +284,7 @@
     NSSet *oldAnnotations = [NSSet setWithArray:[self.annotationsDictionary allKeys]];
     NSMutableSet *newAnnotations = [NSMutableSet set];
     for (Spot *spot in self.resultsController.fetchedObjects) {
+//        NSLog(@"spot %@", spot);
         [newAnnotations addObject:spot.xid];
     }
     
@@ -606,12 +608,13 @@
 
     [super viewDidLoad];
 
+//    NSLog(@"MVC viewDidLoad");
 
 	// Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-//    NSLog(@"viewWillAppear");
+//    NSLog(@"MVC viewWillAppear");
     [self performFetch];
     if (self.filteredSpot) {
         CLLocationCoordinate2D center;
@@ -623,6 +626,7 @@
         MapAnnotation *filteredAnnotation = [self.annotationsDictionary objectForKey:self.filteredSpot.xid];
         [self.mapView selectAnnotation:filteredAnnotation animated:NO];
     }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -10,18 +10,18 @@
 #import "AppDelegate.h"
 #import "UDOAuthBasic.h"
 #import "TrackingLocationController.h"
+#import "GDataXMLNode.h"
 #import "Datum.h"
 
 
-@interface DataSyncController() <NSURLConnectionDataDelegate, NSXMLParserDelegate>
+@interface DataSyncController() <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) NSTimeInterval timerInterval;
 @property (nonatomic, strong) NSDictionary *eventsToSync;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) int changesCount;
 @property (nonatomic, strong) TrackingLocationController *tracker;
-@property (nonatomic, strong) NSString *pEntityName;
-@property (nonatomic, strong) NSMutableArray *pEntityXids;
+@property (nonatomic, strong) NSManagedObject *syncObject;
 
 @end
 
@@ -201,7 +201,7 @@
                     xmlTextWriterEndElement(xmlTextWriter); //set-of
                     
                 } else {
-                    NSLog(@"No data to sync");
+//                    NSLog(@"No data to sync");
                 }
             }
         } else {
@@ -219,36 +219,38 @@
     
 //    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
 
+    [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
     
     if (dataToSync) {
-        self.tracker.trackerStatus = @"SYNC";
-        self.tracker.syncing = YES;
-        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/reflect/?--mirror"];
-//        NSURL *requestURL = [NSURL URLWithString:@"https://system.unact.ru/asa/?_host=oldcat&_svc=iexp/gt"];
-//        NSURL *requestURL = [NSURL URLWithString:@"http://lamac.local/~sasha/ud/?--show-headers"];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
-        [request setHTTPMethod:@"POST"];
-        [request setHTTPBody:requestData];
-        [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-        NSLog(@"request %@", request);
-        [[UDOAuthBasic sharedOAuth] checkToken];
-//        NSLog(@"[UDOAuthBasic sharedOAuth] checkToken %@", [[UDOAuthBasic sharedOAuth] checkToken]);
-//        NSLog(@"authenticateRequest %@", [[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request]);
-        request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
-        NSLog(@"[request allHTTPHeaderFields] %@", [request allHTTPHeaderFields]);
-            NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-            if (!connection) {
-                NSLog(@"connection error");
-                self.tracker.trackerStatus = @"SYNC FAIL";
-                self.tracker.syncing = NO;
-            }
+//        [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
     } else {
         NSLog(@"No data to sync");
         self.changesCount = 0;
     }
 
+}
+
+- (void)sendData:(NSData *)requestData toServer:(NSString *)serverUrlString {
+    self.tracker.trackerStatus = @"SYNC";
+    self.tracker.syncing = YES;
+    NSURL *requestURL = [NSURL URLWithString:serverUrlString];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody:requestData];
+    [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+    NSLog(@"request %@", request);
+    [[UDOAuthBasic sharedOAuth] checkToken];
+    request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
+    NSLog(@"[request allHTTPHeaderFields] %@", [request allHTTPHeaderFields]);
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    if (!connection) {
+        NSLog(@"connection error");
+        self.tracker.trackerStatus = @"SYNC FAIL";
+        self.tracker.syncing = NO;
+    }
 
 }
+
 
 #pragma mark - NSURLConnectionDataDelegate
 
@@ -264,53 +266,93 @@
     
 //    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
 //    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
-    NSXMLParser *responseParser = [[NSXMLParser alloc] initWithData:self.responseData];
-    responseParser.delegate = self;
-    self.pEntityName = @"";
-    self.pEntityXids = [NSMutableArray array];
-    if (![responseParser parse]) {
-        NSLog(@"[responseParser parserError] %@", [responseParser parserError].localizedDescription);
-        self.tracker.trackerStatus = @"PARSER FAIL";
-        self.tracker.syncing = NO;
-    }
-    responseParser.delegate = nil;
-    responseParser = nil;
-}
-
-#pragma mark - NSXMLParserDelegate
-
-- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
-
-    if ([elementName isEqualToString:@"set-of"]) {
-        self.pEntityName = [attributeDict valueForKey:@"name"];
-    }
-    if ([elementName isEqualToString:@"d"] && ![[attributeDict allKeys] containsObject:@"name"]) {
-//        NSLog(@"%@", self.pEntityName);
-//        NSLog(@"xid %@", [attributeDict valueForKey:@"xid"]);
-        [self.pEntityXids addObject:[attributeDict valueForKey:@"xid"]];
-    }
-
-}
-
-- (void)parserDidEndDocument:(NSXMLParser *)parser {
-
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Datum"];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-    request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.xid IN %@", self.pEntityXids];
+    
+    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"];
+    self.responseData = [NSData dataWithContentsOfFile:dataPath];
+    
+//    NSLog(@"self.responseData %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
+    
     NSError *error;
-    NSArray *result = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog(@"result.count %d", result.count);
-    for (Datum *datum in result) {
-        datum.synced = [NSNumber numberWithBool:YES];
-        datum.lastSyncTimestamp = [NSDate date];
+    GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithData:self.responseData options:0 error:&error];
+    if (!xmlDoc) {
+        NSLog(@"%@", error.description);
     }
+    NSArray *entityNodes = [xmlDoc nodesForXPath:@"//set-of" error:nil];
+
+    for (GDataXMLElement *entityNode in entityNodes) {
+        NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
+        NSLog(@"entityName %@", entityName);
+        NSArray *entityItems = [entityNode nodesForXPath:@"./d" error:nil];
+
+        for (GDataXMLElement *entityItem in entityItems) {
+            NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
+            NSLog(@"entityXid.stringValue %@", entityXid);
+            
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
+            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+            request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", entityXid];
+            NSArray *result = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+
+            if ([result lastObject]) {
+                self.syncObject = [result lastObject];
+                NSLog(@"result lastObject");
+            } else {
+                self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+                [self.syncObject setValue:entityXid forKey:@"xid"];
+                [self.syncObject setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lastSyncTimestamp"];
+                NSLog(@"insertNewObjectForEntity");
+            }
+            
+            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
+            NSString *timestamp = [[[entityItem nodesForXPath:@"./date[@name='timestamp']" error:nil] lastObject] stringValue];
+
+            NSDate *serverDate = [dateFormatter dateFromString:timestamp];
+            NSDate *localDate = [self.syncObject valueForKey:@"lastSyncTimestamp"];
+            
+            NSLog(@"serverDate %@", serverDate);
+            NSLog(@"localDate %@", localDate);
+            
+            if ([localDate compare:serverDate] == NSOrderedAscending) {
+                NSLog(@"serverDate > localDate");
+                NSArray *entityItemProperties = [entityItem nodesForXPath:@"./*" error:nil];
+                for (GDataXMLElement *entityItemProperty in entityItemProperties) {
+                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
+                    
+                    NSString *type = [entityItemProperty name];
+                    NSString *name = [[[entityItemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
+                    NSString *value = entityItemProperty.stringValue;
+                    
+                    if ([type isEqualToString:@"string"]) {
+                        [self.syncObject setValue:value forKey:name];
+                    } else if ([type isEqualToString:@"double"]) {
+                        NSNumber *number = [[[NSNumberFormatter alloc] init] numberFromString:value];
+                        [self.syncObject setValue:number forKey:name];
+                    } else if ([type isEqualToString:@"png"]) {
+                        [self.syncObject setValue:[value dataUsingEncoding:NSUTF8StringEncoding] forKey:name];
+                    }
+                    
+                }
+                [self.syncObject setValue:serverDate forKey:@"timestamp"];
+
+            } else {
+                NSLog(@"serverDate <= localDate");
+            }
+            
+            [self.syncObject setValue:[NSNumber numberWithBool:YES] forKey:@"synced"];
+            [self.syncObject setValue:[NSDate date] forKey:@"lastSyncTimestamp"];
+
+            
+            NSLog(@"self.syncObject %@", self.syncObject);
+            
+        }
+    }
+    
     self.changesCount = 0;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"setSynced UIDocumentSaveForOverwriting success");
         self.tracker.trackerStatus = @"";
         self.tracker.syncing = NO;
-        self.pEntityName = @"";
-        self.pEntityXids = [NSMutableArray array];
     }];
 
 }

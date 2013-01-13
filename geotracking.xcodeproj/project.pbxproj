@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C13398D169C36F400E841C6 /* Tracker.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 2C13398C169C36F400E841C6 /* Tracker.xcdatamodel */; };
+		2C168D3716A00A74008CBFA7 /* test.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2C168D3616A00A74008CBFA7 /* test.xml */; };
 		2C29FC1016510FFB007E86E0 /* blank_image_44_44.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C29FC0F16510FFB007E86E0 /* blank_image_44_44.png */; };
 		2C32860F1685BDC30081B9DC /* route.html in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860D1685BDC30081B9DC /* route.html */; };
 		2C32A0A6161052E200713735 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32A0A5161052E200713735 /* libxml2.dylib */; };
@@ -78,6 +79,7 @@
 
 /* Begin PBXFileReference section */
 		2C13398C169C36F400E841C6 /* Tracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Tracker.xcdatamodel; sourceTree = "<group>"; };
+		2C168D3616A00A74008CBFA7 /* test.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = test.xml; sourceTree = "<group>"; };
 		2C29FC0F16510FFB007E86E0 /* blank_image_44_44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blank_image_44_44.png; sourceTree = "<group>"; };
 		2C32860D1685BDC30081B9DC /* route.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = route.html; sourceTree = "<group>"; };
 		2C32860E1685BDC30081B9DC /* route.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = route.js; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 		2CE4720615E3FEEC00B092DB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2C168D3616A00A74008CBFA7 /* test.xml */,
 				2C32860D1685BDC30081B9DC /* route.html */,
 				2C32860E1685BDC30081B9DC /* route.js */,
 				2C3B3D02165D3B20003F2347 /* blank_spotImage_132_85.png */,
@@ -525,6 +528,7 @@
 				2C29FC1016510FFB007E86E0 /* blank_image_44_44.png in Resources */,
 				2C3B3D03165D3B20003F2347 /* blank_spotImage_132_85.png in Resources */,
 				2C32860F1685BDC30081B9DC /* route.html in Resources */,
+				2C168D3716A00A74008CBFA7 /* test.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
