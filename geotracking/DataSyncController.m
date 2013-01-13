@@ -12,6 +12,7 @@
 #import "TrackingLocationController.h"
 #import "GDataXMLNode.h"
 
+#define NAMESPACE @"http://github.com/UDTO/UD/unknown"
 
 @interface DataSyncController() <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSTimer *timer;
@@ -126,7 +127,8 @@
     xmlTextWriterStartDocument(xmlTextWriter, "1.0", "UTF-8", NULL);
     
     xmlTextWriterStartElement(xmlTextWriter, (xmlChar *) "post");
-
+    xmlTextWriterWriteAttribute(xmlTextWriter, (xmlChar *) "xmlns", (xmlChar *)[NAMESPACE UTF8String]);
+    
     for (NSString *entityName in allEntityNames) {
         NSEntityDescription *entityDescription = [allEntities objectForKey:entityName];
         if (![entityDescription isAbstract]) {
@@ -216,12 +218,12 @@
     requestData = [NSData dataWithBytes:(xmlBuffer->content) length:(xmlBuffer->use)];
     xmlBufferFree(xmlBuffer);
     
-    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
+//    NSLog(@"requestData %@", [[NSString alloc] initWithData:requestData encoding:NSUTF8StringEncoding]);
 
-    [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
+//    [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
     
     if (dataToSync) {
-//        [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
+        [self sendData:requestData toServer:@"https://system.unact.ru/reflect/?--mirror"];
     } else {
         NSLog(@"No data to sync");
         self.changesCount = 0;
@@ -263,25 +265,27 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
     
-    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"];
-    self.responseData = [NSData dataWithContentsOfFile:dataPath];
+//    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"];
+//    self.responseData = [NSData dataWithContentsOfFile:dataPath];
     
 //    NSLog(@"self.responseData %@", [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding]);
     
     NSError *error;
     GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithData:self.responseData options:0 error:&error];
+    NSDictionary *namespaces = [[NSDictionary alloc] initWithObjectsAndKeys:NAMESPACE, @"ns", nil];
+
     if (!xmlDoc) {
         NSLog(@"%@", error.description);
     }
-    NSArray *entityNodes = [xmlDoc nodesForXPath:@"//set-of" error:nil];
+    NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:set-of" namespaces:namespaces error:nil];
 
     for (GDataXMLElement *entityNode in entityNodes) {
         NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
         NSLog(@"entityName %@", entityName);
-        NSArray *entityItems = [entityNode nodesForXPath:@"./d" error:nil];
+        NSArray *entityItems = [entityNode nodesForXPath:@"./ns:d" namespaces:namespaces error:nil];
 
         for (GDataXMLElement *entityItem in entityItems) {
             NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
@@ -303,7 +307,7 @@
             }
             
             if ([entityName isEqualToString:@"Spot"]) {
-                NSArray *itemProperties = [entityItem nodesForXPath:@"./d" error:nil];
+                NSArray *itemProperties = [entityItem nodesForXPath:@"./ns:d" namespaces:namespaces error:nil];
                 NSMutableSet *propertiesSet = [NSMutableSet set];
                 
                 for (GDataXMLElement *itemProperty in itemProperties) {
@@ -334,7 +338,7 @@
             
             NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
             [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
-            NSString *timestamp = [[[entityItem nodesForXPath:@"./date[@name='timestamp']" error:nil] lastObject] stringValue];
+            NSString *timestamp = [[[entityItem nodesForXPath:@"./ns:date[@name='timestamp']" namespaces:namespaces error:nil] lastObject] stringValue];
 
             NSDate *serverDate = [dateFormatter dateFromString:timestamp];
             NSDate *localDate = [self.syncObject valueForKey:@"lastSyncTimestamp"];
@@ -344,7 +348,7 @@
             
             if ([localDate compare:serverDate] == NSOrderedAscending) {
                 NSLog(@"serverDate > localDate");
-                NSArray *entityItemProperties = [entityItem nodesForXPath:@"./*" error:nil];
+                NSArray *entityItemProperties = [entityItem nodesForXPath:@"./ns:*" namespaces:namespaces error:nil];
                 for (GDataXMLElement *entityItemProperty in entityItemProperties) {
                     NSLog(@"entityItemProperty %@", [entityItemProperty name]);
                     
