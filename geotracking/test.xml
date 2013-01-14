@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<post>
+<post xmlns="http://github.com/UDTO/UD/unknown">
 	<set-of name="Spot">
 		<d xid="21364F9E-6554-4389-8727-D1D45D758ED1">
 			<date name="timestamp">2013-01-08 11:46:08 +0000</date>

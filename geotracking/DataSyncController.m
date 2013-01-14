@@ -132,7 +132,7 @@
     for (NSString *entityName in allEntityNames) {
         NSEntityDescription *entityDescription = [allEntities objectForKey:entityName];
         if (![entityDescription isAbstract]) {
-            NSLog(@"%@", entityName);
+//            NSLog(@"%@", entityName);
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
             request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]];
             NSError *error;
@@ -143,8 +143,8 @@
 //                NSLog(@"fetchedData.count %d", fetchedData.count);
                 NSPredicate *notSynced = [NSPredicate predicateWithFormat:@"SELF.synced == 0"];
                 NSArray *notSyncedData = [fetchedData filteredArrayUsingPredicate:notSynced];
-                NSLog(@"notSyncedData.count %d", notSyncedData.count);
                 if (notSyncedData.count > 0) {
+                    NSLog(@"notSyncedData.count %d", notSyncedData.count);
                     
                     dataToSync = YES;
                     
@@ -206,7 +206,7 @@
                 }
             }
         } else {
-            NSLog(@"Entity %@ is Abstract", entityName);
+//            NSLog(@"Entity %@ is Abstract", entityName);
         }
     }
     
