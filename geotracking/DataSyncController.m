@@ -361,7 +361,7 @@
                     } else if ([type isEqualToString:@"double"]) {
                         NSNumber *number = [[[NSNumberFormatter alloc] init] numberFromString:value];
                         [self.syncObject setValue:number forKey:name];
-                    } else if ([type isEqualToString:@"png"]) {
+                    } else if ([type isEqualToString:@"png"] && ![value isEqualToString:@"text too large"]) {
                         NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
                         NSString *dataString = [[value stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
 //                        NSLog(@"dataString %@", dataString);
