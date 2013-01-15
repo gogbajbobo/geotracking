@@ -14,7 +14,7 @@
 
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.syncer = [[DataSyncController alloc] init];
+    self.syncer = [[STGTDataSyncController alloc] init];
     self.tracker = [[TrackingLocationController alloc] init];
     [self.syncer startSyncer];
 //    NSLog(@"self.syncer %@", self.syncer);

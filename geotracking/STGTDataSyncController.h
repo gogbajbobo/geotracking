@@ -11,7 +11,7 @@
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
 
-@interface DataSyncController : NSObject
+@interface STGTDataSyncController : NSObject
 
 - (void)startSyncer;
 - (void)stopSyncer;

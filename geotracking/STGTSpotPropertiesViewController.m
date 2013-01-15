@@ -9,20 +9,20 @@
 #import "STGTSpotPropertiesViewController.h"
 #import "SpotProperty.h"
 #import "STGTAppDelegate.h"
-#import "DataSyncController.h"
+#import "STGTDataSyncController.h"
 
 @interface STGTSpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) UIImageView *tappedImageView;
-@property (nonatomic, strong) DataSyncController *syncer;
+@property (nonatomic, strong) STGTDataSyncController *syncer;
 
 @end
 
 @implementation STGTSpotPropertiesViewController
 
-- (DataSyncController *)syncer {
+- (STGTDataSyncController *)syncer {
     if (!_syncer) {
         STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _syncer = app.syncer;

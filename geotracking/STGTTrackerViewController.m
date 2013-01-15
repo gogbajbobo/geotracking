@@ -7,11 +7,11 @@
 //
 
 #import "STGTAppDelegate.h"
-#import "TrackerViewController.h"
+#import "STGTTrackerViewController.h"
 #import "TrackingLocationController.h"
 #import "Location.h"
 
-@interface TrackerViewController () <UIAlertViewDelegate>
+@interface STGTTrackerViewController () <UIAlertViewDelegate>
 
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
@@ -20,7 +20,7 @@
 
 @end
 
-@implementation TrackerViewController
+@implementation STGTTrackerViewController
 @synthesize startButton = _startButton;
 @synthesize tracker = _tracker;
 @synthesize tableView = _tableView;

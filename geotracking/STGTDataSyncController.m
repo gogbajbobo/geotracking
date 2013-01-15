@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "DataSyncController.h"
+#import "STGTDataSyncController.h"
 #import "STGTAppDelegate.h"
 #import "UDOAuthBasic.h"
 #import "TrackingLocationController.h"
@@ -14,7 +14,7 @@
 
 #define NAMESPACE @"http://github.com/UDTO/UD/unknown"
 
-@interface DataSyncController() <NSURLConnectionDataDelegate>
+@interface STGTDataSyncController() <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic) NSTimeInterval timerInterval;
 @property (nonatomic, strong) NSDictionary *eventsToSync;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation DataSyncController
+@implementation STGTDataSyncController
 @synthesize changesCount = _changesCount;
 
 - (TrackingLocationController *)tracker

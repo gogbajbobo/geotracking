@@ -11,10 +11,10 @@
 #import "Location.h"
 #import "Track.h"
 #import "STGTMapAnnotation.h"
-#import "TrackerViewController.h"
+#import "STGTTrackerViewController.h"
 #import "UDOAuthBasic.h"
 #import "STGTTrackerManagedDocument.h"
-#import "DataSyncController.h"
+#import "STGTDataSyncController.h"
 
 #define DB_FILE @"geoTracker.sqlite"
 //#define REQUIRED_ACCURACY 15.0
@@ -28,7 +28,7 @@
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic, strong) Track *currentTrack;
 @property (nonatomic, strong) NSTimer *syncingTimer;
-@property (nonatomic, strong) DataSyncController *syncer;
+@property (nonatomic, strong) STGTDataSyncController *syncer;
 
 @end
 
@@ -61,7 +61,7 @@
 #pragma mark - methods
 
 
-- (DataSyncController *)syncer {
+- (STGTDataSyncController *)syncer {
     if (!_syncer) {
         STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _syncer = app.syncer;
@@ -115,8 +115,8 @@
     
     if (!_locationsDatabase) {
         UIBarButtonItem *startButton;
-        TrackerViewController *caller;
-        if ([self.caller isKindOfClass:[TrackerViewController class]]) {
+        STGTTrackerViewController *caller;
+        if ([self.caller isKindOfClass:[STGTTrackerViewController class]]) {
             caller = self.caller;
         }
         startButton = caller.startButton;

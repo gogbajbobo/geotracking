@@ -11,7 +11,7 @@
 #import "STGTSpotPropertiesViewController.h"
 #import "SpotProperty.h"
 #import "Track.h"
-#import "DataSyncController.h"
+#import "STGTDataSyncController.h"
 
 @interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
@@ -20,14 +20,14 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *interestsCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *networkCollectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *spotImageView;
-@property (nonatomic, strong) DataSyncController *syncer;
+@property (nonatomic, strong) STGTDataSyncController *syncer;
 
 
 @end
 
 @implementation STGTSpotViewController
 
-- (DataSyncController *)syncer {
+- (STGTDataSyncController *)syncer {
     if (!_syncer) {
         STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _syncer = app.syncer;
