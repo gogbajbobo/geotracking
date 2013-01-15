@@ -8,17 +8,17 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "Datum.h"
+#import "STGTDatum.h"
 
-@class Track;
+@class STGTTrack;
 
-@interface Location : Datum
+@interface STGTLocation : STGTDatum
 
 @property (nonatomic, retain) NSNumber * course;
 @property (nonatomic, retain) NSNumber * horizontalAccuracy;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSNumber * speed;
-@property (nonatomic, retain) Track *track;
+@property (nonatomic, retain) STGTTrack *track;
 
 @end

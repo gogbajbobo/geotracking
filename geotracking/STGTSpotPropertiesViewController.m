@@ -7,7 +7,7 @@
 //
 
 #import "STGTSpotPropertiesViewController.h"
-#import "SpotProperty.h"
+#import "STGTSpotProperty.h"
 #import "STGTAppDelegate.h"
 #import "STGTDataSyncController.h"
 
@@ -32,7 +32,7 @@
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SpotProperty"];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpotProperty"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
@@ -110,12 +110,12 @@
 }
 
 - (void)addNewPropertyWithName:(NSString *)name {
-    SpotProperty *newProperty = (SpotProperty *)[NSEntityDescription insertNewObjectForEntityForName:@"SpotProperty" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpotProperty *newProperty = (STGTSpotProperty *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotProperty" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     [newProperty setXid:[self.tracker newid]];
     [newProperty setType:self.typeOfProperty];
     [newProperty setName:name];
     [newProperty setTimestamp:[NSDate date]];
-    [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"blank_image_44_44.png"])];
+    [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
     [self.syncer changesCountPlusOne];
     [self.filterSpot addPropertiesObject:newProperty];
 //    NSLog(@"newProperty %@", newProperty);
@@ -184,7 +184,7 @@
     if ([imageView.superview.superview isKindOfClass:[UITableViewCell class]]) {
         UITableViewCell *cell = (UITableViewCell *)imageView.superview.superview;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         spotProperty.image = UIImagePNGRepresentation(imageView.image);
         spotProperty.timestamp = [NSDate date];
         spotProperty.synced = [NSNumber numberWithBool:NO];
@@ -227,9 +227,9 @@
     textField.delegate = self;
     textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
     textField.text = nil;
-    cell.imageView.image = [UIImage imageNamed:@"blank_image_44_44.png"];
+    cell.imageView.image = [UIImage imageNamed:@"STGTblank_image_44_44.png"];
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
-        SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
         textField.text = cell.textLabel.text;
         if (spotProperty.image) {
@@ -284,7 +284,7 @@
             }
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
-        SpotProperty *propertyToDelete = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        STGTSpotProperty *propertyToDelete = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         [self.filterSpot removePropertiesObject:propertyToDelete];
         [self.tracker.locationsDatabase.managedObjectContext deleteObject:propertyToDelete];
     }
@@ -292,7 +292,7 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //    NSLog(@"indexPath %@", indexPath);
-    SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+    STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
     NSDate *timestamp = [NSDate date];
     spotProperty.timestamp = timestamp;
 //    self.caller.spot.timestamp = timestamp;
@@ -338,7 +338,7 @@
                     if ([textField.text isEqualToString:@""]) {
                         textField.text = cell.textLabel.text;
                     } else {
-                        SpotProperty *spotProperty = (SpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
+                        STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
                         spotProperty.name = textField.text;
                         spotProperty.timestamp = [NSDate date];
                         spotProperty.synced = [NSNumber numberWithBool:NO];

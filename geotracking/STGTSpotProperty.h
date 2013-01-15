@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "Datum.h"
+#import "STGTDatum.h"
 
-@class Spot;
+@class STGTSpot;
 
-@interface SpotProperty : Datum
+@interface STGTSpotProperty : STGTDatum
 
 @property (nonatomic, retain) NSData * image;
 @property (nonatomic, retain) NSString * name;
@@ -20,10 +20,10 @@
 @property (nonatomic, retain) NSSet *points;
 @end
 
-@interface SpotProperty (CoreDataGeneratedAccessors)
+@interface STGTSpotProperty (CoreDataGeneratedAccessors)
 
-- (void)addPointsObject:(Spot *)value;
-- (void)removePointsObject:(Spot *)value;
+- (void)addPointsObject:(STGTSpot *)value;
+- (void)removePointsObject:(STGTSpot *)value;
 - (void)addPoints:(NSSet *)values;
 - (void)removePoints:(NSSet *)values;
 

@@ -9,7 +9,7 @@
 #import "STGTAppDelegate.h"
 #import "STGTTrackerViewController.h"
 #import "STGTTrackingLocationController.h"
-#import "Location.h"
+#import "STGTLocation.h"
 
 @interface STGTTrackerViewController () <UIAlertViewDelegate>
 

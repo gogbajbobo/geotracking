@@ -7,14 +7,14 @@
 //
 
 #import "STGTAddressSearchViewController.h"
-#import "Spot.h"
+#import "STGTSpot.h"
 
 @interface STGTAddressSearchViewController () <UISearchDisplayDelegate>
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, strong) NSArray *filteredListContent;
 @property (nonatomic, strong) NSArray *listContent;
-@property (nonatomic, strong) Spot *filterSpot;
+@property (nonatomic, strong) STGTSpot *filterSpot;
 
 @end
 
@@ -39,7 +39,7 @@
     self.searchController.searchResultsDataSource = self;
     self.searchController.searchResultsDelegate = self;
     
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Spot"];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpot"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"];
     NSError *error;
@@ -87,7 +87,7 @@
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"addressCell"];
 	}
 
-	Spot *spot = nil;
+	STGTSpot *spot = nil;
 	if (tableView == self.searchDisplayController.searchResultsTableView)
 	{
         spot = [self.filteredListContent objectAtIndex:indexPath.row];

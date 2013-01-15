@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Spot.h"
-#import "SpotProperty.h"
+#import "STGTSpot.h"
+#import "STGTSpotProperty.h"
 
 
-@implementation Spot
+@implementation STGTSpot
 
 @dynamic address;
 @dynamic image;

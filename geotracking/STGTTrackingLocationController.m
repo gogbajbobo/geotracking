@@ -8,8 +8,8 @@
 
 #import "STGTTrackingLocationController.h"
 #import "STGTAppDelegate.h"
-#import "Location.h"
-#import "Track.h"
+#import "STGTLocation.h"
+#import "STGTTrack.h"
 #import "STGTMapAnnotation.h"
 #import "STGTTrackerViewController.h"
 #import "UDOAuthBasic.h"
@@ -26,7 +26,7 @@
 @property (nonatomic) CLLocationSpeed averageSpeed;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) NSMutableData *responseData;
-@property (nonatomic, strong) Track *currentTrack;
+@property (nonatomic, strong) STGTTrack *currentTrack;
 @property (nonatomic, strong) NSTimer *syncingTimer;
 @property (nonatomic, strong) STGTDataSyncController *syncer;
 
@@ -78,7 +78,7 @@
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Track"];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTTrack"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:NO selector:@selector(compare:)]];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
@@ -90,7 +90,7 @@
 
 - (NSArray *)allLocationsArray {
     NSMutableSet *allLocations = [NSMutableSet set];
-    for (Track *track in self.resultsController.fetchedObjects) {
+    for (STGTTrack *track in self.resultsController.fetchedObjects) {
         [allLocations unionSet:track.locations];
     }
     return [allLocations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]]];
@@ -172,7 +172,7 @@
 }
 
 - (void)startNewTrack {
-    Track *track = (Track *)[NSEntityDescription insertNewObjectForEntityForName:@"Track" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+    STGTTrack *track = (STGTTrack *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTTrack" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [track setXid:[self newid]];
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     [track setStartTime:[NSDate date]];
@@ -192,7 +192,7 @@
 //        NSLog(@"%f",[currentLocation distanceFromLocation:self.lastLocation]);
 //        NSLog(@"%f",(2 * self.distanceFilter));
         if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * self.distanceFilter)) {
-            Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+            STGTLocation *location = (STGTLocation *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTLocation" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
             [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
             [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
             [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
@@ -212,7 +212,7 @@
     NSNumber *overallDistance = [NSNumber numberWithDouble:[self.currentTrack.overallDistance doubleValue] + [currentLocation distanceFromLocation:self.lastLocation]];
     self.currentTrack.overallDistance = ([overallDistance doubleValue] < 0) ? [NSNumber numberWithDouble:0.0] : overallDistance;
 
-    Location *location = (Location *)[NSEntityDescription insertNewObjectForEntityForName:@"Location" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+    STGTLocation *location = (STGTLocation *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTLocation" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     CLLocationCoordinate2D coordinate = [currentLocation coordinate];
     [location setLatitude:[NSNumber numberWithDouble:coordinate.latitude]];
     [location setLongitude:[NSNumber numberWithDouble:coordinate.longitude]];
@@ -266,7 +266,7 @@
 - (CLLocationDistance)overallDistance {
 
     CLLocationDistance overallDistance = 0.0;
-    for (Track *track in self.resultsController.fetchedObjects) {
+    for (STGTTrack *track in self.resultsController.fetchedObjects) {
         overallDistance = overallDistance + [track.overallDistance doubleValue];
     }
     return overallDistance;
@@ -276,7 +276,7 @@
 - (CLLocationSpeed)averageSpeed {
     
     NSTimeInterval trackOverallTime = 0;
-    for (Track *track in self.resultsController.fetchedObjects) {
+    for (STGTTrack *track in self.resultsController.fetchedObjects) {
         trackOverallTime = trackOverallTime + [track.finishTime timeIntervalSinceDate:track.startTime];
     }
     CLLocationSpeed averageSpeed = 0.0;
@@ -714,7 +714,7 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    Track *track = (Track *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+    STGTTrack *track = (STGTTrack *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
 
     NSDateFormatter *startDateFormatter = [[NSDateFormatter alloc] init];
     [startDateFormatter setDateStyle:NSDateFormatterShortStyle];
@@ -753,8 +753,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Track *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        for (Location *location in track.locations) {
+        STGTTrack *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        for (STGTLocation *location in track.locations) {
 //            NSLog(@"location to delete %@", location);
             [self.locationsDatabase.managedObjectContext deleteObject:location];
         }

@@ -9,8 +9,8 @@
 #import "STGTAppDelegate.h"
 #import "STGTSpotViewController.h"
 #import "STGTSpotPropertiesViewController.h"
-#import "SpotProperty.h"
-#import "Track.h"
+#import "STGTSpotProperty.h"
+#import "STGTTrack.h"
 #import "STGTDataSyncController.h"
 
 @interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
@@ -214,7 +214,7 @@
     } else {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
         [[cell.contentView viewWithTag:1] removeFromSuperview];
-        SpotProperty *spotProperty = [spotPropertiesArray objectAtIndex:indexPath.row];
+        STGTSpotProperty *spotProperty = [spotPropertiesArray objectAtIndex:indexPath.row];
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, cell.contentView.frame.size.height)];
         imageView.image = [UIImage imageWithData:spotProperty.image];
         imageView.tag = 1;
@@ -295,7 +295,7 @@
 - (void)viewDidLoad
 {
     if (!self.spot) {
-    Spot *newSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpot *newSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     [newSpot setXid:[self.tracker newid]];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
@@ -319,7 +319,7 @@
     if (spotImage) {
         self.spotImageView.image = spotImage;
     } else {
-        self.spotImageView.image = [UIImage imageNamed:@"blank_spotImage_132_85"];
+        self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
     }
 
     self.spotImageView.contentMode = UIViewContentModeScaleAspectFit;

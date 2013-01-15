@@ -306,7 +306,7 @@
 //                NSLog(@"insertNewObjectForEntity");
             }
             
-            if ([entityName isEqualToString:@"Spot"]) {
+            if ([entityName isEqualToString:@"STGTSpot"]) {
                 NSArray *itemProperties = [entityItem nodesForXPath:@"./ns:d" namespaces:namespaces error:nil];
                 NSMutableSet *propertiesSet = [NSMutableSet set];
                 

@@ -24,14 +24,14 @@
 }
 
 
-+ (STGTMapAnnotation *)createAnnotationForLocation:(Location *)location
++ (STGTMapAnnotation *)createAnnotationForLocation:(STGTLocation *)location
 {
     STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.location = location;
     return annotation;
 }
 
-+ (STGTMapAnnotation *)createAnnotationForSpot:(Spot *)spot
++ (STGTMapAnnotation *)createAnnotationForSpot:(STGTSpot *)spot
 {
     STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.spot = spot;

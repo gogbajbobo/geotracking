@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Track.h"
-#import "Location.h"
+#import "STGTTrack.h"
+#import "STGTLocation.h"
 
 
-@implementation Track
+@implementation STGTTrack
 
 @dynamic finishTime;
 @dynamic overallDistance;

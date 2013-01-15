@@ -6,11 +6,11 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Location.h"
-#import "Track.h"
+#import "STGTLocation.h"
+#import "STGTTrack.h"
 
 
-@implementation Location
+@implementation STGTLocation
 
 @dynamic course;
 @dynamic horizontalAccuracy;

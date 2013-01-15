@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Datum" representedClassName="Datum" isAbstract="YES" syncable="YES">
+    <entity name="STGTDatum" representedClassName="STGTDatum" isAbstract="YES" syncable="YES">
         <attribute name="lastSyncTimestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="synced" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="xid" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Location" representedClassName="Location" parentEntity="Datum" syncable="YES">
+    <entity name="STGTLocation" representedClassName="STGTLocation" parentEntity="STGTDatum" syncable="YES">
         <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="track" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Track" inverseName="locations" inverseEntity="Track" syncable="YES"/>
+        <relationship name="track" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STGTTrack" inverseName="locations" inverseEntity="STGTTrack" syncable="YES"/>
     </entity>
-    <entity name="Spot" representedClassName="Spot" parentEntity="Datum" syncable="YES">
+    <entity name="STGTSpot" representedClassName="STGTSpot" parentEntity="STGTDatum" syncable="YES">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <relationship name="properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SpotProperty" inverseName="points" inverseEntity="SpotProperty" syncable="YES"/>
+        <relationship name="properties" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTSpotProperty" inverseName="points" inverseEntity="STGTSpotProperty" syncable="YES"/>
     </entity>
-    <entity name="SpotProperty" representedClassName="SpotProperty" parentEntity="Datum" syncable="YES">
+    <entity name="STGTSpotProperty" representedClassName="STGTSpotProperty" parentEntity="STGTDatum" syncable="YES">
         <attribute name="image" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Spot" inverseName="properties" inverseEntity="Spot" syncable="YES"/>
+        <relationship name="points" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTSpot" inverseName="properties" inverseEntity="STGTSpot" syncable="YES"/>
     </entity>
-    <entity name="Track" representedClassName="Track" parentEntity="Datum" syncable="YES">
+    <entity name="STGTTrack" representedClassName="STGTTrack" parentEntity="STGTDatum" syncable="YES">
         <attribute name="finishTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="overallDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Location" inverseName="track" inverseEntity="Location" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTLocation" inverseName="track" inverseEntity="STGTLocation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Datum" positionX="4590" positionY="1377" width="128" height="103"/>
-        <element name="Location" positionX="4984" positionY="1346" width="128" height="133"/>
-        <element name="Spot" positionX="4464" positionY="1566" width="128" height="133"/>
-        <element name="SpotProperty" positionX="4660" positionY="1598" width="128" height="103"/>
-        <element name="Track" positionX="4813" positionY="1439" width="128" height="103"/>
+        <element name="STGTDatum" positionX="-576" positionY="-252" width="128" height="105"/>
+        <element name="STGTLocation" positionX="-594" positionY="-72" width="128" height="135"/>
+        <element name="STGTSpot" positionX="-144" positionY="-261" width="128" height="135"/>
+        <element name="STGTSpotProperty" positionX="-371" positionY="-45" width="128" height="105"/>
+        <element name="STGTTrack" positionX="-855" positionY="-63" width="128" height="105"/>
     </elements>
 </model>

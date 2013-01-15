@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "Datum.h"
+#import "STGTDatum.h"
 
-@class Location;
+@class STGTLocation;
 
-@interface Track : Datum
+@interface STGTTrack : STGTDatum
 
 @property (nonatomic, retain) NSDate * finishTime;
 @property (nonatomic, retain) NSNumber * overallDistance;
@@ -20,10 +20,10 @@
 @property (nonatomic, retain) NSSet *locations;
 @end
 
-@interface Track (CoreDataGeneratedAccessors)
+@interface STGTTrack (CoreDataGeneratedAccessors)
 
-- (void)addLocationsObject:(Location *)value;
-- (void)removeLocationsObject:(Location *)value;
+- (void)addLocationsObject:(STGTLocation *)value;
+- (void)removeLocationsObject:(STGTLocation *)value;
 - (void)addLocations:(NSSet *)values;
 - (void)removeLocations:(NSSet *)values;
 

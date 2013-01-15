@@ -24,8 +24,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *trackNumberLabel;
 @property (weak, nonatomic) IBOutlet UIStepper *trackNumberSelector;
 @property (strong, nonatomic) NSFetchedResultsController *resultsController;
-@property (strong, nonatomic) Spot *selectedSpot;
-@property (strong, nonatomic) Spot *filterSpot;
+@property (strong, nonatomic) STGTSpot *selectedSpot;
+@property (strong, nonatomic) STGTSpot *filterSpot;
 @property (strong, nonatomic) NSMutableDictionary *annotationsDictionary;
 
 
@@ -50,7 +50,7 @@
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Spot"];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpot"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"];
         NSError *error;
@@ -86,12 +86,12 @@
 }
 
 - (void)createFilterSpot {
-    Spot *filterSpot = (Spot *)[NSEntityDescription insertNewObjectForEntityForName:@"Spot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpot *filterSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     [filterSpot setXid:[self.tracker newid]];
     filterSpot.timestamp = [NSDate date];
     filterSpot.label = @"@filter";
 //    filterSpot.synced = [NSNumber numberWithBool:YES];
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SpotProperty"];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpotProperty"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     NSError *error;
     NSArray *allProperties = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
@@ -220,14 +220,14 @@
     NSArray *locationsArray = [self.tracker locationsArrayForTrack:self.tracker.selectedTrackNumber];
     if (locationsArray.count > 0) {
 //        NSLog(@"locationsArray.count > 0");
-        Location *location = (Location *)[locationsArray objectAtIndex:0];
+        STGTLocation *location = (STGTLocation *)[locationsArray objectAtIndex:0];
         
         double maxLon = [location.longitude doubleValue];
         double minLon = [location.longitude doubleValue];
         double maxLat = [location.latitude doubleValue];
         double minLat = [location.latitude doubleValue];
         
-        for (Location *location in locationsArray) {
+        for (STGTLocation *location in locationsArray) {
             if ([location.longitude doubleValue] > maxLon) maxLon = [location.longitude doubleValue];
             if ([location.longitude doubleValue] < minLon) minLon = [location.longitude doubleValue];
             if ([location.latitude doubleValue] > maxLat) maxLat = [location.latitude doubleValue];
@@ -261,7 +261,7 @@
 }
 
 - (void)annotationsCreateForSpots:(NSSet *)spots {
-    for (Spot *spot in spots) {
+    for (STGTSpot *spot in spots) {
         if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
             STGTMapAnnotation *annotation = [STGTMapAnnotation createAnnotationForSpot:spot];
             [self.mapView addAnnotation:annotation];
@@ -283,7 +283,7 @@
 - (void)refreshAnnotations {
     NSSet *oldAnnotations = [NSSet setWithArray:[self.annotationsDictionary allKeys]];
     NSMutableSet *newAnnotations = [NSMutableSet set];
-    for (Spot *spot in self.resultsController.fetchedObjects) {
+    for (STGTSpot *spot in self.resultsController.fetchedObjects) {
 //        NSLog(@"spot %@", spot);
         [newAnnotations addObject:spot.xid];
     }
@@ -324,7 +324,7 @@
     CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
     if (numberOfLocations > 0) {
         int i = 0;
-        for (Location *location in locationsArray) {
+        for (STGTLocation *location in locationsArray) {
             CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([location.latitude doubleValue], [location.longitude doubleValue]);
             annotationsCoordinates[i] = coordinate;
             i++;
@@ -342,7 +342,7 @@
     CLLocationCoordinate2D annotationsCoordinates[numberOfLocations];
     if (numberOfLocations > 0) {
         int i = 0;
-        for (Location *location in locationsArray) {
+        for (STGTLocation *location in locationsArray) {
             CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake([location.latitude doubleValue], [location.longitude doubleValue]);
             annotationsCoordinates[i] = coordinate;
             i++;
@@ -370,7 +370,7 @@
     self.routeStartPoint = startPoint;
     self.routeFinishPoint = finishPoint;
     NSError *error;
-    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"route" ofType:@"html"];
+    NSString *htmlPath = [[NSBundle mainBundle] pathForResource:@"STGTroute" ofType:@"html"];
     NSString *htmlContent = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:&error];
     [self.routeBuiderWebView loadHTMLString:htmlContent baseURL:[NSURL fileURLWithPath:[[NSBundle mainBundle] bundlePath]]];
 }
@@ -380,7 +380,7 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
 //    NSLog(@"webViewDidFinishLoad");
     NSError *error;
-    NSString *jsPath = [[NSBundle mainBundle] pathForResource:@"route" ofType:@"js"];
+    NSString *jsPath = [[NSBundle mainBundle] pathForResource:@"STGTroute" ofType:@"js"];
     NSString *jsContent = [NSString stringWithContentsOfFile:jsPath encoding:NSUTF8StringEncoding error:&error];
     NSString *startPoint = [NSString stringWithFormat:@"[%f,%f]",self.routeStartPoint.latitude, self.routeStartPoint.longitude];
     NSString *finishPoint = [NSString stringWithFormat:@"[%f,%f]",self.routeFinishPoint.latitude, self.routeFinishPoint.longitude];
@@ -521,8 +521,8 @@
         
 //        NSLog(@"NSFetchedResultsChangeDelete");
         
-        if ([anObject isKindOfClass:[Spot class]]) {
-            Spot *spot = (Spot *)anObject;
+        if ([anObject isKindOfClass:[STGTSpot class]]) {
+            STGTSpot *spot = (STGTSpot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
                 STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
                 [self.annotationsDictionary removeObjectForKey:spot.xid];
@@ -533,8 +533,8 @@
     } else if (type == NSFetchedResultsChangeInsert) {
         
 //        NSLog(@"NSFetchedResultsChangeInsert");
-        if ([anObject isKindOfClass:[Spot class]]) {
-            Spot *spot = (Spot *)anObject;
+        if ([anObject isKindOfClass:[STGTSpot class]]) {
+            STGTSpot *spot = (STGTSpot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
                 STGTMapAnnotation *annotation = [STGTMapAnnotation createAnnotationForSpot:spot];
                 [self.annotationsDictionary setObject:annotation forKey:spot.xid];
@@ -546,8 +546,8 @@
     } else if (type == NSFetchedResultsChangeUpdate || type == NSFetchedResultsChangeMove) {
         
 //        NSLog(@"NSFetchedResultsChangeUpdate or Move");
-        if ([anObject isKindOfClass:[Spot class]]) {
-            Spot *spot = (Spot *)anObject;
+        if ([anObject isKindOfClass:[STGTSpot class]]) {
+            STGTSpot *spot = (STGTSpot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
                 STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
                 [self.mapView removeAnnotation:annotation];

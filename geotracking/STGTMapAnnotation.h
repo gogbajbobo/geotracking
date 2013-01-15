@@ -8,15 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-#import "Location.h"
-#import "Spot.h"
+#import "STGTLocation.h"
+#import "STGTSpot.h"
 
 @interface STGTMapAnnotation : NSObject <MKAnnotation>
 
-+ (STGTMapAnnotation *)createAnnotationForLocation:(Location *)location;
-+ (STGTMapAnnotation *)createAnnotationForSpot:(Spot *)spot;
++ (STGTMapAnnotation *)createAnnotationForLocation:(STGTLocation *)location;
++ (STGTMapAnnotation *)createAnnotationForSpot:(STGTSpot *)spot;
 + (STGTMapAnnotation *)createAnnotationForCoordinate:(CLLocationCoordinate2D)coordinate;
-@property (nonatomic, strong) Location *location;
-@property (nonatomic, strong) Spot *spot;
+@property (nonatomic, strong) STGTLocation *location;
+@property (nonatomic, strong) STGTSpot *spot;
 
 @end

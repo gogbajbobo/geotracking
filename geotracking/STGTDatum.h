@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 
 
-@interface Datum : NSManagedObject
+@interface STGTDatum : NSManagedObject
 
 @property (nonatomic, retain) NSDate * lastSyncTimestamp;
 @property (nonatomic, retain) NSNumber * synced;

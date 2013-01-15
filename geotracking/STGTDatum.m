@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "Datum.h"
+#import "STGTDatum.h"
 
 
-@implementation Datum
+@implementation STGTDatum
 
 @dynamic lastSyncTimestamp;
 @dynamic synced;

@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
-#import "Location.h"
+#import "STGTLocation.h"
 #import "STGTTrackingLocationController.h"
-#import "Spot.h"
+#import "STGTSpot.h"
 
 @interface STGTMapViewController : UIViewController
 @property (nonatomic, strong) NSArray *annotations;
 @property (nonatomic, strong) STGTTrackingLocationController *tracker;
-@property (strong, nonatomic) Spot *filteredSpot;
+@property (strong, nonatomic) STGTSpot *filteredSpot;
 
 @end
