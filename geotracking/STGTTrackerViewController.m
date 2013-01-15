@@ -8,12 +8,12 @@
 
 #import "STGTAppDelegate.h"
 #import "STGTTrackerViewController.h"
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 #import "Location.h"
 
 @interface STGTTrackerViewController () <UIAlertViewDelegate>
 
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *summary;
 @property (weak, nonatomic) IBOutlet UILabel *currentValues;
@@ -27,7 +27,7 @@
 @synthesize summary = _summary;
 @synthesize currentValues = _currentValues;
 
-- (TrackingLocationController *)tracker
+- (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {
         STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];

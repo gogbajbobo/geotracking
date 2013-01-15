@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 #import "Spot.h"
 
 @interface STGTSpotViewController : UIViewController
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) BOOL newSpotMode;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;

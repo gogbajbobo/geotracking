@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 #import "STGTSpotViewController.h"
 #import "Spot.h"
 
 @interface STGTSpotPropertiesViewController : UITableViewController
 @property (nonatomic) STGTSpotViewController *caller;
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (nonatomic, strong) Spot *spot;
 @property (nonatomic, strong) Spot *filterSpot;

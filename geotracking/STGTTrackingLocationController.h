@@ -14,7 +14,7 @@
 #import <libxml/xmlwriter.h>
 
 
-@interface TrackingLocationController : NSObject <UITableViewDataSource, UITableViewDelegate>
+@interface STGTTrackingLocationController : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic) CLLocationDistance distanceFilter;
 @property (nonatomic) CLLocationAccuracy desiredAccuracy;

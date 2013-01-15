@@ -9,7 +9,7 @@
 #import "STGTDataSyncController.h"
 #import "STGTAppDelegate.h"
 #import "UDOAuthBasic.h"
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 #import "GDataXMLNode.h"
 
 #define NAMESPACE @"http://github.com/UDTO/UD/unknown"
@@ -20,7 +20,7 @@
 @property (nonatomic, strong) NSDictionary *eventsToSync;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic) int changesCount;
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic, strong) NSManagedObject *syncObject;
 
 @end
@@ -28,7 +28,7 @@
 @implementation STGTDataSyncController
 @synthesize changesCount = _changesCount;
 
-- (TrackingLocationController *)tracker
+- (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {
         STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];

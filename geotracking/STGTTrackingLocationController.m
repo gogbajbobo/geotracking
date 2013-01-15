@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 #import "STGTAppDelegate.h"
 #import "Location.h"
 #import "Track.h"
@@ -19,7 +19,7 @@
 #define DB_FILE @"geoTracker.sqlite"
 //#define REQUIRED_ACCURACY 15.0
 
-@interface TrackingLocationController() <NSFetchedResultsControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, CLLocationManagerDelegate>
+@interface STGTTrackingLocationController() <NSFetchedResultsControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic) CLLocationDistance overallDistance;
@@ -32,7 +32,7 @@
 
 @end
 
-@implementation TrackingLocationController
+@implementation STGTTrackingLocationController
 
 @synthesize distanceFilter = _distanceFilter;
 @synthesize desiredAccuracy = _desiredAccuracy;

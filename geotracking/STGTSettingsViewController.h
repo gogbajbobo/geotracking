@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 
 @interface STGTSettingsViewController : UIViewController
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 
 @end

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "STGTDataSyncController.h"
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 #import "UDPushNotificationCenter.h"
 #import "UDPushAuthCodeRetriever.h"
 #import "UDAuthTokenRetriever.h"
@@ -21,7 +21,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (nonatomic, strong) STGTDataSyncController *syncer;
-@property (nonatomic, strong) TrackingLocationController *tracker;
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (strong, nonatomic) UDPushNotificationCenter *pushNotificatonCenter;
 @property (strong, nonatomic) UDPushAuthCodeRetriever *authCodeRetriever;
 @property (strong, nonatomic) Reachability *reachability;
