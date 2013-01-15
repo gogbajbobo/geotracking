@@ -11,7 +11,7 @@
 #import "Spot.h"
 
 
-@interface FilterSpotViewController : UITabBarController
+@interface STGTFilterSpotViewController : UITabBarController
 @property (nonatomic) id caller;
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic, strong) Spot *filterSpot;

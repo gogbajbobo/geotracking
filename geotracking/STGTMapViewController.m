@@ -8,8 +8,8 @@
 
 #import "STGTMapViewController.h"
 #import "STGTMapAnnotation.h"
-#import "SpotViewController.h"
-#import "FilterSpotViewController.h"
+#import "STGTSpotViewController.h"
+#import "STGTFilterSpotViewController.h"
 
 @interface STGTMapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIWebViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
@@ -120,8 +120,8 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UIButton *)sender {
     if ([segue.identifier isEqualToString:@"showSpot"]) {
 //        NSLog(@"prepareForSegue showSpot");
-        if ([segue.destinationViewController isKindOfClass:[SpotViewController class]]) {
-            SpotViewController *spotVC = segue.destinationViewController;
+        if ([segue.destinationViewController isKindOfClass:[STGTSpotViewController class]]) {
+            STGTSpotViewController *spotVC = segue.destinationViewController;
             spotVC.tracker = self.tracker;
             spotVC.filterSpot = self.filterSpot;
             if (sender.buttonType == UIButtonTypeContactAdd) {
@@ -135,8 +135,8 @@
             }
         }
     } else if ([segue.identifier isEqualToString:@"filterSpots"]) {
-        if ([segue.destinationViewController isKindOfClass:[FilterSpotViewController class]]) {
-            FilterSpotViewController *filterVC = segue.destinationViewController;
+        if ([segue.destinationViewController isKindOfClass:[STGTFilterSpotViewController class]]) {
+            STGTFilterSpotViewController *filterVC = segue.destinationViewController;
             filterVC.tracker = self.tracker;
             filterVC.filterSpot = self.filterSpot;
             filterVC.caller = self;

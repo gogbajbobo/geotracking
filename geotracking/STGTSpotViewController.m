@@ -7,13 +7,13 @@
 //
 
 #import "STGTAppDelegate.h"
-#import "SpotViewController.h"
-#import "SpotPropertiesViewController.h"
+#import "STGTSpotViewController.h"
+#import "STGTSpotPropertiesViewController.h"
 #import "SpotProperty.h"
 #import "Track.h"
 #import "DataSyncController.h"
 
-@interface SpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfo;
 @property (weak, nonatomic) IBOutlet UITextField *spotLabel;
@@ -25,7 +25,7 @@
 
 @end
 
-@implementation SpotViewController
+@implementation STGTSpotViewController
 
 - (DataSyncController *)syncer {
     if (!_syncer) {
@@ -107,8 +107,8 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
-    if ([segue.destinationViewController isKindOfClass:[SpotPropertiesViewController class]]) {
-        SpotPropertiesViewController *spotPropertiesVC = segue.destinationViewController;        
+    if ([segue.destinationViewController isKindOfClass:[STGTSpotPropertiesViewController class]]) {
+        STGTSpotPropertiesViewController *spotPropertiesVC = segue.destinationViewController;        
         if ([segue.identifier isEqualToString:@"showProperties"]) {
             spotPropertiesVC.spot = self.spot;
             spotPropertiesVC.caller = self;

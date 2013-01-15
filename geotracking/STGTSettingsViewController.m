@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "SettingsViewController.h"
+#import "STGTSettingsViewController.h"
 
-@interface SettingsViewController () <UIPickerViewDelegate>
+@interface STGTSettingsViewController () <UIPickerViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *desiredAccuracyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *distanceFilterLabel;
 @property (weak, nonatomic) IBOutlet UISlider *distanceFilterSlider;
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation SettingsViewController
+@implementation STGTSettingsViewController
 @synthesize desiredAccuracyLabel = _desiredAccuracyLabel;
 @synthesize distanceFilterLabel = _distanceFilterLabel;
 @synthesize distanceFilterSlider = _distanceFilterSlider;

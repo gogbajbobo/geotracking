@@ -7,7 +7,7 @@
         <!--Settings View Controller - Settings-->
         <scene sceneID="GLW-na-eUv">
             <objects>
-                <viewController id="J3s-3h-Q2X" customClass="SettingsViewController" sceneMemberID="viewController">
+                <viewController id="J3s-3h-Q2X" customClass="STGTSettingsViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YcR-Pf-Mjw">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -314,7 +314,7 @@
         <!--Spot View Controller - Spot-->
         <scene sceneID="bMO-u4-Mdt">
             <objects>
-                <viewController id="Ekf-eM-AEE" customClass="SpotViewController" sceneMemberID="viewController">
+                <viewController id="Ekf-eM-AEE" customClass="STGTSpotViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vry-Qg-tbA">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -479,7 +479,7 @@
         <!--Spot Properties View Controller-->
         <scene sceneID="SvW-jG-q23">
             <objects>
-                <tableViewController id="YSR-xL-nVu" customClass="SpotPropertiesViewController" sceneMemberID="viewController">
+                <tableViewController id="YSR-xL-nVu" customClass="STGTSpotPropertiesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="hzO-ty-H8p">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -531,7 +531,7 @@
         <!--Spot Properties View Controller - Interests-->
         <scene sceneID="18p-6h-xx6">
             <objects>
-                <tableViewController id="huX-xm-rnp" customClass="SpotPropertiesViewController" sceneMemberID="viewController">
+                <tableViewController id="huX-xm-rnp" customClass="STGTSpotPropertiesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="xfb-z3-sdJ">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -574,7 +574,7 @@
         <!--Spot Properties View Controller - Networks-->
         <scene sceneID="w82-Xh-Q0b">
             <objects>
-                <tableViewController id="E49-EY-NsE" customClass="SpotPropertiesViewController" sceneMemberID="viewController">
+                <tableViewController id="E49-EY-NsE" customClass="STGTSpotPropertiesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="AYV-Pg-B5h">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -664,7 +664,7 @@
         <!--Filter Spot View Controller - Filter Spots-->
         <scene sceneID="k6x-rs-bgI">
             <objects>
-                <tabBarController definesPresentationContext="YES" id="Aip-Yc-IjZ" customClass="FilterSpotViewController" sceneMemberID="viewController">
+                <tabBarController definesPresentationContext="YES" id="Aip-Yc-IjZ" customClass="STGTFilterSpotViewController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Filter Spots" id="ZJS-Ec-2U5"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="TYF-YI-gw1">

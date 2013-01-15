@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "SpotPropertiesViewController.h"
+#import "STGTSpotPropertiesViewController.h"
 #import "SpotProperty.h"
 #import "STGTAppDelegate.h"
 #import "DataSyncController.h"
 
-@interface SpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
+@interface STGTSpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
@@ -20,7 +20,7 @@
 
 @end
 
-@implementation SpotPropertiesViewController
+@implementation STGTSpotPropertiesViewController
 
 - (DataSyncController *)syncer {
     if (!_syncer) {

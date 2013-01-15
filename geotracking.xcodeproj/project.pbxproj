@@ -12,7 +12,7 @@
 		2C29FC1016510FFB007E86E0 /* blank_image_44_44.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C29FC0F16510FFB007E86E0 /* blank_image_44_44.png */; };
 		2C32860F1685BDC30081B9DC /* route.html in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860D1685BDC30081B9DC /* route.html */; };
 		2C32A0A6161052E200713735 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32A0A5161052E200713735 /* libxml2.dylib */; };
-		2C32D33D1643A99700A2ADB7 /* SpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C32D33C1643A99700A2ADB7 /* SpotViewController.m */; };
+		2C32D33D1643A99700A2ADB7 /* STGTSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C32D33C1643A99700A2ADB7 /* STGTSpotViewController.m */; };
 		2C32D42D164ACF0800A2ADB7 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32D42C164ACF0800A2ADB7 /* SenTestingKit.framework */; };
 		2C32D42E164ACF0800A2ADB7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2C32D42F164ACF0800A2ADB7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
@@ -47,9 +47,9 @@
 		2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* STGTMapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* STGTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */; };
 		2C94D71E166F92C50019A0C7 /* Datum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D71D166F92C50019A0C7 /* Datum.m */; };
-		2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */; };
-		2CB24B701639A7A90040A211 /* SpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */; };
-		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
+		2C94D722166FC00D0019A0C7 /* STGTFilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */; };
+		2CB24B701639A7A90040A211 /* STGTSpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */; };
+		2CC7F59D15E8C1E500CF638E /* STGTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CD0371E1685D1A700BBEDD5 /* route.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860E1685BDC30081B9DC /* route.js */; };
 		2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
@@ -84,8 +84,8 @@
 		2C32860D1685BDC30081B9DC /* route.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = route.html; sourceTree = "<group>"; };
 		2C32860E1685BDC30081B9DC /* route.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = route.js; sourceTree = "<group>"; };
 		2C32A0A5161052E200713735 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
-		2C32D33B1643A99700A2ADB7 /* SpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotViewController.h; sourceTree = "<group>"; };
-		2C32D33C1643A99700A2ADB7 /* SpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotViewController.m; sourceTree = "<group>"; };
+		2C32D33B1643A99700A2ADB7 /* STGTSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotViewController.h; sourceTree = "<group>"; };
+		2C32D33C1643A99700A2ADB7 /* STGTSpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotViewController.m; sourceTree = "<group>"; };
 		2C32D42B164ACF0800A2ADB7 /* geotrackingTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = geotrackingTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C32D42C164ACF0800A2ADB7 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		2C32D432164ACF0800A2ADB7 /* geotrackingTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "geotrackingTests-Info.plist"; sourceTree = "<group>"; };
@@ -158,12 +158,12 @@
 		2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTMapAnnotation.m; sourceTree = "<group>"; };
 		2C94D71C166F92C50019A0C7 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
 		2C94D71D166F92C50019A0C7 /* Datum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Datum.m; sourceTree = "<group>"; };
-		2C94D720166FC00D0019A0C7 /* FilterSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterSpotViewController.h; sourceTree = "<group>"; };
-		2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterSpotViewController.m; sourceTree = "<group>"; };
-		2CB24B6E1639A7A90040A211 /* SpotPropertiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpotPropertiesViewController.h; sourceTree = "<group>"; };
-		2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SpotPropertiesViewController.m; sourceTree = "<group>"; };
-		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
-		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		2C94D720166FC00D0019A0C7 /* STGTFilterSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTFilterSpotViewController.h; sourceTree = "<group>"; };
+		2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTFilterSpotViewController.m; sourceTree = "<group>"; };
+		2CB24B6E1639A7A90040A211 /* STGTSpotPropertiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotPropertiesViewController.h; sourceTree = "<group>"; };
+		2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotPropertiesViewController.m; sourceTree = "<group>"; };
+		2CC7F59B15E8C1E400CF638E /* STGTSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettingsViewController.h; sourceTree = "<group>"; };
+		2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		2CD0372616888F1500BBEDD5 /* STGTTrackerManagedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrackerManagedDocument.h; sourceTree = "<group>"; };
 		2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackerManagedDocument.m; sourceTree = "<group>"; };
@@ -412,14 +412,14 @@
 				2C417C6615E81E6000A3A83D /* STGTMapViewController.m */,
 				2C417C6815E8280B00A3A83D /* STGTMapAnnotation.h */,
 				2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */,
-				2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */,
-				2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */,
-				2C32D33B1643A99700A2ADB7 /* SpotViewController.h */,
-				2C32D33C1643A99700A2ADB7 /* SpotViewController.m */,
-				2CB24B6E1639A7A90040A211 /* SpotPropertiesViewController.h */,
-				2CB24B6F1639A7A90040A211 /* SpotPropertiesViewController.m */,
-				2C94D720166FC00D0019A0C7 /* FilterSpotViewController.h */,
-				2C94D721166FC00D0019A0C7 /* FilterSpotViewController.m */,
+				2CC7F59B15E8C1E400CF638E /* STGTSettingsViewController.h */,
+				2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */,
+				2C32D33B1643A99700A2ADB7 /* STGTSpotViewController.h */,
+				2C32D33C1643A99700A2ADB7 /* STGTSpotViewController.m */,
+				2CB24B6E1639A7A90040A211 /* STGTSpotPropertiesViewController.h */,
+				2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */,
+				2C94D720166FC00D0019A0C7 /* STGTFilterSpotViewController.h */,
+				2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */,
 				2CE4720615E3FEEC00B092DB /* Supporting Files */,
 			);
 			path = geotracking;
@@ -570,9 +570,9 @@
 				2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */,
 				2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* STGTMapAnnotation.m in Sources */,
-				2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */,
-				2CB24B701639A7A90040A211 /* SpotPropertiesViewController.m in Sources */,
-				2C32D33D1643A99700A2ADB7 /* SpotViewController.m in Sources */,
+				2CC7F59D15E8C1E500CF638E /* STGTSettingsViewController.m in Sources */,
+				2CB24B701639A7A90040A211 /* STGTSpotPropertiesViewController.m in Sources */,
+				2C32D33D1643A99700A2ADB7 /* STGTSpotViewController.m in Sources */,
 				2C3B3D0B165E64E6003F2347 /* DataSyncController.m in Sources */,
 				2C3EAFF01662168600748C23 /* Location.m in Sources */,
 				2C3EAFF31662168700748C23 /* Track.m in Sources */,
@@ -597,7 +597,7 @@
 				2C3EB107166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m in Sources */,
 				2C3EB108166CD6BD00748C23 /* UDPushObject.m in Sources */,
 				2C94D71E166F92C50019A0C7 /* Datum.m in Sources */,
-				2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */,
+				2C94D722166FC00D0019A0C7 /* STGTFilterSpotViewController.m in Sources */,
 				2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */,
 				2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */,
 				2C13398D169C36F400E841C6 /* Tracker.xcdatamodel in Sources */,

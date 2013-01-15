@@ -6,17 +6,17 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "FilterSpotViewController.h"
-#import "SpotPropertiesViewController.h"
+#import "STGTFilterSpotViewController.h"
+#import "STGTSpotPropertiesViewController.h"
 #import "STGTAddressSearchViewController.h"
-#import "SpotViewController.h"
+#import "STGTSpotViewController.h"
 #import "SpotProperty.h"
 
-@interface FilterSpotViewController ()
+@interface STGTFilterSpotViewController ()
 
 @end
 
-@implementation FilterSpotViewController
+@implementation STGTFilterSpotViewController
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -30,8 +30,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     for (int i = 0; i < self.viewControllers.count; i++) {
-        if ([[self.viewControllers objectAtIndex:i] isKindOfClass:[SpotPropertiesViewController class]]) {
-            SpotPropertiesViewController *spvc = (SpotPropertiesViewController *)[self.viewControllers objectAtIndex:i];
+        if ([[self.viewControllers objectAtIndex:i] isKindOfClass:[STGTSpotPropertiesViewController class]]) {
+            STGTSpotPropertiesViewController *spvc = (STGTSpotPropertiesViewController *)[self.viewControllers objectAtIndex:i];
             spvc.tracker = self.tracker;
             spvc.spot = self.filterSpot;
             UITabBarItem *tabBarItem = [self.tabBar.items objectAtIndex:i];

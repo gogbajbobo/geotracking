@@ -10,7 +10,7 @@
 #import "TrackingLocationController.h"
 #import "Spot.h"
 
-@interface SpotViewController : UIViewController
+@interface STGTSpotViewController : UIViewController
 @property (nonatomic, strong) TrackingLocationController *tracker;
 @property (nonatomic) CLLocationCoordinate2D coordinate;
 @property (nonatomic) BOOL newSpotMode;
