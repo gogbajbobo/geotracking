@@ -7,13 +7,13 @@
 //
 
 #import "TrackingLocationController.h"
-#import "AppDelegate.h"
+#import "STGTAppDelegate.h"
 #import "Location.h"
 #import "Track.h"
 #import "STGTMapAnnotation.h"
 #import "TrackerViewController.h"
 #import "UDOAuthBasic.h"
-#import "TrackerManagedDocument.h"
+#import "STGTTrackerManagedDocument.h"
 #import "DataSyncController.h"
 
 #define DB_FILE @"geoTracker.sqlite"
@@ -63,7 +63,7 @@
 
 - (DataSyncController *)syncer {
     if (!_syncer) {
-        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _syncer = app.syncer;
     }
     return _syncer;
@@ -127,7 +127,7 @@
 
 //        NSLog(@"url %@", url);
 //        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
-        _locationsDatabase = [[TrackerManagedDocument alloc] initWithFileURL:url];
+        _locationsDatabase = [[STGTTrackerManagedDocument alloc] initWithFileURL:url];
         _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         

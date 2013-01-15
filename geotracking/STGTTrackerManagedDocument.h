@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-@interface TrackerManagedDocument : UIManagedDocument
+@interface STGTTrackerManagedDocument : UIManagedDocument
 @property(nonatomic, strong, readonly) NSManagedObjectModel *myManagedObjectModel;
 
 @end

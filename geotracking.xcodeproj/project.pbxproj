@@ -52,14 +52,14 @@
 		2CC7F59D15E8C1E500CF638E /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CD0371E1685D1A700BBEDD5 /* route.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860E1685BDC30081B9DC /* route.js */; };
-		2CD0372816888F1600BBEDD5 /* TrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* TrackerManagedDocument.m */; };
+		2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
 		2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
 		2CE4720A15E3FEEC00B092DB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4720815E3FEEC00B092DB /* InfoPlist.strings */; };
 		2CE4720C15E3FEEC00B092DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720B15E3FEEC00B092DB /* main.m */; };
-		2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720F15E3FEEC00B092DB /* AppDelegate.m */; };
+		2CE4721015E3FEEC00B092DB /* STGTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720F15E3FEEC00B092DB /* STGTAppDelegate.m */; };
 		2CE4721315E3FEEC00B092DB /* STGTMainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4721115E3FEEC00B092DB /* STGTMainStoryboard_iPhone.storyboard */; };
 		2CE4722015E4016300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4721F15E4016300B092DB /* CoreLocation.framework */; };
 		2CE4722215E4016F00B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4722115E4016F00B092DB /* MapKit.framework */; };
@@ -165,8 +165,8 @@
 		2CC7F59B15E8C1E400CF638E /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
-		2CD0372616888F1500BBEDD5 /* TrackerManagedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackerManagedDocument.h; sourceTree = "<group>"; };
-		2CD0372716888F1500BBEDD5 /* TrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackerManagedDocument.m; sourceTree = "<group>"; };
+		2CD0372616888F1500BBEDD5 /* STGTTrackerManagedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrackerManagedDocument.h; sourceTree = "<group>"; };
+		2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackerManagedDocument.m; sourceTree = "<group>"; };
 		2CD07D75167CE91500E76B81 /* STGTAddressSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTAddressSearchViewController.h; sourceTree = "<group>"; };
 		2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTAddressSearchViewController.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,8 +177,8 @@
 		2CE4720915E3FEEC00B092DB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2CE4720B15E3FEEC00B092DB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2CE4720D15E3FEEC00B092DB /* geotracking-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "geotracking-Prefix.pch"; sourceTree = "<group>"; };
-		2CE4720E15E3FEEC00B092DB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		2CE4720F15E3FEEC00B092DB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2CE4720E15E3FEEC00B092DB /* STGTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STGTAppDelegate.h; sourceTree = "<group>"; };
+		2CE4720F15E3FEEC00B092DB /* STGTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STGTAppDelegate.m; sourceTree = "<group>"; };
 		2CE4721215E3FEEC00B092DB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STGTMainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2CE4721F15E4016300B092DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2CE4722115E4016F00B092DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -398,12 +398,12 @@
 				2CE4721115E3FEEC00B092DB /* STGTMainStoryboard_iPhone.storyboard */,
 				2CD07D75167CE91500E76B81 /* STGTAddressSearchViewController.h */,
 				2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */,
-				2CE4720E15E3FEEC00B092DB /* AppDelegate.h */,
-				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
+				2CE4720E15E3FEEC00B092DB /* STGTAppDelegate.h */,
+				2CE4720F15E3FEEC00B092DB /* STGTAppDelegate.m */,
 				2CE4722315E4055F00B092DB /* TrackingLocationController.h */,
 				2CE4722415E4055F00B092DB /* TrackingLocationController.m */,
-				2CD0372616888F1500BBEDD5 /* TrackerManagedDocument.h */,
-				2CD0372716888F1500BBEDD5 /* TrackerManagedDocument.m */,
+				2CD0372616888F1500BBEDD5 /* STGTTrackerManagedDocument.h */,
+				2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */,
 				2C417C6215E80E3F00A3A83D /* TrackerViewController.h */,
 				2C417C6315E80E3F00A3A83D /* TrackerViewController.m */,
 				2C3B3D09165E64E6003F2347 /* DataSyncController.h */,
@@ -565,7 +565,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CE4720C15E3FEEC00B092DB /* main.m in Sources */,
-				2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */,
+				2CE4721015E3FEEC00B092DB /* STGTAppDelegate.m in Sources */,
 				2CE4722515E4055F00B092DB /* TrackingLocationController.m in Sources */,
 				2C417C6415E80E3F00A3A83D /* TrackerViewController.m in Sources */,
 				2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */,
@@ -599,7 +599,7 @@
 				2C94D71E166F92C50019A0C7 /* Datum.m in Sources */,
 				2C94D722166FC00D0019A0C7 /* FilterSpotViewController.m in Sources */,
 				2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */,
-				2CD0372816888F1600BBEDD5 /* TrackerManagedDocument.m in Sources */,
+				2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */,
 				2C13398D169C36F400E841C6 /* Tracker.xcdatamodel in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

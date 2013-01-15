@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "TrackerManagedDocument.h"
+#import "STGTTrackerManagedDocument.h"
 
-@implementation TrackerManagedDocument
+@implementation STGTTrackerManagedDocument
 @synthesize myManagedObjectModel = _myManagedObjectModel;
 
 - (NSManagedObjectModel *)myManagedObjectModel {
