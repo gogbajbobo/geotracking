@@ -487,6 +487,7 @@
 		2CE471F215E3FEEB00B092DB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = STGT;
 				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Maxim V. Grigoriev";
 			};
