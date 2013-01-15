@@ -205,7 +205,7 @@
         <!--Map View Controller - Map-->
         <scene sceneID="jzN-vt-4uB">
             <objects>
-                <viewController id="tND-F5-tUH" customClass="MapViewController" sceneMemberID="viewController">
+                <viewController id="tND-F5-tUH" customClass="STGTMapViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Hkj-op-5yV">
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -617,7 +617,7 @@
         <!--Address Search View Controller - Address Search-->
         <scene sceneID="1i9-It-Mg3">
             <objects>
-                <tableViewController id="zNE-ZD-zu0" customClass="AddressSearchViewController" sceneMemberID="viewController">
+                <tableViewController id="zNE-ZD-zu0" customClass="STGTAddressSearchViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="MbP-Gb-2ce">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

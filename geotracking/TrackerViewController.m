@@ -117,8 +117,8 @@
         [segue.destinationViewController setTracker:self.tracker];
     }
     if ([segue.identifier isEqualToString:@"showMap"]) {
-        if ([segue.destinationViewController isKindOfClass:[MapViewController class]]) {
-            MapViewController *mapVC = segue.destinationViewController;
+        if ([segue.destinationViewController isKindOfClass:[STGTMapViewController class]]) {
+            STGTMapViewController *mapVC = segue.destinationViewController;
             mapVC.tracker = self.tracker;
 //            NSLog(@"segue showMap");
         }

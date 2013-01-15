@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "Location.h"
 #import "Track.h"
-#import "MapAnnotation.h"
+#import "STGTMapAnnotation.h"
 #import "TrackerViewController.h"
 #import "UDOAuthBasic.h"
 #import "TrackerManagedDocument.h"

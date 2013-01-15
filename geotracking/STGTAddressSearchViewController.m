@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "AddressSearchViewController.h"
+#import "STGTAddressSearchViewController.h"
 #import "Spot.h"
 
-@interface AddressSearchViewController () <UISearchDisplayDelegate>
+@interface STGTAddressSearchViewController () <UISearchDisplayDelegate>
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (nonatomic, strong) NSArray *filteredListContent;
@@ -18,7 +18,7 @@
 
 @end
 
-@implementation AddressSearchViewController
+@implementation STGTAddressSearchViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

@@ -8,7 +8,7 @@
 
 #import "FilterSpotViewController.h"
 #import "SpotPropertiesViewController.h"
-#import "AddressSearchViewController.h"
+#import "STGTAddressSearchViewController.h"
 #import "SpotViewController.h"
 #import "SpotProperty.h"
 
@@ -37,11 +37,11 @@
             UITabBarItem *tabBarItem = [self.tabBar.items objectAtIndex:i];
             spvc.typeOfProperty = [tabBarItem.title substringToIndex:(tabBarItem.title.length - 1)];
 //            NSLog(@"spvc.typeOfProperty %@", spvc.typeOfProperty);
-        } else if ([[self.viewControllers objectAtIndex:i] isKindOfClass:[AddressSearchViewController class]]) {
-            AddressSearchViewController *asvc = (AddressSearchViewController *)[self.viewControllers objectAtIndex:i];
+        } else if ([[self.viewControllers objectAtIndex:i] isKindOfClass:[STGTAddressSearchViewController class]]) {
+            STGTAddressSearchViewController *asvc = (STGTAddressSearchViewController *)[self.viewControllers objectAtIndex:i];
             asvc.tracker = self.tracker;
-            if ([self.caller isKindOfClass:[MapViewController class]]) {
-                asvc.mapVC = (MapViewController *)self.caller;
+            if ([self.caller isKindOfClass:[STGTMapViewController class]]) {
+                asvc.mapVC = (STGTMapViewController *)self.caller;
             }
         }
     }

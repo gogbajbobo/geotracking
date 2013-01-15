@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MapViewController.h"
+#import "STGTMapViewController.h"
 #include "AppDelegate.h"
 
 @interface TrackerViewController : UIViewController

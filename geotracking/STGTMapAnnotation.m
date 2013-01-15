@@ -6,34 +6,34 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "MapAnnotation.h"
+#import "STGTMapAnnotation.h"
 
-@interface MapAnnotation ()
+@interface STGTMapAnnotation ()
 @property (nonatomic) BOOL addNewSpot;
 @property (nonatomic) CLLocationCoordinate2D newSpotCoordinate;
 
 @end
 
-@implementation MapAnnotation
+@implementation STGTMapAnnotation
 
-+ (MapAnnotation *)createAnnotationForCoordinate:(CLLocationCoordinate2D)coordinate{
-    MapAnnotation *annotation = [[MapAnnotation alloc] init];
++ (STGTMapAnnotation *)createAnnotationForCoordinate:(CLLocationCoordinate2D)coordinate{
+    STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.newSpotCoordinate = coordinate;
     annotation.addNewSpot = YES;
     return annotation;
 }
 
 
-+ (MapAnnotation *)createAnnotationForLocation:(Location *)location
++ (STGTMapAnnotation *)createAnnotationForLocation:(Location *)location
 {
-    MapAnnotation *annotation = [[MapAnnotation alloc] init];
+    STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.location = location;
     return annotation;
 }
 
-+ (MapAnnotation *)createAnnotationForSpot:(Spot *)spot
++ (STGTMapAnnotation *)createAnnotationForSpot:(Spot *)spot
 {
-    MapAnnotation *annotation = [[MapAnnotation alloc] init];
+    STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.spot = spot;
     return annotation;
 }

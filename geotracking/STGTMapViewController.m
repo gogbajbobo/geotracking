@@ -6,12 +6,12 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "MapViewController.h"
-#import "MapAnnotation.h"
+#import "STGTMapViewController.h"
+#import "STGTMapAnnotation.h"
 #import "SpotViewController.h"
 #import "FilterSpotViewController.h"
 
-@interface MapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIWebViewDelegate>
+@interface STGTMapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIWebViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
 @property (nonatomic) CLLocationCoordinate2D newSpotCoordinate;
 @property (nonatomic) CLLocationCoordinate2D routeStartPoint;
@@ -31,7 +31,7 @@
 
 @end
 
-@implementation MapViewController
+@implementation STGTMapViewController
 @synthesize mapView = _mapView;
 @synthesize mapSwitch = _mapSwitch;
 @synthesize headingModeSwitch = _headingModeSwitch;
@@ -263,7 +263,7 @@
 - (void)annotationsCreateForSpots:(NSSet *)spots {
     for (Spot *spot in spots) {
         if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
-            MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:spot];
+            STGTMapAnnotation *annotation = [STGTMapAnnotation createAnnotationForSpot:spot];
             [self.mapView addAnnotation:annotation];
             [self.annotationsDictionary setObject:annotation forKey:spot.xid];
             //        NSLog(@"spot %@", spot);
@@ -274,7 +274,7 @@
 
 - (void)annotationsDeleteForSpotXids:(NSSet *)spotXids {
     for (NSString *spotXid in spotXids) {
-        MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spotXid];
+        STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spotXid];
         [self.annotationsDictionary removeObjectForKey:spotXid];
         [self.mapView removeAnnotation:annotation];
     }
@@ -361,7 +361,7 @@
         CLLocationCoordinate2D longTapCoordinate = [self.mapView convertPoint:longTapPoint toCoordinateFromView:self.mapView];
 //        NSLog(@"coordinate %f %f", longTapCoordinate.latitude, longTapCoordinate.longitude);
         self.newSpotCoordinate = longTapCoordinate;
-        [self.mapView addAnnotation:[MapAnnotation createAnnotationForCoordinate:longTapCoordinate]];
+        [self.mapView addAnnotation:[STGTMapAnnotation createAnnotationForCoordinate:longTapCoordinate]];
     }
 }
 
@@ -438,7 +438,7 @@
         }
         pinView.rightCalloutAccessoryView = detailDisclosureButton;
 
-        MapAnnotation *mapAnnotation = annotation;
+        STGTMapAnnotation *mapAnnotation = annotation;
         UIImage *spotImage = [UIImage imageWithData:mapAnnotation.spot.image];
         if (spotImage) {
             CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
@@ -469,8 +469,8 @@
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
-    if ([view.annotation isKindOfClass:[MapAnnotation class]]) {
-        MapAnnotation *mapAnnotation = view.annotation;
+    if ([view.annotation isKindOfClass:[STGTMapAnnotation class]]) {
+        STGTMapAnnotation *mapAnnotation = view.annotation;
         self.selectedSpot = mapAnnotation.spot;
     }
     if ([control isKindOfClass:[UIButton class]]) {
@@ -524,7 +524,7 @@
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
-                MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+                STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
                 [self.annotationsDictionary removeObjectForKey:spot.xid];
                 [self.mapView removeAnnotation:annotation];
             }
@@ -536,7 +536,7 @@
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
-                MapAnnotation *annotation = [MapAnnotation createAnnotationForSpot:spot];
+                STGTMapAnnotation *annotation = [STGTMapAnnotation createAnnotationForSpot:spot];
                 [self.annotationsDictionary setObject:annotation forKey:spot.xid];
                 [self.mapView addAnnotation:annotation];
                 [self.mapView selectAnnotation:annotation animated:NO];
@@ -549,9 +549,9 @@
         if ([anObject isKindOfClass:[Spot class]]) {
             Spot *spot = (Spot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
-                MapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+                STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
                 [self.mapView removeAnnotation:annotation];
-                annotation = [MapAnnotation createAnnotationForSpot:spot];
+                annotation = [STGTMapAnnotation createAnnotationForSpot:spot];
                 [self.mapView addAnnotation:annotation];
                 [self.mapView selectAnnotation:annotation animated:NO];
             }
@@ -623,7 +623,7 @@
         self.center = center;
         [self.mapView setRegion:MKCoordinateRegionMake(self.center, self.span) animated:YES];
         self.selectedSpot = self.filteredSpot;
-        MapAnnotation *filteredAnnotation = [self.annotationsDictionary objectForKey:self.filteredSpot.xid];
+        STGTMapAnnotation *filteredAnnotation = [self.annotationsDictionary objectForKey:self.filteredSpot.xid];
         [self.mapView selectAnnotation:filteredAnnotation animated:NO];
     }
     

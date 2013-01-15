@@ -11,11 +11,11 @@
 #import "Location.h"
 #import "Spot.h"
 
-@interface MapAnnotation : NSObject <MKAnnotation>
+@interface STGTMapAnnotation : NSObject <MKAnnotation>
 
-+ (MapAnnotation *)createAnnotationForLocation:(Location *)location;
-+ (MapAnnotation *)createAnnotationForSpot:(Spot *)spot;
-+ (MapAnnotation *)createAnnotationForCoordinate:(CLLocationCoordinate2D)coordinate;
++ (STGTMapAnnotation *)createAnnotationForLocation:(Location *)location;
++ (STGTMapAnnotation *)createAnnotationForSpot:(Spot *)spot;
++ (STGTMapAnnotation *)createAnnotationForCoordinate:(CLLocationCoordinate2D)coordinate;
 @property (nonatomic, strong) Location *location;
 @property (nonatomic, strong) Spot *spot;
 
