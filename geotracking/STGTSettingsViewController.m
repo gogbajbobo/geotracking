@@ -32,7 +32,7 @@
 }
 
 - (void)requiredAccuracySliderSetup {
-    self.requiredAccuracySlider.maximumValue = 500.0;
+    self.requiredAccuracySlider.maximumValue = 100.0;
     self.requiredAccuracySlider.minimumValue = 5.0;
     [self.requiredAccuracySlider setValue:self.tracker.requiredAccuracy animated:YES];
 }

@@ -242,11 +242,17 @@
 //    NSLog(@"request %@", request);
     [[UDOAuthBasic sharedOAuth] checkToken];
     request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
-//    NSLog(@"[request allHTTPHeaderFields] %@", [request allHTTPHeaderFields]);
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if (!connection) {
-        NSLog(@"connection error");
-        self.tracker.trackerStatus = @"SYNC FAIL";
+    NSLog(@"[request valueForHTTPHeaderField:Authorization] %@", [request valueForHTTPHeaderField:@"Authorization"]);
+    if ([request valueForHTTPHeaderField:@"Authorization"]) {
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        if (!connection) {
+            NSLog(@"connection error");
+            self.tracker.trackerStatus = @"SYNC FAIL";
+            self.tracker.syncing = NO;
+        }
+    } else {
+        NSLog(@"No Authorization header");
+        self.tracker.trackerStatus = @"NO TOKEN";
         self.tracker.syncing = NO;
     }
 
