@@ -17,8 +17,10 @@
     self.syncer = [[STGTDataSyncController alloc] init];
     self.tracker = [[STGTTrackingLocationController alloc] init];
     [self.syncer startSyncer];
+    
 //    NSLog(@"self.syncer %@", self.syncer);
 //    NSLog(@"self.tracker %@", self.tracker);
+
     return YES;
 }
 
