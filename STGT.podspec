@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
 
   s.license      = 'MIT'
   s.author       = { "Grigoriev Maxim" => "grigoriev.maxim@gmail.com" }
-  s.source       = { :git => "https://github.com/gogbajbobo/geotracking.git", :branch => 'master'}
+  s.source       = { :git => "https://github.com/gogbajbobo/geotracking.git"}
   s.platform     = :ios, '5.0'
 
   s.source_files = 'geotracking/Classes/*.{h,m}', 'geotracking/Classes/**/*.{h,m}'
