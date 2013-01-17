@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/gogbajbobo/geotracking.git", :branch => 'addingPrefixes'}
   s.platform     = :ios, '5.0'
 
-  s.source_files = 'geotracking/Classes/*.{h,m}', 'geotracking/DataModel/*.{h,m,xcdatamodel}'
+  s.source_files = 'geotracking/*.{h,m}', 'geotracking/Classes/*.{h,m}', 'geotracking/DataModel/*.{h,m,xcdatamodel}'
   s.resources = "geotracking/Resources/*.{png,html,xml,js}"
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphicg', 'SenTestingKit'
