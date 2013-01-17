@@ -6,11 +6,11 @@ Pod::Spec.new do |s|
 
   s.license      = 'MIT'
   s.author       = { "Grigoriev Maxim" => "grigoriev.maxim@gmail.com" }
-  s.source       = { :git => "https://github.com/gogbajbobo/geotracking.git", :branch => 'addingPrefixes'}
+  s.source       = { :git => "https://github.com/gogbajbobo/geotracking.git", :branch => 'master'}
   s.platform     = :ios, '5.0'
 
-  s.source_files = 'geotracking/*.{h,m}', 'geotracking/Classes/*.{h,m}', 'geotracking/DataModel/*.{h,m,xcdatamodel}'
-  s.resources = "geotracking/Resources/*.{png,html,xml,js}"
+  s.source_files = 'geotracking/STGT*.{h,m}', 'geotracking/Classes/STGT*.{h,m}', 'geotracking/DataModel/STGT*.{h,m,xcdatamodel}'
+  s.resources = "geotracking/Resources/STGT*.{png,html,xml,js}"
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphicg', 'SenTestingKit'
   s.library   = 'xml2'
