@@ -4,3 +4,6 @@ geotracking.xcodeproj/project.xcworkspace/xcuserdata/grimax.xcuserdatad/UserInte
 geotracking.xcodeproj/xcuserdata/grimax.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
 
 geotracking.xcodeproj/project.xcworkspace/xcuserdata/grimax.xcuserdatad/WorkspaceSettings.xcsettings
+
+*.xcworkspacedata
+Pods/

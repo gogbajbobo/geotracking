@@ -1,0 +1,33 @@
+
+DEPENDENCIES: 
+- GData (~> 1.9.1)
+- UDPushAuth (from `https://github.com/Unact/UDPushAuth.git', branch `master')
+
+SPEC CHECKSUMS: 
+  GData/Core: d1dc33624d13149423a943159d82b8e6e97bfc01
+  GData/XMLNode: d1dc33624d13149423a943159d82b8e6e97bfc01
+  UDPushAuth: d336d00c04f448af93a60e0e1d5d8d8f0c5998bb
+  Reachability: 1c8584c5f26fa776695efef95caaa50402c94cfb
+  GData/YouTube: d1dc33624d13149423a943159d82b8e6e97bfc01
+  GData: d1dc33624d13149423a943159d82b8e6e97bfc01
+
+COCOAPODS: 0.16.1
+
+EXTERNAL SOURCES: 
+  UDPushAuth: 
+    :git: https://github.com/Unact/UDPushAuth.git
+    :branch: master
+
+PODS: 
+- GData (1.9.1): 
+  - GData/Core (= 1.9.1)
+  - GData/XMLNode (= 1.9.1)
+  - GData/YouTube (= 1.9.1)
+- GData/Core (1.9.1)
+- GData/XMLNode (1.9.1)
+- GData/YouTube (1.9.1): 
+  - GData/Core
+- Reachability (3.1.0)
+- UDPushAuth (0.1.1): 
+  - GData (~> 1.9.1)
+  - Reachability (~> 3.1.0)

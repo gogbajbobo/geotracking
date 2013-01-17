@@ -24,24 +24,6 @@
 		2C3EAFF31662168700748C23 /* STGTTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFF21662168700748C23 /* STGTTrack.m */; };
 		2C3EAFF61662168700748C23 /* STGTSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFF51662168700748C23 /* STGTSpot.m */; };
 		2C3EAFF91662168700748C23 /* STGTSpotProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFF81662168700748C23 /* STGTSpotProperty.m */; };
-		2C3EB0F4166CD6BD00748C23 /* GDataXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0AC166CD6BD00748C23 /* GDataXMLNode.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		2C3EB0F5166CD6BD00748C23 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0AE166CD6BD00748C23 /* Reachability.m */; };
-		2C3EB0F9166CD6BD00748C23 /* UDAuthToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0B7166CD6BD00748C23 /* UDAuthToken.m */; };
-		2C3EB0FA166CD6BD00748C23 /* UDAuthTokenRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0BB166CD6BD00748C23 /* UDAuthTokenRetriever.m */; };
-		2C3EB0FB166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0BD166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.m */; };
-		2C3EB0FC166CD6BD00748C23 /* UDOAuthBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0BF166CD6BD00748C23 /* UDOAuthBasic.m */; };
-		2C3EB0FD166CD6BD00748C23 /* UDPushAuthActivationCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0C1166CD6BD00748C23 /* UDPushAuthActivationCode.m */; };
-		2C3EB0FE166CD6BD00748C23 /* UDPushAuthClientSecret.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0C3166CD6BD00748C23 /* UDPushAuthClientSecret.m */; };
-		2C3EB0FF166CD6BD00748C23 /* UDPushAuthCodeRetriever.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0C5166CD6BD00748C23 /* UDPushAuthCodeRetriever.m */; };
-		2C3EB100166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0C7166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.m */; };
-		2C3EB101166CD6BD00748C23 /* UDPushAuthRequestBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0CA166CD6BD00748C23 /* UDPushAuthRequestBasic.m */; };
-		2C3EB102166CD6BD00748C23 /* UDPushAuthStorageBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0CD166CD6BD00748C23 /* UDPushAuthStorageBasic.m */; };
-		2C3EB103166CD6BD00748C23 /* UDPushNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0D0166CD6BD00748C23 /* UDPushNotificationCenter.m */; };
-		2C3EB104166CD6BD00748C23 /* UDPushNotificationCenterAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0D2166CD6BD00748C23 /* UDPushNotificationCenterAbstract.m */; };
-		2C3EB105166CD6BD00748C23 /* UDPushNotificationProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0D5166CD6BD00748C23 /* UDPushNotificationProcessor.m */; };
-		2C3EB106166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0D7166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m */; };
-		2C3EB107166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0D9166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m */; };
-		2C3EB108166CD6BD00748C23 /* UDPushObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EB0DB166CD6BD00748C23 /* UDPushObject.m */; };
 		2C3EB115166D251400748C23 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C3EB114166D251400748C23 /* SystemConfiguration.framework */; };
 		2C417C6415E80E3F00A3A83D /* STGTTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* STGTTrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* STGTMapViewController.m */; };
@@ -65,6 +47,7 @@
 		2CE4722215E4016F00B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4722115E4016F00B092DB /* MapKit.framework */; };
 		2CE4722515E4055F00B092DB /* STGTTrackingLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722415E4055F00B092DB /* STGTTrackingLocationController.m */; };
 		2CE4723415E54ECF00B092DB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4723315E54ECF00B092DB /* CoreData.framework */; };
+		D602AFAEBC744A309AA94938 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19979538E5644F14B8F469EA /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +61,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		19979538E5644F14B8F469EA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C13398C169C36F400E841C6 /* STGTTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STGTTracker.xcdatamodel; sourceTree = "<group>"; };
 		2C168D3616A00A74008CBFA7 /* STGTtest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = STGTtest.xml; sourceTree = "<group>"; };
 		2C29FC0F16510FFB007E86E0 /* STGTblank_image_44_44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = STGTblank_image_44_44.png; sourceTree = "<group>"; };
@@ -104,51 +88,6 @@
 		2C3EAFF51662168700748C23 /* STGTSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpot.m; sourceTree = "<group>"; };
 		2C3EAFF71662168700748C23 /* STGTSpotProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotProperty.h; sourceTree = "<group>"; };
 		2C3EAFF81662168700748C23 /* STGTSpotProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotProperty.m; sourceTree = "<group>"; };
-		2C3EB0AB166CD6BD00748C23 /* GDataXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GDataXMLNode.h; path = ../UDPushAuth/pushauth/lib/GDataXMLNode.h; sourceTree = "<group>"; };
-		2C3EB0AC166CD6BD00748C23 /* GDataXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GDataXMLNode.m; path = ../UDPushAuth/pushauth/lib/GDataXMLNode.m; sourceTree = "<group>"; };
-		2C3EB0AD166CD6BD00748C23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../UDPushAuth/pushauth/lib/Reachability.h; sourceTree = "<group>"; };
-		2C3EB0AE166CD6BD00748C23 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../UDPushAuth/pushauth/lib/Reachability.m; sourceTree = "<group>"; };
-		2C3EB0B4166CD6BD00748C23 /* UDAuthCodeRetrieverableProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthCodeRetrieverableProtocol.h; sourceTree = "<group>"; };
-		2C3EB0B5166CD6BD00748C23 /* UDAuthCodeRetrieverDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthCodeRetrieverDelegate.h; sourceTree = "<group>"; };
-		2C3EB0B6166CD6BD00748C23 /* UDAuthToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthToken.h; sourceTree = "<group>"; };
-		2C3EB0B7166CD6BD00748C23 /* UDAuthToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDAuthToken.m; sourceTree = "<group>"; };
-		2C3EB0B8166CD6BD00748C23 /* UDAuthTokenProcessable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthTokenProcessable.h; sourceTree = "<group>"; };
-		2C3EB0B9166CD6BD00748C23 /* UDAuthTokenRetrievable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthTokenRetrievable.h; sourceTree = "<group>"; };
-		2C3EB0BA166CD6BD00748C23 /* UDAuthTokenRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthTokenRetriever.h; sourceTree = "<group>"; };
-		2C3EB0BB166CD6BD00748C23 /* UDAuthTokenRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDAuthTokenRetriever.m; sourceTree = "<group>"; };
-		2C3EB0BC166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDAuthTokenRetrieverAbstract.h; sourceTree = "<group>"; };
-		2C3EB0BD166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDAuthTokenRetrieverAbstract.m; sourceTree = "<group>"; };
-		2C3EB0BE166CD6BD00748C23 /* UDOAuthBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDOAuthBasic.h; sourceTree = "<group>"; };
-		2C3EB0BF166CD6BD00748C23 /* UDOAuthBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDOAuthBasic.m; sourceTree = "<group>"; };
-		2C3EB0C0166CD6BD00748C23 /* UDPushAuthActivationCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthActivationCode.h; sourceTree = "<group>"; };
-		2C3EB0C1166CD6BD00748C23 /* UDPushAuthActivationCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushAuthActivationCode.m; sourceTree = "<group>"; };
-		2C3EB0C2166CD6BD00748C23 /* UDPushAuthClientSecret.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthClientSecret.h; sourceTree = "<group>"; };
-		2C3EB0C3166CD6BD00748C23 /* UDPushAuthClientSecret.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushAuthClientSecret.m; sourceTree = "<group>"; };
-		2C3EB0C4166CD6BD00748C23 /* UDPushAuthCodeRetriever.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthCodeRetriever.h; sourceTree = "<group>"; };
-		2C3EB0C5166CD6BD00748C23 /* UDPushAuthCodeRetriever.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushAuthCodeRetriever.m; sourceTree = "<group>"; };
-		2C3EB0C6166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthCodeRetrieverAbstract.h; sourceTree = "<group>"; };
-		2C3EB0C7166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushAuthCodeRetrieverAbstract.m; sourceTree = "<group>"; };
-		2C3EB0C8166CD6BD00748C23 /* UDPushAuthProcessableProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthProcessableProtocol.h; sourceTree = "<group>"; };
-		2C3EB0C9166CD6BD00748C23 /* UDPushAuthRequestBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthRequestBasic.h; sourceTree = "<group>"; };
-		2C3EB0CA166CD6BD00748C23 /* UDPushAuthRequestBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushAuthRequestBasic.m; sourceTree = "<group>"; };
-		2C3EB0CB166CD6BD00748C23 /* UDPushAuthRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthRequestDelegate.h; sourceTree = "<group>"; };
-		2C3EB0CC166CD6BD00748C23 /* UDPushAuthStorageBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthStorageBasic.h; sourceTree = "<group>"; };
-		2C3EB0CD166CD6BD00748C23 /* UDPushAuthStorageBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushAuthStorageBasic.m; sourceTree = "<group>"; };
-		2C3EB0CE166CD6BD00748C23 /* UDPushAuthStorageDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushAuthStorageDelegate.h; sourceTree = "<group>"; };
-		2C3EB0CF166CD6BD00748C23 /* UDPushNotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushNotificationCenter.h; sourceTree = "<group>"; };
-		2C3EB0D0166CD6BD00748C23 /* UDPushNotificationCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushNotificationCenter.m; sourceTree = "<group>"; };
-		2C3EB0D1166CD6BD00748C23 /* UDPushNotificationCenterAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushNotificationCenterAbstract.h; sourceTree = "<group>"; };
-		2C3EB0D2166CD6BD00748C23 /* UDPushNotificationCenterAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushNotificationCenterAbstract.m; sourceTree = "<group>"; };
-		2C3EB0D3166CD6BD00748C23 /* UDPushNotificationProcessable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushNotificationProcessable.h; sourceTree = "<group>"; };
-		2C3EB0D4166CD6BD00748C23 /* UDPushNotificationProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushNotificationProcessor.h; sourceTree = "<group>"; };
-		2C3EB0D5166CD6BD00748C23 /* UDPushNotificationProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushNotificationProcessor.m; sourceTree = "<group>"; };
-		2C3EB0D6166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushNotificationProcessorAbstract.h; sourceTree = "<group>"; };
-		2C3EB0D7166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushNotificationProcessorAbstract.m; sourceTree = "<group>"; };
-		2C3EB0D8166CD6BD00748C23 /* UDPushNotificationProcessorBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushNotificationProcessorBasic.h; sourceTree = "<group>"; };
-		2C3EB0D9166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushNotificationProcessorBasic.m; sourceTree = "<group>"; };
-		2C3EB0DA166CD6BD00748C23 /* UDPushObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPushObject.h; sourceTree = "<group>"; };
-		2C3EB0DB166CD6BD00748C23 /* UDPushObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UDPushObject.m; sourceTree = "<group>"; };
-		2C3EB0DC166CD6BD00748C23 /* UDTokenRetrieverDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDTokenRetrieverDelegate.h; sourceTree = "<group>"; };
 		2C3EB114166D251400748C23 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		2C417C6215E80E3F00A3A83D /* STGTTrackerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrackerViewController.h; sourceTree = "<group>"; };
 		2C417C6315E80E3F00A3A83D /* STGTTrackerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackerViewController.m; sourceTree = "<group>"; };
@@ -185,6 +124,7 @@
 		2CE4722315E4055F00B092DB /* STGTTrackingLocationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrackingLocationController.h; sourceTree = "<group>"; };
 		2CE4722415E4055F00B092DB /* STGTTrackingLocationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackingLocationController.m; sourceTree = "<group>"; };
 		2CE4723315E54ECF00B092DB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		9C01DD088AC6425A89DD5C5B /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,6 +150,7 @@
 				2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */,
 				2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */,
 				2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */,
+				D602AFAEBC744A309AA94938 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -234,107 +175,6 @@
 				2C32D439164ACF0800A2ADB7 /* geotrackingTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		2C3EB0A0166CD6BD00748C23 /* pushauth */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB1D3166F87F400748C23 /* UDAuthTokenRetriever */,
-				2C3EB1D2166F87B100748C23 /* UDPushNotificationCenter */,
-				2C3EB1D1166F875000748C23 /* UDPushAuth */,
-				2C3EB0BA166CD6BD00748C23 /* UDAuthTokenRetriever.h */,
-				2C3EB0BB166CD6BD00748C23 /* UDAuthTokenRetriever.m */,
-				2C3EB0BE166CD6BD00748C23 /* UDOAuthBasic.h */,
-				2C3EB0BF166CD6BD00748C23 /* UDOAuthBasic.m */,
-				2C3EB0C4166CD6BD00748C23 /* UDPushAuthCodeRetriever.h */,
-				2C3EB0C5166CD6BD00748C23 /* UDPushAuthCodeRetriever.m */,
-				2C3EB0C9166CD6BD00748C23 /* UDPushAuthRequestBasic.h */,
-				2C3EB0CA166CD6BD00748C23 /* UDPushAuthRequestBasic.m */,
-				2C3EB0CC166CD6BD00748C23 /* UDPushAuthStorageBasic.h */,
-				2C3EB0CD166CD6BD00748C23 /* UDPushAuthStorageBasic.m */,
-				2C3EB0D4166CD6BD00748C23 /* UDPushNotificationProcessor.h */,
-				2C3EB0D5166CD6BD00748C23 /* UDPushNotificationProcessor.m */,
-				2C3EB0D8166CD6BD00748C23 /* UDPushNotificationProcessorBasic.h */,
-				2C3EB0D9166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m */,
-			);
-			name = pushauth;
-			path = ../UDPushAuth/pushauth;
-			sourceTree = "<group>";
-		};
-		2C3EB1CA166F86F500748C23 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB1CC166F872500748C23 /* Reachability */,
-				2C3EB1CB166F871500748C23 /* GDataXMLNode */,
-				2C3EB0A0166CD6BD00748C23 /* pushauth */,
-			);
-			name = lib;
-			sourceTree = "<group>";
-		};
-		2C3EB1CB166F871500748C23 /* GDataXMLNode */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB0AB166CD6BD00748C23 /* GDataXMLNode.h */,
-				2C3EB0AC166CD6BD00748C23 /* GDataXMLNode.m */,
-			);
-			name = GDataXMLNode;
-			sourceTree = "<group>";
-		};
-		2C3EB1CC166F872500748C23 /* Reachability */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB0AD166CD6BD00748C23 /* Reachability.h */,
-				2C3EB0AE166CD6BD00748C23 /* Reachability.m */,
-			);
-			name = Reachability;
-			sourceTree = "<group>";
-		};
-		2C3EB1D1166F875000748C23 /* UDPushAuth */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB0B4166CD6BD00748C23 /* UDAuthCodeRetrieverableProtocol.h */,
-				2C3EB0B5166CD6BD00748C23 /* UDAuthCodeRetrieverDelegate.h */,
-				2C3EB0C0166CD6BD00748C23 /* UDPushAuthActivationCode.h */,
-				2C3EB0C1166CD6BD00748C23 /* UDPushAuthActivationCode.m */,
-				2C3EB0C2166CD6BD00748C23 /* UDPushAuthClientSecret.h */,
-				2C3EB0C3166CD6BD00748C23 /* UDPushAuthClientSecret.m */,
-				2C3EB0C6166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.h */,
-				2C3EB0C7166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.m */,
-				2C3EB0C8166CD6BD00748C23 /* UDPushAuthProcessableProtocol.h */,
-				2C3EB0CB166CD6BD00748C23 /* UDPushAuthRequestDelegate.h */,
-				2C3EB0CE166CD6BD00748C23 /* UDPushAuthStorageDelegate.h */,
-			);
-			name = UDPushAuth;
-			sourceTree = "<group>";
-		};
-		2C3EB1D2166F87B100748C23 /* UDPushNotificationCenter */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB0CF166CD6BD00748C23 /* UDPushNotificationCenter.h */,
-				2C3EB0D0166CD6BD00748C23 /* UDPushNotificationCenter.m */,
-				2C3EB0D1166CD6BD00748C23 /* UDPushNotificationCenterAbstract.h */,
-				2C3EB0D2166CD6BD00748C23 /* UDPushNotificationCenterAbstract.m */,
-				2C3EB0D3166CD6BD00748C23 /* UDPushNotificationProcessable.h */,
-				2C3EB0D6166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.h */,
-				2C3EB0D7166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m */,
-				2C3EB0DA166CD6BD00748C23 /* UDPushObject.h */,
-				2C3EB0DB166CD6BD00748C23 /* UDPushObject.m */,
-			);
-			name = UDPushNotificationCenter;
-			sourceTree = "<group>";
-		};
-		2C3EB1D3166F87F400748C23 /* UDAuthTokenRetriever */ = {
-			isa = PBXGroup;
-			children = (
-				2C3EB0B6166CD6BD00748C23 /* UDAuthToken.h */,
-				2C3EB0B7166CD6BD00748C23 /* UDAuthToken.m */,
-				2C3EB0B8166CD6BD00748C23 /* UDAuthTokenProcessable.h */,
-				2C3EB0B9166CD6BD00748C23 /* UDAuthTokenRetrievable.h */,
-				2C3EB0BC166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.h */,
-				2C3EB0BD166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.m */,
-				2C3EB0DC166CD6BD00748C23 /* UDTokenRetrieverDelegate.h */,
-			);
-			name = UDAuthTokenRetriever;
 			sourceTree = "<group>";
 		};
 		2C4BF64416A7EF36000A8E55 /* Classes */ = {
@@ -411,11 +251,11 @@
 		2CE471F015E3FEEB00B092DB = {
 			isa = PBXGroup;
 			children = (
-				2C3EB1CA166F86F500748C23 /* lib */,
 				2CE4720515E3FEEC00B092DB /* geotracking */,
 				2C32D430164ACF0800A2ADB7 /* geotrackingTests */,
 				2CE471FE15E3FEEC00B092DB /* Frameworks */,
 				2CE471FC15E3FEEC00B092DB /* Products */,
+				9C01DD088AC6425A89DD5C5B /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -440,6 +280,7 @@
 				2CE4720115E3FEEC00B092DB /* Foundation.framework */,
 				2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */,
 				2C32D42C164ACF0800A2ADB7 /* SenTestingKit.framework */,
+				19979538E5644F14B8F469EA /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -487,6 +328,7 @@
 				2CE471F715E3FEEC00B092DB /* Sources */,
 				2CE471F815E3FEEC00B092DB /* Frameworks */,
 				2CE471F915E3FEEC00B092DB /* Resources */,
+				2071127FC672468E9FE53250 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -552,6 +394,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2071127FC672468E9FE53250 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
 		2C32D429164ACF0800A2ADB7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -594,24 +450,6 @@
 				2C3EAFF31662168700748C23 /* STGTTrack.m in Sources */,
 				2C3EAFF61662168700748C23 /* STGTSpot.m in Sources */,
 				2C3EAFF91662168700748C23 /* STGTSpotProperty.m in Sources */,
-				2C3EB0F4166CD6BD00748C23 /* GDataXMLNode.m in Sources */,
-				2C3EB0F5166CD6BD00748C23 /* Reachability.m in Sources */,
-				2C3EB0F9166CD6BD00748C23 /* UDAuthToken.m in Sources */,
-				2C3EB0FA166CD6BD00748C23 /* UDAuthTokenRetriever.m in Sources */,
-				2C3EB0FB166CD6BD00748C23 /* UDAuthTokenRetrieverAbstract.m in Sources */,
-				2C3EB0FC166CD6BD00748C23 /* UDOAuthBasic.m in Sources */,
-				2C3EB0FD166CD6BD00748C23 /* UDPushAuthActivationCode.m in Sources */,
-				2C3EB0FE166CD6BD00748C23 /* UDPushAuthClientSecret.m in Sources */,
-				2C3EB0FF166CD6BD00748C23 /* UDPushAuthCodeRetriever.m in Sources */,
-				2C3EB100166CD6BD00748C23 /* UDPushAuthCodeRetrieverAbstract.m in Sources */,
-				2C3EB101166CD6BD00748C23 /* UDPushAuthRequestBasic.m in Sources */,
-				2C3EB102166CD6BD00748C23 /* UDPushAuthStorageBasic.m in Sources */,
-				2C3EB103166CD6BD00748C23 /* UDPushNotificationCenter.m in Sources */,
-				2C3EB104166CD6BD00748C23 /* UDPushNotificationCenterAbstract.m in Sources */,
-				2C3EB105166CD6BD00748C23 /* UDPushNotificationProcessor.m in Sources */,
-				2C3EB106166CD6BD00748C23 /* UDPushNotificationProcessorAbstract.m in Sources */,
-				2C3EB107166CD6BD00748C23 /* UDPushNotificationProcessorBasic.m in Sources */,
-				2C3EB108166CD6BD00748C23 /* UDPushObject.m in Sources */,
 				2C94D71E166F92C50019A0C7 /* STGTDatum.m in Sources */,
 				2C94D722166FC00D0019A0C7 /* STGTFilterSpotViewController.m in Sources */,
 				2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */,
@@ -758,6 +596,7 @@
 		};
 		2CE4721D15E3FEEC00B092DB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C01DD088AC6425A89DD5C5B /* Pods.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -775,6 +614,7 @@
 		};
 		2CE4721E15E3FEEC00B092DB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C01DD088AC6425A89DD5C5B /* Pods.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
