@@ -7,7 +7,7 @@
 //
 
 #import "STGTTrackingLocationController.h"
-#import "AppDelegate.h"
+#import "STGTAppDelegate.h"
 #import "STGTLocation.h"
 #import "STGTTrack.h"
 #import "STGTMapAnnotation.h"
@@ -63,7 +63,7 @@
 
 - (STGTDataSyncController *)syncer {
     if (!_syncer) {
-        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _syncer = app.syncer;
     }
     return _syncer;

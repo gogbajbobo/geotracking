@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "AppDelegate.h"
+#import "STGTAppDelegate.h"
 #import "STGTSpotViewController.h"
 #import "STGTSpotPropertiesViewController.h"
 #import "STGTSpotProperty.h"
@@ -29,7 +29,7 @@
 
 - (STGTDataSyncController *)syncer {
     if (!_syncer) {
-        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _syncer = app.syncer;
     }
     return _syncer;

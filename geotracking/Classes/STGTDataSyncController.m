@@ -7,7 +7,7 @@
 //
 
 #import "STGTDataSyncController.h"
-#import "AppDelegate.h"
+#import "STGTAppDelegate.h"
 #import "UDOAuthBasic.h"
 #import "STGTTrackingLocationController.h"
 #import "GDataXMLNode.h"
@@ -31,7 +31,7 @@
 - (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {
-        AppDelegate *app = [[UIApplication sharedApplication] delegate];
+        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
         _tracker = app.tracker;
     }
     return _tracker;

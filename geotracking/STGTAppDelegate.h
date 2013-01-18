@@ -15,7 +15,7 @@
 #import "UDOAuthBasic.h"
 #import "Reachability.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate> {
+@interface STGTAppDelegate : UIResponder <UIApplicationDelegate> {
     
 }
 
