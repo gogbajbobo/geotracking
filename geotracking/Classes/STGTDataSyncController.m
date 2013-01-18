@@ -7,7 +7,6 @@
 //
 
 #import "STGTDataSyncController.h"
-#import "STGTAppDelegate.h"
 #import "UDOAuthBasic.h"
 #import "STGTTrackingLocationController.h"
 #import "GDataXMLNode.h"

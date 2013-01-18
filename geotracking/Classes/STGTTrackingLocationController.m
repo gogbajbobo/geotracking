@@ -7,7 +7,6 @@
 //
 
 #import "STGTTrackingLocationController.h"
-#import "STGTAppDelegate.h"
 #import "STGTLocation.h"
 #import "STGTTrack.h"
 #import "STGTMapAnnotation.h"

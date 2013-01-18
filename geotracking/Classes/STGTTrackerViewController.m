@@ -6,10 +6,10 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTAppDelegate.h"
 #import "STGTTrackerViewController.h"
 #import "STGTTrackingLocationController.h"
 #import "STGTLocation.h"
+#import "STGTDataSyncController.h"
 
 @interface STGTTrackerViewController () <UIAlertViewDelegate>
 

@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTAppDelegate.h"
 #import "STGTSpotViewController.h"
 #import "STGTSpotPropertiesViewController.h"
 #import "STGTSpotProperty.h"

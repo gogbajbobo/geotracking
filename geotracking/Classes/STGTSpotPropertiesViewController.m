@@ -8,7 +8,6 @@
 
 #import "STGTSpotPropertiesViewController.h"
 #import "STGTSpotProperty.h"
-#import "STGTAppDelegate.h"
 #import "STGTDataSyncController.h"
 
 @interface STGTSpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
