@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source_files = 'geotracking/STGT*.{h,m,storyboard}', 'geotracking/Classes/STGT*.{h,m}', 'geotracking/DataModel/STGT*.{h,m,xcdatamodel}'
   s.resources = "geotracking/Resources/STGT*.{png,html,xml,js,storyboard}"
 
-  s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics', 'SenTestingKit'
+  s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics'
   s.library   = 'xml2'
 
   s.requires_arc = true
