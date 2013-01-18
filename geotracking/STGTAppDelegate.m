@@ -13,12 +13,6 @@
 @synthesize window = _window;
 
 
-- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [STGTTrackingLocationController sharedTracker];
-    [[STGTDataSyncController sharedSyncer] startSyncer];
-    return YES;
-}
-
 - (void)applicationWillTerminate:(UIApplication *)application {
 
 }
@@ -32,6 +26,9 @@
     
     [UDOAuthBasic sharedOAuth];
     
+    [STGTTrackingLocationController sharedTracker];
+    [[STGTDataSyncController sharedSyncer] startSyncer];
+
     // allocate a reachability object
     self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
     self.reachability.reachableOnWWAN = YES;
