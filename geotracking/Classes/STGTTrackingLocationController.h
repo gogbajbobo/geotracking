@@ -43,5 +43,6 @@
 //- (void)startConnection;
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 - (NSString *)newid;
++ (STGTTrackingLocationController *)sharedTracker;
 
 @end

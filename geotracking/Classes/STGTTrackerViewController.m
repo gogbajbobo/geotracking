@@ -30,9 +30,7 @@
 - (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {
-        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
-        _tracker = app.tracker;
-//        _tracker = [[TrackingLocationController alloc] init];
+        _tracker = [STGTTrackingLocationController sharedTracker];
         _tracker.tableView = self.tableView;
         _tracker.summary = self.summary;
         _tracker.currentValues = self.currentValues;

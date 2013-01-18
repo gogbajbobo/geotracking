@@ -31,8 +31,7 @@
 - (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {
-        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
-        _tracker = app.tracker;
+        _tracker = [STGTTrackingLocationController sharedTracker];
     }
     return _tracker;
 }

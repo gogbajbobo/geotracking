@@ -60,6 +60,15 @@
 
 #pragma mark - methods
 
++ (STGTTrackingLocationController *)sharedTracker
+{
+    static dispatch_once_t pred = 0;
+    __strong static id _sharedTracker = nil;
+    dispatch_once(&pred, ^{
+        _sharedTracker = [[self alloc] init]; // or some other init method
+    });
+    return _sharedTracker;
+}
 
 - (STGTDataSyncController *)syncer {
     if (!_syncer) {
