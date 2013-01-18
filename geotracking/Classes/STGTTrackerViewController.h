@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "STGTMapViewController.h"
-#include "STGTAppDelegate.h"
+#include "AppDelegate.h"
 
 @interface STGTTrackerViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *startButton;

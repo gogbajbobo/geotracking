@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTAppDelegate.h"
+#import "AppDelegate.h"
 #import "STGTTrackerViewController.h"
 #import "STGTTrackingLocationController.h"
 #import "STGTLocation.h"
@@ -30,7 +30,7 @@
 - (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {
-        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
+        AppDelegate *app = [[UIApplication sharedApplication] delegate];
         _tracker = app.tracker;
 //        _tracker = [[TrackingLocationController alloc] init];
         _tracker.tableView = self.tableView;
@@ -43,7 +43,7 @@
 }
 
 - (IBAction)syncButtonPressed:(id)sender {
-    STGTAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     [appDelegate.syncer fireTimer];
 //    [self.tracker startConnection];
 }

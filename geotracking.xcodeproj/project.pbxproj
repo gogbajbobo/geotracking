@@ -41,7 +41,7 @@
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
 		2CE4720C15E3FEEC00B092DB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720B15E3FEEC00B092DB /* main.m */; };
-		2CE4721015E3FEEC00B092DB /* STGTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720F15E3FEEC00B092DB /* STGTAppDelegate.m */; };
+		2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720F15E3FEEC00B092DB /* AppDelegate.m */; };
 		2CE4721315E3FEEC00B092DB /* STGTMainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4721115E3FEEC00B092DB /* STGTMainStoryboard_iPhone.storyboard */; };
 		2CE4722015E4016300B092DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4721F15E4016300B092DB /* CoreLocation.framework */; };
 		2CE4722215E4016F00B092DB /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4722115E4016F00B092DB /* MapKit.framework */; };
@@ -116,8 +116,8 @@
 		2CE4720715E3FEEC00B092DB /* geotracking-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "geotracking-Info.plist"; sourceTree = "<group>"; };
 		2CE4720B15E3FEEC00B092DB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2CE4720D15E3FEEC00B092DB /* geotracking-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "geotracking-Prefix.pch"; sourceTree = "<group>"; };
-		2CE4720E15E3FEEC00B092DB /* STGTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STGTAppDelegate.h; sourceTree = "<group>"; };
-		2CE4720F15E3FEEC00B092DB /* STGTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = STGTAppDelegate.m; sourceTree = "<group>"; };
+		2CE4720E15E3FEEC00B092DB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2CE4720F15E3FEEC00B092DB /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2CE4721215E3FEEC00B092DB /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/STGTMainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		2CE4721F15E4016300B092DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		2CE4722115E4016F00B092DB /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -293,8 +293,8 @@
 				2C4BF64416A7EF36000A8E55 /* Classes */,
 				2C94D71F166F92D00019A0C7 /* DataModel */,
 				2CE4721115E3FEEC00B092DB /* STGTMainStoryboard_iPhone.storyboard */,
-				2CE4720E15E3FEEC00B092DB /* STGTAppDelegate.h */,
-				2CE4720F15E3FEEC00B092DB /* STGTAppDelegate.m */,
+				2CE4720E15E3FEEC00B092DB /* AppDelegate.h */,
+				2CE4720F15E3FEEC00B092DB /* AppDelegate.m */,
 			);
 			path = geotracking;
 			sourceTree = "<group>";
@@ -437,7 +437,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CE4720C15E3FEEC00B092DB /* main.m in Sources */,
-				2CE4721015E3FEEC00B092DB /* STGTAppDelegate.m in Sources */,
+				2CE4721015E3FEEC00B092DB /* AppDelegate.m in Sources */,
 				2CE4722515E4055F00B092DB /* STGTTrackingLocationController.m in Sources */,
 				2C417C6415E80E3F00A3A83D /* STGTTrackerViewController.m in Sources */,
 				2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */,

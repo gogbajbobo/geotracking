@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTAppDelegate.h"
+#import "AppDelegate.h"
 
-@implementation STGTAppDelegate
+@implementation AppDelegate
 
 @synthesize window = _window;
 
