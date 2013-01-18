@@ -41,8 +41,7 @@
 }
 
 - (IBAction)syncButtonPressed:(id)sender {
-    STGTAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    [appDelegate.syncer fireTimer];
+    [[STGTDataSyncController sharedSyncer] fireTimer];
 //    [self.tracker startConnection];
 }
 

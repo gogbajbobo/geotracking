@@ -20,7 +20,6 @@
 }
 
 @property (strong, nonatomic) UIWindow *window;
-@property (nonatomic, strong) STGTDataSyncController *syncer;
 @property (strong, nonatomic) UDPushNotificationCenter *pushNotificatonCenter;
 @property (strong, nonatomic) UDPushAuthCodeRetriever *authCodeRetriever;
 @property (strong, nonatomic) Reachability *reachability;

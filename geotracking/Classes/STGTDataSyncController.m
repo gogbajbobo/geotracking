@@ -28,6 +28,17 @@
 @implementation STGTDataSyncController
 @synthesize changesCount = _changesCount;
 
++ (STGTDataSyncController *)sharedSyncer
+{
+    static dispatch_once_t pred = 0;
+    __strong static id _sharedSyncer = nil;
+    dispatch_once(&pred, ^{
+        _sharedSyncer = [[self alloc] init]; // or some other init method
+    });
+    return _sharedSyncer;
+}
+
+
 - (STGTTrackingLocationController *)tracker
 {
     if(!_tracker) {

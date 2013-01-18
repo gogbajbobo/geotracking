@@ -17,5 +17,7 @@
 - (void)stopSyncer;
 - (void)fireTimer;
 - (void)changesCountPlusOne;
++ (STGTDataSyncController *)sharedSyncer;
+
 
 @end

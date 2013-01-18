@@ -29,8 +29,7 @@
 
 - (STGTDataSyncController *)syncer {
     if (!_syncer) {
-        STGTAppDelegate *app = [[UIApplication sharedApplication] delegate];
-        _syncer = app.syncer;
+        _syncer = [STGTDataSyncController sharedSyncer];
     }
     return _syncer;
 }

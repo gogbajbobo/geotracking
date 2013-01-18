@@ -14,17 +14,13 @@
 
 
 - (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    self.syncer = [[STGTDataSyncController alloc] init];
     [STGTTrackingLocationController sharedTracker];
-    [self.syncer startSyncer];
-    
-//    NSLog(@"self.syncer %@", self.syncer);
-
+    [[STGTDataSyncController sharedSyncer] startSyncer];
     return YES;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
-    [self.syncer stopSyncer];
+
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
