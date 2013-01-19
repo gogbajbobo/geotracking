@@ -26,7 +26,6 @@
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic, strong) STGTTrack *currentTrack;
-@property (nonatomic, strong) NSTimer *syncingTimer;
 @property (nonatomic, strong) STGTDataSyncController *syncer;
 
 @end
@@ -429,9 +428,7 @@
 - (void)startTrackingLocation {
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
-    self.syncingTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:1800 target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
-    NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
-    [currentRunLoop addTimer:self.syncingTimer forMode:NSDefaultRunLoopMode];
+    NSLog(@"startTrackingLocation");
 }
 
 - (void)stopTrackingLocation {
@@ -439,14 +436,9 @@
     self.locationManager.delegate = nil;
     self.locationManager = nil;
     self.locationManagerRunning = NO;
-//    [self startConnection];
-    [self.syncingTimer invalidate];
+    NSLog(@"stopTrackingLocation");
 }
 
-- (void)onTimerTick:(NSTimer *)timer {
-//    NSLog(@"timer tick at %@", [NSDate date]);
-//    [self startConnection];
-}
 
 - (NSString *)newid
 {

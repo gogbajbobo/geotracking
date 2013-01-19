@@ -72,7 +72,7 @@
 
 - (void)changesCountPlusOne {
     self.changesCount += 1;
-    NSLog(@"self.changesCount %d", self.changesCount);
+//    NSLog(@"self.changesCount %d", self.changesCount);
     if (self.changesCount >= 20) {
         [self fireTimer];
         self.changesCount = 0;
@@ -153,7 +153,7 @@
                 NSPredicate *notSynced = [NSPredicate predicateWithFormat:@"SELF.synced == 0"];
                 NSArray *notSyncedData = [fetchedData filteredArrayUsingPredicate:notSynced];
                 if (notSyncedData.count > 0) {
-                    NSLog(@"notSyncedData.count %d", notSyncedData.count);
+//                    NSLog(@"notSyncedData.count %d", notSyncedData.count);
                     
                     dataToSync = YES;
                     
