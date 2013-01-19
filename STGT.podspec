@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/gogbajbobo/geotracking.git", :branch => 'master'}
   s.platform     = :ios, '5.0'
 
-  s.source_files = 'geotracking/Classes/STGT*.{h,m}', 'geotracking/DataModel/STGT*.{h,m,xcdatamodel}'
+  s.source_files = 'geotracking/en.lproj/STGT*.storyboard', 'geotracking/Classes/STGT*.{h,m}', 'geotracking/DataModel/STGT*.{h,m,xcdatamodel}'
   s.resources = "geotracking/Resources/STGT*.{png,html,xml,js}", 'geotracking/en.lproj/STGT*.storyboard'
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics'
