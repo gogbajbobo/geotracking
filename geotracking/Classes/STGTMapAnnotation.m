@@ -65,7 +65,7 @@
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
     if (self.location) {
-        return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.location.timestamp]];
+        return [NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:self.location.ts]];
     } else if (self.spot) {
         return [NSString stringWithFormat:@"%@",self.spot.address];
     } else {

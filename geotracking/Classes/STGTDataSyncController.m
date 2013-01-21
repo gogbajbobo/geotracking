@@ -118,21 +118,43 @@
 }
 
 - (void)dataSyncing {
-    self.fetchLimit = 200;
+    self.fetchLimit = 20;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(compare:)]];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)]];
     [request setIncludesSubentities:YES];
     [request setFetchLimit:self.fetchLimit];
-    request.predicate = [NSPredicate predicateWithFormat:@"SELF.lastSyncTimestamp == %@ || SELF.timestamp > SELF.lastSyncTimestamp", nil];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
     NSError *error;
     NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     NSLog(@"fetchedData.count %d", fetchedData.count);
     
-    for (NSManagedObject *object in fetchedData) {
+    if (fetchedData.count == 0) {
+        NSLog(@"No data to sync");
+    } else {
+
+        GDataXMLElement *postNode = [GDataXMLElement elementWithName:@"post"];
+        [postNode addNamespace:[GDataXMLNode namespaceWithName:@"" stringValue:NAMESPACE]];
+
+        GDataXMLElement *setOfNode = [GDataXMLElement elementWithName:@"set-of"];
+        
+        for (NSManagedObject *object in fetchedData) {
 //        NSLog(@"object %@", object);
 //        NSLog(@"timestamp %@", [object valueForKey:@"timestamp"]);
 //        NSLog(@"lastSyncTimestamp %@", [object valueForKey:@"lastSyncTimestamp"]);
+            
+            GDataXMLElement *dNode = [GDataXMLElement elementWithName:@"d"];
+            [dNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[object entity] name]]];
+            [dNode addAttribute:[GDataXMLNode attributeWithName:@"xid" stringValue:[object valueForKey:@"xid"]]];
+            [setOfNode addChild:dNode];
+            
+        }
+        [postNode addChild:setOfNode];
+        
+        GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
+        
+        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
     }
+    
 
 }
 
@@ -165,7 +187,7 @@
         if (![entityDescription isAbstract]) {
 //            NSLog(@"%@", entityName);
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
-            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:NO selector:@selector(compare:)]];
+            request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:NO selector:@selector(compare:)]];
             NSError *error;
             NSArray *fetchedData = [document.managedObjectContext executeFetchRequest:request error:&error];
             if (!fetchedData) {

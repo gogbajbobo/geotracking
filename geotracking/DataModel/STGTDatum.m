@@ -1,9 +1,9 @@
 //
-//  Datum.m
+//  STGTDatum.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 12/5/12.
-//  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
+//  Created by Maxim Grigoriev on 1/21/13.
+//  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
 #import "STGTDatum.h"
@@ -11,9 +11,10 @@
 
 @implementation STGTDatum
 
-@dynamic lastSyncTimestamp;
+@dynamic lts;
 @dynamic synced;
-@dynamic timestamp;
+@dynamic ts;
 @dynamic xid;
+@dynamic cts;
 
 @end

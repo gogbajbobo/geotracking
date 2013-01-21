@@ -112,7 +112,7 @@
     [newProperty setXid:[self.tracker newid]];
     [newProperty setType:self.typeOfProperty];
     [newProperty setName:name];
-    [newProperty setTimestamp:[NSDate date]];
+    [newProperty setTs:[NSDate date]];
     [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
     [self.syncer changesCountPlusOne];
     [self.filterSpot addPropertiesObject:newProperty];
@@ -184,7 +184,7 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
         spotProperty.image = UIImagePNGRepresentation(imageView.image);
-        spotProperty.timestamp = [NSDate date];
+        spotProperty.ts = [NSDate date];
         spotProperty.synced = [NSNumber numberWithBool:NO];
     }
     
@@ -292,9 +292,9 @@
 //    NSLog(@"indexPath %@", indexPath);
     STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
     NSDate *timestamp = [NSDate date];
-    spotProperty.timestamp = timestamp;
+    spotProperty.ts = timestamp;
 //    self.caller.spot.timestamp = timestamp;
-    self.spot.timestamp = timestamp;
+    self.spot.ts = timestamp;
     spotProperty.synced = [NSNumber numberWithBool:NO];
 //    self.caller.spot.synced = [NSNumber numberWithBool:NO];
     self.spot.synced = [NSNumber numberWithBool:NO];
@@ -338,7 +338,7 @@
                     } else {
                         STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
                         spotProperty.name = textField.text;
-                        spotProperty.timestamp = [NSDate date];
+                        spotProperty.ts = [NSDate date];
                         spotProperty.synced = [NSNumber numberWithBool:NO];
                         cell.textLabel.text = textField.text;
                         [textField resignFirstResponder];

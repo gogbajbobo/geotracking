@@ -88,7 +88,7 @@
 - (void)createFilterSpot {
     STGTSpot *filterSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     [filterSpot setXid:[self.tracker newid]];
-    filterSpot.timestamp = [NSDate date];
+    filterSpot.ts = [NSDate date];
     filterSpot.label = @"@filter";
 //    filterSpot.synced = [NSNumber numberWithBool:YES];
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpotProperty"];
