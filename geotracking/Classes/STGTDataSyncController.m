@@ -87,7 +87,8 @@
 - (void)onTimerTick:(NSTimer *)timer {
     NSLog(@"timer tick at %@", [NSDate date]);
     if (!self.tracker.syncing) {
-        [self syncDataFromDocument:self.tracker.locationsDatabase];
+//        [self syncDataFromDocument:self.tracker.locationsDatabase];
+        [self dataSyncing];
     }
 }
 
@@ -115,6 +116,27 @@
     [self.timer invalidate];
     self.timer = nil;
 }
+
+- (void)dataSyncing {
+    self.fetchLimit = 200;
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"timestamp" ascending:YES selector:@selector(compare:)]];
+    [request setIncludesSubentities:YES];
+    [request setFetchLimit:self.fetchLimit];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.lastSyncTimestamp == %@ || SELF.timestamp > SELF.lastSyncTimestamp", nil];
+    NSError *error;
+    NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"fetchedData.count %d", fetchedData.count);
+    
+    for (NSManagedObject *object in fetchedData) {
+//        NSLog(@"object %@", object);
+//        NSLog(@"timestamp %@", [object valueForKey:@"timestamp"]);
+//        NSLog(@"lastSyncTimestamp %@", [object valueForKey:@"lastSyncTimestamp"]);
+    }
+
+}
+
+
 
 - (void)syncDataFromDocument:(UIManagedDocument *)document {
 

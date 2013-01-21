@@ -145,15 +145,18 @@
                 NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
                 [self startNewTrack];
                 [self performFetch];
+                [[STGTDataSyncController sharedSyncer] startSyncer];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
             [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
                 NSLog(@"locationsDatabase openWithCompletionHandler success");
                 [self performFetch];
+                [[STGTDataSyncController sharedSyncer] startSyncer];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
             caller.startButton.enabled = YES;
+            [[STGTDataSyncController sharedSyncer] startSyncer];
         }
     }
     return _locationsDatabase;

@@ -13,6 +13,8 @@
 
 @interface STGTDataSyncController : NSObject
 
+@property (nonatomic) NSUInteger fetchLimit;
+
 - (void)startSyncer;
 - (void)stopSyncer;
 - (void)fireTimer;

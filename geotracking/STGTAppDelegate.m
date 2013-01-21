@@ -27,7 +27,6 @@
     [UDOAuthBasic sharedOAuth];
     
     [STGTTrackingLocationController sharedTracker];
-    [[STGTDataSyncController sharedSyncer] startSyncer];
 
     // allocate a reachability object
     self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
