@@ -208,8 +208,8 @@
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     NSDate *ts = [NSDate date];
     [track setStartTime:ts];
-    track.ts = ts;
-    track.cts = ts;
+//    track.ts = ts;
+//    track.cts = ts;
     [self.syncer changesCountPlusOne];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
@@ -226,18 +226,18 @@
 //        NSLog(@"%f",[currentLocation distanceFromLocation:self.lastLocation]);
 //        NSLog(@"%f",(2 * self.distanceFilter));
         if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * self.distanceFilter)) {
+            NSDate *ts = [NSDate date];
             STGTLocation *location = (STGTLocation *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTLocation" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
             [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
             [location setLongitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.longitude]];
             [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
             [location setSpeed:[NSNumber numberWithDouble:-1]];
             [location setCourse:[NSNumber numberWithDouble:-1]];
-            NSDate *ts = [NSDate date];
-            location.ts = ts;
-            location.cts = ts;
+//            location.ts = ts;
+//            location.cts = ts;
             [location setXid:[self newid]];
             [self.syncer changesCountPlusOne];
-            [self.currentTrack setStartTime:location.ts];
+            [self.currentTrack setStartTime:ts];
             [self.currentTrack addLocationsObject:location];
 //            NSLog(@"copy lastLocation to new Track as first location");
         } else {
@@ -255,16 +255,16 @@
     [location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
-    location.ts = timestamp;
-    location.cts = timestamp;
+//    location.ts = timestamp;
+//    location.cts = timestamp;
     [location setXid:[self newid]];
     [self.syncer changesCountPlusOne];
 
     if (self.currentTrack.locations.count == 0) {
-        self.currentTrack.startTime = location.ts;
+        self.currentTrack.startTime = timestamp;
     }
-    self.currentTrack.finishTime = location.ts;
-    self.currentTrack.ts = location.ts;
+    self.currentTrack.finishTime = timestamp;
+//    self.currentTrack.ts = location.ts;
 //    self.currentTrack.synced = [NSNumber numberWithBool:NO];
     [self.currentTrack addLocationsObject:location];
     

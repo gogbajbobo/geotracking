@@ -75,21 +75,21 @@
 - (void)changesCountPlusOne {
     self.changesCount += 1;
 //    NSLog(@"self.changesCount %d", self.changesCount);
-    if (self.changesCount >= 20) {
+    self.fetchLimit = 200;
+    if (self.changesCount >= self.fetchLimit) {
         [self fireTimer];
         self.changesCount = 0;
     }
 }
 
 - (void)fireTimer {
-    NSLog(@"timer fire at %@", [NSDate date]);
+//    NSLog(@"timer fire at %@", [NSDate date]);
     [self.timer fire];
 }
 
 - (void)onTimerTick:(NSTimer *)timer {
-    NSLog(@"timer tick at %@", [NSDate date]);
+//    NSLog(@"timer tick at %@", [NSDate date]);
     if (!self.tracker.syncing) {
-//        [self syncDataFromDocument:self.tracker.locationsDatabase];
         [self dataSyncing];
     }
 }
@@ -128,10 +128,7 @@
     [request setFetchLimit:self.fetchLimit];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
     NSError *error;
-    
-//    NSEntityDescription *datum = [NSEntityDescription entityForName:@"STGTDatum" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-//    NSLog(@"datum.propertiesByName allKeys %@", [datum.propertiesByName allKeys]);
-    
+        
     NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     
     NSLog(@"fetchedData.count %d", fetchedData.count);
@@ -146,11 +143,11 @@
         GDataXMLElement *setOfNode = [GDataXMLElement elementWithName:@"set-of"];
         
         for (NSManagedObject *object in fetchedData) {
-        NSLog(@"----> %@", [[object entity] name]);
-        NSLog(@"timestamp %@", [object valueForKey:@"ts"]);
-        NSLog(@"createTimestamp %@", [object valueForKey:@"cts"]);
-        NSLog(@"lastSyncTimestamp %@", [object valueForKey:@"lts"]);
-        NSLog(@"sendQueryTimestamp %@", [object valueForKey:@"sqts"]);
+//        NSLog(@"----> %@", [[object entity] name]);
+//        NSLog(@"timestamp %@", [object valueForKey:@"ts"]);
+//        NSLog(@"createTimestamp %@", [object valueForKey:@"cts"]);
+//        NSLog(@"lastSyncTimestamp %@", [object valueForKey:@"lts"]);
+//        NSLog(@"sendQueryTimestamp %@", [object valueForKey:@"sqts"]);
             
             GDataXMLElement *dNode = [GDataXMLElement elementWithName:@"d"];
             [dNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[object entity] name]]];
@@ -200,9 +197,10 @@
         
         GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
         
-        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
-        
-        [self sendData:[xmlDoc XMLData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
+//        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
+        if (!self.tracker.syncing) {
+            [self sendData:[xmlDoc XMLData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
+        }
     }
     
 
@@ -262,8 +260,8 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     
-    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
-    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
+//    NSString *responseString = [[NSString alloc] initWithData:self.responseData encoding:NSUTF8StringEncoding];
+//    NSLog(@"connectionDidFinishLoading responseData %@", responseString);
     
 //    NSString *dataPath = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"xml"];
 //    self.responseData = [NSData dataWithContentsOfFile:dataPath];
@@ -286,9 +284,9 @@
 
         for (GDataXMLElement *entityItem in entityItems) {
             NSString *entityName = [[[entityItem nodesForXPath:@"@name" error:nil] lastObject] stringValue];
-            NSLog(@"entityName %@", entityName);
+//            NSLog(@"entityName %@", entityName);
             NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
-            NSLog(@"entityXid.stringValue %@", entityXid);
+//            NSLog(@"entityXid.stringValue %@", entityXid);
             
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
             request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
@@ -409,11 +407,12 @@
 //
 //    }
     
-    self.changesCount = 0;
+//    self.changesCount = 0;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"setSynced UIDocumentSaveForOverwriting success");
         self.tracker.trackerStatus = @"";
         self.tracker.syncing = NO;
+        [self dataSyncing];
     }];
 
 }

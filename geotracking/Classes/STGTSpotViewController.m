@@ -141,7 +141,7 @@
 //    self.spotImageView.image = [info objectForKey:UIImagePickerControllerOriginalImage];
     self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     self.spot.image = UIImagePNGRepresentation(self.spotImageView.image);
-    self.spot.ts = [NSDate date];
+//    self.spot.ts = [NSDate date];
 //    self.spot.synced = [NSNumber numberWithBool:NO];
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spot.image UIDocumentSaveForOverwriting success");
@@ -258,7 +258,7 @@
     if (![textField.text isEqualToString:@""]) {
         if (![textField.text isEqualToString:self.spot.label]) {
             self.spot.label = textField.text;
-            self.spot.ts = [NSDate date];
+//            self.spot.ts = [NSDate date];
 //            self.spot.synced = [NSNumber numberWithBool:NO];
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"spot.label UIDocumentSaveForOverwriting success");
@@ -297,9 +297,9 @@
     [newSpot setXid:[self.tracker newid]];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
-    NSDate *ts = [NSDate date];
-    newSpot.ts = ts;
-    newSpot.cts = ts;
+//    NSDate *ts = [NSDate date];
+//    newSpot.ts = ts;
+//    newSpot.cts = ts;
     newSpot.address = @"";
     [self.syncer changesCountPlusOne];
     self.spot = newSpot;
