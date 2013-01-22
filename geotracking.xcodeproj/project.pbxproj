@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2C168D3716A00A74008CBFA7 /* STGTtest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2C168D3616A00A74008CBFA7 /* STGTtest.xml */; };
+		2C1ABBDF16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */; };
+		2C1ABBE216AEBC1E00AD92E4 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBE116AEBC1E00AD92E4 /* STGTDatum.m */; };
+		2C1ABBE816AECD9200AD92E4 /* STGTDatum+Timestamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBE716AECD9200AD92E4 /* STGTDatum+Timestamp.m */; };
 		2C29FC1016510FFB007E86E0 /* STGTblank_image_44_44.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C29FC0F16510FFB007E86E0 /* STGTblank_image_44_44.png */; };
 		2C32860F1685BDC30081B9DC /* STGTroute.html in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860D1685BDC30081B9DC /* STGTroute.html */; };
 		2C32A0A6161052E200713735 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32A0A5161052E200713735 /* libxml2.dylib */; };
@@ -34,8 +37,6 @@
 		2CC7F59D15E8C1E500CF638E /* STGTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CD0371E1685D1A700BBEDD5 /* STGTroute.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860E1685BDC30081B9DC /* STGTroute.js */; };
-		2CD0371E16ADB36400EA06C3 /* STGTTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0371B16ADB36400EA06C3 /* STGTTracker.xcdatamodeld */; };
-		2CD0372116ADB3D800EA06C3 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372016ADB3D800EA06C3 /* STGTDatum.m */; };
 		2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
 		2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
@@ -63,6 +64,12 @@
 /* Begin PBXFileReference section */
 		19979538E5644F14B8F469EA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C168D3616A00A74008CBFA7 /* STGTtest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = STGTtest.xml; sourceTree = "<group>"; };
+		2C1ABBDD16AEBBDE00AD92E4 /* STGTTracker 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 2.xcdatamodel"; sourceTree = "<group>"; };
+		2C1ABBDE16AEBBDE00AD92E4 /* STGTTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STGTTracker.xcdatamodel; sourceTree = "<group>"; };
+		2C1ABBE016AEBC1E00AD92E4 /* STGTDatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTDatum.h; sourceTree = "<group>"; };
+		2C1ABBE116AEBC1E00AD92E4 /* STGTDatum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTDatum.m; sourceTree = "<group>"; };
+		2C1ABBE616AECD9200AD92E4 /* STGTDatum+Timestamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "STGTDatum+Timestamp.h"; sourceTree = "<group>"; };
+		2C1ABBE716AECD9200AD92E4 /* STGTDatum+Timestamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "STGTDatum+Timestamp.m"; sourceTree = "<group>"; };
 		2C29FC0F16510FFB007E86E0 /* STGTblank_image_44_44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = STGTblank_image_44_44.png; sourceTree = "<group>"; };
 		2C32860D1685BDC30081B9DC /* STGTroute.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = STGTroute.html; sourceTree = "<group>"; };
 		2C32860E1685BDC30081B9DC /* STGTroute.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = STGTroute.js; sourceTree = "<group>"; };
@@ -104,10 +111,6 @@
 		2CC7F59B15E8C1E400CF638E /* STGTSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettingsViewController.h; sourceTree = "<group>"; };
 		2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		2CD0371C16ADB36400EA06C3 /* STGTTracker 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 2.xcdatamodel"; sourceTree = "<group>"; };
-		2CD0371D16ADB36400EA06C3 /* STGTTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STGTTracker.xcdatamodel; sourceTree = "<group>"; };
-		2CD0371F16ADB3D800EA06C3 /* STGTDatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTDatum.h; sourceTree = "<group>"; };
-		2CD0372016ADB3D800EA06C3 /* STGTDatum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTDatum.m; sourceTree = "<group>"; };
 		2CD0372616888F1500BBEDD5 /* STGTTrackerManagedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrackerManagedDocument.h; sourceTree = "<group>"; };
 		2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackerManagedDocument.m; sourceTree = "<group>"; };
 		2CD07D75167CE91500E76B81 /* STGTAddressSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTAddressSearchViewController.h; sourceTree = "<group>"; };
@@ -210,9 +213,11 @@
 		2C94D71F166F92D00019A0C7 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				2CD0371B16ADB36400EA06C3 /* STGTTracker.xcdatamodeld */,
-				2CD0371F16ADB3D800EA06C3 /* STGTDatum.h */,
-				2CD0372016ADB3D800EA06C3 /* STGTDatum.m */,
+				2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */,
+				2C1ABBE016AEBC1E00AD92E4 /* STGTDatum.h */,
+				2C1ABBE116AEBC1E00AD92E4 /* STGTDatum.m */,
+				2C1ABBE616AECD9200AD92E4 /* STGTDatum+Timestamp.h */,
+				2C1ABBE716AECD9200AD92E4 /* STGTDatum+Timestamp.m */,
 				2C3EAFF71662168700748C23 /* STGTSpotProperty.h */,
 				2C3EAFF81662168700748C23 /* STGTSpotProperty.m */,
 				2C3EAFF41662168700748C23 /* STGTSpot.h */,
@@ -454,8 +459,9 @@
 				2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */,
 				2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */,
 				2CA191CC16A98FEA0072E61F /* STGTAppDelegate.m in Sources */,
-				2CD0371E16ADB36400EA06C3 /* STGTTracker.xcdatamodeld in Sources */,
-				2CD0372116ADB3D800EA06C3 /* STGTDatum.m in Sources */,
+				2C1ABBDF16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld in Sources */,
+				2C1ABBE216AEBC1E00AD92E4 /* STGTDatum.m in Sources */,
+				2C1ABBE816AECD9200AD92E4 /* STGTDatum+Timestamp.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -664,13 +670,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		2CD0371B16ADB36400EA06C3 /* STGTTracker.xcdatamodeld */ = {
+		2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				2CD0371C16ADB36400EA06C3 /* STGTTracker 2.xcdatamodel */,
-				2CD0371D16ADB36400EA06C3 /* STGTTracker.xcdatamodel */,
+				2C1ABBDD16AEBBDE00AD92E4 /* STGTTracker 2.xcdatamodel */,
+				2C1ABBDE16AEBBDE00AD92E4 /* STGTTracker.xcdatamodel */,
 			);
-			currentVersion = 2CD0371C16ADB36400EA06C3 /* STGTTracker 2.xcdatamodel */;
+			currentVersion = 2C1ABBDD16AEBBDE00AD92E4 /* STGTTracker 2.xcdatamodel */;
 			path = STGTTracker.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

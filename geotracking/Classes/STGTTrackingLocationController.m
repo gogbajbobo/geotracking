@@ -63,7 +63,7 @@
     static dispatch_once_t pred = 0;
     __strong static id _sharedTracker = nil;
     dispatch_once(&pred, ^{
-        _sharedTracker = [[self alloc] init]; // or some other init method
+        _sharedTracker = [[self alloc] init];
     });
     return _sharedTracker;
 }
@@ -143,6 +143,7 @@
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
                 NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
+//                [self registerNotificationCenter];
                 [self startNewTrack];
                 [self performFetch];
                 [[STGTDataSyncController sharedSyncer] startSyncer];
@@ -151,16 +152,37 @@
             [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 caller.startButton.enabled = YES;
                 NSLog(@"locationsDatabase openWithCompletionHandler success");
+//                [self registerNotificationCenter];
                 [self performFetch];
                 [[STGTDataSyncController sharedSyncer] startSyncer];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
+//            [self registerNotificationCenter];
             caller.startButton.enabled = YES;
             [[STGTDataSyncController sharedSyncer] startSyncer];
         }
     }
     return _locationsDatabase;
     
+}
+
+- (void)registerNotificationCenter {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(sqtsChecking:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
+}
+
+- (void)sqtsChecking:(id)sender {
+    NSLog(@"updatedObjects %@", self.locationsDatabase.managedObjectContext.updatedObjects);
+    NSLog(@"insertedObjects %@", self.locationsDatabase.managedObjectContext.insertedObjects);
+//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+//    [nc removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
+//    NSMutableSet *setOfObjects = [self.locationsDatabase.managedObjectContext.updatedObjects mutableCopy];
+//    [setOfObjects unionSet:self.locationsDatabase.managedObjectContext.insertedObjects];
+//    for (NSManagedObject *object in setOfObjects) {
+//        NSDate *sqts = [object valueForKey:@"lts"] ? [object valueForKey:@"ts"] : [object valueForKey:@"cts"];
+//        [object setValue:sqts forKey:@"sqts"];
+//    }
+//    [self registerNotificationCenter];
 }
 
 - (void)performFetch {
@@ -184,7 +206,10 @@
     STGTTrack *track = (STGTTrack *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTTrack" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
     [track setXid:[self newid]];
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
-    [track setStartTime:[NSDate date]];
+    NSDate *ts = [NSDate date];
+    [track setStartTime:ts];
+    track.ts = ts;
+    track.cts = ts;
     [self.syncer changesCountPlusOne];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
@@ -207,7 +232,9 @@
             [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
             [location setSpeed:[NSNumber numberWithDouble:-1]];
             [location setCourse:[NSNumber numberWithDouble:-1]];
-            [location setTs:[NSDate date]];
+            NSDate *ts = [NSDate date];
+            location.ts = ts;
+            location.cts = ts;
             [location setXid:[self newid]];
             [self.syncer changesCountPlusOne];
             [self.currentTrack setStartTime:location.ts];
@@ -228,7 +255,8 @@
     [location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
-    [location setTs:timestamp];
+    location.ts = timestamp;
+    location.cts = timestamp;
     [location setXid:[self newid]];
     [self.syncer changesCountPlusOne];
 
@@ -237,7 +265,7 @@
     }
     self.currentTrack.finishTime = location.ts;
     self.currentTrack.ts = location.ts;
-    self.currentTrack.synced = [NSNumber numberWithBool:NO];
+//    self.currentTrack.synced = [NSNumber numberWithBool:NO];
     [self.currentTrack addLocationsObject:location];
     
 //    NSLog(@"currentLocation %@",currentLocation);
