@@ -166,14 +166,14 @@
     
 }
 
-- (void)registerNotificationCenter {
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(sqtsChecking:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
-}
+//- (void)registerNotificationCenter {
+//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+//    [nc addObserver:self selector:@selector(sqtsChecking:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
+//}
 
-- (void)sqtsChecking:(id)sender {
-    NSLog(@"updatedObjects %@", self.locationsDatabase.managedObjectContext.updatedObjects);
-    NSLog(@"insertedObjects %@", self.locationsDatabase.managedObjectContext.insertedObjects);
+//- (void)sqtsChecking:(id)sender {
+//    NSLog(@"updatedObjects %@", self.locationsDatabase.managedObjectContext.updatedObjects);
+//    NSLog(@"insertedObjects %@", self.locationsDatabase.managedObjectContext.insertedObjects);
 //    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
 //    [nc removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
 //    NSMutableSet *setOfObjects = [self.locationsDatabase.managedObjectContext.updatedObjects mutableCopy];
@@ -183,7 +183,7 @@
 //        [object setValue:sqts forKey:@"sqts"];
 //    }
 //    [self registerNotificationCenter];
-}
+//}
 
 - (void)performFetch {
     NSError *error;
@@ -242,6 +242,7 @@
 //            NSLog(@"copy lastLocation to new Track as first location");
         } else {
 //            NSLog(@"no");
+            self.lastLocation = currentLocation;
         }
         timestamp = [NSDate date];
     }
