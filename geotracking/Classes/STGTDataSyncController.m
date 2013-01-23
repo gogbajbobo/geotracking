@@ -13,7 +13,7 @@
 //#import "STGTDatum.h"
 //#import "STGTDatum+ComputedValues.h"
 
-#define NAMESPACE @"http://github.com/UDTO/UD/unknown"
+//#define NAMESPACE @"https://github.com/sys-team/ASA.chest"
 
 @interface STGTDataSyncController() <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSTimer *timer;
@@ -28,17 +28,19 @@
 
 @implementation STGTDataSyncController
 @synthesize changesCount = _changesCount;
+@synthesize fetchLimit = _fetchLimit;
+@synthesize xmlNamespace = _xmlNamespace;
+@synthesize syncServerAddress = _syncServerAddress;
 
 + (STGTDataSyncController *)sharedSyncer
 {
     static dispatch_once_t pred = 0;
     __strong static id _sharedSyncer = nil;
     dispatch_once(&pred, ^{
-        _sharedSyncer = [[self alloc] init]; // or some other init method
+        _sharedSyncer = [[self alloc] init];
     });
     return _sharedSyncer;
 }
-
 
 - (STGTTrackingLocationController *)tracker
 {
@@ -46,6 +48,73 @@
         _tracker = [STGTTrackingLocationController sharedTracker];
     }
     return _tracker;
+}
+
+- (NSUInteger)fetchLimit {
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    NSUInteger fetchLimit = [[settings objectForKey:@"STGTpref_numberOfItemToSend"] intValue];
+    if (!fetchLimit) {
+        _fetchLimit = 20;
+        [settings setObject:[NSString stringWithFormat:@"%d",_fetchLimit] forKey:@"STGTpref_numberOfItemToSend"];
+        [settings synchronize];
+    } else {
+        _fetchLimit = fetchLimit;
+    }
+//    NSLog(@"_fetchLimit %d", _fetchLimit);
+    return _fetchLimit;
+}
+
+- (void)setFetchLimit:(NSUInteger)fetchLimit {
+    if (fetchLimit != _fetchLimit) {
+        _fetchLimit = fetchLimit;
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        [settings setObject:[NSString stringWithFormat:@"%d",_fetchLimit] forKey:@"STGTpref_numberOfItemToSend"];
+        [settings synchronize];
+    }
+}
+
+- (NSString *)xmlNamespace {
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    NSString *xmlNamespace = [settings objectForKey:@"STGTpref_xmlNamespace"];
+    if (!xmlNamespace) {
+        _xmlNamespace = @"https://github.com/sys-team/ASA.chest";
+        [settings setObject:_xmlNamespace forKey:@"STGTpref_xmlNamespace"];
+        [settings synchronize];
+    } else {
+        _xmlNamespace = xmlNamespace;
+    }
+    return _xmlNamespace;
+}
+
+- (void)setXmlNamespace:(NSString *)xmlNamespace {
+    if (xmlNamespace != _xmlNamespace) {
+        _xmlNamespace = xmlNamespace;
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        [settings setObject:_xmlNamespace forKey:@"STGTpref_xmlNamespace"];
+        [settings synchronize];
+    }
+}
+
+- (NSString *)syncServerAddress {
+    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+    NSString *syncServerAddress = [settings objectForKey:@"STGTpref_syncServerAddress"];
+    if (!syncServerAddress) {
+        _syncServerAddress = @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest";
+        [settings setObject:_syncServerAddress forKey:@"STGTpref_syncServerAddress"];
+        [settings synchronize];
+    } else {
+        _syncServerAddress = syncServerAddress;
+    }
+    return _syncServerAddress;
+}
+
+- (void)setSyncServerAddress:(NSString *)syncServerAddress {
+    if (syncServerAddress != _syncServerAddress) {
+        _syncServerAddress = syncServerAddress;
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        [settings setObject:_syncServerAddress forKey:@"STGTpref_syncServerAddress"];
+        [settings synchronize];
+    }
 }
 
 
@@ -65,17 +134,19 @@
 }
 
 - (void)setChangesCount:(int)changesCount {
-    _changesCount = changesCount;
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [settings setObject:[NSNumber numberWithDouble:changesCount] forKey:@"changesCount"];
-    [settings synchronize];
+    if (changesCount != _changesCount) {
+        _changesCount = changesCount;
+        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
+        [settings setObject:[NSNumber numberWithDouble:changesCount] forKey:@"changesCount"];
+        [settings synchronize];
+    }
 }
 
 
 - (void)changesCountPlusOne {
     self.changesCount += 1;
 //    NSLog(@"self.changesCount %d", self.changesCount);
-    self.fetchLimit = 200;
+//    self.fetchLimit = 20;
     if (self.changesCount >= self.fetchLimit) {
         [self fireTimer];
         self.changesCount = 0;
@@ -109,19 +180,25 @@
 
 - (void)startSyncer {
     NSLog(@"startSyncer");
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged) name:NSUserDefaultsDidChangeNotification object:nil];
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
 }
 
 - (void)stopSyncer {
     NSLog(@"stopSyncer");
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.timer invalidate];
     self.timer = nil;
 }
 
+- (void)defaultsChanged {
+    NSLog(@"defaultsChanged");
+}
+
 - (void)dataSyncing {
     
-    self.fetchLimit = 20;
+//    self.fetchLimit = 20;
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
     [request setIncludesSubentities:YES];
@@ -138,11 +215,13 @@
     } else {
 
         GDataXMLElement *postNode = [GDataXMLElement elementWithName:@"post"];
-        [postNode addNamespace:[GDataXMLNode namespaceWithName:@"" stringValue:NAMESPACE]];
+        [postNode addNamespace:[GDataXMLNode namespaceWithName:@"" stringValue:self.xmlNamespace]];
 
-        GDataXMLElement *setOfNode = [GDataXMLElement elementWithName:@"set-of"];
+//        GDataXMLElement *setOfNode = [GDataXMLElement elementWithName:@"set-of"];
         
         for (NSManagedObject *object in fetchedData) {
+//            NSLog(@"object %@", object);
+//            NSLog(@"object.xid %@", [object valueForKey:@"xid"]);
 //        NSLog(@"----> %@", [[object entity] name]);
 //        NSLog(@"timestamp %@", [object valueForKey:@"ts"]);
 //        NSLog(@"createTimestamp %@", [object valueForKey:@"cts"]);
@@ -190,16 +269,17 @@
                 }
             }
 
-            [setOfNode addChild:dNode];
+            [postNode addChild:dNode];
             
         }
-        [postNode addChild:setOfNode];
+//        [postNode addChild:setOfNode];
         
         GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
         
 //        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
         if (!self.tracker.syncing) {
-            [self sendData:[xmlDoc XMLData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
+//            [self sendData:[xmlDoc XMLData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
+            [self sendData:[xmlDoc XMLData] toServer:self.syncServerAddress];
         }
     }
     
@@ -217,8 +297,9 @@
     [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
 //    [[UDOAuthBasic sharedOAuth] checkToken];
 //    request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
-    NSLog(@"request %@", request);
 
+    
+//    NSLog(@"request %@", request);
     NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     if (!connection) {
         NSLog(@"connection error");
@@ -270,12 +351,12 @@
     
     NSError *error;
     GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithData:self.responseData options:0 error:&error];
-    NSDictionary *namespaces = [[NSDictionary alloc] initWithObjectsAndKeys:NAMESPACE, @"ns", nil];
+    NSDictionary *namespaces = [[NSDictionary alloc] initWithObjectsAndKeys:self.xmlNamespace, @"ns", nil];
 
     if (!xmlDoc) {
         NSLog(@"%@", error.description);
     }
-    NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:set-of" namespaces:namespaces error:nil];
+    NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:response" namespaces:namespaces error:nil];
 
     for (GDataXMLElement *entityNode in entityNodes) {
 //        NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
@@ -329,13 +410,16 @@
                     }
                     [propertiesSet addObject:property];
                 }
-                [self.syncObject setValue:[propertiesSet copy] forKey:@"properties"];
+                if (propertiesSet) {
+                    [self.syncObject setValue:[propertiesSet copy] forKey:@"properties"];
+                }
             }
             
             
             NSString *timestamp = [[[entityItem nodesForXPath:@"./ns:date[@name='ts']" namespaces:namespaces error:nil] lastObject] stringValue];
             
             if (timestamp) {
+                NSLog(@"timestamp %@", timestamp);
                 NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                 [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
                 NSDate *serverDate = [dateFormatter dateFromString:timestamp];
@@ -345,7 +429,7 @@
                 //            NSLog(@"localDate %@", localDate);
                 
                 if ([localDate compare:serverDate] == NSOrderedAscending) {
-                    //                NSLog(@"serverDate > localDate");
+//                    NSLog(@"serverDate > localDate");
                     NSArray *entityItemProperties = [entityItem nodesForXPath:@"./ns:*" namespaces:namespaces error:nil];
                     for (GDataXMLElement *entityItemProperty in entityItemProperties) {
                         //                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
@@ -386,7 +470,6 @@
             }
             
             
-//            [self.syncObject setValue:[NSNumber numberWithBool:YES] forKey:@"synced"];
             [self.syncObject setValue:[NSDate date] forKey:@"lts"];
 
             
@@ -412,6 +495,7 @@
         NSLog(@"setSynced UIDocumentSaveForOverwriting success");
         self.tracker.trackerStatus = @"";
         self.tracker.syncing = NO;
+        self.changesCount = 0;
         [self dataSyncing];
     }];
 
