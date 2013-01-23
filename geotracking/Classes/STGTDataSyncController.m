@@ -13,7 +13,9 @@
 //#import "STGTDatum.h"
 //#import "STGTDatum+ComputedValues.h"
 
-//#define NAMESPACE @"https://github.com/sys-team/ASA.chest"
+#define DEFAULT_NAMESPACE @"https://github.com/sys-team/ASA.chest"
+#define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
+#define DEFAULT_FETCHLIMIT 20
 
 @interface STGTDataSyncController() <NSURLConnectionDataDelegate>
 @property (nonatomic, strong) NSTimer *timer;
@@ -54,7 +56,7 @@
     NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     NSUInteger fetchLimit = [[settings objectForKey:@"STGTpref_numberOfItemToSend"] intValue];
     if (!fetchLimit) {
-        _fetchLimit = 20;
+        _fetchLimit = DEFAULT_FETCHLIMIT;
         [settings setObject:[NSString stringWithFormat:@"%d",_fetchLimit] forKey:@"STGTpref_numberOfItemToSend"];
         [settings synchronize];
     } else {
@@ -77,7 +79,7 @@
     NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     NSString *xmlNamespace = [settings objectForKey:@"STGTpref_xmlNamespace"];
     if (!xmlNamespace) {
-        _xmlNamespace = @"https://github.com/sys-team/ASA.chest";
+        _xmlNamespace = DEFAULT_NAMESPACE;
         [settings setObject:_xmlNamespace forKey:@"STGTpref_xmlNamespace"];
         [settings synchronize];
     } else {
@@ -99,7 +101,7 @@
     NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     NSString *syncServerAddress = [settings objectForKey:@"STGTpref_syncServerAddress"];
     if (!syncServerAddress) {
-        _syncServerAddress = @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest";
+        _syncServerAddress = DEFAULT_SYNCSERVER;
         [settings setObject:_syncServerAddress forKey:@"STGTpref_syncServerAddress"];
         [settings synchronize];
     } else {
