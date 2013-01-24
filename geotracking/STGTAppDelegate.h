@@ -12,7 +12,7 @@
 #import "UDPushNotificationCenter.h"
 #import "UDPushAuthCodeRetriever.h"
 #import "UDAuthTokenRetriever.h"
-#import "UDOAuthBasic.h"
+#import "STGTAuthBasic.h"
 #import "Reachability.h"
 
 @interface STGTAppDelegate : UIResponder <UIApplicationDelegate> {

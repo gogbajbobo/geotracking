@@ -1,5 +1,5 @@
 //
-//  STGTDatum.m
+//  STGTDatum+Timestamp.h
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 1/22/13.
@@ -8,14 +8,6 @@
 
 #import "STGTDatum.h"
 
-
-@implementation STGTDatum
-
-@dynamic lts;
-@dynamic ts;
-@dynamic xid;
-@dynamic cts;
-@dynamic sqts;
-
+@interface STGTDatum (Timestamp)
 
 @end
