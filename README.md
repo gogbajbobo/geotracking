@@ -3,6 +3,12 @@ geotracking (STGT)
 
 Установка
 ---
+Проект использует CocoaPods — http://cocoapods.org
+
+При использовании проекта как stand-alone приложения необходимо выполнить установку библиотек:
+``` pod install ```
+
+При использовании проекта как части другой программы необходимо добавить в Podfile строчку:
 ```pod 'STGT', :git => "https://github.com/gogbajbobo/geotracking.git", :branch => 'master'```
 
 Настройка
