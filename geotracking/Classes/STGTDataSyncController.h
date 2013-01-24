@@ -10,12 +10,14 @@
 #import <CoreData/CoreData.h>
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
+#import "STGTRequestAuthenticatable.h"
 
 @interface STGTDataSyncController : NSObject
 
 @property (nonatomic) NSUInteger fetchLimit;
 @property (nonatomic, strong) NSString *syncServerAddress;
 @property (nonatomic, strong) NSString *xmlNamespace;
+@property (nonatomic, weak) id <STGTRequestAuthenticatable> authDelegate;
 
 - (void)startSyncer;
 - (void)stopSyncer;

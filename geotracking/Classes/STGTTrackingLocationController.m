@@ -11,7 +11,7 @@
 #import "STGTTrack.h"
 #import "STGTMapAnnotation.h"
 #import "STGTTrackerViewController.h"
-#import "UDOAuthBasic.h"
+//#import "UDOAuthBasic.h"
 #import "STGTTrackerManagedDocument.h"
 #import "STGTDataSyncController.h"
 

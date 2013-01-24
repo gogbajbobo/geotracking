@@ -22,17 +22,29 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
     self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
-    self.authCodeRetriever = [UDPushAuthCodeRetriever codeRetriever];
-    
-    [UDOAuthBasic sharedOAuth];
-    
-    [STGTTrackingLocationController sharedTracker];
-
-    // allocate a reachability object
-    self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
+    self.authCodeRetriever = (UDPushAuthCodeRetriever *)[(UDAuthTokenRetriever *)[[STGTAuthBasic sharedOAuth] tokenRetriever] codeDelegate];
+    self.reachability = [Reachability reachabilityWithHostname:[[STGTAuthBasic sharedOAuth] reachabilityServer]];
     self.reachability.reachableOnWWAN = YES;
-    
     [self.reachability startNotifier];
+
+    [STGTTrackingLocationController sharedTracker];
+    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
+    
+    
+//    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+//    
+//    self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
+//    self.authCodeRetriever = [UDPushAuthCodeRetriever codeRetriever];
+//    
+//    [STGTAuthBasic sharedOAuth];
+//    
+//    [STGTTrackingLocationController sharedTracker];
+//
+//    // allocate a reachability object
+//    self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
+//    self.reachability.reachableOnWWAN = YES;
+//    
+//    [self.reachability startNotifier];
     
     return YES;
 

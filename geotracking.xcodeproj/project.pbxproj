@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C0CBBDB16B120E300F74384 /* STGTAuthBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBBDA16B120E300F74384 /* STGTAuthBasic.m */; };
 		2C168D3716A00A74008CBFA7 /* STGTtest.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2C168D3616A00A74008CBFA7 /* STGTtest.xml */; };
 		2C1ABBDF16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */; };
 		2C1ABBE216AEBC1E00AD92E4 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBE116AEBC1E00AD92E4 /* STGTDatum.m */; };
@@ -64,6 +65,9 @@
 
 /* Begin PBXFileReference section */
 		19979538E5644F14B8F469EA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C0CBBD916B120E300F74384 /* STGTAuthBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTAuthBasic.h; sourceTree = "<group>"; };
+		2C0CBBDA16B120E300F74384 /* STGTAuthBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTAuthBasic.m; sourceTree = "<group>"; };
+		2C0CBBDD16B1271A00F74384 /* STGTRequestAuthenticatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STGTRequestAuthenticatable.h; sourceTree = "<group>"; };
 		2C168D3616A00A74008CBFA7 /* STGTtest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = STGTtest.xml; sourceTree = "<group>"; };
 		2C1ABBDD16AEBBDE00AD92E4 /* STGTTracker 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 2.xcdatamodel"; sourceTree = "<group>"; };
 		2C1ABBDE16AEBBDE00AD92E4 /* STGTTracker.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = STGTTracker.xcdatamodel; sourceTree = "<group>"; };
@@ -208,6 +212,9 @@
 				2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */,
 				2C94D720166FC00D0019A0C7 /* STGTFilterSpotViewController.h */,
 				2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */,
+				2C0CBBDD16B1271A00F74384 /* STGTRequestAuthenticatable.h */,
+				2C0CBBD916B120E300F74384 /* STGTAuthBasic.h */,
+				2C0CBBDA16B120E300F74384 /* STGTAuthBasic.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -466,6 +473,7 @@
 				2C1ABBDF16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld in Sources */,
 				2C1ABBE216AEBC1E00AD92E4 /* STGTDatum.m in Sources */,
 				2C1ABBE816AECD9200AD92E4 /* STGTDatum+Timestamp.m in Sources */,
+				2C0CBBDB16B120E300F74384 /* STGTAuthBasic.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

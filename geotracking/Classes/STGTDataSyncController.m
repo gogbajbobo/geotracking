@@ -7,7 +7,7 @@
 //
 
 #import "STGTDataSyncController.h"
-#import "UDOAuthBasic.h"
+#import "STGTAuthBasic.h"
 #import "STGTTrackingLocationController.h"
 #import "GDataXMLNode.h"
 //#import "STGTDatum.h"
@@ -297,32 +297,32 @@
     [request setHTTPMethod:@"POST"];
     [request setHTTPBody:requestData];
     [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
-//    [[UDOAuthBasic sharedOAuth] checkToken];
-//    request = [[[UDOAuthBasic sharedOAuth] authenticateRequest:(NSURLRequest *) request] mutableCopy];
+    [[STGTAuthBasic sharedOAuth] checkToken];
+    request = [[self.authDelegate authenticateRequest:(NSURLRequest *) request] mutableCopy];
 
     
-//    NSLog(@"request %@", request);
-    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    if (!connection) {
-        NSLog(@"connection error");
-        self.tracker.trackerStatus = @"SYNC FAIL";
-        self.tracker.syncing = NO;
-    }
-
-    
-//    NSLog(@"[request valueForHTTPHeaderField:Authorization] %@", [request valueForHTTPHeaderField:@"Authorization"]);
-//    if ([request valueForHTTPHeaderField:@"Authorization"]) {
-//        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-//        if (!connection) {
-//            NSLog(@"connection error");
-//            self.tracker.trackerStatus = @"SYNC FAIL";
-//            self.tracker.syncing = NO;
-//        }
-//    } else {
-//        NSLog(@"No Authorization header");
-//        self.tracker.trackerStatus = @"NO TOKEN";
+    NSLog(@"request %@", request);
+//    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+//    if (!connection) {
+//        NSLog(@"connection error");
+//        self.tracker.trackerStatus = @"SYNC FAIL";
 //        self.tracker.syncing = NO;
 //    }
+
+    
+    NSLog(@"[request valueForHTTPHeaderField:Authorization] %@", [request valueForHTTPHeaderField:@"Authorization"]);
+    if ([request valueForHTTPHeaderField:@"Authorization"]) {
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        if (!connection) {
+            NSLog(@"connection error");
+            self.tracker.trackerStatus = @"SYNC FAIL";
+            self.tracker.syncing = NO;
+        }
+    } else {
+        NSLog(@"No Authorization header");
+        self.tracker.trackerStatus = @"NO TOKEN";
+        self.tracker.syncing = NO;
+    }
 
 }
 
