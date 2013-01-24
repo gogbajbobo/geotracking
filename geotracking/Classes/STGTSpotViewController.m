@@ -82,8 +82,10 @@
         CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
         CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
         [geoCoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
-            NSLog(@"placemarks %@", placemarks);
-            NSLog(@"error %@", error.localizedDescription);
+//            NSLog(@"placemarks %@", placemarks);
+            if (error) {
+                NSLog(@"error %@", error.localizedDescription);
+            }
             CLPlacemark *place = [placemarks lastObject];
             self.spotInfo.text = place.name;
             self.spot.address = place.name;
