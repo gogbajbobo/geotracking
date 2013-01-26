@@ -42,7 +42,6 @@
 
 - (IBAction)syncButtonPressed:(id)sender {
     [[STGTDataSyncController sharedSyncer] fireTimer];
-//    [self.tracker startConnection];
 }
 
 - (IBAction)showOptions:(id)sender {

@@ -10,6 +10,8 @@
 #import "STGTMapAnnotation.h"
 #import "STGTSpotViewController.h"
 #import "STGTFilterSpotViewController.h"
+#import "STGTSettingsController.h"
+#import "STGTSettings.h"
 
 @interface STGTMapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIWebViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
@@ -27,6 +29,7 @@
 @property (strong, nonatomic) STGTSpot *selectedSpot;
 @property (strong, nonatomic) STGTSpot *filterSpot;
 @property (strong, nonatomic) NSMutableDictionary *annotationsDictionary;
+@property (nonatomic, strong) STGTSettings *settings;
 
 
 @end
@@ -39,6 +42,14 @@
 @synthesize span = _span;
 @synthesize annotations = _annotations;
 @synthesize tracker = _tracker;
+
+
+- (STGTSettings *)settings {
+    if (!_settings) {
+        _settings = self.tracker.settings;
+    }
+    return _settings;
+}
 
 - (UIWebView *)routeBuiderWebView {
     if (!_routeBuiderWebView) {
@@ -97,10 +108,10 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     NSError *error;
     NSArray *allProperties = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog(@"allProperties %@", allProperties);
+//    NSLog(@"allProperties %@", allProperties);
     [filterSpot addProperties:[NSSet setWithArray:allProperties]];
     self.filterSpot = filterSpot;
-    NSLog(@"filterSpot %@", filterSpot);
+//    NSLog(@"filterSpot %@", filterSpot);
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newSpot UIDocumentSaveForOverwriting success");
     }];
@@ -172,7 +183,6 @@
 
 - (IBAction)headingModeSwitchSwitched:(id)sender {
     if ([sender isKindOfClass:[UISwitch class]]) {
-        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
         UISwitch *headingMode = sender;
         if (headingMode.on) {
             [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
@@ -181,14 +191,23 @@
             [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
 //            self.mapView.showsUserLocation = NO;
         }
-        [settings setObject:[NSNumber numberWithBool:headingMode.on] forKey:@"headingMode"];
-        [settings synchronize];
+        self.settings.mapHeading = [NSNumber numberWithBool:headingMode.on];
     }
 }
 
+- (void)setHeadingMode {
+    
+    BOOL headingMode = [self.settings.mapHeading boolValue];
+    if (!headingMode) {
+        headingMode = NO;
+        [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+    } else {
+        [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
+    }
+    [self.headingModeSwitch setOn:headingMode animated:NO];
+}
 
 - (IBAction)mapSwitchPressed:(id)sender {
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
     UISegmentedControl *mapSwitch;
     if ([sender isKindOfClass:[UISegmentedControl class]]) {
         mapSwitch = sender;
@@ -200,10 +219,25 @@
     } else if (mapSwitch.selectedSegmentIndex == 2) {
         self.mapView.mapType = MKMapTypeHybrid;
     }
-    [settings setObject:[NSNumber numberWithInteger:self.mapView.mapType] forKey:@"mapType"];
-    [settings synchronize];
+    self.settings.mapType = [NSNumber numberWithInteger:self.mapView.mapType];
 }
 
+- (void)setMapType {
+    
+    NSNumber *mapType = self.settings.mapType;
+    if (!mapType) {
+        self.mapView.mapType = MKMapTypeStandard;
+    }
+    self.mapView.mapType = [mapType integerValue];
+    if ([mapType integerValue] == MKMapTypeStandard) {
+        self.mapSwitch.selectedSegmentIndex = 0;
+    } else if ([mapType integerValue] == MKMapTypeSatellite) {
+        self.mapSwitch.selectedSegmentIndex = 1;
+    } else if ([mapType integerValue] == MKMapTypeHybrid) {
+        self.mapSwitch.selectedSegmentIndex = 2;
+    }
+
+}
 
 - (void)updateMapView
 {
@@ -574,27 +608,8 @@
 
 - (void)viewDidLoad
 {
-    BOOL headingMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"headingMode"] boolValue];
-    if (!headingMode) {
-        headingMode = NO;
-        [self.mapView setUserTrackingMode:MKUserTrackingModeNone];
-    } else {
-        [self.mapView setUserTrackingMode:MKUserTrackingModeFollowWithHeading animated:YES];
-    }
-    [self.headingModeSwitch setOn:headingMode animated:NO];
-    
-    NSNumber *mapType = [[NSUserDefaults standardUserDefaults] objectForKey:@"mapType"];
-    if (!mapType) {
-        self.mapView.mapType = MKMapTypeStandard;
-    }
-    self.mapView.mapType = [mapType integerValue];
-    if ([mapType integerValue] == MKMapTypeStandard) {
-        self.mapSwitch.selectedSegmentIndex = 0;
-    } else if ([mapType integerValue] == MKMapTypeSatellite) {
-        self.mapSwitch.selectedSegmentIndex = 1;
-    } else if ([mapType integerValue] == MKMapTypeHybrid) {
-        self.mapSwitch.selectedSegmentIndex = 2;
-    }
+    [self setHeadingMode];
+    [self setMapType];
     
     self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
@@ -632,6 +647,9 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"mapViewWillDisappear UIDocumentSaveForOverwriting success");
+    }];
 }
 
 - (void)viewDidUnload

@@ -12,15 +12,12 @@
 #import <CoreData/CoreData.h>
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
+#import "STGTSettingsController.h"
 
 
 @interface STGTTrackingLocationController : NSObject <UITableViewDataSource, UITableViewDelegate>
 
-@property (nonatomic) CLLocationDistance distanceFilter;
-@property (nonatomic) CLLocationAccuracy desiredAccuracy;
 @property (nonatomic) CLLocationAccuracy currentAccuracy;
-@property (nonatomic) CLLocationAccuracy requiredAccuracy;
-@property (nonatomic) NSTimeInterval trackDetectionTimeInterval;
 @property (nonatomic, strong) NSArray *locationsArray;
 @property (nonatomic, strong) NSArray *allLocationsArray;
 @property (nonatomic) UITableView *tableView;
@@ -34,13 +31,13 @@
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSString *trackerStatus;
+@property (nonatomic, strong) STGTSettings *settings;
 
 
 
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
-//- (void)startConnection;
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 - (NSString *)newid;
 + (STGTTrackingLocationController *)sharedTracker;

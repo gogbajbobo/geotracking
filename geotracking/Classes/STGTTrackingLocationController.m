@@ -11,12 +11,12 @@
 #import "STGTTrack.h"
 #import "STGTMapAnnotation.h"
 #import "STGTTrackerViewController.h"
-//#import "UDOAuthBasic.h"
 #import "STGTTrackerManagedDocument.h"
 #import "STGTDataSyncController.h"
+#import "STGTSettings.h"
 
 #define DB_FILE @"geoTracker.sqlite"
-//#define REQUIRED_ACCURACY 15.0
+#define REQUIRED_ACCURACY 15.0
 
 @interface STGTTrackingLocationController() <NSFetchedResultsControllerDelegate, NSURLConnectionDataDelegate, NSXMLParserDelegate, CLLocationManagerDelegate>
 
@@ -28,13 +28,11 @@
 @property (nonatomic, strong) STGTTrack *currentTrack;
 @property (nonatomic, strong) STGTDataSyncController *syncer;
 
+
 @end
 
 @implementation STGTTrackingLocationController
 
-@synthesize distanceFilter = _distanceFilter;
-@synthesize desiredAccuracy = _desiredAccuracy;
-@synthesize requiredAccuracy = _requiredAccuracy;
 @synthesize locationManager = _locationManager;
 @synthesize locationsDatabase = _locationsDatabase;
 @synthesize locationsArray = _locationsArray;
@@ -52,7 +50,6 @@
 @synthesize currentTrack = _currentTrack;
 @synthesize lastLocation = _lastLocation;
 @synthesize allLocationsArray = _allLocationsArray;
-@synthesize trackDetectionTimeInterval = _trackDetectionTimeInterval;
 @synthesize selectedTrackNumber = _selectedTrackNumber;
 @synthesize numberOfTracks = _numberOfTracks;
 
@@ -73,6 +70,44 @@
         _syncer = [STGTDataSyncController sharedSyncer];
     }
     return _syncer;
+}
+
+- (STGTSettings *)settings {
+    if (!_settings && self.locationsDatabase.documentState == UIDocumentStateNormal) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSettings"];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        NSError *error;
+        STGTSettings *settings = (STGTSettings *)[[self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+
+        if (!settings) {
+            settings = (STGTSettings *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSettings" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
+            [settings setValuesForKeysWithDictionary:[STGTSettingsController defaultSettings]];
+            [settings setValue:[self newid] forKey:@"xid"];
+                            
+            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                NSLog(@"settings create UIDocumentSaveForOverwriting success");
+            }];
+            
+        } else {
+            NSLog(@"settings load from locationsDatabase success");
+        }
+        [settings addObserver:self forKeyPath:@"distanceFilter" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"desiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
+//        NSLog(@"settings.xid %@", settings.xid);
+//        NSLog(@"settings.lts %@", settings.lts);
+        _settings = settings;
+    }
+    return _settings;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+//    NSLog(@"observeValueForKeyPath");
+//    NSLog(@"object %@", object);
+//    NSLog(@"change %@", change);
+    self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
+    self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
+    [self updateInfoLabels];
 }
 
 - (void)setSyncing:(BOOL)syncing {
@@ -120,12 +155,10 @@
 - (UIManagedDocument *)locationsDatabase {
     
     if (!_locationsDatabase) {
-        UIBarButtonItem *startButton;
         STGTTrackerViewController *caller;
         if ([self.caller isKindOfClass:[STGTTrackerViewController class]]) {
             caller = self.caller;
         }
-        startButton = caller.startButton;
         caller.startButton.enabled = NO;
         
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
@@ -137,53 +170,34 @@
         _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
-//        NSLog(@"_locationsDatabase %@", [_locationsDatabase.managedObjectModel.entitiesByName allKeys]);
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
-                caller.startButton.enabled = YES;
-                NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
-//                [self registerNotificationCenter];
-                [self startNewTrack];
-                [self performFetch];
-                [[STGTDataSyncController sharedSyncer] startSyncer];
+                [_locationsDatabase closeWithCompletionHandler:^(BOOL success) {
+                    [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
+                        NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
+                        [self startNewTrack];
+                        [self performFetch];
+                        [[STGTDataSyncController sharedSyncer] startSyncer];
+                        caller.startButton.enabled = YES;
+                    }];
+                }];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
             [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
-                caller.startButton.enabled = YES;
                 NSLog(@"locationsDatabase openWithCompletionHandler success");
-//                [self registerNotificationCenter];
                 [self performFetch];
                 [[STGTDataSyncController sharedSyncer] startSyncer];
+                caller.startButton.enabled = YES;
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
-//            [self registerNotificationCenter];
-            caller.startButton.enabled = YES;
             [[STGTDataSyncController sharedSyncer] startSyncer];
+            caller.startButton.enabled = YES;
         }
     }
     return _locationsDatabase;
-    
 }
 
-//- (void)registerNotificationCenter {
-//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-//    [nc addObserver:self selector:@selector(sqtsChecking:) name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
-//}
-
-//- (void)sqtsChecking:(id)sender {
-//    NSLog(@"updatedObjects %@", self.locationsDatabase.managedObjectContext.updatedObjects);
-//    NSLog(@"insertedObjects %@", self.locationsDatabase.managedObjectContext.insertedObjects);
-//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-//    [nc removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:self.locationsDatabase.managedObjectContext];
-//    NSMutableSet *setOfObjects = [self.locationsDatabase.managedObjectContext.updatedObjects mutableCopy];
-//    [setOfObjects unionSet:self.locationsDatabase.managedObjectContext.insertedObjects];
-//    for (NSManagedObject *object in setOfObjects) {
-//        NSDate *sqts = [object valueForKey:@"lts"] ? [object valueForKey:@"ts"] : [object valueForKey:@"cts"];
-//        [object setValue:sqts forKey:@"sqts"];
-//    }
-//    [self registerNotificationCenter];
-//}
 
 - (void)performFetch {
     NSError *error;
@@ -208,8 +222,6 @@
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     NSDate *ts = [NSDate date];
     [track setStartTime:ts];
-//    track.ts = ts;
-//    track.cts = ts;
     [self.syncer changesCountPlusOne];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
@@ -221,11 +233,9 @@
 - (void)addLocation:(CLLocation *)currentLocation {
 
     NSDate *timestamp = currentLocation.timestamp;
-    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > self.trackDetectionTimeInterval) {
+    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.trackDetectionTime doubleValue]) {
         [self startNewTrack];
-//        NSLog(@"%f",[currentLocation distanceFromLocation:self.lastLocation]);
-//        NSLog(@"%f",(2 * self.distanceFilter));
-        if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * self.distanceFilter)) {
+        if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * [self.settings.distanceFilter doubleValue])) {
             NSDate *ts = [NSDate date];
             STGTLocation *location = (STGTLocation *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTLocation" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
             [location setLatitude:[NSNumber numberWithDouble:self.lastLocation.coordinate.latitude]];
@@ -233,8 +243,6 @@
             [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
             [location setSpeed:[NSNumber numberWithDouble:-1]];
             [location setCourse:[NSNumber numberWithDouble:-1]];
-//            location.ts = ts;
-//            location.cts = ts;
             [location setXid:[self newid]];
             [self.syncer changesCountPlusOne];
             [self.currentTrack setStartTime:ts];
@@ -256,8 +264,6 @@
     [location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
-//    location.ts = timestamp;
-//    location.cts = timestamp;
     [location setXid:[self newid]];
     [self.syncer changesCountPlusOne];
 
@@ -265,12 +271,9 @@
         self.currentTrack.startTime = timestamp;
     }
     self.currentTrack.finishTime = timestamp;
-//    self.currentTrack.ts = location.ts;
-//    self.currentTrack.synced = [NSNumber numberWithBool:NO];
     [self.currentTrack addLocationsObject:location];
     
 //    NSLog(@"currentLocation %@",currentLocation);
-
 
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //        NSLog(@"addLocation UIDocumentSaveForOverwriting success");
@@ -338,119 +341,51 @@
     }
     self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus];
     if (self.currentAccuracy > 0) {
-        self.currentValues.text = [NSString stringWithFormat:@"DA %gm, RA %gm, DF %gm, CA %gm", self.desiredAccuracy, self.requiredAccuracy, self.distanceFilter, self.currentAccuracy];
+        self.currentValues.text = [NSString stringWithFormat:@"DA %@m, RA %@m, DF %@m, CA %gm", self.settings.desiredAccuracy, self.settings.requiredAccuracy, self.settings.distanceFilter, self.currentAccuracy];
     } else {
-        self.currentValues.text = [NSString stringWithFormat:@"DA %gm, RA %gm, DF %gm", self.desiredAccuracy, self.requiredAccuracy, self.distanceFilter];
+        self.currentValues.text = [NSString stringWithFormat:@"DA %@m, RA %@m, DF %@m", self.settings.desiredAccuracy, self.settings.requiredAccuracy, self.settings.distanceFilter];
     }
-}
-
-- (NSTimeInterval)trackDetectionTimeInterval {
-    if (!_trackDetectionTimeInterval) {
-        NSNumber *trackDetectionTimeInterval = [[NSUserDefaults standardUserDefaults] objectForKey:@"trackDetectionTimeInterval"];
-        if (trackDetectionTimeInterval == nil) {
-            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _trackDetectionTimeInterval = 300;
-            [settings setObject:[NSNumber numberWithDouble:_trackDetectionTimeInterval] forKey:@"trackDetectionTimeInterval"];
-            [settings synchronize];
-        } else {
-            _trackDetectionTimeInterval = [trackDetectionTimeInterval doubleValue];
-        }
-    }
-    return _trackDetectionTimeInterval;
-}
-
-- (void)setTrackDetectionTimeInterval:(NSTimeInterval)trackDetectionTimeInterval {
-    _trackDetectionTimeInterval = trackDetectionTimeInterval;
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [settings setObject:[NSNumber numberWithDouble:_trackDetectionTimeInterval] forKey:@"trackDetectionTimeInterval"];
-    [settings synchronize];
-}
-
-- (CLLocationAccuracy)desiredAccuracy {
-    if (!_desiredAccuracy) {
-        NSNumber *desiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"desiredAccuracy"];
-        if (desiredAccuracy == nil) {
-            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-                _desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
-            [settings setObject:[NSNumber numberWithDouble:_desiredAccuracy] forKey:@"desiredAccuracy"];
-            [settings synchronize];
-        } else {
-            _desiredAccuracy = [desiredAccuracy doubleValue];
-        }
-    }
-    return _desiredAccuracy;
-}
-
-- (void)setDesiredAccuracy:(CLLocationAccuracy)desiredAccuracy {
-    _desiredAccuracy = desiredAccuracy;
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [settings setObject:[NSNumber numberWithDouble:desiredAccuracy] forKey:@"desiredAccuracy"];
-    [settings synchronize];
-    self.locationManager.desiredAccuracy = desiredAccuracy;
-    [self updateInfoLabels];
-}
-
-- (CLLocationAccuracy)requiredAccuracy {
-    if (!_requiredAccuracy) {
-        NSNumber *requiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"requiredAccuracy"];
-        if (requiredAccuracy == nil) {
-            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _requiredAccuracy = 10.0;
-            [settings setObject:[NSNumber numberWithDouble:_requiredAccuracy] forKey:@"requiredAccuracy"];
-            [settings synchronize];
-        } else {
-            _requiredAccuracy = [requiredAccuracy doubleValue];
-        }
-    }
-    return _requiredAccuracy;
-}
-
-- (void)setRequiredAccuracy:(CLLocationAccuracy)requiredAccuracy {
-    _requiredAccuracy = requiredAccuracy;
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [settings setObject:[NSNumber numberWithDouble:requiredAccuracy] forKey:@"requiredAccuracy"];
-    [settings synchronize];
-    [self updateInfoLabels];
-}
-
-- (CLLocationDistance)distanceFilter {
-    if (!_distanceFilter) {
-        NSNumber *distanceFilter = [[NSUserDefaults standardUserDefaults] objectForKey:@"distanceFilter"];
-        if (distanceFilter == nil) {
-            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _distanceFilter = 50.0;
-            [settings setObject:[NSNumber numberWithDouble:_distanceFilter] forKey:@"distanceFilter"];
-            [settings synchronize];
-        } else {
-            _distanceFilter = [distanceFilter doubleValue];
-        }
-    }
-    return _distanceFilter;
-}
-
-- (void)setDistanceFilter:(CLLocationDistance)distanceFilter {
-    _distanceFilter = distanceFilter;
-    NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-    [settings setObject:[NSNumber numberWithDouble:distanceFilter] forKey:@"distanceFilter"];
-    [settings synchronize];
-    self.locationManager.distanceFilter = distanceFilter;
-    [self updateInfoLabels];
 }
 
 - (void)clearLocations {
     if (!self.locationManagerRunning) {
-        //    NSLog(@"self.locationsDatabase %@, self.resultsController %@, self.lastLocation %@", self.locationsDatabase, self.resultsController, self.lastLocation);
-        [self.locationsDatabase closeWithCompletionHandler:^(BOOL success) {
-            self.locationsDatabase = nil;
-            self.resultsController = nil;
-            self.lastLocation = nil;
-            NSError *error;
-            NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-            url = [url URLByAppendingPathComponent:DB_FILE];
-            [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
-//            NSLog(@"removeItemAtURL error %@", error.localizedDescription);
-            [self.tableView reloadData];
-        }];
+
+        STGTTrackerViewController *caller;
+        if ([self.caller isKindOfClass:[STGTTrackerViewController class]]) {
+            caller = self.caller;
+        }
+        caller.startButton.enabled = NO;
+
+        for (STGTTrack *track in self.resultsController.fetchedObjects) {
+            for (STGTLocation *location in track.locations) {
+//                NSLog(@"delete location");
+                [self.locationsDatabase.managedObjectContext deleteObject:location];
+            }
+//            NSLog(@"delete track");
+            [self.locationsDatabase.managedObjectContext deleteObject:track];
+            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//                NSLog(@"clearLocations UIDocumentSaveForOverwriting success");
+            }];
+        }
+        self.lastLocation = nil;
+        [self startNewTrack];
+        caller.startButton.enabled = YES;
+
+//        [self.locationsDatabase closeWithCompletionHandler:^(BOOL success) {
+//            self.locationsDatabase = nil;
+//            self.resultsController = nil;
+//            self.lastLocation = nil;
+//            [self.settings removeObserver:self forKeyPath:@"distanceFilter"];
+//            [self.settings removeObserver:self forKeyPath:@"desiredAccuracy"];
+//            [self.settings removeObserver:self forKeyPath:@"requiredAccuracy"];
+//            self.settings = nil;
+//
+//            NSError *error;
+//            NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//            url = [url URLByAppendingPathComponent:DB_FILE];
+//            [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+//            [self.tableView reloadData];
+//        }];
     } else {
         NSLog(@"LocationManager is running, stop it first");
     }
@@ -491,8 +426,8 @@
     if (!_locationManager) {
         _locationManager = [[CLLocationManager alloc] init];
         _locationManager.delegate = self;
-        _locationManager.distanceFilter = self.distanceFilter;
-        _locationManager.desiredAccuracy = self.desiredAccuracy;
+        _locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
+        _locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
         self.locationManager.pausesLocationUpdatesAutomatically = NO;
     }
     return _locationManager;
@@ -506,7 +441,7 @@
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy <= self.requiredAccuracy) {
+    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue]) {
 //        NSLog(@"addLocation");
         [self addLocation:newLocation];
     }
@@ -613,7 +548,9 @@
 //    NSLog(@"controller didChangeObject");
     
     if (type == NSFetchedResultsChangeDelete) {
-                
+        
+//        NSLog(@"NSFetchedResultsChangeDelete");
+        
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
         [self updateInfoLabels];
 

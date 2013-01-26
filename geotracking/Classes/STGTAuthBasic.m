@@ -10,15 +10,29 @@
 #import <UDPushAuth/UDAuthTokenRetriever.h>
 #import <UDPushAuth/UDPushAuthCodeRetriever.h>
 #import <UDPushAuth/UDPushAuthRequestBasic.h>
+#import "STGTSettingsController.h"
+#import "STGTSettings.h"
+#import "STGTTrackingLocationController.h"
 
-
-#define TOKEN_SERVER_URL @"system.unact.ru"
 #define AUTH_SERVICE_URI @"https://system.unact.ru/asa"
+
+@interface STGTAuthBasic()
+@property (nonatomic, strong) STGTSettings *settings;
+
+@end
+
 
 @implementation STGTAuthBasic
 
+- (STGTSettings *)settings {
+    if (!_settings) {
+        _settings = [STGTTrackingLocationController sharedTracker].settings;
+    }
+    return _settings;
+}
+
 - (NSString *) reachabilityServer{
-    return TOKEN_SERVER_URL;
+    return self.settings.tokenServerURL;
 }
 
 + (id) tokenRetrieverMaker{

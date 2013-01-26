@@ -27,32 +27,32 @@
 
 - (IBAction)requiredAccuracyChangeValue:(id)sender {
     [self.requiredAccuracySlider setValue:floor(self.requiredAccuracySlider.value/10)*10];
-    self.tracker.requiredAccuracy = self.requiredAccuracySlider.value;
+    self.tracker.settings.requiredAccuracy = [NSNumber numberWithDouble:self.requiredAccuracySlider.value];
     [self updateLabels];
 }
 
 - (void)requiredAccuracySliderSetup {
     self.requiredAccuracySlider.maximumValue = 100.0;
     self.requiredAccuracySlider.minimumValue = 5.0;
-    [self.requiredAccuracySlider setValue:self.tracker.requiredAccuracy animated:YES];
+    [self.requiredAccuracySlider setValue:[self.tracker.settings.requiredAccuracy doubleValue] animated:YES];
 }
 
 
 - (IBAction)trackDetectionTimeIntervalChangeValue:(id)sender {
     [self.trackDetectionTimeIntervalSlider setValue:floor(self.trackDetectionTimeIntervalSlider.value/30)*30];
-    self.tracker.trackDetectionTimeInterval = self.trackDetectionTimeIntervalSlider.value;
+    self.tracker.settings.trackDetectionTime = [NSNumber numberWithDouble:self.trackDetectionTimeIntervalSlider.value];
     [self updateLabels];
 }
 
 - (void)trackDetectionTimeIntervalSliderSetup {
     self.trackDetectionTimeIntervalSlider.maximumValue = 600.0;
     self.trackDetectionTimeIntervalSlider.minimumValue = 0.0;
-    [self.trackDetectionTimeIntervalSlider setValue:self.tracker.trackDetectionTimeInterval animated:YES];
+    [self.trackDetectionTimeIntervalSlider setValue:[self.tracker.settings.trackDetectionTime doubleValue] animated:YES];
 }
 
 - (IBAction)distanceFilterChangeValue:(id)sender {
     [self.distanceFilterSlider setValue:floor(self.distanceFilterSlider.value/10)*10];
-    self.tracker.distanceFilter = self.distanceFilterSlider.value;
+    self.tracker.settings.distanceFilter = [NSNumber numberWithDouble:self.distanceFilterSlider.value];
     [self updateLabels];
 }
 
@@ -60,39 +60,39 @@
 //    self.distanceFilterSlider.continuous = NO;
     self.distanceFilterSlider.maximumValue = 200.0;
     self.distanceFilterSlider.minimumValue = -1.0;
-    [self.distanceFilterSlider setValue:self.tracker.distanceFilter animated:YES];    
+    [self.distanceFilterSlider setValue:[self.tracker.settings.distanceFilter doubleValue] animated:YES];
 }
 
 
 - (void)updateLabels {
-    self.desiredAccuracyLabel.text = [NSString stringWithFormat:@"%f", self.tracker.desiredAccuracy];
-    self.requiredAccuracyLabel.text = [NSString stringWithFormat:@"%f", self.tracker.requiredAccuracy];
-    self.distanceFilterLabel.text = [NSString stringWithFormat:@"%f", self.tracker.distanceFilter];
-    self.trackDetectionTimeIntervalLabel.text = [NSString stringWithFormat:@"%f", self.tracker.trackDetectionTimeInterval];
+    self.desiredAccuracyLabel.text = [NSString stringWithFormat:@"%@", self.tracker.settings.desiredAccuracy];
+    self.requiredAccuracyLabel.text = [NSString stringWithFormat:@"%@", self.tracker.settings.requiredAccuracy];
+    self.distanceFilterLabel.text = [NSString stringWithFormat:@"%@", self.tracker.settings.distanceFilter];
+    self.trackDetectionTimeIntervalLabel.text = [NSString stringWithFormat:@"%@", self.tracker.settings.trackDetectionTime];
 }
 
 - (IBAction)mostBest:(id)sender {
-    self.tracker.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
+    self.tracker.settings.desiredAccuracy = [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation];
     [self updateLabels];
 }
 - (IBAction)best:(id)sender {
-    self.tracker.desiredAccuracy = kCLLocationAccuracyBest;
+    self.tracker.settings.desiredAccuracy = [NSNumber numberWithDouble:kCLLocationAccuracyBest];
     [self updateLabels];
 }
 - (IBAction)tenMeters:(id)sender {
-    self.tracker.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    self.tracker.settings.desiredAccuracy = [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters];
     [self updateLabels];
 }
 - (IBAction)hundredMeters:(id)sender {
-    self.tracker.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+    self.tracker.settings.desiredAccuracy = [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters];
     [self updateLabels];
 }
 - (IBAction)kilometer:(id)sender {
-    self.tracker.desiredAccuracy = kCLLocationAccuracyKilometer;
+    self.tracker.settings.desiredAccuracy = [NSNumber numberWithDouble:kCLLocationAccuracyKilometer];
     [self updateLabels];
 }
 - (IBAction)threeKilometers:(id)sender {
-    self.tracker.desiredAccuracy = kCLLocationAccuracyThreeKilometers;
+    self.tracker.settings.desiredAccuracy = [NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers];
     [self updateLabels];
 }
 
@@ -113,6 +113,9 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"settingViewWillDisappear UIDocumentSaveForOverwriting success");
+    }];
 }
 
 - (void)viewDidLoad

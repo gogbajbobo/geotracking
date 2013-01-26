@@ -16,6 +16,8 @@
 			<array>
 				<string>Icon.png</string>
 				<string>Icon@2x.png</string>
+				<string>Icon-72.png</string>
+				<string>Icon-72@2x.png</string>
 			</array>
 		</dict>
 	</dict>
@@ -42,12 +44,11 @@
 	<key>UIMainStoryboardFile</key>
 	<string>STGTMainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
-	<string>MainStoryboard_iPad</string>
+	<string>STGTMainStoryboard_iPhone</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 		<string>location-services</string>
-		<string>gps</string>
 		<string>magnetometer</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
