@@ -818,11 +818,6 @@
         <class className="STGTMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTMapViewController.h"/>
             <relationships>
-                <relationship kind="action" name="addNewSpotButtonPressed:" candidateClass="UIButton"/>
-                <relationship kind="action" name="filterSpotButtonPressed:"/>
-                <relationship kind="action" name="headingModeSwitchSwitched:"/>
-                <relationship kind="action" name="mapSwitchPressed:"/>
-                <relationship kind="action" name="trackNumberChange:"/>
                 <relationship kind="outlet" name="headingModeSwitch" candidateClass="UISwitch"/>
                 <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
                 <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
@@ -875,6 +870,9 @@
         </class>
         <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UICollectionViewLayout" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
         </class>
     </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
