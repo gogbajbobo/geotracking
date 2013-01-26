@@ -25,6 +25,7 @@
 @synthesize distanceFilterSlider = _distanceFilterSlider;
 @synthesize tracker = _tracker;
 
+
 - (IBAction)requiredAccuracyChangeValue:(id)sender {
     [self.requiredAccuracySlider setValue:floor(self.requiredAccuracySlider.value/10)*10];
     self.tracker.settings.requiredAccuracy = [NSNumber numberWithDouble:self.requiredAccuracySlider.value];
@@ -32,6 +33,7 @@
 }
 
 - (void)requiredAccuracySliderSetup {
+    
     self.requiredAccuracySlider.maximumValue = 100.0;
     self.requiredAccuracySlider.minimumValue = 5.0;
     [self.requiredAccuracySlider setValue:[self.tracker.settings.requiredAccuracy doubleValue] animated:YES];
@@ -50,18 +52,23 @@
     [self.trackDetectionTimeIntervalSlider setValue:[self.tracker.settings.trackDetectionTime doubleValue] animated:YES];
 }
 
+
+
 - (IBAction)distanceFilterChangeValue:(id)sender {
+    
     [self.distanceFilterSlider setValue:floor(self.distanceFilterSlider.value/10)*10];
     self.tracker.settings.distanceFilter = [NSNumber numberWithDouble:self.distanceFilterSlider.value];
     [self updateLabels];
 }
 
 - (void)distanceFilterSliderSetup {
-//    self.distanceFilterSlider.continuous = NO;
     self.distanceFilterSlider.maximumValue = 200.0;
     self.distanceFilterSlider.minimumValue = -1.0;
     [self.distanceFilterSlider setValue:[self.tracker.settings.distanceFilter doubleValue] animated:YES];
 }
+
+
+
 
 
 - (void)updateLabels {

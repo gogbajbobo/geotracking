@@ -108,6 +108,9 @@
     self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
     self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
     [self updateInfoLabels];
+//    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//        NSLog(@"observeValueForKeyPath change: UIDocumentSaveForOverwriting success");
+//    }];
 }
 
 - (void)setSyncing:(BOOL)syncing {
@@ -155,11 +158,16 @@
 - (UIManagedDocument *)locationsDatabase {
     
     if (!_locationsDatabase) {
+    
         STGTTrackerViewController *caller;
         if ([self.caller isKindOfClass:[STGTTrackerViewController class]]) {
             caller = self.caller;
         }
+
+//        NSLog(@"caller %@", caller);
+//        NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
         caller.startButton.enabled = NO;
+//        NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
         
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
@@ -170,6 +178,7 @@
         _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
         [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
         
+//        NSLog(@"fileExistsAtPath: %d", [[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]);
         
         if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
             [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
@@ -188,7 +197,9 @@
                 NSLog(@"locationsDatabase openWithCompletionHandler success");
                 [self performFetch];
                 [[STGTDataSyncController sharedSyncer] startSyncer];
+//                NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
                 caller.startButton.enabled = YES;
+//                NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
             [[STGTDataSyncController sharedSyncer] startSyncer];
@@ -358,13 +369,14 @@
 
         for (STGTTrack *track in self.resultsController.fetchedObjects) {
             for (STGTLocation *location in track.locations) {
-//                NSLog(@"delete location");
+//                int static i = 1;
+//                NSLog(@"delete location %d", i++);
                 [self.locationsDatabase.managedObjectContext deleteObject:location];
             }
 //            NSLog(@"delete track");
             [self.locationsDatabase.managedObjectContext deleteObject:track];
             [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//                NSLog(@"clearLocations UIDocumentSaveForOverwriting success");
+                NSLog(@"clearTrack UIDocumentSaveForOverwriting success");
             }];
         }
         self.lastLocation = nil;
