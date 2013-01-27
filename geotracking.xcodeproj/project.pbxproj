@@ -27,6 +27,7 @@
 		2C32D438164ACF0800A2ADB7 /* geotrackingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C32D437164ACF0800A2ADB7 /* geotrackingTests.m */; };
 		2C33500F16B40A8300C3EAB0 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C33500E16B40A8300C3EAB0 /* Icon.png */; };
 		2C33501116B40A8C00C3EAB0 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C33501016B40A8C00C3EAB0 /* Icon@2x.png */; };
+		2C33502B16B5228500C3EAB0 /* STGTSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C33502A16B5228500C3EAB0 /* STGTSettingsTableViewController.m */; };
 		2C3B3D03165D3B20003F2347 /* STGTblank_spotImage_132_85.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C3B3D02165D3B20003F2347 /* STGTblank_spotImage_132_85.png */; };
 		2C3B3D0B165E64E6003F2347 /* STGTDataSyncController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3B3D0A165E64E6003F2347 /* STGTDataSyncController.m */; };
 		2C3EAFF01662168600748C23 /* STGTLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3EAFEF1662168600748C23 /* STGTLocation.m */; };
@@ -102,6 +103,8 @@
 		2C32D439164ACF0800A2ADB7 /* geotrackingTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "geotrackingTests-Prefix.pch"; sourceTree = "<group>"; };
 		2C33500E16B40A8300C3EAB0 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		2C33501016B40A8C00C3EAB0 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		2C33502916B5228500C3EAB0 /* STGTSettingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettingsTableViewController.h; sourceTree = "<group>"; };
+		2C33502A16B5228500C3EAB0 /* STGTSettingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettingsTableViewController.m; sourceTree = "<group>"; };
 		2C3B3D02165D3B20003F2347 /* STGTblank_spotImage_132_85.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = STGTblank_spotImage_132_85.png; sourceTree = "<group>"; };
 		2C3B3D09165E64E6003F2347 /* STGTDataSyncController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTDataSyncController.h; sourceTree = "<group>"; };
 		2C3B3D0A165E64E6003F2347 /* STGTDataSyncController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTDataSyncController.m; sourceTree = "<group>"; };
@@ -219,6 +222,8 @@
 				2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */,
 				2CC7F59B15E8C1E400CF638E /* STGTSettingsViewController.h */,
 				2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */,
+				2C33502916B5228500C3EAB0 /* STGTSettingsTableViewController.h */,
+				2C33502A16B5228500C3EAB0 /* STGTSettingsTableViewController.m */,
 				2C0CBC1116B175ED00F74384 /* STGTSettingsController.h */,
 				2C0CBC1216B175ED00F74384 /* STGTSettingsController.m */,
 				2C32D33B1643A99700A2ADB7 /* STGTSpotViewController.h */,
@@ -499,6 +504,7 @@
 				2C0CBBDB16B120E300F74384 /* STGTAuthBasic.m in Sources */,
 				2C0CBC1316B175ED00F74384 /* STGTSettingsController.m in Sources */,
 				2C0CBC1716B1777800F74384 /* STGTSettings.m in Sources */,
+				2C33502B16B5228500C3EAB0 /* STGTSettingsTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

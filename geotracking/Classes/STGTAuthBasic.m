@@ -15,6 +15,7 @@
 #import "STGTTrackingLocationController.h"
 
 #define AUTH_SERVICE_URI @"https://system.unact.ru/asa"
+#define AUTH_SERVICE_PARAMETERS @"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"
 
 @interface STGTAuthBasic()
 @property (nonatomic, strong) STGTSettings *settings;
@@ -36,18 +37,21 @@
 }
 
 + (id) tokenRetrieverMaker{
+    
     UDAuthTokenRetriever *tokenRetriever = [[UDAuthTokenRetriever alloc] init];
     tokenRetriever.authServiceURI = [NSURL URLWithString:AUTH_SERVICE_URI];
     
     UDPushAuthCodeRetriever *codeRetriever = [UDPushAuthCodeRetriever codeRetriever];
     codeRetriever.requestDelegate.uPushAuthServiceURI = [NSURL URLWithString:AUTH_SERVICE_URI];
 #if DEBUG
-    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:@"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"];
+//    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:@"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"];
+    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:AUTH_SERVICE_PARAMETERS];
 #else
-    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:@"_host=hqvsrv73&app_id=geotracking&_svc=a/UPushAuth/"];
+//    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:@"_host=hqvsrv73&app_id=geotracking&_svc=a/UPushAuth/"];
+    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:[AUTH_SERVICE_PARAMETERS stringByReplacingOccurrencesOfString:@"-dev" withString:@""]];
 #endif
     tokenRetriever.codeDelegate = codeRetriever;
-    
+        
     return tokenRetriever;
 }
 
