@@ -104,7 +104,7 @@
 
 - (NSTimer *)timer {
     if (!_timer) {
-        _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
+        _timer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:10] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
 //        NSLog(@"_timer %@", _timer);
     }
     return _timer;
@@ -145,8 +145,6 @@
 
         GDataXMLElement *postNode = [GDataXMLElement elementWithName:@"post"];
         [postNode addNamespace:[GDataXMLNode namespaceWithName:@"" stringValue:self.settings.xmlNamespace]];
-
-//        GDataXMLElement *setOfNode = [GDataXMLElement elementWithName:@"set-of"];
         
         for (NSManagedObject *object in fetchedData) {
 //            NSLog(@"object %@", object);
@@ -214,7 +212,6 @@
             [postNode addChild:dNode];
             
         }
-//        [postNode addChild:setOfNode];
         
         GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
         
@@ -319,9 +316,9 @@
                 
                 for (GDataXMLElement *entityItem in entityItems) {
                     NSString *entityName = [[[entityItem nodesForXPath:@"@name" error:nil] lastObject] stringValue];
-                    //            NSLog(@"entityName %@", entityName);
+//                    NSLog(@"entityName %@", entityName);
                     NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
-                    //            NSLog(@"entityXid.stringValue %@", entityXid);
+//                    NSLog(@"entityXid.stringValue %@", entityXid);
                     
                     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
                     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
@@ -330,12 +327,12 @@
                     
                     if ([result lastObject]) {
                         self.syncObject = [result lastObject];
-                        //                NSLog(@"result lastObject");
+//                        NSLog(@"result lastObject");
                     } else {
                         self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
                         [self.syncObject setValue:entityXid forKey:@"xid"];
                         [self.syncObject setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lts"];
-                        //                NSLog(@"insertNewObjectForEntity");
+//                        NSLog(@"insertNewObjectForEntity");
                     }
                     
                     if ([entityName isEqualToString:@"STGTSpot"]) {

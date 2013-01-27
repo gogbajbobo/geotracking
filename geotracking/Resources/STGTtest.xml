@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <response xmlns="https://github.com/sys-team/ASA.chest">
-    <d name="STGTSettings" xid="C9E8C81A-B512-4F43-A88A-216E3D3A4EF8">
+    <d name="STGTSettings" xid="61BE5B40-1058-4EDE-9A63-33F3C1D8B899">
         <date name="cts">2013-01-25 12:54:50 +0000</date>
-        <date name="ts">2013-01-26 11:53:57 +0000</date>
+        <date name="ts">2013-01-27 19:11:57 +0000</date>
         <string name="authServiceParameters">_host=hqvsrv73&amp;app_id=geotracking-dev&amp;_svc=a/UPushAuth/</string>
         <string name="authServiceURI">https://system.unact.ru/asa</string>
         <double name="desiredAccuracy">100</double>
-        <double name="distanceFilter">-1</double>
+        <double name="distanceFilter">20</double>
         <double name="fetchLimit">20</double>
         <double name="mapHeading">0</double>
-        <double name="mapType">0</double>
-        <double name="requiredAccuracy">101</double>
+        <double name="mapType">2</double>
+        <double name="requiredAccuracy">10</double>
         <double name="syncInterval">1800</double>
         <string name="syncServerURI">https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest</string>
         <string name="tokenServerURL">system.unact.ru</string>

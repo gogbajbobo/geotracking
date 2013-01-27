@@ -42,7 +42,6 @@
 		2CA191CC16A98FEA0072E61F /* STGTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA191CB16A98FEA0072E61F /* STGTAppDelegate.m */; };
 		2CA9489016A7F326008463CA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CA9488E16A7F326008463CA /* InfoPlist.strings */; };
 		2CB24B701639A7A90040A211 /* STGTSpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */; };
-		2CC7F59D15E8C1E500CF638E /* STGTSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */; };
 		2CCD33B51612FC8100F5AEF3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */; };
 		2CD0371E1685D1A700BBEDD5 /* STGTroute.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860E1685BDC30081B9DC /* STGTroute.js */; };
 		2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
@@ -130,8 +129,6 @@
 		2CA9488F16A7F326008463CA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2CB24B6E1639A7A90040A211 /* STGTSpotPropertiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotPropertiesViewController.h; sourceTree = "<group>"; };
 		2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotPropertiesViewController.m; sourceTree = "<group>"; };
-		2CC7F59B15E8C1E400CF638E /* STGTSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettingsViewController.h; sourceTree = "<group>"; };
-		2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettingsViewController.m; sourceTree = "<group>"; };
 		2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		2CD0372616888F1500BBEDD5 /* STGTTrackerManagedDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrackerManagedDocument.h; sourceTree = "<group>"; };
 		2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackerManagedDocument.m; sourceTree = "<group>"; };
@@ -220,8 +217,6 @@
 				2C417C6615E81E6000A3A83D /* STGTMapViewController.m */,
 				2C417C6815E8280B00A3A83D /* STGTMapAnnotation.h */,
 				2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */,
-				2CC7F59B15E8C1E400CF638E /* STGTSettingsViewController.h */,
-				2CC7F59C15E8C1E500CF638E /* STGTSettingsViewController.m */,
 				2C33502916B5228500C3EAB0 /* STGTSettingsTableViewController.h */,
 				2C33502A16B5228500C3EAB0 /* STGTSettingsTableViewController.m */,
 				2C0CBC1116B175ED00F74384 /* STGTSettingsController.h */,
@@ -486,7 +481,6 @@
 				2C417C6415E80E3F00A3A83D /* STGTTrackerViewController.m in Sources */,
 				2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */,
 				2C417C6A15E8280B00A3A83D /* STGTMapAnnotation.m in Sources */,
-				2CC7F59D15E8C1E500CF638E /* STGTSettingsViewController.m in Sources */,
 				2CB24B701639A7A90040A211 /* STGTSpotPropertiesViewController.m in Sources */,
 				2C32D33D1643A99700A2ADB7 /* STGTSpotViewController.m in Sources */,
 				2C3B3D0B165E64E6003F2347 /* STGTDataSyncController.m in Sources */,

@@ -11,7 +11,7 @@
 #import "STGTSettings.h"
 #import "STGTTrackingLocationController.h"
 
-@interface STGTSettingsTableViewController () <NSFetchedResultsControllerDelegate, UITextFieldDelegate>
+@interface STGTSettingsTableViewController () <UITextFieldDelegate>
 @property (nonatomic, strong) STGTSettings *settings;
 @property (nonatomic, strong) NSArray *settingsTitles;
 
@@ -98,14 +98,15 @@
     [cell.contentView addSubview:cellLabel];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(25, 38, 270, 24)];
-    [slider addTarget:self action:@selector(sliderChangeValue:) forControlEvents:UIControlEventValueChanged];
-
     UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 10, 80, 24)];
     valueLabel.font = [UIFont boldSystemFontOfSize:20];
     valueLabel.textAlignment = NSTextAlignmentRight;
     valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];
     valueLabel.tag = 2;
+
+    UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(25, 38, 270, 24)];
+    slider.tag = 3;
+    [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
 
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(25, 38, 270, 24)];
     textField.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];
@@ -176,7 +177,11 @@
         
         if ([settingsName isEqualToString:@"mapHeading"]) {
             UISwitch *headingSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(230, 9, 80, 27)];
+            [headingSwitch setOn:[self.settings.mapHeading boolValue] animated:NO];
+            [headingSwitch addTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
+            headingSwitch.tag = 4;
             [cell.contentView addSubview:headingSwitch];
+            
         } else if ([settingsName isEqualToString:@"mapType"]) {
             NSArray *segments = [NSArray arrayWithObjects: @"Map", @"Satellite", @"Hybrid", nil];
             UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:segments];
@@ -185,6 +190,9 @@
             NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont boldSystemFontOfSize:14], UITextAttributeFont,
                                             nil];
             [mapTypeControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
+            [mapTypeControl addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+            mapTypeControl.selectedSegmentIndex = [self.settings.mapType integerValue];
+            mapTypeControl.tag = 5;
             [cell.contentView addSubview:mapTypeControl];
         }
         
@@ -199,7 +207,7 @@
 
 
 
-- (void)sliderChangeValue:(UISlider *)sender {
+- (void)sliderValueChanged:(UISlider *)sender {
     if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"requiredAccuracy"].location != NSNotFound) {
         [sender setValue:rint(sender.value/10)*10];
         self.settings.requiredAccuracy = [NSNumber numberWithDouble:sender.value];
@@ -225,7 +233,18 @@
         [sender setValue:rint(sender.value/5)*5];
         self.settings.fetchLimit = [NSNumber numberWithDouble:sender.value];
     }
+}
 
+- (void)switchValueChanged:(UISwitch *)sender {
+    if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"mapHeading"].location != NSNotFound) {
+        self.settings.mapHeading = [NSNumber numberWithBool:sender.on];
+    }
+}
+
+- (void)segmentedControlValueChanged:(UISegmentedControl *)sender {
+    if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"mapType"].location != NSNotFound) {
+        self.settings.mapType = [NSNumber numberWithInteger:sender.selectedSegmentIndex];
+    }
 }
 
 
@@ -237,12 +256,20 @@
     return YES;
 }
 
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    NSLog(@"textFieldShouldEndEditing");
+    NSLog(@"%@", [(UILabel *)[textField.superview viewWithTag:1] text]);
+    [self.settings setValue:textField.text forKey:[(UILabel *)[textField.superview viewWithTag:1] text]];
+    return YES;
+}
+
+
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    NSLog(@"observeValueForKeyPath %@", keyPath);
+//    NSLog(@"observeValueForKeyPath %@", keyPath);
 //    NSLog(@"object %@", object);
-    NSLog(@"change %@", change);
+//    NSLog(@"change %@", change);
     
     int i = 0;
     int section = 0;
@@ -258,6 +285,7 @@
     }
 
     if (gotcha) {
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
         
         NSArray *slidersLabels = [NSArray arrayWithObjects: @"requiredAccuracy",
                                                             @"desiredAccuracy",
@@ -266,23 +294,18 @@
                                                             @"syncInterval",
                                                             @"fetchLimit", nil];
         if ([slidersLabels containsObject:keyPath]) {
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
             UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
             valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:keyPath]];
-        } else if ([keyPath isEqualToString:@""]) {
+            UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
+            [slider setValue:[[self.settings valueForKey:keyPath] doubleValue] animated:YES];
             
-        } else if ([keyPath isEqualToString:@""]) {
+        } else if ([keyPath isEqualToString:@"mapHeading"]) {
+            UISwitch *headingSwitch = (UISwitch *)[cell.contentView viewWithTag:4];
+            [headingSwitch setOn:[self.settings.mapHeading boolValue] animated:YES];
             
-        } else if ([keyPath isEqualToString:@""]) {
-            
-        } else if ([keyPath isEqualToString:@""]) {
-            
-        } else if ([keyPath isEqualToString:@""]) {
-            
-        } else if ([keyPath isEqualToString:@""]) {
-            
-        } else if ([keyPath isEqualToString:@""]) {
-            
+        } else if ([keyPath isEqualToString:@"mapType"]) {
+            UISegmentedControl *segmentedControl = (UISegmentedControl *)[cell.contentView viewWithTag:5];
+            segmentedControl.selectedSegmentIndex = [self.settings.mapType integerValue];
         }
 
     }
@@ -306,11 +329,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
-        [self.settings addObserver:self forKeyPath:settingsName options:NSKeyValueObservingOptionNew context:nil];
-    }
-    
+        
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -318,7 +337,17 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
+        [self.settings addObserver:self forKeyPath:settingsName options:NSKeyValueObservingOptionNew context:nil];
+    }
+//    NSLog(@"self.settings.lts %@", self.settings.lts);
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
+    for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
+        [self.settings removeObserver:self forKeyPath:settingsName];
+    }
     [[STGTTrackingLocationController sharedTracker].locationsDatabase saveToURL:[STGTTrackingLocationController sharedTracker].locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"settingViewWillDisappear UIDocumentSaveForOverwriting success");
     }];
