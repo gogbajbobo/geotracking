@@ -14,7 +14,7 @@ geotracking (STGT)
 Настройка
 ---
 ```
-Скопировать модель данных STGTTracker.xcdatamodel из Pods/STGT/ в текущий проект.
+Скопировать модель данных STGTTracker.xcdatamodel (или STGTTracker.xcdatamodeld) из Pods/STGT/ в текущий проект.
 
 В настройках проекта добавить:
 Targets / Info / Custom iOS Target Properties / Required background modes / + App registered for location updates
