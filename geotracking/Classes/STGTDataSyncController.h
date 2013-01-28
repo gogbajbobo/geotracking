@@ -16,6 +16,9 @@
 
 @property (nonatomic, weak) id <STGTRequestAuthenticatable> authDelegate;
 
+@property (nonatomic) BOOL syncing;
+
+
 - (void)startSyncer;
 - (void)stopSyncer;
 - (void)fireTimer;

@@ -608,6 +608,7 @@
                         <outlet property="currentValues" destination="wxU-Qe-ErL" id="gwb-5B-aQq"/>
                         <outlet property="startButton" destination="NqZ-7M-H0G" id="GOz-dm-gfr"/>
                         <outlet property="summary" destination="TqX-pt-8Lo" id="zmV-9T-sn4"/>
+                        <outlet property="syncButton" destination="PGh-Lk-ZYN" id="CZL-jb-Z7t"/>
                         <outlet property="tableView" destination="EON-rK-JTk" id="m58-28-9di"/>
                     </connections>
                 </viewController>

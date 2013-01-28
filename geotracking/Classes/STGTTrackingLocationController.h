@@ -29,7 +29,7 @@
 @property (nonatomic) NSInteger selectedTrackNumber;
 @property (nonatomic) NSInteger numberOfTracks;
 @property (nonatomic, strong) UIManagedDocument *locationsDatabase;
-@property (nonatomic) BOOL syncing;
+//@property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSString *trackerStatus;
 @property (nonatomic, strong) STGTSettings *settings;
 
@@ -40,6 +40,7 @@
 - (void)clearLocations;
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 - (NSString *)newid;
+- (void)updateInfoLabels;
 + (STGTTrackingLocationController *)sharedTracker;
 
 @end

@@ -17,6 +17,7 @@
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *summary;
 @property (weak, nonatomic) IBOutlet UILabel *currentValues;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *syncButton;
 
 @end
 
@@ -83,13 +84,29 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)syncingIsGoing:(NSNotification *) notification {
+    NSLog(@"STGTDataSyncing");
+    if ([notification.object isKindOfClass:[STGTDataSyncController class]]) {
+        if ([(STGTDataSyncController *)notification.object syncing]) {
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            [spinner startAnimating];
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
+            self.syncButton.enabled = NO;
+            NSLog(@"spinner.isAnimating %d", spinner.isAnimating);
+            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
+        } else {
+            self.navigationItem.rightBarButtonItem = nil;
+            self.syncButton.enabled = YES;
+            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
+        }
+    }
 }
 
 - (void)viewDidLoad
 {
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncingIsGoing:) name:@"STGTDataSyncing" object:nil];
     [super viewDidLoad];
 }
 
@@ -98,6 +115,7 @@
     [self setStartButton:nil];
     [self setSummary:nil];
     [self setCurrentValues:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncing" object:[STGTDataSyncController sharedSyncer]];
     [super viewDidUnload];
 }
 

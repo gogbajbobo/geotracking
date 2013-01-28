@@ -47,7 +47,7 @@
 @synthesize currentAccuracy = _currentAccuracy;
 @synthesize resultsController = _resultsController;
 @synthesize responseData = _responseData;
-@synthesize syncing = _syncing;
+//@synthesize syncing = _syncing;
 @synthesize currentTrack = _currentTrack;
 @synthesize lastLocation = _lastLocation;
 @synthesize allLocationsArray = _allLocationsArray;
@@ -114,12 +114,12 @@
 //    }];
 }
 
-- (void)setSyncing:(BOOL)syncing {
-    if (_syncing != syncing) {
-        _syncing = syncing;
-        [self updateInfoLabels];
-    }
-}
+//- (void)setSyncing:(BOOL)syncing {
+//    if (_syncing != syncing) {
+//        _syncing = syncing;
+//        [self updateInfoLabels];
+//    }
+//}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {

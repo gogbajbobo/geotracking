@@ -54,6 +54,14 @@
     return _settings;
 }
 
+- (void)setSyncing:(BOOL)syncing {
+    if (_syncing != syncing) {
+        _syncing = syncing;
+        [self.tracker updateInfoLabels];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTDataSyncing" object:self];
+    }
+}
+
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
@@ -91,7 +99,7 @@
 
 - (void)onTimerTick:(NSTimer *)timer {
 //    NSLog(@"timer tick at %@", [NSDate date]);
-    if (!self.tracker.syncing) {
+    if (!self.syncing) {
         [self dataSyncing];
     }
 }
@@ -211,7 +219,7 @@
         GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
         
 //        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
-        if (!self.tracker.syncing) {
+        if (!self.syncing) {
 //            [self sendData:[xmlDoc XMLData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
             [self sendData:[xmlDoc XMLData] toServer:self.settings.syncServerURI];
         }
@@ -223,7 +231,7 @@
 
 - (void)sendData:(NSData *)requestData toServer:(NSString *)serverUrlString {
     self.tracker.trackerStatus = @"SYNC";
-    self.tracker.syncing = YES;
+    self.syncing = YES;
     NSURL *requestURL = [NSURL URLWithString:serverUrlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
     [request setHTTPMethod:@"POST"];
@@ -239,12 +247,12 @@
         if (!connection) {
             NSLog(@"connection error");
             self.tracker.trackerStatus = @"SYNC FAIL";
-            self.tracker.syncing = NO;
+            self.syncing = NO;
         }
     } else {
         NSLog(@"No Authorization header");
         self.tracker.trackerStatus = @"NO TOKEN";
-        self.tracker.syncing = NO;
+        self.syncing = NO;
     }
 
     
@@ -292,7 +300,7 @@
     if (!xmlDoc) {
         NSLog(@"%@", error.description);
         self.tracker.trackerStatus = @"RESPONSE ERROR";
-        self.tracker.syncing = NO;
+        self.syncing = NO;
     } else {
         NSArray *errorNodes = [xmlDoc nodesForXPath:@"//ns:error" namespaces:namespaces error:nil];
         if (errorNodes.count > 0) {
@@ -300,7 +308,7 @@
                 NSLog(@"error: %@", [errorNode attributeForName:@"code"].stringValue);
             }
             self.tracker.trackerStatus = @"SYNC ERROR";
-            self.tracker.syncing = NO;
+            self.syncing = NO;
         } else {
             NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:response" namespaces:namespaces error:nil];
             
@@ -427,7 +435,7 @@
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"setSynced UIDocumentSaveForOverwriting success");
                 self.tracker.trackerStatus = @"";
-                self.tracker.syncing = NO;
+                self.syncing = NO;
                 [self dataSyncing];
             }];
             
