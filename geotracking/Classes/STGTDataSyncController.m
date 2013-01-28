@@ -17,19 +17,17 @@
 #define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
 #define DEFAULT_FETCHLIMIT 20
 
-@interface STGTDataSyncController() <NSURLConnectionDataDelegate>
+@interface STGTDataSyncController() <NSURLConnectionDataDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic, strong) NSTimer *timer;
-@property (nonatomic, strong) NSDictionary *eventsToSync;
 @property (nonatomic, strong) NSMutableData *responseData;
-@property (nonatomic) int changesCount;
 @property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic, strong) NSManagedObject *syncObject;
 @property (nonatomic, strong) STGTSettings *settings;
+@property (nonatomic, strong) NSFetchedResultsController *resultsController;
 
 @end
 
 @implementation STGTDataSyncController
-@synthesize changesCount = _changesCount;
 
 + (STGTDataSyncController *)sharedSyncer
 {
@@ -56,42 +54,38 @@
     return _settings;
 }
 
-- (int)changesCount {
-    if (!_changesCount) {
-        NSNumber *requiredAccuracy = [[NSUserDefaults standardUserDefaults] objectForKey:@"changesCount"];
-        if (requiredAccuracy == nil) {
-            NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-            _changesCount = 0;
-            [settings setObject:[NSNumber numberWithDouble:_changesCount] forKey:@"changesCount"];
-            [settings synchronize];
+- (NSFetchedResultsController *)resultsController {
+    if (!_resultsController) {
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
+        [request setIncludesSubentities:YES];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController.delegate = self;
+        NSError *error;
+        if (![_resultsController performFetch:&error]) {
+//            NSLog(@"sync init performFetch error %@", error.localizedDescription);
+//            NSLog(@"fetchedObjects.count %d", _resultsController.fetchedObjects.count);
         } else {
-            _changesCount = [requiredAccuracy intValue];
+//            NSLog(@"sync init performFetch");
+//            NSLog(@"fetchedObjects.count %d", _resultsController.fetchedObjects.count);
+            [UIApplication sharedApplication].applicationIconBadgeNumber = _resultsController.fetchedObjects.count;
         }
     }
-    return _changesCount;
+    return _resultsController;
 }
 
-- (void)setChangesCount:(int)changesCount {
-    if (changesCount != _changesCount) {
-        _changesCount = changesCount;
-        NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
-        [settings setObject:[NSNumber numberWithDouble:changesCount] forKey:@"changesCount"];
-        [settings synchronize];
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    //    NSLog(@"controllerDidChangeContent");
+    [UIApplication sharedApplication].applicationIconBadgeNumber = controller.fetchedObjects.count;
+    if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
+        [self.timer fire];
     }
-}
 
-
-- (void)changesCountPlusOne {
-    self.changesCount += 1;
-//    NSLog(@"self.changesCount %d", self.changesCount);
-    if (self.changesCount >= [self.settings.fetchLimit integerValue]) {
-        [self fireTimer];
-        self.changesCount = 0;
-    }
 }
 
 - (void)fireTimer {
-//    NSLog(@"timer fire at %@", [NSDate date]);
+    //    NSLog(@"timer fire at %@", [NSDate date]);
     [self.timer fire];
 }
 
@@ -104,7 +98,7 @@
 
 - (NSTimer *)timer {
     if (!_timer) {
-        _timer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:10] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
+        _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
 //        NSLog(@"_timer %@", _timer);
     }
     return _timer;
@@ -138,6 +132,7 @@
     NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     
     NSLog(@"fetchedData.count %d", fetchedData.count);
+    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
     
     if (fetchedData.count == 0) {
         NSLog(@"No data to sync");
@@ -433,7 +428,6 @@
                 NSLog(@"setSynced UIDocumentSaveForOverwriting success");
                 self.tracker.trackerStatus = @"";
                 self.tracker.syncing = NO;
-                self.changesCount = 0;
                 [self dataSyncing];
             }];
             

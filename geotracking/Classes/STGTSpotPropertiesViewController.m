@@ -69,7 +69,7 @@
 //    newProperty.ts = ts;
 //    newProperty.cts = ts;
     [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
-    [self.syncer changesCountPlusOne];
+//    [self.syncer changesCountPlusOne];
     [self.filterSpot addPropertiesObject:newProperty];
 //    NSLog(@"newProperty %@", newProperty);
 }

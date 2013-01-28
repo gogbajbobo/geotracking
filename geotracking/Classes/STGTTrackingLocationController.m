@@ -14,6 +14,7 @@
 #import "STGTTrackerManagedDocument.h"
 #import "STGTDataSyncController.h"
 #import "STGTSettings.h"
+#import "STGTAuthBasic.h"
 
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
@@ -187,6 +188,7 @@
                         NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
                         [self startNewTrack];
                         [self performFetch];
+                        [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
                         [[STGTDataSyncController sharedSyncer] startSyncer];
                         caller.startButton.enabled = YES;
                     }];
@@ -196,12 +198,14 @@
             [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 NSLog(@"locationsDatabase openWithCompletionHandler success");
                 [self performFetch];
+                [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
                 [[STGTDataSyncController sharedSyncer] startSyncer];
 //                NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
                 caller.startButton.enabled = YES;
 //                NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
+            [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
             [[STGTDataSyncController sharedSyncer] startSyncer];
             caller.startButton.enabled = YES;
         }
@@ -233,7 +237,7 @@
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     NSDate *ts = [NSDate date];
     [track setStartTime:ts];
-    [self.syncer changesCountPlusOne];
+//    [self.syncer changesCountPlusOne];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
@@ -255,7 +259,7 @@
             [location setSpeed:[NSNumber numberWithDouble:-1]];
             [location setCourse:[NSNumber numberWithDouble:-1]];
             [location setXid:[self newid]];
-            [self.syncer changesCountPlusOne];
+//            [self.syncer changesCountPlusOne];
             [self.currentTrack setStartTime:ts];
             [self.currentTrack addLocationsObject:location];
 //            NSLog(@"copy lastLocation to new Track as first location");
@@ -276,7 +280,7 @@
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
     [location setXid:[self newid]];
-    [self.syncer changesCountPlusOne];
+//    [self.syncer changesCountPlusOne];
 
     if (self.currentTrack.locations.count == 0) {
         self.currentTrack.startTime = timestamp;
