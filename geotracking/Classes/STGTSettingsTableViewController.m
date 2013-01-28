@@ -289,7 +289,6 @@
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
         
         NSArray *slidersLabels = [NSArray arrayWithObjects: @"requiredAccuracy",
-                                                            @"desiredAccuracy",
                                                             @"distanceFilter",
                                                             @"trackDetectionTime",
                                                             @"syncInterval",
@@ -299,6 +298,18 @@
             valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:keyPath]];
             UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
             [slider setValue:[[self.settings valueForKey:keyPath] doubleValue] animated:YES];
+            
+        } else if ([keyPath isEqualToString:@"desiredAccuracy"]) {
+            NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
+                                      [NSNumber numberWithDouble:kCLLocationAccuracyBest],
+                                      [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters],
+                                      [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters],
+                                      [NSNumber numberWithDouble:kCLLocationAccuracyKilometer],
+                                      [NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers],nil];
+            UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
+            valueLabel.text = [NSString stringWithFormat:@"%@", self.settings.desiredAccuracy];
+            UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
+            [slider setValue:[accuracyArray indexOfObject:self.settings.desiredAccuracy] animated:YES];
             
         } else if ([keyPath isEqualToString:@"mapHeading"]) {
             UISwitch *headingSwitch = (UISwitch *)[cell.contentView viewWithTag:4];
@@ -312,48 +323,6 @@
     }
     
 }
-
-
-#pragma mark - keyboard behavior
-
-- (void)keyboardDidShow:(NSNotification *)notification
-{
-    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-//    CGFloat heightShift = keyboardSize.height - self.toolbar.frame.size.height;
-    CGFloat heightShift = keyboardSize.height;
-    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, heightShift, 0.0);
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-
-    CGRect rect = self.tableView.bounds;
-    rect.size.height -= heightShift;
-    CGRect textFieldFrame = [self firstResponderCellFrame];
-    if (!CGRectContainsPoint(rect, CGPointMake(0.0, textFieldFrame.origin.y + textFieldFrame.size.height))) {
-        CGPoint scrollPoint = CGPointMake(0.0, textFieldFrame.origin.y + textFieldFrame.size.height - heightShift+16);
-        [self.tableView setContentOffset:scrollPoint animated:YES];
-    }
-}
-
-- (void)keyboardWillHide:(NSNotification *)notification {
-    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
-    self.tableView.contentInset = contentInsets;
-    self.tableView.scrollIndicatorInsets = contentInsets;
-}
-
-- (CGRect)firstResponderCellFrame {
-    CGRect frame;
-    for (UIView *subview in self.tableView.subviews) {
-        if ([subview isKindOfClass:[UITableViewCell class]]) {
-            UITableViewCell *cell = (UITableViewCell *)subview;
-            if ([[cell.contentView viewWithTag:6] isFirstResponder]) {
-                frame = cell.frame;
-            }
-        }
-    }
-    return frame;
-}
-
-
 
 
 #pragma mark - View lifecycle
@@ -382,18 +351,16 @@
     for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
         [self.settings addObserver:self forKeyPath:settingsName options:NSKeyValueObservingOptionNew context:nil];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
+    
 //    NSLog(@"self.settings.lts %@", self.settings.lts);
+    
+    [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
         [self.settings removeObserver:self forKeyPath:settingsName];
     }
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
     [[STGTTrackingLocationController sharedTracker].locationsDatabase saveToURL:[STGTTrackingLocationController sharedTracker].locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"settingViewWillDisappear UIDocumentSaveForOverwriting success");
     }];
