@@ -29,7 +29,7 @@
 
 - (NSArray *)settingsTitles {
     if (!_settingsTitles) {
-        NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"trackDetectionTime", nil];
+        NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
         NSArray *syncerSettingsTitles = [NSArray arrayWithObjects:@"fetchLimit", @"syncInterval", @"syncServerURI", @"xmlNamespace", nil];
         NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", nil];
         NSArray *authServiceSettingsTitles = [NSArray arrayWithObjects:@"tokenServerURL", @"authServiceURI", @"authServiceParameters", nil];
@@ -70,7 +70,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0) {
-        return 70.0;
+        if (indexPath.row == 4) {
+            return 44.0;
+        } else {
+            return 70.0;
+        }
     } else if (indexPath.section == 1) {
         return 70.0;
     } else if (indexPath.section == 2) {
@@ -108,6 +112,11 @@
     slider.tag = 3;
     [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
 
+    UISwitch *headingSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(230, 9, 80, 27)];
+    [headingSwitch setOn:[[self.settings valueForKey:settingsName] boolValue] animated:NO];
+    [headingSwitch addTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
+    headingSwitch.tag = 4;
+    
     UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(25, 38, 270, 24)];
     textField.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];
     textField.keyboardType = UIKeyboardTypeURL;
@@ -118,44 +127,63 @@
     double numericValue = [[self.settings valueForKey:settingsName] doubleValue];
     
     if (indexPath.section == 0) {
-        
-        if ([settingsName isEqualToString:@"trackDetectionTime"]) {
+
+        if ([settingsName isEqualToString:@"trackerAutoStart"]) {
             
-            cellLabel.text = [NSString stringWithFormat:@"%@, s", settingsName];
-            slider.maximumValue = 600.0;
-            slider.minimumValue = 0.0;
+            [cell.contentView addSubview:headingSwitch];
             
         } else {
             
-            cellLabel.text = [NSString stringWithFormat:@"%@, m", settingsName];
-            
-            if ([settingsName isEqualToString:@"requiredAccuracy"]) {
-                slider.maximumValue = 100.0;
-                slider.minimumValue = 5.0;
-            } else if ([settingsName isEqualToString:@"distanceFilter"]) {
-                slider.maximumValue = 200.0;
-                slider.minimumValue = -1.0;
-            } else if ([settingsName isEqualToString:@"desiredAccuracy"]) {
-                NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
-                                                                    [NSNumber numberWithDouble:kCLLocationAccuracyBest],
-                                                                    [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters],
-                                                                    [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters],
-                                                                    [NSNumber numberWithDouble:kCLLocationAccuracyKilometer],
-                                                                    [NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers],nil];
-                slider.maximumValue = accuracyArray.count - 1;
-                slider.minimumValue = 0;
-                numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:numericValue]];
-                if (numericValue == NSNotFound) {
-                    NSLog(@"NSNotFoundS");
-                    numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters]];
-                    [self.settings setValue:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters] forKey:settingsName];
+            if ([settingsName isEqualToString:@"trackDetectionTime"]) {
+                
+                cellLabel.text = [NSString stringWithFormat:@"%@, s", settingsName];
+                slider.maximumValue = 600.0;
+                slider.minimumValue = 0.0;
+                
+            } else if ([settingsName isEqualToString:@"trackerStartTime"] || [settingsName isEqualToString:@"trackerFinishTime"]){
+                slider.minimumValue = 0.0;
+                slider.maximumValue = 24.0;
+                double time = [[self.settings valueForKey:settingsName] doubleValue];
+                double hours = rint(time);
+                double minutes = rint((time - floor(time)) * 60);
+                NSNumberFormatter *timeFormatter = [[NSNumberFormatter alloc] init];
+                timeFormatter.formatWidth = 2;
+                timeFormatter.paddingCharacter = @"0";
+                valueLabel.text = [NSString stringWithFormat:@"%@:%@", [timeFormatter stringFromNumber:[NSNumber numberWithDouble:hours]], [timeFormatter stringFromNumber:[NSNumber numberWithDouble:minutes]]];
+
+            } else {
+                
+                cellLabel.text = [NSString stringWithFormat:@"%@, m", settingsName];
+                
+                if ([settingsName isEqualToString:@"requiredAccuracy"]) {
+                    slider.maximumValue = 100.0;
+                    slider.minimumValue = 5.0;
+                } else if ([settingsName isEqualToString:@"distanceFilter"]) {
+                    slider.maximumValue = 200.0;
+                    slider.minimumValue = -1.0;
+                } else if ([settingsName isEqualToString:@"desiredAccuracy"]) {
+                    NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
+                                              [NSNumber numberWithDouble:kCLLocationAccuracyBest],
+                                              [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters],
+                                              [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters],
+                                              [NSNumber numberWithDouble:kCLLocationAccuracyKilometer],
+                                              [NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers],nil];
+                    slider.maximumValue = accuracyArray.count - 1;
+                    slider.minimumValue = 0;
+                    numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:numericValue]];
+                    if (numericValue == NSNotFound) {
+                        NSLog(@"NSNotFoundS");
+                        numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters]];
+                        [self.settings setValue:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters] forKey:settingsName];
+                    }
                 }
             }
+            [slider setValue:numericValue animated:NO];
+            [cell.contentView addSubview:slider];
+            [cell.contentView addSubview:valueLabel];
+
         }
-        [slider setValue:numericValue animated:NO];
-        [cell.contentView addSubview:slider];
-        [cell.contentView addSubview:valueLabel];
-        
+
     } else if (indexPath.section == 1) {
         
         if ([settingsName isEqualToString:@"syncInterval"]) {
@@ -177,10 +205,6 @@
     } else if (indexPath.section == 2) {
         
         if ([settingsName isEqualToString:@"mapHeading"]) {
-            UISwitch *headingSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(230, 9, 80, 27)];
-            [headingSwitch setOn:[self.settings.mapHeading boolValue] animated:NO];
-            [headingSwitch addTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
-            headingSwitch.tag = 4;
             [cell.contentView addSubview:headingSwitch];
             
         } else if ([settingsName isEqualToString:@"mapType"]) {
@@ -233,12 +257,20 @@
     } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"fetchLimit"].location != NSNotFound) {
         [sender setValue:rint(sender.value/5)*5];
         self.settings.fetchLimit = [NSNumber numberWithDouble:sender.value];
+    } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackerStartTime"].location != NSNotFound) {
+        [sender setValue:rint(sender.value/0.25)*0.25];
+        self.settings.trackerStartTime = [NSNumber numberWithDouble:sender.value];
+    } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackerFinishTime"].location != NSNotFound) {
+        [sender setValue:rint(sender.value/0.25)*0.25];
+        self.settings.trackerFinishTime = [NSNumber numberWithDouble:sender.value];        
     }
 }
 
 - (void)switchValueChanged:(UISwitch *)sender {
     if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"mapHeading"].location != NSNotFound) {
         self.settings.mapHeading = [NSNumber numberWithBool:sender.on];
+    } else if (([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackerAutoStart"].location != NSNotFound)) {
+        self.settings.trackerAutoStart = [NSNumber numberWithBool:sender.on];
     }
 }
 
@@ -265,7 +297,7 @@
 }
 
 
-
+#pragma mark - observeValueForKeyPath
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 //    NSLog(@"observeValueForKeyPath %@", keyPath);
@@ -311,9 +343,21 @@
             UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
             [slider setValue:[accuracyArray indexOfObject:self.settings.desiredAccuracy] animated:YES];
             
-        } else if ([keyPath isEqualToString:@"mapHeading"]) {
+        } else if ([keyPath isEqualToString:@"trackerStartTime"] || [keyPath isEqualToString:@"trackerFinishTime"]) {
+            UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
+            double time = [[self.settings valueForKey:keyPath] doubleValue];
+            double hours = rint(time);
+            double minutes = rint((time - floor(time)) * 60);
+            NSNumberFormatter *timeFormatter = [[NSNumberFormatter alloc] init];
+            timeFormatter.formatWidth = 2;
+            timeFormatter.paddingCharacter = @"0";
+            valueLabel.text = [NSString stringWithFormat:@"%@:%@", [timeFormatter stringFromNumber:[NSNumber numberWithDouble:hours]], [timeFormatter stringFromNumber:[NSNumber numberWithDouble:minutes]]];
+            UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
+            [slider setValue:[[self.settings valueForKey:keyPath] doubleValue] animated:YES];
+            
+        } else if ([keyPath isEqualToString:@"mapHeading"] || [keyPath isEqualToString:@"trackerAutoStart"]) {
             UISwitch *headingSwitch = (UISwitch *)[cell.contentView viewWithTag:4];
-            [headingSwitch setOn:[self.settings.mapHeading boolValue] animated:YES];
+            [headingSwitch setOn:[[self.settings valueForKey:keyPath] boolValue] animated:YES];
             
         } else if ([keyPath isEqualToString:@"mapType"]) {
             UISegmentedControl *segmentedControl = (UISegmentedControl *)[cell.contentView viewWithTag:5];

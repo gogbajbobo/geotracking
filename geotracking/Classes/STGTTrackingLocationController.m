@@ -513,6 +513,19 @@
     NSTimeInterval trackOverallTime = [track.finishTime timeIntervalSinceDate:track.startTime];
     NSNumber *speed = [NSNumber numberWithDouble:0.0];
     
+//    request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
+//    if ([localDate compare:serverDate] == NSOrderedAscending) {
+//        //                            NSLog(@"serverDate > localDate");
+
+    UIColor *textColor;
+    if ([track.ts compare:track.lts] == NSOrderedAscending) {
+        textColor = [UIColor grayColor];
+    } else {
+        textColor = [UIColor blackColor];
+    }
+    cell.textLabel.textColor = textColor;
+    cell.detailTextLabel.textColor = textColor;
+
     if (trackOverallTime > 0) {
         speed = [NSNumber numberWithDouble:(3.6 * [track.overallDistance doubleValue] / trackOverallTime)];
     }

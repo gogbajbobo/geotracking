@@ -17,6 +17,10 @@
 #define STGT_REQUIRED_ACCURACY 10.0
 #define STGT_DISTANCE_FILTER 50.0
 #define STGT_TRACK_DETECTION_TIME 300.0
+#define STGT_TRACKER_AUTOSTART NO
+#define STGT_TRACKER_STARTTIME 9.0
+#define STGT_TRACKER_FINISHTIME 18.0
+
 
 #define STGT_MAP_HEADING MKUserTrackingModeNone
 #define STGT_MAP_TYPE MKMapTypeStandard
@@ -25,6 +29,8 @@
 #define STGT_SYNC_INTERVAL 1800.0
 #define STGT_SYNC_SERVER_URI @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
 #define STGT_XML_NAMESPACE @"https://github.com/sys-team/ASA.chest"
+
+
 
 
 @interface STGTSettingsController()
@@ -45,6 +51,9 @@
     [settings setValue:[NSNumber numberWithDouble:STGT_REQUIRED_ACCURACY] forKey:@"requiredAccuracy"];
     [settings setValue:[NSNumber numberWithDouble:STGT_DISTANCE_FILTER] forKey:@"distanceFilter"];
     [settings setValue:[NSNumber numberWithDouble:STGT_TRACK_DETECTION_TIME] forKey:@"trackDetectionTime"];
+    [settings setValue:[NSNumber numberWithBool:STGT_TRACKER_AUTOSTART] forKey:@"trackerAutoStart"];
+    [settings setValue:[NSNumber numberWithDouble:STGT_TRACKER_STARTTIME] forKey:@"trackerStartTime"];
+    [settings setValue:[NSNumber numberWithDouble:STGT_TRACKER_FINISHTIME] forKey:@"trackerFinishTime"];
     
     [settings setValue:[NSNumber numberWithDouble:STGT_MAP_HEADING] forKey:@"mapHeading"];
     [settings setValue:[NSNumber numberWithDouble:STGT_MAP_TYPE] forKey:@"mapType"];
@@ -53,7 +62,7 @@
     [settings setValue:[NSNumber numberWithDouble:STGT_SYNC_INTERVAL] forKey:@"syncInterval"];
     [settings setValue:STGT_SYNC_SERVER_URI forKey:@"syncServerURI"];
     [settings setValue:STGT_XML_NAMESPACE forKey:@"xmlNamespace"];
-
+    
     return [settings copy];
 }
 

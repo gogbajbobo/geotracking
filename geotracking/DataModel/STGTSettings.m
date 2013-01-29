@@ -2,7 +2,7 @@
 //  STGTSettings.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 1/24/13.
+//  Created by Maxim Grigoriev on 1/29/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -24,5 +24,8 @@
 @dynamic tokenServerURL;
 @dynamic trackDetectionTime;
 @dynamic xmlNamespace;
+@dynamic trackerStartTime;
+@dynamic trackerFinishTime;
+@dynamic trackerAutoStart;
 
 @end
