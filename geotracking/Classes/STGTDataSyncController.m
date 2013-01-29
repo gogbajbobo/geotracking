@@ -149,9 +149,9 @@
         
     NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     
-    NSLog(@"fetchedData.count %d", fetchedData.count);
+//    NSLog(@"fetchedData.count %d", fetchedData.count);
 //    NSLog(@"fetchedData %@", fetchedData);
-    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
+//    NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
 //    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
     
     if (fetchedData.count == 0) {
