@@ -35,8 +35,6 @@
         _tracker.tableView = self.tableView;
         _tracker.summary = self.summary;
         _tracker.currentValues = self.currentValues;
-        _tracker.caller = self;
-//        NSLog(@"_tracker.caller %@", _tracker.caller);
     }
     return _tracker;
 }
@@ -50,14 +48,8 @@
 }
 
 - (IBAction)clearData:(id)sender {
-    if (!self.tracker.locationManagerRunning) {
-        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Clear locations" message:@"Delete?" delegate:self cancelButtonTitle:@"YES"  otherButtonTitles:@"NO",nil];
+        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Clear database" message:@"Choose objects to delete:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Only tracks", @"All data", nil];
         [clearAlert show];
-    } else {
-        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You should stop locations tracking for clear procedure" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [clearAlert show];
-    }
-    
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -67,10 +59,18 @@
             [self.tracker stopTrackingLocation];
             [self startButton].title = @"Start";
         }
-    } else if ([alertView.title isEqualToString:@"Clear locations"]) {
-        if (buttonIndex == 0) {
+    } else if ([alertView.title isEqualToString:@"Clear database"]) {
+//        NSLog(@"buttonIndex %d", buttonIndex);
+        if (buttonIndex == 1) {
             [self.tracker clearLocations];
-        }        
+        } else if (buttonIndex == 2) {
+            if (!self.tracker.locationManagerRunning) {
+                [self.tracker clearAllData];
+            } else {
+                UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You should stop locations tracking for clear procedure" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                [clearAlert show];
+            }    
+        }
     }
 }
 
@@ -84,29 +84,45 @@
     }
 }
 
-- (void)syncingIsGoing:(NSNotification *) notification {
-    NSLog(@"STGTDataSyncing");
+- (void)syncStatusChanged:(NSNotification *) notification {
+//    NSLog(@"STGTDataSyncing");
     if ([notification.object isKindOfClass:[STGTDataSyncController class]]) {
         if ([(STGTDataSyncController *)notification.object syncing]) {
             UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
             [spinner startAnimating];
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
             self.syncButton.enabled = NO;
-            NSLog(@"spinner.isAnimating %d", spinner.isAnimating);
-            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
+//            NSLog(@"spinner.isAnimating %d", spinner.isAnimating);
+//            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
         } else {
+//            UILabel *numberOfUnsynced = [[UILabel alloc] init];
+//            numberOfUnsynced.text = [[(STGTDataSyncController *)notification.object numberOfUnsynced] stringValue];
+//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:numberOfUnsynced];
             self.navigationItem.rightBarButtonItem = nil;
             self.syncButton.enabled = YES;
-            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
+//            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
         }
     }
 }
 
+
+- (void)startButtonEnable:(NSNotification *)notification {
+    self.startButton.enabled = YES;
+}
+
+- (void)startButtonDisable:(NSNotification *)notification {
+    self.startButton.enabled = NO;
+}
+
 - (void)viewDidLoad
 {
+    [self startButtonDisable:nil];
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncingIsGoing:) name:@"STGTDataSyncing" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncerUpdated:) name:@"STGTDataSyncUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonEnable:) name:@"STGTTrackerReady" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonDisable:) name:@"STGTTrackerBusy" object:nil];
     [super viewDidLoad];
 }
 
@@ -115,7 +131,10 @@
     [self setStartButton:nil];
     [self setSummary:nil];
     [self setCurrentValues:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncing" object:[STGTDataSyncController sharedSyncer]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncing" object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncUpdated" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerReady" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerBusy" object:nil];
     [super viewDidUnload];
 }
 

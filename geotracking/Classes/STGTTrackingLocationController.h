@@ -22,7 +22,7 @@
 @property (nonatomic, strong) NSArray *allLocationsArray;
 @property (nonatomic) UITableView *tableView;
 @property (nonatomic) BOOL locationManagerRunning;
-@property (nonatomic) id caller;
+//@property (nonatomic) id caller;
 @property (nonatomic, strong) CLLocation *lastLocation;
 @property (weak, nonatomic) UILabel *summary;
 @property (weak, nonatomic) UILabel *currentValues;
@@ -38,6 +38,7 @@
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
+- (void)clearAllData;
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 - (NSString *)newid;
 - (void)updateInfoLabels;

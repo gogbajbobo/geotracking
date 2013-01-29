@@ -17,7 +17,7 @@
 @property (nonatomic, weak) id <STGTRequestAuthenticatable> authDelegate;
 
 @property (nonatomic) BOOL syncing;
-
+@property (nonatomic, strong) NSNumber *numberOfUnsynced;
 
 - (void)startSyncer;
 - (void)stopSyncer;

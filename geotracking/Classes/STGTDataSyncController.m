@@ -62,6 +62,10 @@
     }
 }
 
+- (NSNumber *)numberOfUnsynced {
+    return [NSNumber numberWithInt:self.resultsController.fetchedObjects.count];
+}
+
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
@@ -77,7 +81,8 @@
         } else {
 //            NSLog(@"sync init performFetch");
 //            NSLog(@"fetchedObjects.count %d", _resultsController.fetchedObjects.count);
-            [UIApplication sharedApplication].applicationIconBadgeNumber = _resultsController.fetchedObjects.count;
+//            [UIApplication sharedApplication].applicationIconBadgeNumber = _resultsController.fetchedObjects.count;
+            [self.tracker updateInfoLabels];
         }
     }
     return _resultsController;
@@ -85,7 +90,8 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerDidChangeContent");
-    [UIApplication sharedApplication].applicationIconBadgeNumber = controller.fetchedObjects.count;
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = controller.fetchedObjects.count;
+    [self.tracker updateInfoLabels];
     if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
         [self.timer fire];
     }
@@ -106,6 +112,7 @@
 
 - (NSTimer *)timer {
     if (!_timer) {
+//        NSLog(@"self.settings.syncInterval %@", self.settings.syncInterval);
         _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
 //        NSLog(@"_timer %@", _timer);
     }
@@ -122,6 +129,8 @@
     NSLog(@"stopSyncer");
     [self.timer invalidate];
     self.timer = nil;
+    self.resultsController = nil;
+    self.settings = nil;
 }
 
 - (void)defaultsChanged {
@@ -140,7 +149,9 @@
     NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     
     NSLog(@"fetchedData.count %d", fetchedData.count);
+//    NSLog(@"fetchedData %@", fetchedData);
     NSLog(@"fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
+//    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
     
     if (fetchedData.count == 0) {
         NSLog(@"No data to sync");

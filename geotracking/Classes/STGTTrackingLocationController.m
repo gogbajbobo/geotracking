@@ -41,13 +41,12 @@
 @synthesize locationManagerRunning = _locationManagerRunning;
 @synthesize overallDistance = _overallDistance;
 @synthesize averageSpeed = _averageSpeed;
-@synthesize caller = _caller;
+//@synthesize caller = _caller;
 @synthesize summary = _summary;
 @synthesize currentValues = _currentValues;
 @synthesize currentAccuracy = _currentAccuracy;
 @synthesize resultsController = _resultsController;
 @synthesize responseData = _responseData;
-//@synthesize syncing = _syncing;
 @synthesize currentTrack = _currentTrack;
 @synthesize lastLocation = _lastLocation;
 @synthesize allLocationsArray = _allLocationsArray;
@@ -97,6 +96,7 @@
         [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
 //        NSLog(@"settings.xid %@", settings.xid);
 //        NSLog(@"settings.lts %@", settings.lts);
+//        NSLog(@"settings.distanceFilter %@", settings.distanceFilter);
         _settings = settings;
     }
     return _settings;
@@ -160,16 +160,8 @@
     
     if (!_locationsDatabase) {
     
-        STGTTrackerViewController *caller;
-        if ([self.caller isKindOfClass:[STGTTrackerViewController class]]) {
-            caller = self.caller;
-        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
 
-//        NSLog(@"caller %@", caller);
-//        NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
-        caller.startButton.enabled = NO;
-//        NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
-        
         NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
         url = [url URLByAppendingPathComponent:DB_FILE];
 
@@ -190,7 +182,7 @@
                         [self performFetch];
                         [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
                         [[STGTDataSyncController sharedSyncer] startSyncer];
-                        caller.startButton.enabled = YES;
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
                     }];
                 }];
             }];
@@ -200,14 +192,12 @@
                 [self performFetch];
                 [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
                 [[STGTDataSyncController sharedSyncer] startSyncer];
-//                NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
-                caller.startButton.enabled = YES;
-//                NSLog(@"caller.startButton.enabled %d", caller.startButton.enabled);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
             [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
             [[STGTDataSyncController sharedSyncer] startSyncer];
-            caller.startButton.enabled = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
         }
     }
     return _locationsDatabase;
@@ -354,7 +344,16 @@
     if (!self.trackerStatus) {
         self.trackerStatus = @"";
     }
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus];
+    
+    NSString *numberOfNotSyncedItems;
+    NSNumber *number = [[STGTDataSyncController sharedSyncer] numberOfUnsynced];
+    if (number > 0) {
+        numberOfNotSyncedItems = [number stringValue];
+    } else {
+        numberOfNotSyncedItems = @"";
+    }
+    
+    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@ /%@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus, numberOfNotSyncedItems];
     if (self.currentAccuracy > 0) {
         self.currentValues.text = [NSString stringWithFormat:@"DA %@m, RA %@m, DF %@m, CA %gm", self.settings.desiredAccuracy, self.settings.requiredAccuracy, self.settings.distanceFilter, self.currentAccuracy];
     } else {
@@ -363,50 +362,55 @@
 }
 
 - (void)clearLocations {
-    if (!self.locationManagerRunning) {
+    BOOL wasRunning = self.locationManagerRunning;
+    if (wasRunning) {
+        [self stopTrackingLocation];
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
 
-        STGTTrackerViewController *caller;
-        if ([self.caller isKindOfClass:[STGTTrackerViewController class]]) {
-            caller = self.caller;
-        }
-        caller.startButton.enabled = NO;
-
-        for (STGTTrack *track in self.resultsController.fetchedObjects) {
-            for (STGTLocation *location in track.locations) {
+    for (STGTTrack *track in self.resultsController.fetchedObjects) {
+        for (STGTLocation *location in track.locations) {
 //                int static i = 1;
 //                NSLog(@"delete location %d", i++);
-                [self.locationsDatabase.managedObjectContext deleteObject:location];
-            }
-//            NSLog(@"delete track");
-            [self.locationsDatabase.managedObjectContext deleteObject:track];
-            [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                NSLog(@"clearTrack UIDocumentSaveForOverwriting success");
-            }];
+            [self.locationsDatabase.managedObjectContext deleteObject:location];
         }
-        self.lastLocation = nil;
-        [self startNewTrack];
-        caller.startButton.enabled = YES;
+//            NSLog(@"delete track");
+        [self.locationsDatabase.managedObjectContext deleteObject:track];
+        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            NSLog(@"clearTrack UIDocumentSaveForOverwriting success");
+        }];
+    }
+    self.lastLocation = nil;
+    [self startNewTrack];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
+    if (wasRunning) {
+        [self startTrackingLocation];
+    }
+}
 
-//        [self.locationsDatabase closeWithCompletionHandler:^(BOOL success) {
-//            self.locationsDatabase = nil;
-//            self.resultsController = nil;
-//            self.lastLocation = nil;
-//            [self.settings removeObserver:self forKeyPath:@"distanceFilter"];
-//            [self.settings removeObserver:self forKeyPath:@"desiredAccuracy"];
-//            [self.settings removeObserver:self forKeyPath:@"requiredAccuracy"];
-//            self.settings = nil;
-//
-//            NSError *error;
-//            NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-//            url = [url URLByAppendingPathComponent:DB_FILE];
-//            [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
-//            [self.tableView reloadData];
-//        }];
+- (void)clearAllData {
+    if (!self.locationManagerRunning) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
+        [[STGTDataSyncController sharedSyncer] stopSyncer];
+        [self.locationsDatabase closeWithCompletionHandler:^(BOOL success) {
+            [self.settings removeObserver:self forKeyPath:@"distanceFilter"];
+            [self.settings removeObserver:self forKeyPath:@"desiredAccuracy"];
+            [self.settings removeObserver:self forKeyPath:@"requiredAccuracy"];
+            self.settings = nil;
+            self.locationsDatabase = nil;
+            self.resultsController = nil;
+            self.lastLocation = nil;
+            NSError *error;
+            NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+            url = [url URLByAppendingPathComponent:DB_FILE];
+            [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+            [self.tableView reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
+        }];
     } else {
         NSLog(@"LocationManager is running, stop it first");
     }
 }
-
 
 - (void)startTrackingLocation {
     [[self locationManager] startUpdatingLocation];
