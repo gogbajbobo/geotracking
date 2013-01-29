@@ -119,23 +119,11 @@
     return _timer;
 }
 
-- (void)testDate {
-    NSDate *localDate = [NSDate date];
-    NSDateFormatter *hourFormatter = [[NSDateFormatter alloc] init];
-    hourFormatter.dateFormat = @"HH";
-    NSInteger hour = [[hourFormatter stringFromDate:localDate] integerValue];
-    NSDateFormatter *minuteFormatter = [[NSDateFormatter alloc] init];
-    minuteFormatter.dateFormat = @"mm";
-    NSInteger minute = [[minuteFormatter stringFromDate:localDate] integerValue];
-    NSLog(@"hour, minute %d %d", hour, minute);
-}
-
 
 - (void)startSyncer {
     NSLog(@"startSyncer");
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
-    [self testDate];
 }
 
 - (void)stopSyncer {

@@ -28,6 +28,7 @@
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic, strong) STGTTrack *currentTrack;
 @property (nonatomic, strong) STGTDataSyncController *syncer;
+@property (nonatomic, strong) NSTimer *timer;
 
 
 @end
@@ -178,31 +179,32 @@
                 [_locationsDatabase closeWithCompletionHandler:^(BOOL success) {
                     [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                         NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
+                        [self trackerInit];
                         [self startNewTrack];
                         [self performFetch];
-                        [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-                        [[STGTDataSyncController sharedSyncer] startSyncer];
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
                     }];
                 }];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
             [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
                 NSLog(@"locationsDatabase openWithCompletionHandler success");
+                [self trackerInit];
                 [self performFetch];
-                [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-                [[STGTDataSyncController sharedSyncer] startSyncer];
-                [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
             }];
         } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
-            [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-            [[STGTDataSyncController sharedSyncer] startSyncer];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
+            [self trackerInit];
         }
     }
     return _locationsDatabase;
 }
 
+- (void)trackerInit {
+    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
+    [[STGTDataSyncController sharedSyncer] startSyncer];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
+    NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
+    [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
+}
 
 - (void)performFetch {
     NSError *error;
@@ -400,6 +402,7 @@
             self.locationsDatabase = nil;
             self.resultsController = nil;
             self.lastLocation = nil;
+            [self.timer invalidate];
             NSError *error;
             NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
             url = [url URLByAppendingPathComponent:DB_FILE];
@@ -438,6 +441,62 @@
     
     return uuidString;
 }
+
+
+- (double)currentTime {
+    NSDate *localDate = [NSDate date];
+    NSDateFormatter *hourFormatter = [[NSDateFormatter alloc] init];
+    hourFormatter.dateFormat = @"HH";
+    double hour = [[hourFormatter stringFromDate:localDate] doubleValue];
+    NSDateFormatter *minuteFormatter = [[NSDateFormatter alloc] init];
+    minuteFormatter.dateFormat = @"mm";
+    double minute = [[minuteFormatter stringFromDate:localDate] doubleValue];
+    double currentTime = hour + minute/60;
+    return currentTime;
+}
+
+- (void)checkTrackerAutoStart {
+    if ([self.settings.trackerStartTime doubleValue] < [self.settings.trackerFinishTime doubleValue]) {
+//        NSLog(@"trackerStartTime < trackerFinishTime");
+        if ([self currentTime] > [self.settings.trackerStartTime doubleValue] && [self currentTime] < [self.settings.trackerFinishTime doubleValue]) {
+            if (!self.locationManagerRunning) {
+                [self startTrackingLocation];
+            }
+        } else {
+            if (self.locationManagerRunning) {
+                [self stopTrackingLocation];
+            }
+        }
+    } else {
+//        NSLog(@"trackerStartTime > trackerFinishTime");
+        if ([self currentTime] < [self.settings.trackerStartTime doubleValue] && [self currentTime] > [self.settings.trackerFinishTime doubleValue]) {
+            if (self.locationManagerRunning) {
+                [self stopTrackingLocation];
+            }
+        } else {
+            if (!self.locationManagerRunning) {
+                [self startTrackingLocation];
+            }
+        }            
+    }
+}
+
+- (NSTimer *)timer {
+    if (!_timer) {
+        _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:60 target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
+    }
+    return _timer;
+}
+
+- (void)onTimerTick:(NSTimer *)timer {
+    if ([self.settings.trackerAutoStart boolValue]) {
+        [self checkTrackerAutoStart];
+    } else {
+//        NSLog(@"No autostart");
+    }
+
+}
+
 
 
 #pragma mark - CLLocationManager
