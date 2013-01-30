@@ -119,11 +119,16 @@
     return _timer;
 }
 
+- (void)tokenReceived:(NSNotification *)notification {
+//    NSLog(@"tokenReceived");
+    [self fireTimer];
+}
 
 - (void)startSyncer {
     NSLog(@"startSyncer");
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenReceived:) name:@"tokenReceived" object:nil];
 }
 
 - (void)stopSyncer {
@@ -132,6 +137,7 @@
     self.timer = nil;
     self.resultsController = nil;
     self.settings = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tokenReceived" object:nil];
 }
 
 - (void)defaultsChanged {

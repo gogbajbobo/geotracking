@@ -120,7 +120,6 @@
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncerUpdated:) name:@"STGTDataSyncUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonEnable:) name:@"STGTTrackerReady" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonDisable:) name:@"STGTTrackerBusy" object:nil];
     [super viewDidLoad];
@@ -132,7 +131,6 @@
     [self setSummary:nil];
     [self setCurrentValues:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncing" object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncUpdated" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerReady" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerBusy" object:nil];
     [super viewDidUnload];
