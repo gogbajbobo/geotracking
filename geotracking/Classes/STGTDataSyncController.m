@@ -156,6 +156,7 @@
     
     if (fetchedData.count == 0) {
         NSLog(@"No data to sync");
+//        [self sendData:nil toServer:@"https://system.unact.ru/reflect/?--mirror"];
         [self sendData:nil toServer:self.settings.syncServerURI];
     } else {
 
@@ -249,7 +250,9 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
     if (!requestData) {
         [request setHTTPMethod:@"GET"];
+//        NSLog(@"GET");
     } else {
+//        NSLog(@"POST");
         [request setHTTPMethod:@"POST"];
         [request setHTTPBody:requestData];
         [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
@@ -278,7 +281,7 @@
 //    if (!connection) {
 //        NSLog(@"connection error");
 //        self.tracker.trackerStatus = @"SYNC FAIL";
-//        self.tracker.syncing = NO;
+//        self.syncing = NO;
 //    }
 
     
@@ -328,6 +331,7 @@
             self.syncing = NO;
         } else {
             NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:response" namespaces:namespaces error:nil];
+//            NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:post" namespaces:namespaces error:nil];
             
             for (GDataXMLElement *entityNode in entityNodes) {
                 //        NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
@@ -453,7 +457,9 @@
                 NSLog(@"setSynced UIDocumentSaveForOverwriting success");
                 self.tracker.trackerStatus = @"";
                 self.syncing = NO;
-                [self dataSyncing];
+                if (self.resultsController.fetchedObjects.count > 0) {
+                    [self dataSyncing];
+                }
             }];
             
         }
