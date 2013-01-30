@@ -156,6 +156,7 @@
     
     if (fetchedData.count == 0) {
         NSLog(@"No data to sync");
+        [self sendData:nil toServer:self.settings.syncServerURI];
     } else {
 
         GDataXMLElement *postNode = [GDataXMLElement elementWithName:@"post"];
@@ -246,9 +247,13 @@
     self.syncing = YES;
     NSURL *requestURL = [NSURL URLWithString:serverUrlString];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
-    [request setHTTPMethod:@"POST"];
-    [request setHTTPBody:requestData];
-    [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+    if (!requestData) {
+        [request setHTTPMethod:@"GET"];
+    } else {
+        [request setHTTPMethod:@"POST"];
+        [request setHTTPBody:requestData];
+        [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
+    }
     
     [[STGTAuthBasic sharedOAuth] checkToken];
     request = [[self.authDelegate authenticateRequest:(NSURLRequest *) request] mutableCopy];

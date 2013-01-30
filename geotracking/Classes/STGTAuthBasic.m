@@ -36,6 +36,14 @@
     return self.settings.tokenServerURL;
 }
 
+- (void) tokenReceived:(UDAuthToken *) token{
+//    if (token != nil && token != self.authToken) {
+//        self.authToken = token;
+//        
+//        NSLog(@"Token Received with ttl: %f",self.authToken.ttl);
+//    }
+}
+
 + (id) tokenRetrieverMaker{
     
     UDAuthTokenRetriever *tokenRetriever = [[UDAuthTokenRetriever alloc] init];

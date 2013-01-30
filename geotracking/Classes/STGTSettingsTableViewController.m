@@ -144,7 +144,7 @@
                 slider.minimumValue = 0.0;
                 slider.maximumValue = 24.0;
                 double time = [[self.settings valueForKey:settingsName] doubleValue];
-                double hours = rint(time);
+                double hours = floor(time);
                 double minutes = rint((time - floor(time)) * 60);
                 NSNumberFormatter *timeFormatter = [[NSNumberFormatter alloc] init];
                 timeFormatter.formatWidth = 2;
@@ -258,10 +258,10 @@
         [sender setValue:rint(sender.value/5)*5];
         self.settings.fetchLimit = [NSNumber numberWithDouble:sender.value];
     } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackerStartTime"].location != NSNotFound) {
-        [sender setValue:rint(sender.value/0.25)*0.25];
+        [sender setValue:rint(sender.value/0.5)*0.5];
         self.settings.trackerStartTime = [NSNumber numberWithDouble:sender.value];
     } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackerFinishTime"].location != NSNotFound) {
-        [sender setValue:rint(sender.value/0.25)*0.25];
+        [sender setValue:rint(sender.value/0.5)*0.5];
         self.settings.trackerFinishTime = [NSNumber numberWithDouble:sender.value];        
     }
 }
@@ -346,7 +346,7 @@
         } else if ([keyPath isEqualToString:@"trackerStartTime"] || [keyPath isEqualToString:@"trackerFinishTime"]) {
             UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
             double time = [[self.settings valueForKey:keyPath] doubleValue];
-            double hours = rint(time);
+            double hours = floor(time);
             double minutes = rint((time - floor(time)) * 60);
             NSNumberFormatter *timeFormatter = [[NSNumberFormatter alloc] init];
             timeFormatter.formatWidth = 2;
