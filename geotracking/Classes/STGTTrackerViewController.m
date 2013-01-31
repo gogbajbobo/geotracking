@@ -95,9 +95,6 @@
 //            NSLog(@"spinner.isAnimating %d", spinner.isAnimating);
 //            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
         } else {
-//            UILabel *numberOfUnsynced = [[UILabel alloc] init];
-//            numberOfUnsynced.text = [[(STGTDataSyncController *)notification.object numberOfUnsynced] stringValue];
-//            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:numberOfUnsynced];
             self.navigationItem.rightBarButtonItem = nil;
             self.syncButton.enabled = YES;
 //            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
@@ -114,6 +111,14 @@
     self.startButton.enabled = NO;
 }
 
+- (void)setStartButtonLabel:(NSNotification *)notification {
+    if (self.tracker.locationManagerRunning) {
+        [self startButton].title = @"Stop";
+    } else {
+        [self startButton].title = @"Start";
+    }
+}
+
 - (void)viewDidLoad
 {
     [self startButtonDisable:nil];
@@ -122,6 +127,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonEnable:) name:@"STGTTrackerReady" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonDisable:) name:@"STGTTrackerBusy" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
     [super viewDidLoad];
 }
 
@@ -133,6 +140,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTDataSyncing" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerReady" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerBusy" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStart" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStop" object:nil];
     [super viewDidUnload];
 }
 

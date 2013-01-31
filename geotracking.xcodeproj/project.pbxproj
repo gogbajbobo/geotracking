@@ -78,7 +78,7 @@
 		2C0CBC1216B175ED00F74384 /* STGTSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettingsController.m; sourceTree = "<group>"; };
 		2C0CBC3C16B357EC00F74384 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		2C0CBC3D16B357EC00F74384 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
-		2C15B49516B810F40007DBEE /* STGTTracker 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "STGTTracker 4.xcdatamodel"; sourceTree = "<group>"; };
+		2C15B49516B810F40007DBEE /* STGTTracker 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 4.xcdatamodel"; sourceTree = "<group>"; };
 		2C15B49716B811810007DBEE /* STGTSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettings.h; sourceTree = "<group>"; };
 		2C15B49816B811810007DBEE /* STGTSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettings.m; sourceTree = "<group>"; };
 		2C168D3616A00A74008CBFA7 /* STGTtest.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = STGTtest.xml; sourceTree = "<group>"; };

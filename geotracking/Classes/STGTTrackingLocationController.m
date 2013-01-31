@@ -418,6 +418,7 @@
 - (void)startTrackingLocation {
     [[self locationManager] startUpdatingLocation];
     self.locationManagerRunning = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerStart" object:self];
     NSLog(@"startTrackingLocation");
 }
 
@@ -426,6 +427,7 @@
     self.locationManager.delegate = nil;
     self.locationManager = nil;
     self.locationManagerRunning = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerStop" object:self];
     NSLog(@"stopTrackingLocation");
 }
 
