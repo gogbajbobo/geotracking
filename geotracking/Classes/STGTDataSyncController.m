@@ -272,7 +272,7 @@
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         if (!connection) {
             NSLog(@"connection error");
-            self.tracker.trackerStatus = @"SYNC FAIL";
+            self.tracker.trackerStatus = @"NO CONNECTION";
             self.syncing = NO;
         }
     } else {
@@ -298,6 +298,8 @@
 #pragma mark - NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    self.tracker.trackerStatus = @"SYNC FAIL";
+    self.syncing = NO;
     NSLog(@"connection didFailWithError: %@", error);
 }
 

@@ -113,13 +113,20 @@
 //    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //        NSLog(@"observeValueForKeyPath change: UIDocumentSaveForOverwriting success");
 //    }];
+    
+    
+//    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:10 target:self selector:@selector(timerTest) userInfo:nil repeats:NO];
+////    NSLog(@"[timer isValid] %d", [timer isValid]);
+//    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+////    NSLog(@"[timer isValid] %d", [timer isValid]);
+//    [timer invalidate];
+////    NSLog(@"[timer isValid] %d", [timer isValid]);
+////    NSLog(@"[self.timer isValid] %d", [self.timer isValid]);
+
 }
 
-//- (void)setSyncing:(BOOL)syncing {
-//    if (_syncing != syncing) {
-//        _syncing = syncing;
-//        [self updateInfoLabels];
-//    }
+//- (void)timerTest {
+////    NSLog(@"test");
 //}
 
 - (NSFetchedResultsController *)resultsController {
@@ -454,6 +461,16 @@
     minuteFormatter.dateFormat = @"mm";
     double minute = [[minuteFormatter stringFromDate:localDate] doubleValue];
     double currentTime = hour + minute/60;
+    
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+//    NSString *string = [dateFormatter stringFromDate:localDate];
+//    double timerTime = 13.25;
+//    double seconds = timerTime * 3600;
+//    NSLog(@"localDate %@", localDate);
+//    NSLog(@"dateFromString %@", [dateFormatter dateFromString:string]);
+//    NSLog(@"dateWithTimeInterval %@", [NSDate dateWithTimeInterval:seconds sinceDate:[dateFormatter dateFromString:string]]);
+
     return currentTime;
 }
 
