@@ -26,3 +26,14 @@ Targets / Info / Custom iOS Target Properties / Required background modes / + Ap
 `[STGTTrackingLocationController sharedTracker]` - доступ к геотрекеру. Геотрекер автоматически запускает синхронизатор. Если к синхронизатору нужен отдельный доступ, то: `[STGTDataSyncController sharedSyncer]` - доступ к синхронизатору.
 
 
+Описание ошибок
+---
+
+`NO CONNECTION` - не удалось установить соединение с сервером.
+`NO TOKEN` - не получен токен.
+`SYNC FAIL` - потеря соединения с сервером во время синхронизации.
+`RESPONSE ERROR` - ответ от сервера не xml.
+`SYNC ERROR` - в ответе от сервера есть нода <error />.
+
+
+
