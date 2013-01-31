@@ -33,7 +33,7 @@ Targets / Info / Custom iOS Target Properties / Required background modes / + Ap
 `NO TOKEN` - не получен токен.
 `SYNC FAIL` - потеря соединения с сервером во время синхронизации.
 `RESPONSE ERROR` - ответ от сервера не xml.
-`SYNC ERROR` - в ответе от сервера есть нода <error />.
+`SYNC ERROR` - в ответе от сервера есть нода error.
 
 
 
