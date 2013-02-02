@@ -29,27 +29,33 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    self.searchController = [[UISearchDisplayController alloc]
-                        initWithSearchBar:self.searchBar contentsController:self];
-    self.searchController.delegate = self;
-    self.searchController.searchResultsDataSource = self;
-    self.searchController.searchResultsDelegate = self;
-    
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    NSLog(@"viewWillAppear");
+
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpot"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"];
     NSError *error;
     self.filterSpot = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
     request.predicate = nil;
-    request.predicate = [NSPredicate predicateWithFormat:@"(SELF.address != NIL) AND ((ANY SELF.interests IN %@ || SELF.interests.@count == 0) || (ANY SELF.networks IN %@ || SELF.networks.@count == 0))", self.filterSpot.interests, self.filterSpot.networks];
+    request.predicate = [NSPredicate predicateWithFormat:@"(SELF.address != NIL) AND (ANY SELF.interests IN %@ || ANY SELF.networks IN %@ || (SELF.interests.@count == 0 && SELF.networks.@count == 0))", self.filterSpot.interests, self.filterSpot.networks];
     self.listContent = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"self.listContent %@", self.listContent);
     self.filteredListContent = [NSMutableArray array];
-    
-//    NSLog(@"self.listContent %@", self.listContent);
+
+    [self.tableView reloadData];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.searchController = [[UISearchDisplayController alloc]
+                             initWithSearchBar:self.searchBar contentsController:self];
+    self.searchController.delegate = self;
+    self.searchController.searchResultsDataSource = self;
+    self.searchController.searchResultsDelegate = self;
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -68,12 +74,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	if (tableView == self.searchDisplayController.searchResultsTableView)
-	{
+	if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [self.filteredListContent count];
     }
-	else
-	{
+	else {
         return [self.listContent count];
     }
 }
@@ -82,18 +86,15 @@
 {
 
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"addressCell"];
-	if (cell == nil)
-	{
+	if (cell == nil) {
 		cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"addressCell"];
 	}
 
 	STGTSpot *spot = nil;
-	if (tableView == self.searchDisplayController.searchResultsTableView)
-	{
+	if (tableView == self.searchDisplayController.searchResultsTableView) {
         spot = [self.filteredListContent objectAtIndex:indexPath.row];
     }
-	else
-	{
+	else {
         spot = [self.listContent objectAtIndex:indexPath.row];
     }
 	
@@ -107,12 +108,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (tableView == self.searchDisplayController.searchResultsTableView)
-	{
+	if (tableView == self.searchDisplayController.searchResultsTableView) {
         self.mapVC.filteredSpot = [self.filteredListContent objectAtIndex:indexPath.row];
     }
-	else
-	{
+	else {
         self.mapVC.filteredSpot = [self.listContent objectAtIndex:indexPath.row];
     }
     [self.navigationController popViewControllerAnimated:YES];
