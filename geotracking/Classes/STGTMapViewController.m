@@ -275,10 +275,9 @@
         center.latitude = (maxLat + minLat)/2;
         self.center = center;
 //        NSLog(@"self.center %f %f", self.center.longitude, self.center.latitude);
-        double zoomScale = 2;
         MKCoordinateSpan span;
-        span.longitudeDelta = zoomScale * (maxLon - minLon);
-        span.latitudeDelta = zoomScale * (maxLat - minLat);
+        span.longitudeDelta = [self.settings.trackScale doubleValue] * (maxLon - minLon);
+        span.latitudeDelta = [self.settings.trackScale doubleValue] * (maxLat - minLat);
         if (span.longitudeDelta == 0) {
             span.longitudeDelta = 0.01;
         }
