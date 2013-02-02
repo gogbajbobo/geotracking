@@ -26,7 +26,7 @@
 @dynamic trackerAutoStart;
 @dynamic trackerFinishTime;
 @dynamic trackerStartTime;
-@dynamic xmlNamespace;
 @dynamic trackScale;
+@dynamic xmlNamespace;
 
 @end

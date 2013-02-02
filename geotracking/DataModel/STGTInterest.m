@@ -1,20 +1,19 @@
 //
-//  STGTDatum.m
+//  STGTInterest.m
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 2/2/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTDatum.h"
+#import "STGTInterest.h"
+#import "STGTSpot.h"
 
 
-@implementation STGTDatum
+@implementation STGTInterest
 
-@dynamic cts;
-@dynamic lts;
-@dynamic sqts;
-@dynamic ts;
-@dynamic xid;
+@dynamic image;
+@dynamic name;
+@dynamic spots;
 
 @end

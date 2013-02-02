@@ -1,13 +1,14 @@
 //
-//  Spot.m
+//  STGTSpot.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 11/25/12.
-//  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
+//  Created by Maxim Grigoriev on 2/2/13.
+//  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
 #import "STGTSpot.h"
-#import "STGTSpotProperty.h"
+#import "STGTInterest.h"
+#import "STGTNetwork.h"
 
 
 @implementation STGTSpot
@@ -17,6 +18,7 @@
 @dynamic label;
 @dynamic latitude;
 @dynamic longitude;
-@dynamic properties;
+@dynamic interests;
+@dynamic networks;
 
 @end

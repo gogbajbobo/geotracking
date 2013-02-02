@@ -1,20 +1,19 @@
 //
-//  STGTDatum.m
+//  STGTNetwork.m
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 2/2/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTDatum.h"
+#import "STGTNetwork.h"
+#import "STGTSpot.h"
 
 
-@implementation STGTDatum
+@implementation STGTNetwork
 
-@dynamic cts;
-@dynamic lts;
-@dynamic sqts;
-@dynamic ts;
-@dynamic xid;
+@dynamic image;
+@dynamic name;
+@dynamic spots;
 
 @end

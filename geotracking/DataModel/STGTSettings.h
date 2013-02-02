@@ -28,7 +28,7 @@
 @property (nonatomic, retain) NSNumber * trackerAutoStart;
 @property (nonatomic, retain) NSNumber * trackerFinishTime;
 @property (nonatomic, retain) NSNumber * trackerStartTime;
-@property (nonatomic, retain) NSString * xmlNamespace;
 @property (nonatomic, retain) NSNumber * trackScale;
+@property (nonatomic, retain) NSString * xmlNamespace;
 
 @end

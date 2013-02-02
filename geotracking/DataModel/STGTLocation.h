@@ -1,9 +1,9 @@
 //
-//  Location.h
+//  STGTLocation.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 11/25/12.
-//  Copyright (c) 2012 Maxim V. Grigoriev. All rights reserved.
+//  Created by Maxim Grigoriev on 2/2/13.
+//  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

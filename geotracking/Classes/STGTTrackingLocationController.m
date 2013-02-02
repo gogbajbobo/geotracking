@@ -212,6 +212,7 @@
 }
 
 - (void)trackerInit {
+    NSLog(@"trackerInit");
     [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
     [[STGTDataSyncController sharedSyncer] startSyncer];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];

@@ -20,6 +20,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+
+    [STGTTrackingLocationController sharedTracker];
     
     self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
     self.authCodeRetriever = (UDPushAuthCodeRetriever *)[(UDAuthTokenRetriever *)[[STGTAuthBasic sharedOAuth] tokenRetriever] codeDelegate];
@@ -27,7 +29,6 @@
     self.reachability.reachableOnWWAN = YES;
     [self.reachability startNotifier];
 
-    [STGTTrackingLocationController sharedTracker];
 //    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
     
     

@@ -41,10 +41,16 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"tokenReceived" object:self];
 }
 
++ (STGTSettings *)settings {
+    return [STGTTrackingLocationController sharedTracker].settings;
+}
+
 + (id) tokenRetrieverMaker{
     
     UDAuthTokenRetriever *tokenRetriever = [[UDAuthTokenRetriever alloc] init];
     tokenRetriever.authServiceURI = [NSURL URLWithString:AUTH_SERVICE_URI];
+//    NSLog(@"[self settings].authServiceURI %@", [self settings].authServiceURI);
+//    NSLog(@"[self settings].authServiceParameters %@", [self settings].authServiceParameters);
     
     UDPushAuthCodeRetriever *codeRetriever = [UDPushAuthCodeRetriever codeRetriever];
     codeRetriever.requestDelegate.uPushAuthServiceURI = [NSURL URLWithString:AUTH_SERVICE_URI];
