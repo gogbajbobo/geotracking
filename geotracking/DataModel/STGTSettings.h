@@ -2,7 +2,7 @@
 //  STGTSettings.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 1/29/13.
+//  Created by Maxim Grigoriev on 2/2/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -25,9 +25,10 @@
 @property (nonatomic, retain) NSString * syncServerURI;
 @property (nonatomic, retain) NSString * tokenServerURL;
 @property (nonatomic, retain) NSNumber * trackDetectionTime;
-@property (nonatomic, retain) NSString * xmlNamespace;
-@property (nonatomic, retain) NSNumber * trackerStartTime;
-@property (nonatomic, retain) NSNumber * trackerFinishTime;
 @property (nonatomic, retain) NSNumber * trackerAutoStart;
+@property (nonatomic, retain) NSNumber * trackerFinishTime;
+@property (nonatomic, retain) NSNumber * trackerStartTime;
+@property (nonatomic, retain) NSString * xmlNamespace;
+@property (nonatomic, retain) NSNumber * trackScale;
 
 @end

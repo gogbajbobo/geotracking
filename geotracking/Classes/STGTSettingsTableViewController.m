@@ -31,7 +31,7 @@
     if (!_settingsTitles) {
         NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
         NSArray *syncerSettingsTitles = [NSArray arrayWithObjects:@"fetchLimit", @"syncInterval", @"syncServerURI", @"xmlNamespace", nil];
-        NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", nil];
+        NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", @"trackScale", nil];
         NSArray *authServiceSettingsTitles = [NSArray arrayWithObjects:@"tokenServerURL", @"authServiceURI", @"authServiceParameters", nil];
         _settingsTitles = [NSArray arrayWithObjects: trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, authServiceSettingsTitles, nil];
 //        NSLog(@"_settingsTitles %@", _settingsTitles);
@@ -40,109 +40,18 @@
 }
 
 
-#pragma mark - Table view data source
+- (void)setupCells {
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    // Return the number of sections.
-    return self.settingsTitles.count;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    // Return the number of rows in the section.
-    return [[self.settingsTitles objectAtIndex:section] count];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if (section == 0) {
-        return @"Tracker";
-    } else if (section == 1) {
-        return @"Syncer";
-    } else if (section == 2) {
-        return @"MapView";
-    } else if (section == 3) {
-        return @"AuthService";
-    } else {
-        return @"";
-    }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section == 0) {
-        if (indexPath.row == 4) {
-            return 44.0;
-        } else {
-            return 70.0;
-        }
-    } else if (indexPath.section == 1) {
-        return 70.0;
-    } else if (indexPath.section == 2) {
-        return 44.0;
-    } else if (indexPath.section == 3) {
-        return 70.0;
-    } else {
-        return 0.0;
-    }
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"settingsCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    for (UIView *view in cell.contentView.subviews) {
-        [view removeFromSuperview];
-    }
-
-    UILabel *cellLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 220, 24)];
-    NSString *settingsName = [[self.settingsTitles objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    cellLabel.text = settingsName;
-    cellLabel.font = [UIFont boldSystemFontOfSize:20];
-    cellLabel.tag = 1;
-    [cell.contentView addSubview:cellLabel];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    UILabel *valueLabel = [[UILabel alloc] initWithFrame:CGRectMake(230, 10, 80, 24)];
-    valueLabel.font = [UIFont boldSystemFontOfSize:20];
-    valueLabel.textAlignment = NSTextAlignmentRight;
-    valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];
-    valueLabel.tag = 2;
-
-    UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(25, 38, 270, 24)];
-    slider.tag = 3;
-    [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
-
-    UISwitch *headingSwitch = [[UISwitch alloc] initWithFrame:CGRectMake(230, 9, 80, 27)];
-    [headingSwitch setOn:[[self.settings valueForKey:settingsName] boolValue] animated:NO];
-    [headingSwitch addTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
-    headingSwitch.tag = 4;
-    
-    UITextField *textField = [[UITextField alloc] initWithFrame:CGRectMake(25, 38, 270, 24)];
-    textField.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];
-    textField.keyboardType = UIKeyboardTypeURL;
-    textField.clearButtonMode = UITextFieldViewModeWhileEditing;
-    textField.tag = 6;
-    textField.delegate = self;
-
-    double numericValue = [[self.settings valueForKey:settingsName] doubleValue];
-    
-    if (indexPath.section == 0) {
-
-        if ([settingsName isEqualToString:@"trackerAutoStart"]) {
+    int section = 0;
+    for (NSArray *settingsGroup in self.settingsTitles) {
+        int row = 0;
+        for (NSString *settingsName in settingsGroup) {
+//            NSLog(@"settingsName %@", settingsName);
+            UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
+//            UILabel *cellLabel = (UILabel *)[cell.contentView viewWithTag:1];
             
-            [cell.contentView addSubview:headingSwitch];
-            
-        } else {
-            
-            if ([settingsName isEqualToString:@"trackDetectionTime"]) {
-                
-                cellLabel.text = [NSString stringWithFormat:@"%@, s", settingsName];
-                slider.maximumValue = 600.0;
-                slider.minimumValue = 0.0;
-                
-            } else if ([settingsName isEqualToString:@"trackerStartTime"] || [settingsName isEqualToString:@"trackerFinishTime"]){
-                slider.minimumValue = 0.0;
-                slider.maximumValue = 24.0;
+            UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
+            if ([settingsName isEqualToString:@"trackerStartTime"] || [settingsName isEqualToString:@"trackerFinishTime"]){
                 double time = [[self.settings valueForKey:settingsName] doubleValue];
                 double hours = floor(time);
                 double minutes = rint((time - floor(time)) * 60);
@@ -152,84 +61,76 @@
                 valueLabel.text = [NSString stringWithFormat:@"%@:%@", [timeFormatter stringFromNumber:[NSNumber numberWithDouble:hours]], [timeFormatter stringFromNumber:[NSNumber numberWithDouble:minutes]]];
 
             } else {
-                
-                cellLabel.text = [NSString stringWithFormat:@"%@, m", settingsName];
-                
-                if ([settingsName isEqualToString:@"requiredAccuracy"]) {
-                    slider.maximumValue = 100.0;
-                    slider.minimumValue = 5.0;
-                } else if ([settingsName isEqualToString:@"distanceFilter"]) {
-                    slider.maximumValue = 200.0;
-                    slider.minimumValue = -1.0;
-                } else if ([settingsName isEqualToString:@"desiredAccuracy"]) {
-                    NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
-                                              [NSNumber numberWithDouble:kCLLocationAccuracyBest],
-                                              [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters],
-                                              [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters],
-                                              [NSNumber numberWithDouble:kCLLocationAccuracyKilometer],
-                                              [NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers],nil];
-                    slider.maximumValue = accuracyArray.count - 1;
-                    slider.minimumValue = 0;
-                    numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:numericValue]];
-                    if (numericValue == NSNotFound) {
-                        NSLog(@"NSNotFoundS");
-                        numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters]];
-                        [self.settings setValue:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters] forKey:settingsName];
-                    }
+                valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];                
+            }
+            
+            UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
+            [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+            double numericValue = [[self.settings valueForKey:settingsName] doubleValue];
+            if ([settingsName isEqualToString:@"desiredAccuracy"]) {
+                NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
+                                          [NSNumber numberWithDouble:kCLLocationAccuracyBest],
+                                          [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters],
+                                          [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters],
+                                          [NSNumber numberWithDouble:kCLLocationAccuracyKilometer],
+                                          [NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers],nil];
+                slider.maximumValue = accuracyArray.count - 1;
+                slider.minimumValue = 0;
+                numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:numericValue]];
+                if (numericValue == NSNotFound) {
+                    NSLog(@"NSNotFoundS");
+                    numericValue = [accuracyArray indexOfObject:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters]];
+                    [self.settings setValue:[NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters] forKey:settingsName];
                 }
             }
             [slider setValue:numericValue animated:NO];
-            [cell.contentView addSubview:slider];
-            [cell.contentView addSubview:valueLabel];
-
-        }
-
-    } else if (indexPath.section == 1) {
-        
-        if ([settingsName isEqualToString:@"syncInterval"]) {
-            cellLabel.text = [NSString stringWithFormat:@"%@, s", settingsName];
-            slider.maximumValue = 3600.0;
-            slider.minimumValue = 10.0;
-        } else if ([settingsName isEqualToString:@"fetchLimit"]) {
-            slider.maximumValue = 100.0;
-            slider.minimumValue = 5.0;
-        }
-        if ([settingsName isEqualToString:@"fetchLimit"] || [settingsName isEqualToString:@"syncInterval"]) {
-            [slider setValue:numericValue animated:NO];
-            [cell.contentView addSubview:slider];
-            [cell.contentView addSubview:valueLabel];
-        } else {
-            [cell.contentView addSubview:textField];
-        }
-        
-    } else if (indexPath.section == 2) {
-        
-        if ([settingsName isEqualToString:@"mapHeading"]) {
-            [cell.contentView addSubview:headingSwitch];
             
-        } else if ([settingsName isEqualToString:@"mapType"]) {
-            NSArray *segments = [NSArray arrayWithObjects: @"Map", @"Satellite", @"Hybrid", nil];
-            UISegmentedControl *mapTypeControl = [[UISegmentedControl alloc] initWithItems:segments];
-            mapTypeControl.frame = CGRectMake(110, 7, 200, 30);
-            mapTypeControl.segmentedControlStyle = UISegmentedControlStylePlain;
-            NSDictionary *textAttributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIFont boldSystemFontOfSize:14], UITextAttributeFont,
-                                            nil];
-            [mapTypeControl setTitleTextAttributes:textAttributes forState:UIControlStateNormal];
-            [mapTypeControl addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
-            mapTypeControl.selectedSegmentIndex = [self.settings.mapType integerValue];
-            mapTypeControl.tag = 5;
-            [cell.contentView addSubview:mapTypeControl];
+            UISwitch *cellSwitch = (UISwitch *)[cell.contentView viewWithTag:4];
+            [cellSwitch setOn:[[self.settings valueForKey:settingsName] boolValue] animated:NO];
+            [cellSwitch addTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
+
+            UISegmentedControl *segmentedControl = (UISegmentedControl *)[cell.contentView viewWithTag:5];
+            [segmentedControl addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+            segmentedControl.selectedSegmentIndex = [self.settings.mapType integerValue];
+            
+            UITextField *textField = (UITextField *)[cell.contentView viewWithTag:6];
+            textField.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingsName]];
+            textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+            textField.delegate = self;
+            
+            row++;
         }
-        
-    } else if (indexPath.section == 3) {
-        
-        [cell.contentView addSubview:textField];
-        
+        section++;
     }
 
-    return cell;
 }
 
+- (void)removeTargets {
+
+    int section = 0;
+    for (NSArray *settingsGroup in self.settingsTitles) {
+        int row = 0;
+        for (NSString *settingsName in settingsGroup) {
+//            NSLog(@"settingsName %@", settingsName);
+            UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
+            UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
+            [slider removeTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            UISwitch *cellSwitch = (UISwitch *)[cell.contentView viewWithTag:4];
+            [cellSwitch removeTarget:self action:@selector(switchValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            UISegmentedControl *segmentedControl = (UISegmentedControl *)[cell.contentView viewWithTag:5];
+            [segmentedControl removeTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+            
+            UITextField *textField = (UITextField *)[cell.contentView viewWithTag:6];
+            textField.delegate = nil;
+            
+            row++;
+        }
+        section++;
+    }
+    
+}
 
 
 - (void)sliderValueChanged:(UISlider *)sender {
@@ -263,6 +164,9 @@
     } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackerFinishTime"].location != NSNotFound) {
         [sender setValue:rint(sender.value/0.5)*0.5];
         self.settings.trackerFinishTime = [NSNumber numberWithDouble:sender.value];        
+    } else if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"trackScale"].location != NSNotFound) {
+        [sender setValue:rint(sender.value/0.5)*0.5];
+        self.settings.trackScale = [NSNumber numberWithDouble:sender.value];
     }
 }
 
@@ -324,7 +228,8 @@
                                                             @"distanceFilter",
                                                             @"trackDetectionTime",
                                                             @"syncInterval",
-                                                            @"fetchLimit", nil];
+                                                            @"fetchLimit",
+                                                            @"trackScale", nil];
         if ([slidersLabels containsObject:keyPath]) {
             UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
             valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:keyPath]];
@@ -392,6 +297,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [self setupCells];
     for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
         [self.settings addObserver:self forKeyPath:settingsName options:NSKeyValueObservingOptionNew context:nil];
     }
@@ -402,6 +308,7 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+    [self removeTargets];
     for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
         [self.settings removeObserver:self forKeyPath:settingsName];
     }

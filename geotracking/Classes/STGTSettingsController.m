@@ -24,6 +24,7 @@
 
 #define STGT_MAP_HEADING MKUserTrackingModeNone
 #define STGT_MAP_TYPE MKMapTypeStandard
+#define STGT_TRACK_SCALE 2.0
 
 #define STGT_FETCH_LIMIT 20
 #define STGT_SYNC_INTERVAL 1800.0
@@ -57,6 +58,7 @@
     
     [settings setValue:[NSNumber numberWithDouble:STGT_MAP_HEADING] forKey:@"mapHeading"];
     [settings setValue:[NSNumber numberWithDouble:STGT_MAP_TYPE] forKey:@"mapType"];
+    [settings setValue:[NSNumber numberWithDouble:STGT_TRACK_SCALE] forKey:@"trackScale"];
     
     [settings setValue:[NSNumber numberWithInt:STGT_FETCH_LIMIT] forKey:@"fetchLimit"];
     [settings setValue:[NSNumber numberWithDouble:STGT_SYNC_INTERVAL] forKey:@"syncInterval"];

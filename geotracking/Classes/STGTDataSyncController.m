@@ -17,7 +17,7 @@
 #define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
 #define DEFAULT_FETCHLIMIT 20
 
-@interface STGTDataSyncController() <NSURLConnectionDataDelegate, NSFetchedResultsControllerDelegate>
+@interface STGTDataSyncController() <NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSMutableData *responseData;
 @property (nonatomic, strong) STGTTrackingLocationController *tracker;
