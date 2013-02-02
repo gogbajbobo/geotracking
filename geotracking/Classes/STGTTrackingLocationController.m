@@ -95,6 +95,7 @@
         [settings addObserver:self forKeyPath:@"distanceFilter" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"desiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"trackerAutoStart" options:NSKeyValueObservingOptionNew context:nil];
 //        NSLog(@"settings.xid %@", settings.xid);
 //        NSLog(@"settings.lts %@", settings.lts);
 //        NSLog(@"settings.distanceFilter %@", settings.distanceFilter);
@@ -107,9 +108,14 @@
 //    NSLog(@"observeValueForKeyPath");
 //    NSLog(@"object %@", object);
 //    NSLog(@"change %@", change);
-    self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
-    self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
-    [self updateInfoLabels];
+    if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
+        self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
+        self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
+        [self updateInfoLabels];
+    } else if ([keyPath isEqualToString:@"trackerAutoStart"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAutoStartChanged" object:self];
+    }
+    
 //    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //        NSLog(@"observeValueForKeyPath change: UIDocumentSaveForOverwriting success");
 //    }];

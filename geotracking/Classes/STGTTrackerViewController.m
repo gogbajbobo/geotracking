@@ -119,6 +119,17 @@
     }
 }
 
+- (void)startButtonAccess:(NSNotification *)notification {
+    if ([notification.object isKindOfClass:[STGTTrackingLocationController class]]) {
+        if ([[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"trackerAutoStart"] boolValue]) {
+            self.startButton.enabled = NO;
+        } else {
+            self.startButton.enabled = YES;
+        }
+    }
+}
+
+
 - (void)viewDidLoad
 {
     [self startButtonDisable:nil];
@@ -129,6 +140,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonDisable:) name:@"STGTTrackerBusy" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
     [super viewDidLoad];
 }
 
@@ -142,6 +154,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerBusy" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStop" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerAutoStartChanged" object:nil];
     [super viewDidUnload];
 }
 
