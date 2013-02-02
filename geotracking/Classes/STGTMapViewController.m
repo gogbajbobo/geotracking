@@ -74,7 +74,7 @@
 //        NSLog(@"self.filterSpot.interests %@", self.filterSpot.interests);
 //        NSLog(@"self.filterSpot.networks %@", self.filterSpot.networks);
 //        request.predicate = [NSPredicate predicateWithFormat:@"(ANY SELF.interests IN %@) || (ANY SELF.networks IN %@)", self.filterSpot.interests, self.filteredSpot.networks];
-        request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.interests IN %@", self.filteredSpot.interests];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.interests.@count == 0 || ANY SELF.interests IN %@", self.filteredSpot.interests];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
@@ -105,17 +105,21 @@
     [filterSpot setXid:[self.tracker newid]];
     filterSpot.label = @"@filter";
     
+    NSLog(@"filterSpot %@", filterSpot);
+    
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTInterest"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     NSError *error;
     NSArray *allInterests = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
 //    NSLog(@"allInterests %@", allInterests);
     [filterSpot addInterests:[NSSet setWithArray:allInterests]];
+    NSLog(@"filterSpot %@", filterSpot);
     
     request = [NSFetchRequest fetchRequestWithEntityName:@"STGTNetwork"];
     NSArray *allNetworks = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     //    NSLog(@"allNetworks %@", allNetworks);
     [filterSpot addNetworks:[NSSet setWithArray:allNetworks]];
+    NSLog(@"filterSpot %@", filterSpot);
     
     self.filterSpot = filterSpot;
 //    NSLog(@"filterSpot %@", filterSpot);
