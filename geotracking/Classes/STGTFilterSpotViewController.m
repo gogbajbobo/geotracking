@@ -10,7 +10,6 @@
 #import "STGTSpotPropertiesViewController.h"
 #import "STGTAddressSearchViewController.h"
 #import "STGTSpotViewController.h"
-#import "STGTSpotProperty.h"
 
 @interface STGTFilterSpotViewController ()
 

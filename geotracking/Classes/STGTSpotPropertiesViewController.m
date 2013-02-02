@@ -7,8 +7,9 @@
 //
 
 #import "STGTSpotPropertiesViewController.h"
-#import "STGTSpotProperty.h"
 #import "STGTDataSyncController.h"
+#import "STGTInterest.h"
+#import "STGTNetwork.h"
 
 @interface STGTSpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -30,9 +31,8 @@
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpotProperty"];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[NSString stringWithFormat:@"STGT%@", self.typeOfProperty]];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-        request.predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", self.typeOfProperty];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
@@ -61,16 +61,23 @@
 }
 
 - (void)addNewPropertyWithName:(NSString *)name {
-    STGTSpotProperty *newProperty = (STGTSpotProperty *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotProperty" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    [newProperty setXid:[self.tracker newid]];
-    [newProperty setType:self.typeOfProperty];
-    [newProperty setName:name];
-//    NSDate *ts = [NSDate date];
-//    newProperty.ts = ts;
-//    newProperty.cts = ts;
-    [newProperty setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
-//    [self.syncer changesCountPlusOne];
-    [self.filterSpot addPropertiesObject:newProperty];
+    
+    if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+        STGTInterest *newInterest = (STGTInterest *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterest" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        [newInterest setXid:[self.tracker newid]];
+        [newInterest setName:name];
+        [newInterest setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
+        [self.filterSpot addInterestsObject:newInterest];
+
+    } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+        STGTNetwork *newNetwork = (STGTNetwork *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetwork" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        [newNetwork setXid:[self.tracker newid]];
+        [newNetwork setName:name];
+        [newNetwork setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
+        [self.filterSpot addNetworksObject:newNetwork];
+        
+    }
+    
 //    NSLog(@"newProperty %@", newProperty);
 }
 
@@ -137,12 +144,21 @@
     if ([imageView.superview.superview isKindOfClass:[UITableViewCell class]]) {
         UITableViewCell *cell = (UITableViewCell *)imageView.superview.superview;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        spotProperty.image = UIImagePNGRepresentation(imageView.image);
-//        spotProperty.ts = [NSDate date];
-//        spotProperty.synced = [NSNumber numberWithBool:NO];
+
+        NSManagedObject *object = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        [object setValue:UIImagePNGRepresentation(imageView.image) forKey:@"image"];
+        
+//        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+//            STGTInterest *interest = (STGTInterest *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+//            interest.image = UIImagePNGRepresentation(imageView.image);
+//            
+//        } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+//            STGTNetwork *network = (STGTNetwork *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+//            network.image = UIImagePNGRepresentation(imageView.image);
+//            
+//        }
     }
-    
+
 }
 
 #pragma mark - Table view data source & delegate
@@ -182,11 +198,11 @@
     textField.text = nil;
     cell.imageView.image = [UIImage imageNamed:@"STGTblank_image_44_44.png"];
     if (indexPath.row != self.resultsController.fetchedObjects.count) {
-        STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"%@", spotProperty.name];
+        NSManagedObject *object = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", [object valueForKey:@"name"]];
         textField.text = cell.textLabel.text;
-        if (spotProperty.image) {
-            cell.imageView.image = [UIImage imageWithData:spotProperty.image];
+        if ([object valueForKey:@"image"]) {
+            cell.imageView.image = [UIImage imageWithData:[object valueForKey:@"image"]];
         } else {
         }
     } else {
@@ -203,12 +219,18 @@
     if (!tableView.editing) {
 //        NSLog(@"self.caller.spot.properties %@", self.caller.spot.properties);
 //        if ([self.caller.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
-        if ([self.spot.properties containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+            if ([self.spot.interests containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+        } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+            if ([self.spot.networks containsObject:[self.resultsController.fetchedObjects objectAtIndex:indexPath.row]]) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
         }
     }
     return cell;
-    
+
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -237,31 +259,35 @@
             }
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
-        STGTSpotProperty *propertyToDelete = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        [self.filterSpot removePropertiesObject:propertyToDelete];
+        NSManagedObject *propertyToDelete = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+            [self.filterSpot removeInterestsObject:(STGTInterest *)propertyToDelete];
+        } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+            [self.filterSpot removeNetworksObject:(STGTNetwork *)propertyToDelete];
+        }
         [self.tracker.locationsDatabase.managedObjectContext deleteObject:propertyToDelete];
     }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 //    NSLog(@"indexPath %@", indexPath);
-    STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-//    NSDate *timestamp = [NSDate date];
-//    spotProperty.ts = timestamp;
-//    self.caller.spot.timestamp = timestamp;
-//    self.spot.ts = timestamp;
-//    spotProperty.synced = [NSNumber numberWithBool:NO];
-//    self.caller.spot.synced = [NSNumber numberWithBool:NO];
-//    self.spot.synced = [NSNumber numberWithBool:NO];
+    
+    NSManagedObject *spotProperty = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if (cell.accessoryType == UITableViewCellAccessoryCheckmark) {
         cell.accessoryType = UITableViewCellAccessoryNone;
-//        [self.caller.spot removePropertiesObject:spotProperty];
-        [self.spot removePropertiesObject:spotProperty];
+        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+            [self.spot removeInterestsObject:(STGTInterest *)spotProperty];
+        } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+            [self.spot removeNetworksObject:(STGTNetwork *)spotProperty];
+        }
     } else if (cell.accessoryType == UITableViewCellAccessoryNone) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
-//        [self.caller.spot addPropertiesObject:spotProperty];
-        [self.spot addPropertiesObject:spotProperty];
+        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+            [self.spot addInterestsObject:(STGTInterest *)spotProperty];
+        } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+            [self.spot addNetworksObject:(STGTNetwork *)spotProperty];
+        }
     }
     return indexPath;
 }
@@ -291,8 +317,8 @@
                     if ([textField.text isEqualToString:@""]) {
                         textField.text = cell.textLabel.text;
                     } else {
-                        STGTSpotProperty *spotProperty = (STGTSpotProperty *)[self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
-                        spotProperty.name = textField.text;
+                        NSManagedObject *spotProperty = [self.resultsController.fetchedObjects objectAtIndex:[tableView indexPathForCell:cell].row];
+                        [spotProperty setValue:textField.text forKey:@"name"];
 //                        spotProperty.ts = [NSDate date];
 //                        spotProperty.synced = [NSNumber numberWithBool:NO];
                         cell.textLabel.text = textField.text;

@@ -70,7 +70,11 @@
             [self createFilterSpot];
         }
         request.predicate = nil;
-        request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.properties IN %@ || SELF.properties.@count == 0", self.filterSpot.properties];
+//        request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.interests IN %@ || ANY SELF.networks IN %@ || (SELF.interests.@count == 0 && SELF.networks.@count == 0) ", self.filterSpot.interests, self.filteredSpot.networks];
+//        NSLog(@"self.filterSpot.interests %@", self.filterSpot.interests);
+//        NSLog(@"self.filterSpot.networks %@", self.filterSpot.networks);
+//        request.predicate = [NSPredicate predicateWithFormat:@"(ANY SELF.interests IN %@) || (ANY SELF.networks IN %@)", self.filterSpot.interests, self.filteredSpot.networks];
+        request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.interests IN %@", self.filteredSpot.interests];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
@@ -99,17 +103,20 @@
 - (void)createFilterSpot {
     STGTSpot *filterSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     [filterSpot setXid:[self.tracker newid]];
-//    NSDate *ts = [NSDate date];
-//    filterSpot.ts = ts;
-//    filterSpot.cts = ts;
     filterSpot.label = @"@filter";
-//    filterSpot.synced = [NSNumber numberWithBool:YES];
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpotProperty"];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTInterest"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     NSError *error;
-    NSArray *allProperties = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-//    NSLog(@"allProperties %@", allProperties);
-    [filterSpot addProperties:[NSSet setWithArray:allProperties]];
+    NSArray *allInterests = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+//    NSLog(@"allInterests %@", allInterests);
+    [filterSpot addInterests:[NSSet setWithArray:allInterests]];
+    
+    request = [NSFetchRequest fetchRequestWithEntityName:@"STGTNetwork"];
+    NSArray *allNetworks = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    //    NSLog(@"allNetworks %@", allNetworks);
+    [filterSpot addNetworks:[NSSet setWithArray:allNetworks]];
+    
     self.filterSpot = filterSpot;
 //    NSLog(@"filterSpot %@", filterSpot);
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {

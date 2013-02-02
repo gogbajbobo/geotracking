@@ -8,9 +8,10 @@
 
 #import "STGTSpotViewController.h"
 #import "STGTSpotPropertiesViewController.h"
-#import "STGTSpotProperty.h"
 #import "STGTTrack.h"
 #import "STGTDataSyncController.h"
+#import "STGTInterest.h"
+#import "STGTNetwork.h"
 
 @interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
@@ -181,42 +182,42 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSString *predicateString;
+    NSUInteger count;
     if (collectionView.tag == 1) {
-        predicateString = @"Interest";
+        count = [self.spot.interests sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
     } else if (collectionView.tag == 2) {
-        predicateString = @"Network";
+        count = [self.spot.networks sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
     }
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
-    NSUInteger count = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
     return count+1;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 
-    NSString *predicateString;
+    NSString *type;
     NSString *cellIdentifier;
+    NSArray *spotPropertiesArray;
     if (collectionView.tag == 1) {
-        predicateString = @"Interest";
+        type = @"Interest";
+        spotPropertiesArray = [self.spot.interests sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]]];
         cellIdentifier = @"interestCell";
     } else if (collectionView.tag == 2) {
-        predicateString = @"Network";
+        spotPropertiesArray = [self.spot.networks sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]]];
+        type = @"Network";
         cellIdentifier = @"networkCell";
     }
 
     UICollectionViewCell *cell;
 
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
-    NSArray *spotPropertiesArray = [[self.spot.properties filteredSetUsingPredicate:predicate] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]]];
+//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
     
     if (indexPath.row == spotPropertiesArray.count) {
-        cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"%@%@", @"add", predicateString] forIndexPath:indexPath];
+        cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"%@%@", @"add", type] forIndexPath:indexPath];
     } else {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
         [[cell.contentView viewWithTag:1] removeFromSuperview];
-        STGTSpotProperty *spotProperty = [spotPropertiesArray objectAtIndex:indexPath.row];
+        NSManagedObject *spotProperty = [spotPropertiesArray objectAtIndex:indexPath.row];
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, cell.contentView.frame.size.height)];
-        imageView.image = [UIImage imageWithData:spotProperty.image];
+        imageView.image = [UIImage imageWithData:[spotProperty valueForKey:@"image"]];
         imageView.tag = 1;
         [cell.contentView addSubview:imageView];
     }

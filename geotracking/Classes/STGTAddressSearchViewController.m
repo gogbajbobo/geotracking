@@ -45,7 +45,7 @@
     NSError *error;
     self.filterSpot = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
     request.predicate = nil;
-    request.predicate = [NSPredicate predicateWithFormat:@"(SELF.address != NIL) AND (ANY SELF.properties IN %@ || SELF.properties.@count == 0)", self.filterSpot.properties];
+    request.predicate = [NSPredicate predicateWithFormat:@"(SELF.address != NIL) AND ((ANY SELF.interests IN %@ || SELF.interests.@count == 0) || (ANY SELF.networks IN %@ || SELF.networks.@count == 0))", self.filterSpot.interests, self.filterSpot.networks];
     self.listContent = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
     self.filteredListContent = [NSMutableArray array];
     
