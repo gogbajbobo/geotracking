@@ -12,6 +12,7 @@
 #import "GDataXMLNode.h"
 #import "STGTSettingsController.h"
 #import "STGTSettings.h"
+#import "STGTSpot.h"
 
 #define DEFAULT_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 #define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
@@ -368,8 +369,8 @@
                     }
                     
                     if ([entityName isEqualToString:@"STGTSpot"]) {
+                        STGTSpot *spot = (STGTSpot *)self.syncObject;
                         NSArray *itemProperties = [entityItem nodesForXPath:@"./ns:d" namespaces:namespaces error:nil];
-                        NSMutableSet *propertiesSet = [NSMutableSet set];
                         
                         for (GDataXMLElement *itemProperty in itemProperties) {
                             //                    NSLog(@"itemProperty %@", itemProperty);
@@ -391,10 +392,13 @@
                                 [property setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lts"];
                                 //                        NSLog(@"insertNewObjectForEntity");
                             }
-                            [propertiesSet addObject:property];
-                        }
-                        if (propertiesSet) {
-                            [self.syncObject setValue:[propertiesSet copy] forKey:@"properties"];
+                            
+                            if ([propertyName isEqualToString:@"STGTInterest"]) {
+                                [spot addInterestsObject:(STGTInterest *)property];
+                            } else if ([propertyName isEqualToString:@"STGTNetwork"]) {
+                                [spot addNetworksObject:(STGTNetwork *)property];
+                            }
+
                         }
                     }
                     
