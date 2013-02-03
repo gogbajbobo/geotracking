@@ -20,6 +20,7 @@
     STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.newSpotCoordinate = coordinate;
     annotation.addNewSpot = YES;
+//    NSLog(@"createAnnotationForCoordinate %@", annotation);
     return annotation;
 }
 
@@ -28,6 +29,7 @@
 {
     STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.location = location;
+//    NSLog(@"createAnnotationForLocation %@", annotation);
     return annotation;
 }
 
@@ -35,6 +37,7 @@
 {
     STGTMapAnnotation *annotation = [[STGTMapAnnotation alloc] init];
     annotation.spot = spot;
+//    NSLog(@"createAnnotationForSpot %@", annotation);
     return annotation;
 }
 

@@ -251,11 +251,11 @@
         if (tableView.editing) {
             UITextField *textField = (UITextField *)[[tableView cellForRowAtIndexPath:indexPath].contentView viewWithTag:1];
             if (![textField.text isEqualToString:@""]) {
-                NSLog(@"addNewPropertyWithName");
+//                NSLog(@"addNewPropertyWithName");
                 [self addNewPropertyWithName:textField.text];
                 textField.text = nil;
             } else {
-                NSLog(@"textField.text isEqualToString:@\"\"");
+//                NSLog(@"textField.text isEqualToString:@\"\"");
             }
         }
     } else if (editingStyle == UITableViewCellEditingStyleDelete) {
@@ -296,7 +296,7 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    NSLog(@"textFieldShouldEndEditing");
+//    NSLog(@"textFieldShouldEndEditing");
     if ([textField.superview.superview isKindOfClass:[UITableViewCell class]]) {
 //        NSLog(@"textFieldShouldEndEditing");
         UITableViewCell *cell = (UITableViewCell *)textField.superview.superview;
@@ -309,7 +309,7 @@
                     [self addNewPropertyWithName:textField.text];
                     textField.text = nil;
                 } else {
-                    NSLog(@"textField.text isEqualToString:@\"\"");
+//                    NSLog(@"textField.text isEqualToString:@\"\"");
                 }
             } else {
 //                NSLog(@"Not last row");

@@ -31,7 +31,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    NSLog(@"viewWillAppear");
+//    NSLog(@"viewWillAppear");
 
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSpot"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
@@ -41,7 +41,7 @@
     request.predicate = nil;
     request.predicate = [NSPredicate predicateWithFormat:@"(SELF.address != NIL) AND (ANY SELF.interests IN %@ || ANY SELF.networks IN %@ || (SELF.interests.@count == 0 && SELF.networks.@count == 0))", self.filterSpot.interests, self.filterSpot.networks];
     self.listContent = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog(@"self.listContent %@", self.listContent);
+//    NSLog(@"self.listContent %@", self.listContent);
     self.filteredListContent = [NSMutableArray array];
 
     [self.tableView reloadData];

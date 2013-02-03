@@ -69,6 +69,7 @@
         if (!self.filterSpot) {
             [self createFilterSpot];
         }
+//        NSLog(@"self.filterSpot %@", self.filterSpot);
         request.predicate = nil;
         request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.interests IN %@ || ANY SELF.networks IN %@ || (SELF.interests.@count == 0 && SELF.networks.@count == 0) ", self.filterSpot.interests, self.filterSpot.networks];
         _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
@@ -79,15 +80,18 @@
 }
 
 - (void)performFetch {
+//    NSLog(@"performFetch");
     if (self.resultsController) {
         self.resultsController.delegate = nil;
         self.resultsController = nil;
+        self.filterSpot = nil;
     }
     NSError *error;
 
     if (![self.resultsController performFetch:&error]) {
         NSLog(@"performFetch error %@", error.localizedDescription);
     } else {
+//        NSLog(@"self.resultsController.fetchedObjects.count %d", self.resultsController.fetchedObjects.count);
         if (self.resultsController.fetchedObjects.count > 0) {
 //            [self annotationsCreateForSpots:[NSSet setWithArray:self.resultsController.fetchedObjects]];
             [self refreshAnnotations];
@@ -312,13 +316,18 @@
 
 - (void)annotationsDeleteForSpotXids:(NSSet *)spotXids {
     for (NSString *spotXid in spotXids) {
+//        NSLog(@"self.annotationsDictionary1 %@", self.annotationsDictionary);
         STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spotXid];
         [self.annotationsDictionary removeObjectForKey:spotXid];
+//        NSLog(@"self.annotationsDictionary2 %@", self.annotationsDictionary);
+//        NSLog(@"self.mapView.annotations1 %@", self.mapView.annotations);
         [self.mapView removeAnnotation:annotation];
+//        NSLog(@"self.mapView.annotations2 %@", self.mapView.annotations);
     }
 }
 
 - (void)refreshAnnotations {
+//    NSLog(@"refreshAnnotations");
     NSSet *oldAnnotations = [NSSet setWithArray:[self.annotationsDictionary allKeys]];
     NSMutableSet *newAnnotations = [NSMutableSet set];
     for (STGTSpot *spot in self.resultsController.fetchedObjects) {
@@ -330,11 +339,13 @@
     
     NSMutableSet *oldAnnotationsCopy = [oldAnnotations mutableCopy];
     [oldAnnotationsCopy minusSet:newAnnotations];
+//    NSLog(@"oldAnnotationsCopy %@", oldAnnotationsCopy);
     [self annotationsDeleteForSpotXids:oldAnnotationsCopy];
     
     [newAnnotations minusSet:oldAnnotations];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.xid IN %@", newAnnotations];
     NSSet *annotationsToAdd = [NSSet setWithArray:[self.resultsController.fetchedObjects filteredArrayUsingPredicate:predicate]];
+//    NSLog(@"annotationsToAdd %@", annotationsToAdd);
     [self annotationsCreateForSpots:annotationsToAdd];
 }
 
@@ -514,7 +525,9 @@
     if ([control isKindOfClass:[UIButton class]]) {
         UIButton *button = (UIButton *)control;
         if (button.buttonType == UIButtonTypeContactAdd) {
+//            NSLog(@"button Add self.mapView.annotations1 %@", self.mapView.annotations);
             [self.mapView removeAnnotation:view.annotation];
+//            NSLog(@"button Add self.mapView.annotations2 %@", self.mapView.annotations);
         }
         [self showSpot:button];
     }
@@ -588,8 +601,10 @@
             STGTSpot *spot = (STGTSpot *)anObject;
             if (![[spot.label substringToIndex:1] isEqualToString:@"@"]) {
                 STGTMapAnnotation *annotation = [self.annotationsDictionary objectForKey:spot.xid];
+                [self.annotationsDictionary removeObjectForKey:spot.xid];
                 [self.mapView removeAnnotation:annotation];
                 annotation = [STGTMapAnnotation createAnnotationForSpot:spot];
+                [self.annotationsDictionary setObject:annotation forKey:spot.xid];
                 [self.mapView addAnnotation:annotation];
                 [self.mapView selectAnnotation:annotation animated:NO];
             }
@@ -634,6 +649,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 //    NSLog(@"MVC viewWillAppear");
+//    NSLog(@"self.mapView.annotations %@", self.mapView.annotations);
+    [super viewWillAppear:animated];
     [self performFetch];
     if (self.filteredSpot) {
         CLLocationCoordinate2D center;
@@ -649,6 +666,9 @@
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
+//    NSLog(@"MVC viewWillDisappear");
+//    NSLog(@"self.mapView.annotations %@", self.mapView.annotations);
+    [super viewWillDisappear:animated];
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"mapViewWillDisappear UIDocumentSaveForOverwriting success");
     }];

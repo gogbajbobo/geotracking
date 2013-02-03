@@ -300,11 +300,7 @@
     [newSpot setXid:[self.tracker newid]];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
-//    NSDate *ts = [NSDate date];
-//    newSpot.ts = ts;
-//    newSpot.cts = ts;
     newSpot.address = @"";
-//    [self.syncer changesCountPlusOne];
     self.spot = newSpot;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newSpot UIDocumentSaveForOverwriting success");
