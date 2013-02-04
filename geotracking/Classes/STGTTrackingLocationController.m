@@ -218,6 +218,9 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
+
+//    [self testDeleteTrack];
+
 }
 
 - (void)performFetch {
@@ -377,24 +380,60 @@
     }
 }
 
+//- (void)testDeleteTrack {
+//    NSDate *localDate = [NSDate date];
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateStyle:NSDateFormatterShortStyle];
+//    NSString *string = [dateFormatter stringFromDate:localDate];
+//    NSDate *todayStart = [dateFormatter dateFromString:string];
+//    NSLog(@"localDate %@", localDate);
+//    NSLog(@"todayStart %@", todayStart);
+//
+//    double days = 5;
+//    double hours = 5;
+//    double seconds = (days * 24 * 3600) + (hours * 3600);
+//    NSDate *testDate = [NSDate dateWithTimeInterval:-seconds sinceDate:todayStart];
+//    NSLog(@"testDate %@", testDate);
+//    [self deleteTracksOlderThan:testDate];
+//    
+//}
+
+- (void)deleteTracksOlderThan:(NSDate *)date {
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTTrack"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
+    [request setIncludesSubentities:YES];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.ts < SELF.lts && SELF.ts < %@", date];
+    NSError *error;
+    NSArray *result = [self.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSLog(@"result.count %d", result.count);
+    for (STGTTrack *track in result) {
+//        NSLog(@"track %@", track);
+//        [self deleteTrack:track];
+    }
+
+}
+
+- (void)deleteTrack:(STGTTrack *)track {
+    for (STGTLocation *location in track.locations) {
+//        int static i = 1;
+//        NSLog(@"delete location %d", i++);
+        [self.locationsDatabase.managedObjectContext deleteObject:location];
+    }
+//        NSLog(@"delete track");
+    [self.locationsDatabase.managedObjectContext deleteObject:track];
+    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"deleteTrack UIDocumentSaveForOverwriting success");
+    }];
+}
+
 - (void)clearLocations {
     BOOL wasRunning = self.locationManagerRunning;
     if (wasRunning) {
         [self stopTrackingLocation];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
-
     for (STGTTrack *track in self.resultsController.fetchedObjects) {
-        for (STGTLocation *location in track.locations) {
-//                int static i = 1;
-//                NSLog(@"delete location %d", i++);
-            [self.locationsDatabase.managedObjectContext deleteObject:location];
-        }
-//            NSLog(@"delete track");
-        [self.locationsDatabase.managedObjectContext deleteObject:track];
-        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"clearTrack UIDocumentSaveForOverwriting success");
-        }];
+        [self deleteTrack:track];
     }
     self.lastLocation = nil;
     [self startNewTrack];
