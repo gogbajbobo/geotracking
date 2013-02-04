@@ -605,6 +605,7 @@
     UIColor *textColor;
     if ([track.ts compare:track.lts] == NSOrderedAscending) {
         textColor = [UIColor grayColor];
+        cell.tag = 1;
     } else {
         textColor = [UIColor blackColor];
     }
@@ -624,7 +625,11 @@
     if (indexPath.row == 0) {
         return UITableViewCellEditingStyleNone;
     } else {
-        return UITableViewCellEditingStyleDelete;
+        if (![self.settings.localAccessToSettings boolValue] && [tableView cellForRowAtIndexPath:indexPath].tag == 0) {
+            return UITableViewCellEditingStyleNone;
+        } else {
+            return UITableViewCellEditingStyleDelete;
+        }
     }
 }
 
