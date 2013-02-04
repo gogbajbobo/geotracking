@@ -21,7 +21,6 @@
 #define STGT_TRACKER_STARTTIME 9.0
 #define STGT_TRACKER_FINISHTIME 18.0
 
-
 #define STGT_MAP_HEADING MKUserTrackingModeNone
 #define STGT_MAP_TYPE MKMapTypeStandard
 #define STGT_TRACK_SCALE 2.0
@@ -31,7 +30,7 @@
 #define STGT_SYNC_SERVER_URI @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
 #define STGT_XML_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 
-
+#define STGT_LOCAL_ACCESS_TO_SETTINGS YES
 
 
 @interface STGTSettingsController()
@@ -64,6 +63,8 @@
     [settings setValue:[NSNumber numberWithDouble:STGT_SYNC_INTERVAL] forKey:@"syncInterval"];
     [settings setValue:STGT_SYNC_SERVER_URI forKey:@"syncServerURI"];
     [settings setValue:STGT_XML_NAMESPACE forKey:@"xmlNamespace"];
+    
+    [settings setValue:[NSNumber numberWithBool:STGT_LOCAL_ACCESS_TO_SETTINGS] forKey:@"localAccessToSettings"];
     
     return [settings copy];
 }
