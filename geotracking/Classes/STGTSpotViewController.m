@@ -12,6 +12,7 @@
 #import "STGTDataSyncController.h"
 #import "STGTInterest.h"
 #import "STGTNetwork.h"
+#import "STGTSpotImage.h"
 
 @interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
@@ -51,6 +52,7 @@
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"deleteObject:self.spot UIDocumentSaveForOverwriting success");
             }];
+//            [self imageTest];
             [self.navigationController popViewControllerAnimated:YES];
         }
     } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
@@ -61,6 +63,11 @@
         } else if (buttonIndex == 3) {
             self.spotImageView.image = nil;
             [self.spotImageView setNeedsDisplay];
+            [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot.image];
+            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+            }];
+//            [self imageTest];
         }
     }
 
@@ -124,7 +131,12 @@
 - (void)spotImageLongTap:(UILongPressGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", @"Delete photo", nil];
+        UIAlertView *sourceSelectAlert;
+        if (self.spot.image) {
+            sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", @"Delete photo", nil];
+        } else {
+            sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+        }
         [sourceSelectAlert show];
     }
 }
@@ -141,18 +153,29 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-//    self.spotImageView.image = [info objectForKey:UIImagePickerControllerOriginalImage];
     self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
-    self.spot.image = UIImagePNGRepresentation(self.spotImageView.image);
-//    self.spot.ts = [NSDate date];
-//    self.spot.synced = [NSNumber numberWithBool:NO];
+    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    [spotImage setXid:[self.tracker newid]];
+    spotImage.imageData = UIImagePNGRepresentation(self.spotImageView.image);
+    self.spot.image = spotImage;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spot.image UIDocumentSaveForOverwriting success");
     }];
+//    [self imageTest];
     [picker dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
     }];
 }
+
+//- (void)imageTest {
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTImage"];
+//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+//    NSError *error;
+//    NSArray *images = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+//    NSLog(@"images.count %d", images.count);
+//
+//}
+
 
 -(UIImage *)resizeImage:(UIImage *)image {
     CGFloat width = self.spotImageView.bounds.size.width;
@@ -217,7 +240,7 @@
         [[cell.contentView viewWithTag:1] removeFromSuperview];
         NSManagedObject *spotProperty = [spotPropertiesArray objectAtIndex:indexPath.row];
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, cell.contentView.frame.size.height)];
-        imageView.image = [UIImage imageWithData:[spotProperty valueForKey:@"image"]];
+        imageView.image = [UIImage imageWithData:[[spotProperty valueForKey:@"image"] valueForKey:@"imageData"]];
         imageView.tag = 1;
         [cell.contentView addSubview:imageView];
     }
@@ -314,7 +337,7 @@
     self.networkCollectionView.tag = 2;
     [self showSpotInfo];
     [self showSpotLabel];
-    UIImage *spotImage = [UIImage imageWithData:self.spot.image];
+    UIImage *spotImage = [UIImage imageWithData:self.spot.image.imageData];
     if (spotImage) {
         self.spotImageView.image = spotImage;
     } else {

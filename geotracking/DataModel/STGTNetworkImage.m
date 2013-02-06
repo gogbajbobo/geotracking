@@ -1,20 +1,17 @@
 //
-//  STGTNetwork.m
+//  STGTNetworkImage.m
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 2/6/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTNetwork.h"
 #import "STGTNetworkImage.h"
-#import "STGTSpot.h"
+#import "STGTNetwork.h"
 
 
-@implementation STGTNetwork
+@implementation STGTNetworkImage
 
-@dynamic name;
-@dynamic spots;
-@dynamic image;
+@dynamic network;
 
 @end

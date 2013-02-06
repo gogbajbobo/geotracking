@@ -7,6 +7,7 @@
 //
 
 #import "STGTDatum+Timestamp.h"
+#import "STGTTrackingLocationController.h"
 
 @implementation STGTDatum (Timestamp)
 
@@ -27,6 +28,9 @@
         
         NSDate *sqts = [self primitiveValueForKey:@"lts"] ? [self primitiveValueForKey:@"ts"] : [self primitiveValueForKey:@"cts"];
         [self setPrimitiveValue:sqts forKey:@"sqts"];
+        
+        if (![self primitiveValueForKey:@"xid"])
+            [self setPrimitiveValue:[[STGTTrackingLocationController sharedTracker] newid] forKey:@"xid"];
         
     }
     

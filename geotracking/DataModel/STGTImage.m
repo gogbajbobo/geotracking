@@ -1,20 +1,16 @@
 //
-//  STGTDatum.m
+//  STGTImage.m
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 2/6/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
-#import "STGTDatum.h"
+#import "STGTImage.h"
 
 
-@implementation STGTDatum
+@implementation STGTImage
 
-@dynamic cts;
-@dynamic lts;
-@dynamic sqts;
-@dynamic ts;
-@dynamic xid;
+@dynamic imageData;
 
 @end

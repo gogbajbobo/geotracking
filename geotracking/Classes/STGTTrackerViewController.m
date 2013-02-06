@@ -139,6 +139,7 @@
 
 - (void)viewDidLoad
 {
+    self.startButton.enabled = NO;
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];

@@ -2,7 +2,7 @@
 //  STGTNetwork.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/2/13.
+//  Created by Maxim Grigoriev on 2/6/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -10,13 +10,13 @@
 #import <CoreData/CoreData.h>
 #import "STGTDatum.h"
 
-@class STGTSpot;
+@class STGTNetworkImage, STGTSpot;
 
 @interface STGTNetwork : STGTDatum
 
-@property (nonatomic, retain) NSData * image;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSSet *spots;
+@property (nonatomic, retain) STGTNetworkImage *image;
 @end
 
 @interface STGTNetwork (CoreDataGeneratedAccessors)

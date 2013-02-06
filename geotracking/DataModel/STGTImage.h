@@ -1,20 +1,18 @@
 //
-//  STGTDatum.m
+//  STGTImage.h
 //  geotracking
 //
 //  Created by Maxim Grigoriev on 2/6/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 #import "STGTDatum.h"
 
 
-@implementation STGTDatum
+@interface STGTImage : STGTDatum
 
-@dynamic cts;
-@dynamic lts;
-@dynamic sqts;
-@dynamic ts;
-@dynamic xid;
+@property (nonatomic, retain) NSData * imageData;
 
 @end

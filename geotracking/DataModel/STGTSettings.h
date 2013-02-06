@@ -2,7 +2,7 @@
 //  STGTSettings.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/4/13.
+//  Created by Maxim Grigoriev on 2/6/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -18,6 +18,7 @@
 @property (nonatomic, retain) NSNumber * desiredAccuracy;
 @property (nonatomic, retain) NSNumber * distanceFilter;
 @property (nonatomic, retain) NSNumber * fetchLimit;
+@property (nonatomic, retain) NSNumber * localAccessToSettings;
 @property (nonatomic, retain) NSNumber * mapHeading;
 @property (nonatomic, retain) NSNumber * mapType;
 @property (nonatomic, retain) NSNumber * requiredAccuracy;
@@ -30,6 +31,5 @@
 @property (nonatomic, retain) NSNumber * trackerStartTime;
 @property (nonatomic, retain) NSNumber * trackScale;
 @property (nonatomic, retain) NSString * xmlNamespace;
-@property (nonatomic, retain) NSNumber * localAccessToSettings;
 
 @end

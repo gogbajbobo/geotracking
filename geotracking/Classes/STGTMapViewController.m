@@ -12,6 +12,7 @@
 #import "STGTFilterSpotViewController.h"
 #import "STGTSettingsController.h"
 #import "STGTSettings.h"
+#import "STGTSpotImage.h"
 
 @interface STGTMapViewController () <MKMapViewDelegate, NSFetchedResultsControllerDelegate, UIWebViewDelegate>
 @property (nonatomic) CLLocationCoordinate2D center;
@@ -488,7 +489,7 @@
         pinView.rightCalloutAccessoryView = detailDisclosureButton;
 
         STGTMapAnnotation *mapAnnotation = annotation;
-        UIImage *spotImage = [UIImage imageWithData:mapAnnotation.spot.image];
+        UIImage *spotImage = [UIImage imageWithData:mapAnnotation.spot.image.imageData];
         if (spotImage) {
             CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
             UIImageView *spotImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 32)];

@@ -139,10 +139,16 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)sender.superview.superview];
     NSString *settingName = [[self.settingsTitles objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
-    if ([settingName isEqualToString:@"requiredAccuracy"]) {
-        [sender setValue:rint(sender.value/10)*10];
-        self.settings.requiredAccuracy = [NSNumber numberWithDouble:sender.value];
-    } else if ([settingName isEqualToString:@"desiredAccuracy"]) {
+    NSDictionary *stepValue = [NSDictionary dictionaryWithObjectsAndKeys:
+                               [NSNumber numberWithDouble:10], @"requiredAccuracy",
+                               [NSNumber numberWithDouble:30], @"trackDetectionTime",
+                               [NSNumber numberWithDouble:60], @"syncInterval",
+                               [NSNumber numberWithDouble:10], @"fetchLimit",
+                               [NSNumber numberWithDouble:0.5], @"trackerStartTime",
+                               [NSNumber numberWithDouble:0.5], @"trackerFinishTime",
+                               [NSNumber numberWithDouble:0.5], @"trackScale", nil];
+    
+    if ([settingName isEqualToString:@"desiredAccuracy"]) {
         NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
                                   [NSNumber numberWithDouble:kCLLocationAccuracyBest],
                                   [NSNumber numberWithDouble:kCLLocationAccuracyNearestTenMeters],
@@ -154,25 +160,12 @@
     } else if ([settingName isEqualToString:@"distanceFilter"]) {
         [sender setValue:floor(sender.value/10)*10];
         self.settings.distanceFilter = [NSNumber numberWithDouble:sender.value];
-    } else if ([settingName isEqualToString:@"trackDetectionTime"]) {
-        [sender setValue:rint(sender.value/30)*30];
-        self.settings.trackDetectionTime = [NSNumber numberWithDouble:sender.value];
-    } else if ([settingName isEqualToString:@"syncInterval"]) {
-        [sender setValue:rint(sender.value/60)*60];
-        self.settings.syncInterval = [NSNumber numberWithDouble:sender.value];
-    } else if ([settingName isEqualToString:@"fetchLimit"]) {
-        [sender setValue:rint(sender.value/5)*5];
-        self.settings.fetchLimit = [NSNumber numberWithDouble:sender.value];
-    } else if ([settingName isEqualToString:@"trackerStartTime"]) {
-        [sender setValue:rint(sender.value/0.5)*0.5];
-        self.settings.trackerStartTime = [NSNumber numberWithDouble:sender.value];
-    } else if ([settingName isEqualToString:@"trackerFinishTime"]) {
-        [sender setValue:rint(sender.value/0.5)*0.5];
-        self.settings.trackerFinishTime = [NSNumber numberWithDouble:sender.value];        
-    } else if ([settingName isEqualToString:@"trackScale"]) {
-        [sender setValue:rint(sender.value/0.5)*0.5];
-        self.settings.trackScale = [NSNumber numberWithDouble:sender.value];
+    } else {
+        double step = [[stepValue objectForKey:settingName] doubleValue];
+        [sender setValue:rint(sender.value/step)*step];
+        [self.settings setValue:[NSNumber numberWithDouble:sender.value] forKey:settingName];
     }
+    
 }
 
 - (void)switchValueChanged:(UISwitch *)sender {

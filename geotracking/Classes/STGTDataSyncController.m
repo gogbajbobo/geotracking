@@ -162,7 +162,7 @@
     //        [self sendData:nil toServer:@"https://system.unact.ru/reflect/?--mirror"];
             [self sendData:nil toServer:self.settings.syncServerURI];
         } else {        
-    //        [self sendData:[self xmlFrom:fetchedData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
+//        [self sendData:[self xmlFrom:fetchedData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
             [self sendData:[self xmlFrom:fetchedData] toServer:self.settings.syncServerURI];
         }
     }
@@ -185,6 +185,8 @@
         GDataXMLElement *dNode = [GDataXMLElement elementWithName:@"d"];
         [dNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[object entity] name]]];
         [dNode addAttribute:[GDataXMLNode attributeWithName:@"xid" stringValue:[object valueForKey:@"xid"]]];
+        
+//        NSLog(@"[[object entity] name] %@", [[object entity] name]);
         
         NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[[object entity] name] inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         
@@ -215,10 +217,12 @@
                         [propertyNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:propertyName]];
                         [dNode addChild:propertyNode];
                     } else if ([value isKindOfClass:[NSManagedObject class]]) {
-                        GDataXMLElement *propertyNode = [GDataXMLElement elementWithName:@"d"];
-                        [propertyNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[value entity] name]]];
-                        [propertyNode addAttribute:[GDataXMLNode attributeWithName:@"xid" stringValue:[value valueForKey:@"xid"]]];
-                        [dNode addChild:propertyNode];
+                        if ([value valueForKey:@"xid"]) {
+                            GDataXMLElement *propertyNode = [GDataXMLElement elementWithName:@"d"];
+                            [propertyNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[value entity] name]]];
+                            [propertyNode addAttribute:[GDataXMLNode attributeWithName:@"xid" stringValue:[value valueForKey:@"xid"]]];
+                            [dNode addChild:propertyNode];
+                        }
                     } else if ([value isKindOfClass:[NSSet class]]) {
                         //                            NSLog(@"propertyName %@", propertyName);
                         NSRelationshipDescription *inverseRelationship = [[entityDescription.relationshipsByName objectForKey:propertyName] inverseRelationship];

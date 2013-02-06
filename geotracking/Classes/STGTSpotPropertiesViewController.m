@@ -9,7 +9,9 @@
 #import "STGTSpotPropertiesViewController.h"
 #import "STGTDataSyncController.h"
 #import "STGTInterest.h"
+#import "STGTInterestImage.h"
 #import "STGTNetwork.h"
+#import "STGTNetworkImage.h"
 
 @interface STGTSpotPropertiesViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIAlertViewDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
@@ -66,14 +68,18 @@
         STGTInterest *newInterest = (STGTInterest *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterest" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         [newInterest setXid:[self.tracker newid]];
         [newInterest setName:name];
-        [newInterest setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
+        STGTInterestImage *interestImage = (STGTInterestImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterestImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        interestImage.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"]);
+        [newInterest setImage:interestImage];
         [self.filterSpot addInterestsObject:newInterest];
 
     } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
         STGTNetwork *newNetwork = (STGTNetwork *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetwork" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         [newNetwork setXid:[self.tracker newid]];
         [newNetwork setName:name];
-        [newNetwork setImage:UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"])];
+        STGTNetworkImage *networkImage = (STGTNetworkImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetworkImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        networkImage.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"]);
+        [newNetwork setImage:networkImage];
         [self.filterSpot addNetworksObject:newNetwork];
         
     }
@@ -146,7 +152,7 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
 
         NSManagedObject *object = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        [object setValue:UIImagePNGRepresentation(imageView.image) forKey:@"image"];
+        [[object valueForKey:@"image"] setValue:UIImagePNGRepresentation(imageView.image) forKey:@"imageData"];
         
 //        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
 //            STGTInterest *interest = (STGTInterest *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
@@ -202,7 +208,7 @@
         cell.textLabel.text = [NSString stringWithFormat:@"%@", [object valueForKey:@"name"]];
         textField.text = cell.textLabel.text;
         if ([object valueForKey:@"image"]) {
-            cell.imageView.image = [UIImage imageWithData:[object valueForKey:@"image"]];
+            cell.imageView.image = [UIImage imageWithData:[[object valueForKey:@"image"] valueForKey:@"imageData"]];
         } else {
         }
     } else {

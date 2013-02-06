@@ -418,12 +418,6 @@
 }
 
 - (void)deleteTrack:(STGTTrack *)track {
-    for (STGTLocation *location in track.locations) {
-//        int static i = 1;
-//        NSLog(@"delete location %d", i++);
-        [self.locationsDatabase.managedObjectContext deleteObject:location];
-    }
-//        NSLog(@"delete track");
     [self.locationsDatabase.managedObjectContext deleteObject:track];
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"deleteTrack UIDocumentSaveForOverwriting success");
@@ -688,15 +682,7 @@
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         STGTTrack *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        for (STGTLocation *location in track.locations) {
-//            NSLog(@"location to delete %@", location);
-            [self.locationsDatabase.managedObjectContext deleteObject:location];
-        }
-//        NSLog(@"track to delete %@", track);
-        [self.locationsDatabase.managedObjectContext deleteObject:track];
-        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-            NSLog(@"UIDocumentSaveForOverwriting success");
-        }];
+        [self deleteTrack:track];
     }
 
 }

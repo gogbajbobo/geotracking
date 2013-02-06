@@ -864,8 +864,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
-                                                <slider opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minValue="5" maxValue="100" id="Z5e-nx-8fN">
-                                                    <rect key="frame" x="25" y="38" width="270" height="23"/>
+                                                <slider opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="20" minValue="10" maxValue="200" id="Z5e-nx-8fN">
+                                                    <rect key="frame" x="25" y="42" width="270" height="23"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </slider>
                                             </subviews>
