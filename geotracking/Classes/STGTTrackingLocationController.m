@@ -436,11 +436,19 @@
         [self stopTrackingLocation];
     }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
-    for (STGTTrack *track in self.resultsController.fetchedObjects) {
-        [self deleteTrack:track];
+    if ([self.settings.localAccessToSettings boolValue]) {
+        for (STGTTrack *track in self.resultsController.fetchedObjects) {
+            [self deleteTrack:track];
+        }
+        self.lastLocation = nil;
+        [self startNewTrack];
+    } else {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.ts < SELF.lts"];
+        NSArray *syncedObjects = [self.resultsController.fetchedObjects filteredArrayUsingPredicate:predicate];
+        for (STGTTrack *track in syncedObjects) {
+            [self deleteTrack:track];
+        }
     }
-    self.lastLocation = nil;
-    [self startNewTrack];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
     if (wasRunning) {
         [self startTrackingLocation];
