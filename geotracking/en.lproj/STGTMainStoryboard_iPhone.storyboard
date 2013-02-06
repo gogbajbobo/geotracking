@@ -576,6 +576,8 @@
                     <navigationItem key="navigationItem" title="Tracker" id="AJ0-KO-ici"/>
                     <connections>
                         <outlet property="currentValues" destination="wxU-Qe-ErL" id="gwb-5B-aQq"/>
+                        <outlet property="deleteButton" destination="uKi-Fm-4MH" id="PYm-UW-NoI"/>
+                        <outlet property="settingsButton" destination="STs-tV-Tnh" id="slC-SC-J3t"/>
                         <outlet property="startButton" destination="NqZ-7M-H0G" id="GOz-dm-gfr"/>
                         <outlet property="summary" destination="TqX-pt-8Lo" id="zmV-9T-sn4"/>
                         <outlet property="syncButton" destination="PGh-Lk-ZYN" id="CZL-jb-Z7t"/>

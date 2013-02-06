@@ -96,6 +96,8 @@
         [settings addObserver:self forKeyPath:@"desiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"trackerAutoStart" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"localAccessToSettings" options:NSKeyValueObservingOptionNew context:nil];
+
 //        NSLog(@"settings.xid %@", settings.xid);
 //        NSLog(@"settings.lts %@", settings.lts);
 //        NSLog(@"settings.distanceFilter %@", settings.distanceFilter);
@@ -114,6 +116,8 @@
         [self updateInfoLabels];
     } else if ([keyPath isEqualToString:@"trackerAutoStart"]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAutoStartChanged" object:self];
+    } else if ([keyPath isEqualToString:@"localAccessToSettings"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAccessToSettingsChanged" object:self];
     }
     
 //    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {

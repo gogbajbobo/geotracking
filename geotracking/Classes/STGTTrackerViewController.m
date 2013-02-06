@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *summary;
 @property (weak, nonatomic) IBOutlet UILabel *currentValues;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *syncButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
 
 @end
 
@@ -103,12 +105,18 @@
 }
 
 
-- (void)startButtonEnable:(NSNotification *)notification {
-    self.startButton.enabled = YES;
+- (void)trackerReady:(NSNotification *)notification {
+    self.startButton.enabled = ![[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"trackerAutoStart"] boolValue];
+    self.deleteButton.enabled = [[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"localAccessToSettings"] boolValue];
+    self.syncButton.enabled = ![[STGTDataSyncController sharedSyncer] syncing];
+    self.settingsButton.enabled = YES;
 }
 
-- (void)startButtonDisable:(NSNotification *)notification {
+- (void)trackerBusy:(NSNotification *)notification {
     self.startButton.enabled = NO;
+    self.settingsButton.enabled = NO;
+    self.syncButton.enabled = NO;
+    self.deleteButton.enabled = NO;
 }
 
 - (void)setStartButtonLabel:(NSNotification *)notification {
@@ -121,26 +129,33 @@
 
 - (void)startButtonAccess:(NSNotification *)notification {
     if ([notification.object isKindOfClass:[STGTTrackingLocationController class]]) {
-        if ([[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"trackerAutoStart"] boolValue]) {
-            self.startButton.enabled = NO;
-        } else {
-            self.startButton.enabled = YES;
-        }
+        self.startButton.enabled = ![[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"trackerAutoStart"] boolValue];
+    }
+}
+
+- (void)deleteButtonAccess:(NSNotification *)notification {
+    if ([notification.object isKindOfClass:[STGTTrackingLocationController class]]) {
+        self.deleteButton.enabled = [[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"localAccessToSettings"] boolValue];
     }
 }
 
 
 - (void)viewDidLoad
 {
-    [self startButtonDisable:nil];
+//    [self startButtonDisable:nil];
+//    NSLog(@"trackerAutoStart %d", [[[self.tracker settings] valueForKey:@"trackerAutoStart"] boolValue]);
+//    NSLog(@"localAccessToSettings %d", [[[self.tracker settings] valueForKey:@"localAccessToSettings"] boolValue]);
+//    self.startButton.enabled = ![[[self.tracker settings] valueForKey:@"trackerAutoStart"] boolValue];
+//    self.deleteButton.enabled = [[[self.tracker settings] valueForKey:@"localAccessToSettings"] boolValue];
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonEnable:) name:@"STGTTrackerReady" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonDisable:) name:@"STGTTrackerBusy" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerBusy:) name:@"STGTTrackerBusy" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteButtonAccess:) name:@"STGTTrackerAccessToSettingsChanged" object:nil];
     [super viewDidLoad];
 }
 
@@ -155,6 +170,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerAutoStartChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerAccessToSettingsChanged" object:nil];
     [super viewDidUnload];
 }
 
