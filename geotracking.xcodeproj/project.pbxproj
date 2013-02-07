@@ -33,17 +33,17 @@
 		2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* STGTMapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* STGTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */; };
 		2C94D722166FC00D0019A0C7 /* STGTFilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */; };
-		2C9C564216C29FAF008D6529 /* STGTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C564116C29FAF008D6529 /* STGTNetwork.m */; };
-		2C9C564516C29FAF008D6529 /* STGTInterest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C564416C29FAF008D6529 /* STGTInterest.m */; };
-		2C9C564816C29FAF008D6529 /* STGTLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C564716C29FAF008D6529 /* STGTLocation.m */; };
-		2C9C564B16C29FAF008D6529 /* STGTTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C564A16C29FAF008D6529 /* STGTTrack.m */; };
-		2C9C564E16C29FAF008D6529 /* STGTSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C564D16C29FAF008D6529 /* STGTSettings.m */; };
-		2C9C565116C29FAF008D6529 /* STGTSpotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C565016C29FAF008D6529 /* STGTSpotImage.m */; };
-		2C9C565416C29FAF008D6529 /* STGTImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C565316C29FAF008D6529 /* STGTImage.m */; };
-		2C9C565716C29FB0008D6529 /* STGTNetworkImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C565616C29FB0008D6529 /* STGTNetworkImage.m */; };
-		2C9C565A16C29FB0008D6529 /* STGTInterestImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C565916C29FB0008D6529 /* STGTInterestImage.m */; };
-		2C9C565D16C29FB0008D6529 /* STGTSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C565C16C29FB0008D6529 /* STGTSpot.m */; };
-		2C9C566016C29FB0008D6529 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C565F16C29FB0008D6529 /* STGTDatum.m */; };
+		2C9C566D16C39A02008D6529 /* STGTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566C16C39A02008D6529 /* STGTNetwork.m */; };
+		2C9C567016C39A02008D6529 /* STGTSpotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566F16C39A02008D6529 /* STGTSpotImage.m */; };
+		2C9C567316C39A02008D6529 /* STGTTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567216C39A02008D6529 /* STGTTrack.m */; };
+		2C9C567616C39A02008D6529 /* STGTNetworkImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567516C39A02008D6529 /* STGTNetworkImage.m */; };
+		2C9C567916C39A03008D6529 /* STGTSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567816C39A03008D6529 /* STGTSpot.m */; };
+		2C9C567C16C39A03008D6529 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567B16C39A03008D6529 /* STGTDatum.m */; };
+		2C9C567F16C39A03008D6529 /* STGTImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567E16C39A03008D6529 /* STGTImage.m */; };
+		2C9C568216C39A03008D6529 /* STGTInterest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568116C39A03008D6529 /* STGTInterest.m */; };
+		2C9C568516C39A03008D6529 /* STGTInterestImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568416C39A03008D6529 /* STGTInterestImage.m */; };
+		2C9C568816C39A03008D6529 /* STGTSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568716C39A03008D6529 /* STGTSettings.m */; };
+		2C9C568B16C39A03008D6529 /* STGTLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568A16C39A03008D6529 /* STGTLocation.m */; };
 		2CA191CC16A98FEA0072E61F /* STGTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA191CB16A98FEA0072E61F /* STGTAppDelegate.m */; };
 		2CA9489016A7F326008463CA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CA9488E16A7F326008463CA /* InfoPlist.strings */; };
 		2CB24B701639A7A90040A211 /* STGTSpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */; };
@@ -118,28 +118,29 @@
 		2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTMapAnnotation.m; sourceTree = "<group>"; };
 		2C94D720166FC00D0019A0C7 /* STGTFilterSpotViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTFilterSpotViewController.h; sourceTree = "<group>"; };
 		2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTFilterSpotViewController.m; sourceTree = "<group>"; };
-		2C9C564016C29FAF008D6529 /* STGTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTNetwork.h; sourceTree = "<group>"; };
-		2C9C564116C29FAF008D6529 /* STGTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTNetwork.m; sourceTree = "<group>"; };
-		2C9C564316C29FAF008D6529 /* STGTInterest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTInterest.h; sourceTree = "<group>"; };
-		2C9C564416C29FAF008D6529 /* STGTInterest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTInterest.m; sourceTree = "<group>"; };
-		2C9C564616C29FAF008D6529 /* STGTLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTLocation.h; sourceTree = "<group>"; };
-		2C9C564716C29FAF008D6529 /* STGTLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTLocation.m; sourceTree = "<group>"; };
-		2C9C564916C29FAF008D6529 /* STGTTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrack.h; sourceTree = "<group>"; };
-		2C9C564A16C29FAF008D6529 /* STGTTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrack.m; sourceTree = "<group>"; };
-		2C9C564C16C29FAF008D6529 /* STGTSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettings.h; sourceTree = "<group>"; };
-		2C9C564D16C29FAF008D6529 /* STGTSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettings.m; sourceTree = "<group>"; };
-		2C9C564F16C29FAF008D6529 /* STGTSpotImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotImage.h; sourceTree = "<group>"; };
-		2C9C565016C29FAF008D6529 /* STGTSpotImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotImage.m; sourceTree = "<group>"; };
-		2C9C565216C29FAF008D6529 /* STGTImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTImage.h; sourceTree = "<group>"; };
-		2C9C565316C29FAF008D6529 /* STGTImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTImage.m; sourceTree = "<group>"; };
-		2C9C565516C29FB0008D6529 /* STGTNetworkImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTNetworkImage.h; sourceTree = "<group>"; };
-		2C9C565616C29FB0008D6529 /* STGTNetworkImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTNetworkImage.m; sourceTree = "<group>"; };
-		2C9C565816C29FB0008D6529 /* STGTInterestImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTInterestImage.h; sourceTree = "<group>"; };
-		2C9C565916C29FB0008D6529 /* STGTInterestImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTInterestImage.m; sourceTree = "<group>"; };
-		2C9C565B16C29FB0008D6529 /* STGTSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpot.h; sourceTree = "<group>"; };
-		2C9C565C16C29FB0008D6529 /* STGTSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpot.m; sourceTree = "<group>"; };
-		2C9C565E16C29FB0008D6529 /* STGTDatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTDatum.h; sourceTree = "<group>"; };
-		2C9C565F16C29FB0008D6529 /* STGTDatum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTDatum.m; sourceTree = "<group>"; };
+		2C9C566916C3991B008D6529 /* STGTTracker 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "STGTTracker 9.xcdatamodel"; sourceTree = "<group>"; };
+		2C9C566B16C39A02008D6529 /* STGTNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTNetwork.h; sourceTree = "<group>"; };
+		2C9C566C16C39A02008D6529 /* STGTNetwork.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTNetwork.m; sourceTree = "<group>"; };
+		2C9C566E16C39A02008D6529 /* STGTSpotImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotImage.h; sourceTree = "<group>"; };
+		2C9C566F16C39A02008D6529 /* STGTSpotImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotImage.m; sourceTree = "<group>"; };
+		2C9C567116C39A02008D6529 /* STGTTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTTrack.h; sourceTree = "<group>"; };
+		2C9C567216C39A02008D6529 /* STGTTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrack.m; sourceTree = "<group>"; };
+		2C9C567416C39A02008D6529 /* STGTNetworkImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTNetworkImage.h; sourceTree = "<group>"; };
+		2C9C567516C39A02008D6529 /* STGTNetworkImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTNetworkImage.m; sourceTree = "<group>"; };
+		2C9C567716C39A03008D6529 /* STGTSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpot.h; sourceTree = "<group>"; };
+		2C9C567816C39A03008D6529 /* STGTSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpot.m; sourceTree = "<group>"; };
+		2C9C567A16C39A03008D6529 /* STGTDatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTDatum.h; sourceTree = "<group>"; };
+		2C9C567B16C39A03008D6529 /* STGTDatum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTDatum.m; sourceTree = "<group>"; };
+		2C9C567D16C39A03008D6529 /* STGTImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTImage.h; sourceTree = "<group>"; };
+		2C9C567E16C39A03008D6529 /* STGTImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTImage.m; sourceTree = "<group>"; };
+		2C9C568016C39A03008D6529 /* STGTInterest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTInterest.h; sourceTree = "<group>"; };
+		2C9C568116C39A03008D6529 /* STGTInterest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTInterest.m; sourceTree = "<group>"; };
+		2C9C568316C39A03008D6529 /* STGTInterestImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTInterestImage.h; sourceTree = "<group>"; };
+		2C9C568416C39A03008D6529 /* STGTInterestImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTInterestImage.m; sourceTree = "<group>"; };
+		2C9C568616C39A03008D6529 /* STGTSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSettings.h; sourceTree = "<group>"; };
+		2C9C568716C39A03008D6529 /* STGTSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSettings.m; sourceTree = "<group>"; };
+		2C9C568916C39A03008D6529 /* STGTLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTLocation.h; sourceTree = "<group>"; };
+		2C9C568A16C39A03008D6529 /* STGTLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTLocation.m; sourceTree = "<group>"; };
 		2CA191CA16A98FEA0072E61F /* STGTAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTAppDelegate.h; sourceTree = "<group>"; };
 		2CA191CB16A98FEA0072E61F /* STGTAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTAppDelegate.m; sourceTree = "<group>"; };
 		2CA9488F16A7F326008463CA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -258,28 +259,28 @@
 			isa = PBXGroup;
 			children = (
 				2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */,
-				2C9C565E16C29FB0008D6529 /* STGTDatum.h */,
-				2C9C565F16C29FB0008D6529 /* STGTDatum.m */,
-				2C9C565B16C29FB0008D6529 /* STGTSpot.h */,
-				2C9C565C16C29FB0008D6529 /* STGTSpot.m */,
-				2C9C565816C29FB0008D6529 /* STGTInterestImage.h */,
-				2C9C565916C29FB0008D6529 /* STGTInterestImage.m */,
-				2C9C565516C29FB0008D6529 /* STGTNetworkImage.h */,
-				2C9C565616C29FB0008D6529 /* STGTNetworkImage.m */,
-				2C9C565216C29FAF008D6529 /* STGTImage.h */,
-				2C9C565316C29FAF008D6529 /* STGTImage.m */,
-				2C9C564F16C29FAF008D6529 /* STGTSpotImage.h */,
-				2C9C565016C29FAF008D6529 /* STGTSpotImage.m */,
-				2C9C564C16C29FAF008D6529 /* STGTSettings.h */,
-				2C9C564D16C29FAF008D6529 /* STGTSettings.m */,
-				2C9C564916C29FAF008D6529 /* STGTTrack.h */,
-				2C9C564A16C29FAF008D6529 /* STGTTrack.m */,
-				2C9C564616C29FAF008D6529 /* STGTLocation.h */,
-				2C9C564716C29FAF008D6529 /* STGTLocation.m */,
-				2C9C564316C29FAF008D6529 /* STGTInterest.h */,
-				2C9C564416C29FAF008D6529 /* STGTInterest.m */,
-				2C9C564016C29FAF008D6529 /* STGTNetwork.h */,
-				2C9C564116C29FAF008D6529 /* STGTNetwork.m */,
+				2C9C568916C39A03008D6529 /* STGTLocation.h */,
+				2C9C568A16C39A03008D6529 /* STGTLocation.m */,
+				2C9C568616C39A03008D6529 /* STGTSettings.h */,
+				2C9C568716C39A03008D6529 /* STGTSettings.m */,
+				2C9C568316C39A03008D6529 /* STGTInterestImage.h */,
+				2C9C568416C39A03008D6529 /* STGTInterestImage.m */,
+				2C9C568016C39A03008D6529 /* STGTInterest.h */,
+				2C9C568116C39A03008D6529 /* STGTInterest.m */,
+				2C9C567D16C39A03008D6529 /* STGTImage.h */,
+				2C9C567E16C39A03008D6529 /* STGTImage.m */,
+				2C9C567A16C39A03008D6529 /* STGTDatum.h */,
+				2C9C567B16C39A03008D6529 /* STGTDatum.m */,
+				2C9C567716C39A03008D6529 /* STGTSpot.h */,
+				2C9C567816C39A03008D6529 /* STGTSpot.m */,
+				2C9C567416C39A02008D6529 /* STGTNetworkImage.h */,
+				2C9C567516C39A02008D6529 /* STGTNetworkImage.m */,
+				2C9C567116C39A02008D6529 /* STGTTrack.h */,
+				2C9C567216C39A02008D6529 /* STGTTrack.m */,
+				2C9C566E16C39A02008D6529 /* STGTSpotImage.h */,
+				2C9C566F16C39A02008D6529 /* STGTSpotImage.m */,
+				2C9C566B16C39A02008D6529 /* STGTNetwork.h */,
+				2C9C566C16C39A02008D6529 /* STGTNetwork.m */,
 				2C1ABBE616AECD9200AD92E4 /* STGTDatum+Timestamp.h */,
 				2C1ABBE716AECD9200AD92E4 /* STGTDatum+Timestamp.m */,
 			);
@@ -523,17 +524,17 @@
 				2C0CBBDB16B120E300F74384 /* STGTAuthBasic.m in Sources */,
 				2C0CBC1316B175ED00F74384 /* STGTSettingsController.m in Sources */,
 				2C33502B16B5228500C3EAB0 /* STGTSettingsTableViewController.m in Sources */,
-				2C9C564216C29FAF008D6529 /* STGTNetwork.m in Sources */,
-				2C9C564516C29FAF008D6529 /* STGTInterest.m in Sources */,
-				2C9C564816C29FAF008D6529 /* STGTLocation.m in Sources */,
-				2C9C564B16C29FAF008D6529 /* STGTTrack.m in Sources */,
-				2C9C564E16C29FAF008D6529 /* STGTSettings.m in Sources */,
-				2C9C565116C29FAF008D6529 /* STGTSpotImage.m in Sources */,
-				2C9C565416C29FAF008D6529 /* STGTImage.m in Sources */,
-				2C9C565716C29FB0008D6529 /* STGTNetworkImage.m in Sources */,
-				2C9C565A16C29FB0008D6529 /* STGTInterestImage.m in Sources */,
-				2C9C565D16C29FB0008D6529 /* STGTSpot.m in Sources */,
-				2C9C566016C29FB0008D6529 /* STGTDatum.m in Sources */,
+				2C9C566D16C39A02008D6529 /* STGTNetwork.m in Sources */,
+				2C9C567016C39A02008D6529 /* STGTSpotImage.m in Sources */,
+				2C9C567316C39A02008D6529 /* STGTTrack.m in Sources */,
+				2C9C567616C39A02008D6529 /* STGTNetworkImage.m in Sources */,
+				2C9C567916C39A03008D6529 /* STGTSpot.m in Sources */,
+				2C9C567C16C39A03008D6529 /* STGTDatum.m in Sources */,
+				2C9C567F16C39A03008D6529 /* STGTImage.m in Sources */,
+				2C9C568216C39A03008D6529 /* STGTInterest.m in Sources */,
+				2C9C568516C39A03008D6529 /* STGTInterestImage.m in Sources */,
+				2C9C568816C39A03008D6529 /* STGTSettings.m in Sources */,
+				2C9C568B16C39A03008D6529 /* STGTLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,6 +746,7 @@
 		2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2C9C566916C3991B008D6529 /* STGTTracker 9.xcdatamodel */,
 				2CFC3A9316C294F2004B154A /* STGTTracker 8.xcdatamodel */,
 				2CFC3A8716BFCFFA004B154A /* STGTTracker 7.xcdatamodel */,
 				2C15B49516B810F40007DBEE /* STGTTracker 4.xcdatamodel */,
@@ -754,7 +756,7 @@
 				2C0CBC0816B1648300F74384 /* STGTTracker 3.xcdatamodel */,
 				2C1ABBDE16AEBBDE00AD92E4 /* STGTTracker.xcdatamodel */,
 			);
-			currentVersion = 2CFC3A9316C294F2004B154A /* STGTTracker 8.xcdatamodel */;
+			currentVersion = 2C9C566916C3991B008D6529 /* STGTTracker 9.xcdatamodel */;
 			path = STGTTracker.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -246,7 +246,7 @@
 
 - (void)startNewTrack {
     STGTTrack *track = (STGTTrack *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTTrack" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-    [track setXid:[self newid]];
+//    [track setXid:[self newid]];
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     NSDate *ts = [NSDate date];
     [track setStartTime:ts];
@@ -271,7 +271,9 @@
             [location setHorizontalAccuracy:[NSNumber numberWithDouble:self.lastLocation.horizontalAccuracy]];
             [location setSpeed:[NSNumber numberWithDouble:-1]];
             [location setCourse:[NSNumber numberWithDouble:-1]];
-            [location setXid:[self newid]];
+            [location setAltitude:[NSNumber numberWithDouble:self.lastLocation.altitude]];
+            [location setVerticalAccuracy:[NSNumber numberWithDouble:self.lastLocation.verticalAccuracy]];
+//            [location setXid:[self newid]];
 //            [self.syncer changesCountPlusOne];
             [self.currentTrack setStartTime:ts];
             [self.currentTrack addLocationsObject:location];
@@ -292,7 +294,9 @@
     [location setHorizontalAccuracy:[NSNumber numberWithDouble:currentLocation.horizontalAccuracy]];
     [location setSpeed:[NSNumber numberWithDouble:currentLocation.speed]];
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
-    [location setXid:[self newid]];
+    [location setAltitude:[NSNumber numberWithDouble:currentLocation.altitude]];
+    [location setVerticalAccuracy:[NSNumber numberWithDouble:currentLocation.verticalAccuracy]];
+//    [location setXid:[self newid]];
 //    [self.syncer changesCountPlusOne];
 
     if (self.currentTrack.locations.count == 0) {
@@ -301,11 +305,15 @@
     self.currentTrack.finishTime = timestamp;
     [self.currentTrack addLocationsObject:location];
     
-//    NSLog(@"currentLocation %@",currentLocation);
+    NSLog(@"currentLocation %@",currentLocation);
+    NSLog(@"currentLocation.verticalAccuracy %f", currentLocation.verticalAccuracy);
+    NSLog(@"currentLocation.altitude %f", currentLocation.altitude);
+
+    self.lastLocation = currentLocation;
 
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //        NSLog(@"addLocation UIDocumentSaveForOverwriting success");
-        self.lastLocation = currentLocation;
+//        self.lastLocation = currentLocation;
     }];
     [self updateInfoLabels];
 

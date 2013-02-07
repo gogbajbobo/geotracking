@@ -2,7 +2,7 @@
 //  STGTNetwork.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/6/13.
+//  Created by Maxim Grigoriev on 2/7/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -14,7 +14,7 @@
 @implementation STGTNetwork
 
 @dynamic name;
-@dynamic spots;
 @dynamic image;
+@dynamic spots;
 
 @end

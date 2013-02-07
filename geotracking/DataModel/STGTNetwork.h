@@ -2,7 +2,7 @@
 //  STGTNetwork.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/6/13.
+//  Created by Maxim Grigoriev on 2/7/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -15,8 +15,8 @@
 @interface STGTNetwork : STGTDatum
 
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSSet *spots;
 @property (nonatomic, retain) STGTNetworkImage *image;
+@property (nonatomic, retain) NSSet *spots;
 @end
 
 @interface STGTNetwork (CoreDataGeneratedAccessors)

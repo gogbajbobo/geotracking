@@ -2,7 +2,7 @@
 //  STGTLocation.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/6/13.
+//  Created by Maxim Grigoriev on 2/7/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -19,6 +19,8 @@
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSNumber * longitude;
 @property (nonatomic, retain) NSNumber * speed;
+@property (nonatomic, retain) NSNumber * altitude;
+@property (nonatomic, retain) NSNumber * verticalAccuracy;
 @property (nonatomic, retain) STGTTrack *track;
 
 @end
