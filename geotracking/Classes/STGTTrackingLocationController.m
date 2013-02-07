@@ -83,8 +83,8 @@
         if (!settings) {
             settings = (STGTSettings *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSettings" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
             [settings setValuesForKeysWithDictionary:[STGTSettingsController defaultSettings]];
-            [settings setValue:[self newid] forKey:@"xid"];
-                            
+//            [settings setValue:[self newid] forKey:@"xid"];
+            
             [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"settings create UIDocumentSaveForOverwriting success");
             }];
@@ -305,15 +305,12 @@
     self.currentTrack.finishTime = timestamp;
     [self.currentTrack addLocationsObject:location];
     
-    NSLog(@"currentLocation %@",currentLocation);
-    NSLog(@"currentLocation.verticalAccuracy %f", currentLocation.verticalAccuracy);
-    NSLog(@"currentLocation.altitude %f", currentLocation.altitude);
+//    NSLog(@"currentLocation %@",currentLocation);
 
     self.lastLocation = currentLocation;
 
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //        NSLog(@"addLocation UIDocumentSaveForOverwriting success");
-//        self.lastLocation = currentLocation;
     }];
     [self updateInfoLabels];
 

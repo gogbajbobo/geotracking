@@ -66,7 +66,7 @@
     
     if ([self.typeOfProperty isEqualToString:@"Interest"]) {
         STGTInterest *newInterest = (STGTInterest *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterest" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-        [newInterest setXid:[self.tracker newid]];
+//        [newInterest setXid:[self.tracker newid]];
         [newInterest setName:name];
         STGTInterestImage *interestImage = (STGTInterestImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterestImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         interestImage.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"]);
@@ -75,7 +75,7 @@
 
     } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
         STGTNetwork *newNetwork = (STGTNetwork *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetwork" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-        [newNetwork setXid:[self.tracker newid]];
+//        [newNetwork setXid:[self.tracker newid]];
         [newNetwork setName:name];
         STGTNetworkImage *networkImage = (STGTNetworkImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetworkImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
         networkImage.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"]);

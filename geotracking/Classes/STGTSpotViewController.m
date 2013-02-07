@@ -155,7 +155,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    [spotImage setXid:[self.tracker newid]];
+//    [spotImage setXid:[self.tracker newid]];
     spotImage.imageData = UIImagePNGRepresentation(self.spotImageView.image);
     self.spot.image = spotImage;
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
@@ -320,7 +320,7 @@
 {
     if (!self.spot) {
     STGTSpot *newSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    [newSpot setXid:[self.tracker newid]];
+//    [newSpot setXid:[self.tracker newid]];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
     newSpot.address = @"";

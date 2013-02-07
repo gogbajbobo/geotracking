@@ -103,7 +103,7 @@
 
 - (void)createFilterSpot {
     STGTSpot *filterSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    [filterSpot setXid:[self.tracker newid]];
+//    [filterSpot setXid:[self.tracker newid]];
     filterSpot.label = @"@filter";
         
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTInterest"];

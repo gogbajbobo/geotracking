@@ -11,6 +11,18 @@
 
 @implementation STGTDatum (Timestamp)
 
+- (void)awakeFromInsert {
+
+//    NSLog(@"awakeFromInsert");
+
+    [self setPrimitiveValue:[[STGTTrackingLocationController sharedTracker] newid] forKey:@"xid"];
+
+    NSDate *ts = [NSDate date];
+    
+    [self setPrimitiveValue:ts forKey:@"cts"];
+
+}
+
 - (void)willSave {
     
 //    NSLog(@"STGTDatum willSave");
@@ -23,14 +35,9 @@
         
         [self setPrimitiveValue:ts forKey:@"ts"];
         
-        if (![self primitiveValueForKey:@"cts"])
-            [self setPrimitiveValue:ts forKey:@"cts"];
-        
         NSDate *sqts = [self primitiveValueForKey:@"lts"] ? [self primitiveValueForKey:@"ts"] : [self primitiveValueForKey:@"cts"];
         [self setPrimitiveValue:sqts forKey:@"sqts"];
         
-        if (![self primitiveValueForKey:@"xid"])
-            [self setPrimitiveValue:[[STGTTrackingLocationController sharedTracker] newid] forKey:@"xid"];
         
     }
     
