@@ -92,7 +92,7 @@
 
             UISegmentedControl *segmentedControl = (UISegmentedControl *)[cell.contentView viewWithTag:5];
             [segmentedControl addTarget:self action:@selector(segmentedControlValueChanged:) forControlEvents:UIControlEventValueChanged];
-            segmentedControl.selectedSegmentIndex = [self.settings.mapType integerValue];
+            segmentedControl.selectedSegmentIndex = [[self.settings valueForKey:settingName] integerValue];
             
             UITextField *textField = (UITextField *)[cell.contentView viewWithTag:6];
             textField.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:settingName]];
@@ -177,9 +177,9 @@
 }
 
 - (void)segmentedControlValueChanged:(UISegmentedControl *)sender {
-    if ([[(UILabel *)[sender.superview viewWithTag:1] text] rangeOfString:@"mapType"].location != NSNotFound) {
-        self.settings.mapType = [NSNumber numberWithInteger:sender.selectedSegmentIndex];
-    }
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)sender.superview.superview];
+    NSString *settingName = [[self.settingsTitles objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    [self.settings setValue:[NSNumber numberWithInteger:sender.selectedSegmentIndex] forKey:settingName];
 }
 
 
@@ -270,6 +270,7 @@
         } else if ([keyPath isEqualToString:@"mapType"]) {
             UISegmentedControl *segmentedControl = (UISegmentedControl *)[cell.contentView viewWithTag:5];
             segmentedControl.selectedSegmentIndex = [[self.settings valueForKey:keyPath] integerValue];
+
         } else if ([keyPath isEqualToString:@"syncServerURI"] ||
                    [keyPath isEqualToString:@"xmlNamespace"] ||
                    [keyPath isEqualToString:@"tockenServerURL"] ||
@@ -331,6 +332,7 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self setupCells];
     for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
         [self.settings addObserver:self forKeyPath:settingsName options:NSKeyValueObservingOptionNew context:nil];
@@ -338,7 +340,6 @@
 
 //    NSLog(@"self.settings.lts %@", self.settings.lts);
     
-    [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
