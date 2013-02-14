@@ -14,9 +14,9 @@
 
 @interface STGTTrack : STGTDatum
 
-@property (nonatomic, retain) NSDate * finishTime;
-@property (nonatomic, retain) NSNumber * overallDistance;
-@property (nonatomic, retain) NSDate * startTime;
+@property (nonatomic, retain) NSDate *finishTime;
+@property (nonatomic, retain) NSNumber *overallDistance;
+@property (nonatomic, retain) NSDate *startTime;
 @property (nonatomic, retain) NSSet *locations;
 @end
 

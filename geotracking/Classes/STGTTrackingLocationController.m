@@ -143,7 +143,7 @@
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTTrack"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"startTime" ascending:NO selector:@selector(compare:)]];
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.locationsDatabase.managedObjectContext sectionNameKeyPath:@"dayAsString" cacheName:nil];
         _resultsController.delegate = self;
     }
 //    NSLog(@"self.locationsDatabase.managedObjectContext %@", self.locationsDatabase.managedObjectContext);
@@ -168,10 +168,30 @@
 }
 
 - (void)setSelectedTrackNumber:(NSInteger)selectedTrackNumber {
-    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:_selectedTrackNumber inSection:0]] setSelected:NO];
+    NSLog(@"selectedTrackNumber %d", selectedTrackNumber);
+    NSLog(@"self.tableView indexPathForSelectedRow %@", [self.tableView indexPathForSelectedRow]);
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
     _selectedTrackNumber = selectedTrackNumber;
     self.locationsArray = [self locationsArrayForTrack:selectedTrackNumber];
-    [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedTrackNumber inSection:0]] setSelected:YES];
+    
+    NSInteger sectionNumber = 0;
+    for (id <NSFetchedResultsSectionInfo> sectionInfo in [self.resultsController sections]) {
+        NSLog(@"_________________");
+        NSLog(@"sectionInfo numberOfObjects %d", [sectionInfo numberOfObjects]);
+        if ([sectionInfo numberOfObjects] > selectedTrackNumber) {
+            NSLog(@"[sectionInfo numberOfObjects] > selectedTrackNumber");
+            NSLog(@"indexPathForRow inSection %@", [NSIndexPath indexPathForRow:selectedTrackNumber inSection:sectionNumber]);
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:selectedTrackNumber inSection:sectionNumber] animated:NO scrollPosition:UITableViewScrollPositionNone];
+            NSLog(@"self.tableView indexPathForSelectedRow %@", [self.tableView indexPathForSelectedRow]);
+            break;
+        } else {
+            selectedTrackNumber -= [sectionInfo numberOfObjects];
+            sectionNumber++;
+            NSLog(@"selectedTrackNumber- %d", selectedTrackNumber);
+            NSLog(@"sectionNumber %d", sectionNumber);
+        }
+    }
+    
 }
 
 - (UIManagedDocument *)locationsDatabase {
@@ -620,7 +640,22 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return @"Tracks";
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:section];
+
+    double ddistance = 0;
+    for (STGTTrack *track in [sectionInfo objects]) {
+        ddistance += [track.overallDistance doubleValue];
+    }
+    int idistance = ddistance;
+
+    NSString *tr;
+    if ([sectionInfo numberOfObjects] == 1) {
+        tr = @"track";
+    } else {
+        tr = @"tracks";
+    }
+
+    return [NSString stringWithFormat:@"%@ - %d %@ - %dm", [sectionInfo name], [sectionInfo numberOfObjects], tr, idistance];
 }
 
 
@@ -629,7 +664,11 @@
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    STGTTrack *track = (STGTTrack *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+//    STGTTrack *track = (STGTTrack *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+
+    id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
+    STGTTrack *track = (STGTTrack *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+
 
     NSDateFormatter *startDateFormatter = [[NSDateFormatter alloc] init];
     [startDateFormatter setDateStyle:NSDateFormatterShortStyle];
@@ -672,7 +711,7 @@
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
+    if (indexPath.section == 0 && indexPath.row == 0) {
         return UITableViewCellEditingStyleNone;
     } else {
         if (![self.settings.localAccessToSettings boolValue] && [tableView cellForRowAtIndexPath:indexPath].tag == 0) {
@@ -686,7 +725,9 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        STGTTrack *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+//        STGTTrack *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
+        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
+        STGTTrack *track = (STGTTrack *)[[sectionInfo objects] objectAtIndex:indexPath.row];
         [self deleteTrack:track];
     }
 
@@ -694,8 +735,15 @@
 
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    self.selectedTrackNumber = indexPath.row;
-    self.locationsArray = [self locationsArrayForTrack:indexPath.row];
+    NSInteger trackNumber = 0;
+    for (int i = 0; i < indexPath.section; i++) {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:i];
+        trackNumber = trackNumber + [sectionInfo numberOfObjects];
+    }
+    trackNumber = trackNumber + indexPath.row;
+//    self.selectedTrackNumber = indexPath.row;
+    self.selectedTrackNumber = trackNumber;
+    self.locationsArray = [self locationsArrayForTrack:trackNumber];
     return indexPath;
 
 }
@@ -717,6 +765,7 @@
 //        NSLog(@"NSFetchedResultsChangeDelete");
         
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
         [self updateInfoLabels];
 
     } else if (type == NSFetchedResultsChangeInsert) {
@@ -725,12 +774,14 @@
 
         [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
 
     } else if (type == NSFetchedResultsChangeUpdate) {
 
 //        NSLog(@"NSFetchedResultsChangeUpdate");
 
         [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
 
     }
 }
