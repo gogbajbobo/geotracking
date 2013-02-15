@@ -168,27 +168,27 @@
 }
 
 - (void)setSelectedTrackNumber:(NSInteger)selectedTrackNumber {
-    NSLog(@"selectedTrackNumber %d", selectedTrackNumber);
-    NSLog(@"self.tableView indexPathForSelectedRow %@", [self.tableView indexPathForSelectedRow]);
+//    NSLog(@"selectedTrackNumber %d", selectedTrackNumber);
+//    NSLog(@"self.tableView indexPathForSelectedRow %@", [self.tableView indexPathForSelectedRow]);
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:NO];
     _selectedTrackNumber = selectedTrackNumber;
     self.locationsArray = [self locationsArrayForTrack:selectedTrackNumber];
     
     NSInteger sectionNumber = 0;
     for (id <NSFetchedResultsSectionInfo> sectionInfo in [self.resultsController sections]) {
-        NSLog(@"_________________");
-        NSLog(@"sectionInfo numberOfObjects %d", [sectionInfo numberOfObjects]);
+//        NSLog(@"_________________");
+//        NSLog(@"sectionInfo numberOfObjects %d", [sectionInfo numberOfObjects]);
         if ([sectionInfo numberOfObjects] > selectedTrackNumber) {
-            NSLog(@"[sectionInfo numberOfObjects] > selectedTrackNumber");
-            NSLog(@"indexPathForRow inSection %@", [NSIndexPath indexPathForRow:selectedTrackNumber inSection:sectionNumber]);
+//            NSLog(@"[sectionInfo numberOfObjects] > selectedTrackNumber");
+//            NSLog(@"indexPathForRow inSection %@", [NSIndexPath indexPathForRow:selectedTrackNumber inSection:sectionNumber]);
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:selectedTrackNumber inSection:sectionNumber] animated:NO scrollPosition:UITableViewScrollPositionNone];
-            NSLog(@"self.tableView indexPathForSelectedRow %@", [self.tableView indexPathForSelectedRow]);
+//            NSLog(@"self.tableView indexPathForSelectedRow %@", [self.tableView indexPathForSelectedRow]);
             break;
         } else {
             selectedTrackNumber -= [sectionInfo numberOfObjects];
             sectionNumber++;
-            NSLog(@"selectedTrackNumber- %d", selectedTrackNumber);
-            NSLog(@"sectionNumber %d", sectionNumber);
+//            NSLog(@"selectedTrackNumber- %d", selectedTrackNumber);
+//            NSLog(@"sectionNumber %d", sectionNumber);
         }
     }
     
@@ -707,6 +707,15 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h %dpoints", [distanceNumberFormatter stringFromNumber:track.overallDistance], [speedNumberFormatter stringFromNumber:speed], track.locations.count];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:track.startTime], [finishDateFormatter stringFromDate:track.finishTime]];
 
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(startNewTrack)];
+        [cell addGestureRecognizer:swipe];
+    } else {
+        for (UIGestureRecognizer *gesture in cell.gestureRecognizers) {
+            [cell removeGestureRecognizer:gesture];
+        }
+    }
+    
     return cell;
 }
 
@@ -764,17 +773,22 @@
         
 //        NSLog(@"NSFetchedResultsChangeDelete");
         
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-        [self updateInfoLabels];
+        if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
+            [self.tableView reloadData];
+        } else {
+            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+            [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+            [self updateInfoLabels];            
+        }
 
     } else if (type == NSFetchedResultsChangeInsert) {
         
 //        NSLog(@"NSFetchedResultsChangeInsert");
 
-        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
+//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
 
     } else if (type == NSFetchedResultsChangeUpdate) {
 
