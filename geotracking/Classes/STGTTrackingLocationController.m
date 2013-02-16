@@ -14,7 +14,7 @@
 #import "STGTTrackerManagedDocument.h"
 #import "STGTDataSyncController.h"
 #import "STGTSettings.h"
-#import "STGTAuthBasic.h"
+//#import "STGTAuthBasic.h"
 
 #define DB_FILE @"geoTracker.sqlite"
 #define REQUIRED_ACCURACY 15.0
@@ -237,7 +237,7 @@
 
 - (void)trackerInit {
     NSLog(@"trackerInit");
-    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
+//    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
     [[STGTDataSyncController sharedSyncer] startSyncer];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];

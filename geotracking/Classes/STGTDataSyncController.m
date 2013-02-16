@@ -7,7 +7,7 @@
 //
 
 #import "STGTDataSyncController.h"
-#import "STGTAuthBasic.h"
+//#import "STGTAuthBasic.h"
 #import "STGTTrackingLocationController.h"
 #import "GDataXMLNode.h"
 #import "STGTSettingsController.h"
@@ -260,7 +260,7 @@
         [request setValue:@"text/xml" forHTTPHeaderField:@"Content-type"];
     }
     
-    [[STGTAuthBasic sharedOAuth] checkToken];
+//    [[STGTAuthBasic sharedOAuth] checkToken];
     request = [[self.authDelegate authenticateRequest:(NSURLRequest *) request] mutableCopy];
     NSLog(@"[request valueForHTTPHeaderField:Authorization] %@", [request valueForHTTPHeaderField:@"Authorization"]);
     NSLog(@"request %@", request);

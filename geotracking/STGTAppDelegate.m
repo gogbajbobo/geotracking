@@ -22,6 +22,8 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
     [STGTTrackingLocationController sharedTracker];
+    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
+    [[STGTAuthBasic sharedOAuth] checkToken];
     
     self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
     self.authCodeRetriever = (UDPushAuthCodeRetriever *)[(UDAuthTokenRetriever *)[[STGTAuthBasic sharedOAuth] tokenRetriever] codeDelegate];
