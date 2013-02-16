@@ -687,9 +687,6 @@
     NSTimeInterval trackOverallTime = [track.finishTime timeIntervalSinceDate:track.startTime];
     NSNumber *speed = [NSNumber numberWithDouble:0.0];
     
-//    request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
-//    if ([localDate compare:serverDate] == NSOrderedAscending) {
-//        //                            NSLog(@"serverDate > localDate");
 
     UIColor *textColor;
     if ([track.ts compare:track.lts] == NSOrderedAscending) {
@@ -706,22 +703,13 @@
     }
     cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h %dpoints", [distanceNumberFormatter stringFromNumber:track.overallDistance], [speedNumberFormatter stringFromNumber:speed], track.locations.count];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:track.startTime], [finishDateFormatter stringFromDate:track.finishTime]];
-
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(startNewTrack)];
-        [cell addGestureRecognizer:swipe];
-    } else {
-        for (UIGestureRecognizer *gesture in cell.gestureRecognizers) {
-            [cell removeGestureRecognizer:gesture];
-        }
-    }
     
     return cell;
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0 && indexPath.row == 0) {
-        return UITableViewCellEditingStyleNone;
+        return UITableViewCellEditingStyleDelete;
     } else {
         if (![self.settings.localAccessToSettings boolValue] && [tableView cellForRowAtIndexPath:indexPath].tag == 0) {
             return UITableViewCellEditingStyleNone;
@@ -731,13 +719,17 @@
     }
 }
 
+
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        STGTTrack *track = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
-        STGTTrack *track = (STGTTrack *)[[sectionInfo objects] objectAtIndex:indexPath.row];
-        [self deleteTrack:track];
+        if (indexPath.section == 0 && indexPath.row == 0) {
+            [self startNewTrack];
+        } else {
+            id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
+            STGTTrack *track = (STGTTrack *)[[sectionInfo objects] objectAtIndex:indexPath.row];
+            [self deleteTrack:track];
+        }
     }
 
 }
@@ -750,13 +742,19 @@
         trackNumber = trackNumber + [sectionInfo numberOfObjects];
     }
     trackNumber = trackNumber + indexPath.row;
-//    self.selectedTrackNumber = indexPath.row;
     self.selectedTrackNumber = trackNumber;
     self.locationsArray = [self locationsArrayForTrack:trackNumber];
     return indexPath;
 
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        return @"Add new track";
+    } else {
+        return @"Delete";
+    }
+}
 
 #pragma mark - NSFetchedResultsController delegate
 
