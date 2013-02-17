@@ -272,6 +272,7 @@
                         <outlet property="spotInfo" destination="HwA-Vt-4GS" id="6uY-Zl-m1b"/>
                         <outlet property="spotLabel" destination="nWb-hk-WmC" id="cmJ-dv-Ndj"/>
                         <segue destination="YSR-xL-nVu" kind="push" identifier="showProperties" id="u1e-6T-tE2"/>
+                        <segue destination="0gT-9V-UkA" kind="push" identifier="showImages" id="gzt-S8-DfZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k8h-U5-Y9x" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -329,6 +330,32 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P9l-b5-B6L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2889" y="471"/>
+        </scene>
+        <!--Spot Image View Controller-->
+        <scene sceneID="E3F-l6-pq4">
+            <objects>
+                <viewController id="0gT-9V-UkA" customClass="STGTSpotImageViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="B20-ez-5X3">
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" id="Bdu-ug-v4v">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="7NG-wz-Imp">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="xIn-7A-r6v"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="imageView" destination="Bdu-ug-v4v" id="2Qb-Nn-eKd"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R1p-dP-Jq7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3277" y="471"/>
         </scene>
         <!--Spot Properties View Controller - Interests-->
         <scene sceneID="18p-6h-xx6">

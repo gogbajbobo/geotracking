@@ -13,6 +13,7 @@
 #import "STGTInterest.h"
 #import "STGTNetwork.h"
 #import "STGTSpotImage.h"
+#import "STGTSpotImageViewController.h"
 
 @interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
@@ -124,6 +125,11 @@
             spotPropertiesVC.typeOfProperty = self.typeOfProperty;
             spotPropertiesVC.filterSpot = self.filterSpot;
         }
+    } else if ([segue.destinationViewController isKindOfClass:[STGTSpotImageViewController class]]) {
+        STGTSpotImageViewController *spotImageVC = segue.destinationViewController;
+        if ([segue.identifier isEqualToString:@"showImages"]) {
+            spotImageVC.spot = self.spot;
+        }
     }
     
 }
@@ -139,6 +145,10 @@
         }
         [sourceSelectAlert show];
     }
+}
+
+- (void)spotImageTap:(UITapGestureRecognizer *)gesture {
+    [self performSegueWithIdentifier:@"showImages" sender:self];
 }
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)imageSourceType {
@@ -348,6 +358,8 @@
     
     UILongPressGestureRecognizer *spotImageLongTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageLongTap:)];
     [self.spotImageView addGestureRecognizer:spotImageLongTap];
+    UITapGestureRecognizer *spotImageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageTap:)];
+    [self.spotImageView addGestureRecognizer:spotImageTap];
 
 
     [super viewDidLoad];

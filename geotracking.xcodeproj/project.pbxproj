@@ -52,6 +52,7 @@
 		2CD0371E1685D1A700BBEDD5 /* STGTroute.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C32860E1685BDC30081B9DC /* STGTroute.js */; };
 		2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
 		2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */; };
+		2CD3A7BF16D0ED3B00187B80 /* STGTSpotImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
@@ -154,6 +155,8 @@
 		2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrackerManagedDocument.m; sourceTree = "<group>"; };
 		2CD07D75167CE91500E76B81 /* STGTAddressSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTAddressSearchViewController.h; sourceTree = "<group>"; };
 		2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTAddressSearchViewController.m; sourceTree = "<group>"; };
+		2CD3A7BD16D0ED3A00187B80 /* STGTSpotImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotImageViewController.h; sourceTree = "<group>"; };
+		2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotImageViewController.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE471FF15E3FEEC00B092DB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE4720115E3FEEC00B092DB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -247,6 +250,8 @@
 				2C0CBC1216B175ED00F74384 /* STGTSettingsController.m */,
 				2C32D33B1643A99700A2ADB7 /* STGTSpotViewController.h */,
 				2C32D33C1643A99700A2ADB7 /* STGTSpotViewController.m */,
+				2CD3A7BD16D0ED3A00187B80 /* STGTSpotImageViewController.h */,
+				2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */,
 				2CB24B6E1639A7A90040A211 /* STGTSpotPropertiesViewController.h */,
 				2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */,
 				2C94D720166FC00D0019A0C7 /* STGTFilterSpotViewController.h */,
@@ -541,6 +546,7 @@
 				2C9C568816C39A03008D6529 /* STGTSettings.m in Sources */,
 				2C9C568B16C39A03008D6529 /* STGTLocation.m in Sources */,
 				2C31B9E016CD17F000FA040B /* STGTTrack+dayAsString.m in Sources */,
+				2CD3A7BF16D0ED3B00187B80 /* STGTSpotImageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
