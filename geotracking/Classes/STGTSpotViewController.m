@@ -163,43 +163,34 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    self.spotImageView.image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
-    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-//    [spotImage setXid:[self.tracker newid]];
-    spotImage.imageData = UIImagePNGRepresentation(self.spotImageView.image);
-    self.spot.image = spotImage;
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
-    }];
-//    [self imageTest];
     [picker dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
     }];
+    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    UIImage *image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage] toSize:CGSizeMake(768, 1024)];
+    spotImage.imageData = UIImagePNGRepresentation(image);
+    self.spot.image = spotImage;
+    self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+    }];
 }
 
-//- (void)imageTest {
-//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTImage"];
-//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-//    NSError *error;
-//    NSArray *images = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
-//    NSLog(@"images.count %d", images.count);
-//
-//}
 
-
--(UIImage *)resizeImage:(UIImage *)image {
-    CGFloat width = self.spotImageView.bounds.size.width;
-    CGFloat height = self.spotImageView.bounds.size.height;
-    NSLog(@"width, height %f %f", width, height);
-    NSLog(@"spotImage.size.height, spotImage.size.width %f %f", image.size.height, image.size.width);
+-(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size{
+    NSLog(@"image.size.height %f, image.size.width %f", image.size.height, image.size.width);
+    CGFloat width = size.width;
+    CGFloat height = size.height;
+//    NSLog(@"width, height %f %f", width, height);
+//    NSLog(@"spotImage.size.height, spotImage.size.width %f %f", image.size.height, image.size.width);
     if (image.size.width >= image.size.height) {
-        NSLog(@">=");
+//        NSLog(@">=");
         height = width * image.size.height / image.size.width;
     } else {
-        NSLog(@"<");
+//        NSLog(@"<");
         width = height * image.size.width / image.size.height;
     }
-    NSLog(@"width, height %f %f", width, height);
+//    NSLog(@"width, height %f %f", width, height);
     UIGraphicsBeginImageContext(CGSizeMake(width ,height));
     [image drawInRect:CGRectMake(0, 0, width, height)];
     UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -349,7 +340,7 @@
     [self showSpotLabel];
     UIImage *spotImage = [UIImage imageWithData:self.spot.image.imageData];
     if (spotImage) {
-        self.spotImageView.image = spotImage;
+        self.spotImageView.image = [self resizeImage:spotImage toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
     } else {
         self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
     }

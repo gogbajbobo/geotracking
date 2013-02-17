@@ -74,5 +74,8 @@
     [self.pushNotificatonCenter processPushNotification:userInfo];
 }
 
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    
+}
 
 @end

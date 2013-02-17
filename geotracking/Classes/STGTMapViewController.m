@@ -489,7 +489,7 @@
         pinView.rightCalloutAccessoryView = detailDisclosureButton;
 
         STGTMapAnnotation *mapAnnotation = annotation;
-        UIImage *spotImage = [UIImage imageWithData:mapAnnotation.spot.image.imageData];
+        UIImage *spotImage = [self resizeImage:[UIImage imageWithData:mapAnnotation.spot.image.imageData] toSize:CGSizeMake(32.0, 32.0)];
         if (spotImage) {
             CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
             UIImageView *spotImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 32)];
@@ -499,6 +499,22 @@
         return pinView;
     }
 }
+
+-(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size {
+    CGFloat width = size.width;
+    CGFloat height = size.height;
+    if (image.size.width >= image.size.height) {
+        height = width * image.size.height / image.size.width;
+    } else {
+        width = height * image.size.width / image.size.height;
+    }
+    UIGraphicsBeginImageContext(CGSizeMake(width ,height));
+    [image drawInRect:CGRectMake(0, 0, width, height)];
+    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return resultImage;
+}
+
 
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
