@@ -11,9 +11,10 @@
 #import "STGTSpotImage.h"
 #import "STGTTrackingLocationController.h"
 
-@interface STGTImagesViewController () <UIPageViewControllerDataSource, UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface STGTImagesViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSArray *images;
 @property (nonatomic, strong) STGTTrackingLocationController *tracker;
+@property (nonatomic) NSUInteger currentIndex;
 
 @end
 
@@ -39,13 +40,17 @@
         } else if (buttonIndex == 2) {
             NSLog(@"Set current photo as avatar");
         } else if (buttonIndex == 3) {
-            NSLog(@"Delete current photo");
-//        self.spotImageView.image = nil;
-//        [self.spotImageView setNeedsDisplay];
-//        [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot.image];
-//        [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//            NSLog(@"spot.image UIDocumentSaveForOverwriting success");
-//        }];
+//            NSLog(@"Delete current photo");
+            [self.spot removeImagesObject:[self.images objectAtIndex:self.currentIndex]];
+            self.images = nil;
+            if (self.images.count > 0) {
+                if (self.currentIndex > 0) {
+                    self.currentIndex--;
+                }
+                [self activateViewControllerAtIndex:self.currentIndex];
+            } else {
+                [self.navigationController popViewControllerAnimated:YES];
+            }
         }
     } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
         if (buttonIndex == 1) {
@@ -84,7 +89,8 @@
         NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
     self.images = nil;
-    [self activateViewControllerAtIndex:(self.images.count - 1)];
+    self.currentIndex = self.images.count - 1;
+    [self activateViewControllerAtIndex:self.currentIndex];
 }
 
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size{
@@ -122,6 +128,18 @@
     }
 }
 
+- (void)activateViewControllerAtIndex:(NSUInteger)index {
+    self.currentIndex = index;
+    STGTSpotImageViewController *startVC = [self viewControllerAtIndex:index storyboard:self.storyboard];
+    NSArray *viewControllers = @[startVC];
+    [self setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
+    [self updateTitle];
+}
+
+- (void)updateTitle {
+    self.currentIndex = [self.images indexOfObject:[[self.viewControllers lastObject] spotImage]];
+    self.title = [NSString stringWithFormat:@"%d of %d", self.currentIndex+1, self.images.count];
+}
 
 #pragma mark - Page View Controller Data Source
 
@@ -155,7 +173,7 @@
             
         } else {
             index++;
-            return [self viewControllerAtIndex:index storyboard:viewController.storyboard];            
+            return [self viewControllerAtIndex:index storyboard:viewController.storyboard];
         }
         
     } else {
@@ -163,10 +181,16 @@
     }
 }
 
-- (void)activateViewControllerAtIndex:(NSUInteger)index {
-    STGTSpotImageViewController *startVC = [self viewControllerAtIndex:index storyboard:self.storyboard];
-    NSArray *viewControllers = @[startVC];
-    [self setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
+#pragma mark - Page View Controller Delegate
+
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
+    if (completed) {
+        [self updateTitle];
+    }
 }
 
 #pragma mark - view lifecycle
@@ -183,9 +207,18 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [self activateViewControllerAtIndex:0];
+    self.currentIndex = 0;
+    [self activateViewControllerAtIndex:self.currentIndex];
     self.dataSource = self;
+    self.delegate = self;
 	// Do any additional setup after loading the view.
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+    }];
 }
 
 - (void)didReceiveMemoryWarning

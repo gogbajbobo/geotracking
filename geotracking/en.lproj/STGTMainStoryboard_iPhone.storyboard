@@ -357,11 +357,11 @@
             </objects>
             <point key="canvasLocation" x="3662" y="471"/>
         </scene>
-        <!--Images View Controller-->
+        <!--Images View Controller - Title-->
         <scene sceneID="auZ-c0-YQz">
             <objects>
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="DgB-Hr-9VM" customClass="STGTImagesViewController" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="IZG-mg-9tr">
+                    <navigationItem key="navigationItem" title="Title" id="IZG-mg-9tr">
                         <barButtonItem key="rightBarButtonItem" systemItem="edit" id="hqm-ay-dJT">
                             <connections>
                                 <action selector="editButtonPressed:" destination="DgB-Hr-9VM" id="bzx-Ms-kAm"/>
