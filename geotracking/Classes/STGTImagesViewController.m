@@ -77,7 +77,6 @@
     }
 }
 
-
 #pragma mark - view lifecycle
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -92,6 +91,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    STGTSpotImageViewController *startVC = [self viewControllerAtIndex:0 storyboard:self.storyboard];
+    NSArray *viewControllers = @[startVC];
+    [self setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:NULL];
+
     self.dataSource = self;
 	// Do any additional setup after loading the view.
 }
