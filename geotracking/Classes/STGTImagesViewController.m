@@ -38,7 +38,9 @@
             UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
             [sourceSelectAlert show];
         } else if (buttonIndex == 2) {
-            NSLog(@"Set current photo as avatar");
+//            NSLog(@"Set current photo as avatar");
+            STGTSpotImage *spotImage = [self.images objectAtIndex:self.currentIndex];
+            self.spot.avatarXid = spotImage.xid;
         } else if (buttonIndex == 3) {
 //            NSLog(@"Delete current photo");
             STGTSpotImage *spotImage = [self.images objectAtIndex:self.currentIndex];
