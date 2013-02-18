@@ -493,12 +493,15 @@
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", mapAnnotation.spot.avatarXid];
         NSError *error;
-        UIImage *spotImage = [self resizeImage:[[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject] toSize:CGSizeMake(32.0, 32.0)];
-        if (spotImage) {
+        STGTImage *image = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+        if (image) {
+            UIImage *spotImage = [self resizeImage:[UIImage imageWithData:image.imageData] toSize:CGSizeMake(32.0, 32.0)];
             CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
             UIImageView *spotImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 32)];
             spotImageView.image = spotImage;
             pinView.leftCalloutAccessoryView = spotImageView;
+        } else {
+            pinView.leftCalloutAccessoryView = nil;
         }
         return pinView;
     }

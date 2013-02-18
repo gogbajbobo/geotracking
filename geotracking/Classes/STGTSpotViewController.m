@@ -61,13 +61,6 @@
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         } else if (buttonIndex == 2) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
-        } else if (buttonIndex == 3) {
-            self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
-            [self.spotImageView setNeedsDisplay];
-            [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot.images];
-            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                NSLog(@"spot.image UIDocumentSaveForOverwriting success");
-            }];
         }
     }
 
@@ -133,21 +126,13 @@
     
 }
 
-- (void)spotImageLongTap:(UILongPressGestureRecognizer *)gesture
-{
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        UIAlertView *sourceSelectAlert;
-        if (self.spot.images) {
-            sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", @"Delete photo", nil];
-        } else {
-            sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
-        }
-        [sourceSelectAlert show];
-    }
-}
-
 - (void)spotImageTap:(UITapGestureRecognizer *)gesture {
-    [self performSegueWithIdentifier:@"showImageCollection" sender:self];
+    if (self.spot.images.count == 0) {
+        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+        [sourceSelectAlert show];
+    } else {
+        [self performSegueWithIdentifier:@"showImageCollection" sender:self];
+    }
 }
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)imageSourceType {
@@ -170,24 +155,18 @@
 
 - (void)saveImage:(UIImage *)image {
     
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    spinner.tag = 1;
-    [self.spotImageView addSubview:spinner];
-    [self.spotImageView bringSubviewToFront:spinner];
-    self.spotImageView.image = nil;
-    [self.spotImageView setNeedsDisplay];
-    [spinner startAnimating];
     STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    image = [self resizeImage:image toSize:CGSizeMake(768, 1024)];
+    image = [self resizeImage:image toSize:CGSizeMake(1024, 1024)];
     spotImage.imageData = UIImagePNGRepresentation(image);
-    self.spot.images = spotImage;
-    self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
-    [[self.spotImageView viewWithTag:1] removeFromSuperview];
-    
+    [self.spot addImagesObject:spotImage];
+    if (!self.spot.avatarXid) {
+        self.spot.avatarXid = spotImage.xid;
+        self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
+    }
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+        NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
-
+    
 }
 
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size{
@@ -244,8 +223,6 @@
     }
 
     UICollectionViewCell *cell;
-
-//    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.type == %@", predicateString];
     
     if (indexPath.row == spotPropertiesArray.count) {
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:[NSString stringWithFormat:@"%@%@", @"add", type] forIndexPath:indexPath];
@@ -262,35 +239,6 @@
     return cell;
 }
 
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-//    UICollectionReusableView *view;
-//    NSString *viewIdentifier;
-//    if (collectionView.tag == 1) {
-//        viewIdentifier = @"interestHeader";
-//    } else if (collectionView.tag == 2) {
-//        viewIdentifier = @"networkHeader";
-//    }
-//    if (kind == UICollectionElementKindSectionHeader) {
-//        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:viewIdentifier forIndexPath:indexPath];
-//    } else if (kind == UICollectionElementKindSectionFooter) {
-////        view = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionFooter withReuseIdentifier:@"interestFooter" forIndexPath:indexPath];
-//    }
-//    return view;
-//}
-
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-//    CGSize headerSize;
-//    headerSize.height = 50;
-//    headerSize.width = 100;
-//    return headerSize;
-//}
-//
-//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForFooterInSection:(NSInteger)section {
-//    CGSize footerSize;
-//    footerSize.height = 50;
-//    footerSize.width = 100;
-//    return footerSize;
-//}
 
 #pragma mark - UITextFieldDelegate
 
@@ -298,8 +246,6 @@
     if (![textField.text isEqualToString:@""]) {
         if (![textField.text isEqualToString:self.spot.label]) {
             self.spot.label = textField.text;
-//            self.spot.ts = [NSDate date];
-//            self.spot.synced = [NSNumber numberWithBool:NO];
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"spot.label UIDocumentSaveForOverwriting success");
             }];
@@ -334,7 +280,6 @@
 {
     if (!self.spot) {
     STGTSpot *newSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-//    [newSpot setXid:[self.tracker newid]];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
     newSpot.address = @"";
@@ -356,17 +301,15 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", self.spot.avatarXid];
     NSError *error;
-    UIImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+    STGTImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
     if (spotImage) {
-        self.spotImageView.image = [self resizeImage:spotImage toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
+        self.spotImageView.image = [self resizeImage:[UIImage imageWithData:spotImage.imageData] toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
     } else {
         self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
     }
 
     self.spotImageView.contentMode = UIViewContentModeScaleAspectFit;
     
-    UILongPressGestureRecognizer *spotImageLongTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageLongTap:)];
-    [self.spotImageView addGestureRecognizer:spotImageLongTap];
     UITapGestureRecognizer *spotImageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageTap:)];
     [self.spotImageView addGestureRecognizer:spotImageTap];
 
