@@ -489,7 +489,11 @@
         pinView.rightCalloutAccessoryView = detailDisclosureButton;
 
         STGTMapAnnotation *mapAnnotation = annotation;
-        UIImage *spotImage = [self resizeImage:[UIImage imageWithData:mapAnnotation.spot.image.imageData] toSize:CGSizeMake(32.0, 32.0)];
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTImage"];
+        request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+        request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", mapAnnotation.spot.avatarXid];
+        NSError *error;
+        UIImage *spotImage = [self resizeImage:[[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject] toSize:CGSizeMake(32.0, 32.0)];
         if (spotImage) {
             CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
             UIImageView *spotImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, 32)];

@@ -2,7 +2,7 @@
 //  STGTSpot.h
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/7/13.
+//  Created by Maxim Grigoriev on 2/18/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -18,12 +18,18 @@
 @property (nonatomic, retain) NSString * label;
 @property (nonatomic, retain) NSNumber * latitude;
 @property (nonatomic, retain) NSNumber * longitude;
-@property (nonatomic, retain) STGTSpotImage *image;
+@property (nonatomic, retain) NSString * avatarXid;
+@property (nonatomic, retain) NSSet *images;
 @property (nonatomic, retain) NSSet *interests;
 @property (nonatomic, retain) NSSet *networks;
 @end
 
 @interface STGTSpot (CoreDataGeneratedAccessors)
+
+- (void)addImagesObject:(STGTSpotImage *)value;
+- (void)removeImagesObject:(STGTSpotImage *)value;
+- (void)addImages:(NSSet *)values;
+- (void)removeImages:(NSSet *)values;
 
 - (void)addInterestsObject:(STGTInterest *)value;
 - (void)removeInterestsObject:(STGTInterest *)value;

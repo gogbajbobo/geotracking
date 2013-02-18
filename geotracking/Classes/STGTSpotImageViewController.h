@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "STGTSpot.h"
+#import "STGTSpotImage.h"
 
 @interface STGTSpotImageViewController : UIViewController
-@property (nonatomic, strong) STGTSpot *spot;
+@property (nonatomic, strong) STGTSpotImage *spotImage;
 
 @end

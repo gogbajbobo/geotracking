@@ -7,7 +7,6 @@
 //
 
 #import "STGTSpotImageViewController.h"
-#import "STGTSpotImage.h"
 
 @interface STGTSpotImageViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -19,14 +18,7 @@
 
 - (void)loadImage {
     self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-
-    UIImage *spotImage = [UIImage imageWithData:self.spot.image.imageData];
-    if (spotImage) {
-        self.imageView.image = spotImage;
-    } else {
-        self.imageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
-    }
-    
+    self.imageView.image = [UIImage imageWithData:self.spotImage.imageData];
 }
 
 #pragma mark - view lifecycle

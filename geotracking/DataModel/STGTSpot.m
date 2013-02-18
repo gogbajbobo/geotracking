@@ -2,7 +2,7 @@
 //  STGTSpot.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/7/13.
+//  Created by Maxim Grigoriev on 2/18/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -18,7 +18,8 @@
 @dynamic label;
 @dynamic latitude;
 @dynamic longitude;
-@dynamic image;
+@dynamic avatarXid;
+@dynamic images;
 @dynamic interests;
 @dynamic networks;
 

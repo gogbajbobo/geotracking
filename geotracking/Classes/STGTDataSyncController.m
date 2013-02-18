@@ -112,7 +112,11 @@
 - (NSTimer *)timer {
     if (!_timer) {
 //        NSLog(@"self.settings.syncInterval %@", self.settings.syncInterval);
-        _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
+        if (!self.settings.syncInterval) {
+            _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:NO];;
+        } else {
+            _timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:YES];
+        }
 //        NSLog(@"_timer %@", _timer);
     }
     return _timer;

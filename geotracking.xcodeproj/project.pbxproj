@@ -38,7 +38,6 @@
 		2C9C567016C39A02008D6529 /* STGTSpotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566F16C39A02008D6529 /* STGTSpotImage.m */; };
 		2C9C567316C39A02008D6529 /* STGTTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567216C39A02008D6529 /* STGTTrack.m */; };
 		2C9C567616C39A02008D6529 /* STGTNetworkImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567516C39A02008D6529 /* STGTNetworkImage.m */; };
-		2C9C567916C39A03008D6529 /* STGTSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567816C39A03008D6529 /* STGTSpot.m */; };
 		2C9C567C16C39A03008D6529 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567B16C39A03008D6529 /* STGTDatum.m */; };
 		2C9C567F16C39A03008D6529 /* STGTImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567E16C39A03008D6529 /* STGTImage.m */; };
 		2C9C568216C39A03008D6529 /* STGTInterest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568116C39A03008D6529 /* STGTInterest.m */; };
@@ -53,6 +52,8 @@
 		2CD0372816888F1600BBEDD5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
 		2CD07D77167CE91500E76B81 /* STGTAddressSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */; };
 		2CD3A7BF16D0ED3B00187B80 /* STGTSpotImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */; };
+		2CD3A86A16D24C8C00187B80 /* STGTImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A86916D24C8B00187B80 /* STGTImagesViewController.m */; };
+		2CD3A87416D25A9800187B80 /* STGTSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A87316D25A9800187B80 /* STGTSpot.m */; };
 		2CE4720015E3FEEC00B092DB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE471FF15E3FEEC00B092DB /* UIKit.framework */; };
 		2CE4720215E3FEEC00B092DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720115E3FEEC00B092DB /* Foundation.framework */; };
 		2CE4720415E3FEEC00B092DB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
@@ -131,8 +132,6 @@
 		2C9C567216C39A02008D6529 /* STGTTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTTrack.m; sourceTree = "<group>"; };
 		2C9C567416C39A02008D6529 /* STGTNetworkImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTNetworkImage.h; sourceTree = "<group>"; };
 		2C9C567516C39A02008D6529 /* STGTNetworkImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTNetworkImage.m; sourceTree = "<group>"; };
-		2C9C567716C39A03008D6529 /* STGTSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpot.h; sourceTree = "<group>"; };
-		2C9C567816C39A03008D6529 /* STGTSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpot.m; sourceTree = "<group>"; };
 		2C9C567A16C39A03008D6529 /* STGTDatum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTDatum.h; sourceTree = "<group>"; };
 		2C9C567B16C39A03008D6529 /* STGTDatum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTDatum.m; sourceTree = "<group>"; };
 		2C9C567D16C39A03008D6529 /* STGTImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTImage.h; sourceTree = "<group>"; };
@@ -158,6 +157,11 @@
 		2CD3A7BD16D0ED3A00187B80 /* STGTSpotImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpotImageViewController.h; sourceTree = "<group>"; };
 		2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpotImageViewController.m; sourceTree = "<group>"; };
 		2CD3A7C116D0F42100187B80 /* STGTTracker 10.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "STGTTracker 10.xcdatamodel"; sourceTree = "<group>"; };
+		2CD3A86816D24C8A00187B80 /* STGTImagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTImagesViewController.h; sourceTree = "<group>"; };
+		2CD3A86916D24C8B00187B80 /* STGTImagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTImagesViewController.m; sourceTree = "<group>"; };
+		2CD3A86B16D2500F00187B80 /* STGTTracker 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = file; path = "STGTTracker 11.xcdatamodel"; sourceTree = "<group>"; };
+		2CD3A87216D25A9800187B80 /* STGTSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTSpot.h; sourceTree = "<group>"; };
+		2CD3A87316D25A9800187B80 /* STGTSpot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTSpot.m; sourceTree = "<group>"; };
 		2CE471FB15E3FEEC00B092DB /* geotracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = geotracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE471FF15E3FEEC00B092DB /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CE4720115E3FEEC00B092DB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -251,6 +255,8 @@
 				2C0CBC1216B175ED00F74384 /* STGTSettingsController.m */,
 				2C32D33B1643A99700A2ADB7 /* STGTSpotViewController.h */,
 				2C32D33C1643A99700A2ADB7 /* STGTSpotViewController.m */,
+				2CD3A86816D24C8A00187B80 /* STGTImagesViewController.h */,
+				2CD3A86916D24C8B00187B80 /* STGTImagesViewController.m */,
 				2CD3A7BD16D0ED3A00187B80 /* STGTSpotImageViewController.h */,
 				2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */,
 				2CB24B6E1639A7A90040A211 /* STGTSpotPropertiesViewController.h */,
@@ -268,6 +274,8 @@
 			isa = PBXGroup;
 			children = (
 				2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */,
+				2CD3A87216D25A9800187B80 /* STGTSpot.h */,
+				2CD3A87316D25A9800187B80 /* STGTSpot.m */,
 				2C9C568916C39A03008D6529 /* STGTLocation.h */,
 				2C9C568A16C39A03008D6529 /* STGTLocation.m */,
 				2C9C568616C39A03008D6529 /* STGTSettings.h */,
@@ -280,8 +288,6 @@
 				2C9C567E16C39A03008D6529 /* STGTImage.m */,
 				2C9C567A16C39A03008D6529 /* STGTDatum.h */,
 				2C9C567B16C39A03008D6529 /* STGTDatum.m */,
-				2C9C567716C39A03008D6529 /* STGTSpot.h */,
-				2C9C567816C39A03008D6529 /* STGTSpot.m */,
 				2C9C567416C39A02008D6529 /* STGTNetworkImage.h */,
 				2C9C567516C39A02008D6529 /* STGTNetworkImage.m */,
 				2C9C567116C39A02008D6529 /* STGTTrack.h */,
@@ -539,7 +545,6 @@
 				2C9C567016C39A02008D6529 /* STGTSpotImage.m in Sources */,
 				2C9C567316C39A02008D6529 /* STGTTrack.m in Sources */,
 				2C9C567616C39A02008D6529 /* STGTNetworkImage.m in Sources */,
-				2C9C567916C39A03008D6529 /* STGTSpot.m in Sources */,
 				2C9C567C16C39A03008D6529 /* STGTDatum.m in Sources */,
 				2C9C567F16C39A03008D6529 /* STGTImage.m in Sources */,
 				2C9C568216C39A03008D6529 /* STGTInterest.m in Sources */,
@@ -548,6 +553,8 @@
 				2C9C568B16C39A03008D6529 /* STGTLocation.m in Sources */,
 				2C31B9E016CD17F000FA040B /* STGTTrack+dayAsString.m in Sources */,
 				2CD3A7BF16D0ED3B00187B80 /* STGTSpotImageViewController.m in Sources */,
+				2CD3A86A16D24C8C00187B80 /* STGTImagesViewController.m in Sources */,
+				2CD3A87416D25A9800187B80 /* STGTSpot.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,6 +767,7 @@
 			isa = XCVersionGroup;
 			children = (
 				2CD3A7C116D0F42100187B80 /* STGTTracker 10.xcdatamodel */,
+				2CD3A86B16D2500F00187B80 /* STGTTracker 11.xcdatamodel */,
 				2C9C566916C3991B008D6529 /* STGTTracker 9.xcdatamodel */,
 				2CFC3A9316C294F2004B154A /* STGTTracker 8.xcdatamodel */,
 				2CFC3A8716BFCFFA004B154A /* STGTTracker 7.xcdatamodel */,
@@ -770,7 +778,7 @@
 				2C0CBC0816B1648300F74384 /* STGTTracker 3.xcdatamodel */,
 				2C1ABBDE16AEBBDE00AD92E4 /* STGTTracker.xcdatamodel */,
 			);
-			currentVersion = 2CD3A7C116D0F42100187B80 /* STGTTracker 10.xcdatamodel */;
+			currentVersion = 2CD3A86B16D2500F00187B80 /* STGTTracker 11.xcdatamodel */;
 			path = STGTTracker.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

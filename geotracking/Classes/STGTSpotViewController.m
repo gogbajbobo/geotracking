@@ -14,6 +14,7 @@
 #import "STGTNetwork.h"
 #import "STGTSpotImage.h"
 #import "STGTSpotImageViewController.h"
+#import "STGTImagesViewController.h"
 
 @interface STGTSpotViewController () <UIAlertViewDelegate, UITextFieldDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSString *typeOfProperty;
@@ -53,7 +54,6 @@
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"deleteObject:self.spot UIDocumentSaveForOverwriting success");
             }];
-//            [self imageTest];
             [self.navigationController popViewControllerAnimated:YES];
         }
     } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
@@ -62,13 +62,12 @@
         } else if (buttonIndex == 2) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
         } else if (buttonIndex == 3) {
-            self.spotImageView.image = nil;
+            self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
             [self.spotImageView setNeedsDisplay];
-            [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot.image];
+            [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot.images];
             [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"spot.image UIDocumentSaveForOverwriting success");
             }];
-//            [self imageTest];
         }
     }
 
@@ -125,10 +124,10 @@
             spotPropertiesVC.typeOfProperty = self.typeOfProperty;
             spotPropertiesVC.filterSpot = self.filterSpot;
         }
-    } else if ([segue.destinationViewController isKindOfClass:[STGTSpotImageViewController class]]) {
-        STGTSpotImageViewController *spotImageVC = segue.destinationViewController;
-        if ([segue.identifier isEqualToString:@"showImages"]) {
-            spotImageVC.spot = self.spot;
+    } else if ([segue.destinationViewController isKindOfClass:[STGTImagesViewController class]]) {
+        STGTImagesViewController *imagesVC = segue.destinationViewController;
+        if ([segue.identifier isEqualToString:@"showImageCollection"]) {
+            imagesVC.spot = self.spot;
         }
     }
     
@@ -138,7 +137,7 @@
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
         UIAlertView *sourceSelectAlert;
-        if (self.spot.image) {
+        if (self.spot.images) {
             sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", @"Delete photo", nil];
         } else {
             sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
@@ -148,7 +147,7 @@
 }
 
 - (void)spotImageTap:(UITapGestureRecognizer *)gesture {
-    [self performSegueWithIdentifier:@"showImages" sender:self];
+    [self performSegueWithIdentifier:@"showImageCollection" sender:self];
 }
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)imageSourceType {
@@ -165,20 +164,34 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [picker dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
-    }];
-    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
-    UIImage *image = [self resizeImage:[info objectForKey:UIImagePickerControllerOriginalImage] toSize:CGSizeMake(768, 1024)];
-    spotImage.imageData = UIImagePNGRepresentation(image);
-    self.spot.image = spotImage;
-    self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+        [self saveImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
     }];
 }
 
+- (void)saveImage:(UIImage *)image {
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    spinner.tag = 1;
+    [self.spotImageView addSubview:spinner];
+    [self.spotImageView bringSubviewToFront:spinner];
+    self.spotImageView.image = nil;
+    [self.spotImageView setNeedsDisplay];
+    [spinner startAnimating];
+    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    image = [self resizeImage:image toSize:CGSizeMake(768, 1024)];
+    spotImage.imageData = UIImagePNGRepresentation(image);
+    self.spot.images = spotImage;
+    self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
+    [[self.spotImageView viewWithTag:1] removeFromSuperview];
+    
+    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"spot.image UIDocumentSaveForOverwriting success");
+    }];
+
+}
 
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size{
-    NSLog(@"image.size.height %f, image.size.width %f", image.size.height, image.size.width);
+//    NSLog(@"image.size.height %f, image.size.width %f", image.size.height, image.size.width);
     CGFloat width = size.width;
     CGFloat height = size.height;
 //    NSLog(@"width, height %f %f", width, height);
@@ -338,7 +351,12 @@
     self.networkCollectionView.tag = 2;
     [self showSpotInfo];
     [self showSpotLabel];
-    UIImage *spotImage = [UIImage imageWithData:self.spot.image.imageData];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTImage"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", self.spot.avatarXid];
+    NSError *error;
+    UIImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
     if (spotImage) {
         self.spotImageView.image = [self resizeImage:spotImage toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
     } else {
