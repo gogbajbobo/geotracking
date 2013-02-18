@@ -274,6 +274,23 @@
 - (void)viewWillAppear:(BOOL)animated {
     [self.interestsCollectionView reloadData];
     [self.networkCollectionView reloadData];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTImage"];
+    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", self.spot.avatarXid];
+    NSError *error;
+    STGTImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+    if (spotImage) {
+        self.spotImageView.image = [self resizeImage:[UIImage imageWithData:spotImage.imageData] toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
+    } else {
+        self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
+    }
+    
+    self.spotImageView.contentMode = UIViewContentModeScaleAspectFit;
+    
+    UITapGestureRecognizer *spotImageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageTap:)];
+    [self.spotImageView addGestureRecognizer:spotImageTap];
+
 }
 
 - (void)viewDidLoad
@@ -296,23 +313,6 @@
     self.networkCollectionView.tag = 2;
     [self showSpotInfo];
     [self showSpotLabel];
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTImage"];
-    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", self.spot.avatarXid];
-    NSError *error;
-    STGTImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
-    if (spotImage) {
-        self.spotImageView.image = [self resizeImage:[UIImage imageWithData:spotImage.imageData] toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
-    } else {
-        self.spotImageView.image = [UIImage imageNamed:@"STGTblank_spotImage_132_85"];
-    }
-
-    self.spotImageView.contentMode = UIViewContentModeScaleAspectFit;
-    
-    UITapGestureRecognizer *spotImageTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(spotImageTap:)];
-    [self.spotImageView addGestureRecognizer:spotImageTap];
-
 
     [super viewDidLoad];
 	// Do any additional setup after loading the view.

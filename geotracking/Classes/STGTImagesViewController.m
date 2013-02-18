@@ -41,7 +41,11 @@
             NSLog(@"Set current photo as avatar");
         } else if (buttonIndex == 3) {
 //            NSLog(@"Delete current photo");
-            [self.spot removeImagesObject:[self.images objectAtIndex:self.currentIndex]];
+            STGTSpotImage *spotImage = [self.images objectAtIndex:self.currentIndex];
+            if ([spotImage.xid isEqualToString:self.spot.avatarXid]) {
+                self.spot.avatarXid = @"";
+            }
+            [self.spot removeImagesObject:spotImage];
             self.images = nil;
             if (self.images.count > 0) {
                 if (self.currentIndex > 0) {
