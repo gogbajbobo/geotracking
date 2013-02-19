@@ -62,6 +62,7 @@
 		2CE4722515E4055F00B092DB /* STGTTrackingLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722415E4055F00B092DB /* STGTTrackingLocationController.m */; };
 		2CE4723415E54ECF00B092DB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4723315E54ECF00B092DB /* CoreData.framework */; };
 		D602AFAEBC744A309AA94938 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19979538E5644F14B8F469EA /* libPods.a */; };
+		F3F04F0D16D3A82E00BBC7DD /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F3F04F0F16D3A82E00BBC7DD /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -172,6 +173,8 @@
 		2CFC3A8716BFCFFA004B154A /* STGTTracker 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 7.xcdatamodel"; sourceTree = "<group>"; };
 		2CFC3A9316C294F2004B154A /* STGTTracker 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 8.xcdatamodel"; sourceTree = "<group>"; };
 		9C01DD088AC6425A89DD5C5B /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		F3F04F0E16D3A82E00BBC7DD /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F3F04F1016D3A83F00BBC7DD /* ru */ = {isa = PBXFileReference; lastKnownFileType = file; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,6 +319,7 @@
 				2CCD33B41612FC8100F5AEF3 /* Default-568h@2x.png */,
 				2CE4720B15E3FEEC00B092DB /* main.m */,
 				2CE4720D15E3FEEC00B092DB /* geotracking-Prefix.pch */,
+				F3F04F0F16D3A82E00BBC7DD /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -427,6 +431,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				ru,
 			);
 			mainGroup = 2CE471F015E3FEEB00B092DB;
 			productRefGroup = 2CE471FC15E3FEEC00B092DB /* Products */;
@@ -464,6 +469,7 @@
 				2C0CBC4116B357EC00F74384 /* Icon-72@2x.png in Resources */,
 				2C33500F16B40A8300C3EAB0 /* Icon.png in Resources */,
 				2C33501116B40A8C00C3EAB0 /* Icon@2x.png in Resources */,
+				F3F04F0D16D3A82E00BBC7DD /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -577,6 +583,16 @@
 				2CE4721215E3FEEC00B092DB /* en */,
 			);
 			name = STGTMainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		F3F04F0F16D3A82E00BBC7DD /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F3F04F0E16D3A82E00BBC7DD /* en */,
+				F3F04F1016D3A83F00BBC7DD /* ru */,
+			);
+			name = Localizable.strings;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

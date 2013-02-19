@@ -1,0 +1,26 @@
+/* 
+  Localizable.strings
+  geotracking
+
+  Created by kovtash on 19.02.13.
+  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
+*/
+
+"START" = "Старт";
+"STOP" = "Стоп";
+"SETTINGS" = "Настройки";
+"SYNC" = "Синхр.";
+"TRACKER" = "Tracker";
+"YES" = "Да";
+"NO" = "Нет";
+"OK" = "Ok";
+"WARNING" = "Внимание";
+"CANCEL" = "Отменить";
+"CLEAR DATABASE" = "Очистика базы данных";
+"CHOOSE OBJECTS TO DELETE" = "Что вы хотите удалить?";
+"ONLY TRACKS" = "Только трэки";
+"ALL DATA" = "Все данные";
+"STOP TRACKING" = "Пректатить трэкинг";
+"STOP?" = "Прекратить?";
+"STOP TRACKING FOR CLEAR" = "Вы должны остановть трэкинг перед началом очистки";
+"CANT DELETE ALL DATA" = "Вы не можете удалить все данные";

@@ -50,18 +50,20 @@
 }
 
 - (IBAction)clearData:(id)sender {
-        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Clear database" message:@"Choose objects to delete:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Only tracks", @"All data", nil];
+        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CLEAR DATABASE", @"CLEAR DATABASE") message:NSLocalizedString(@"CHOOSE OBJECTS TO DELETE", @"CHOOSE OBJECTS TO DELETE") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"CANCEL") otherButtonTitles:NSLocalizedString(@"ONLY TRACKS", @"ONLY TRACKS"), NSLocalizedString(@"ALL DATA", @"ALL DATA"), nil];
+    
+        [clearAlert setTag:1];
         [clearAlert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.title isEqualToString:@"Stop tracking"]) {
+    if (alertView.tag ==2) {
         if (buttonIndex == 0) {
             [self.tracker stopTrackingLocation];
-            [self startButton].title = @"Start";
+            [self startButton].title = NSLocalizedString(@"START", @"START");
         }
-    } else if ([alertView.title isEqualToString:@"Clear database"]) {
+    } else if (alertView.tag == 1) {
 //        NSLog(@"buttonIndex %d", buttonIndex);
         if (buttonIndex == 1) {
             [self.tracker clearLocations];
@@ -70,11 +72,11 @@
                 if (!self.tracker.locationManagerRunning) {
                     [self.tracker clearAllData];
                 } else {
-                    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You should stop locations tracking for clear procedure" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"WARNING") message:NSLocalizedString(@"STOP TRACKING FOR CLEAR", @"STOP TRACKING FOR CLEAR") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
                     [clearAlert show];
                 }
             } else {
-                UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You can not delete all data" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"WARNING") message:NSLocalizedString(@"CANT DELETE ALL DATA", @"CANT DELETE ALL DATA") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @"OK"), nil];
                 [clearAlert show];                
             }
         }
@@ -83,11 +85,12 @@
 
 - (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
     if (self.tracker.locationManagerRunning) {
-        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
+        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"STOP TRACKING", @"STOP TRACKING") message: NSLocalizedString(@"STOP?", @"STOP?") delegate: self cancelButtonTitle: NSLocalizedString(@"YES", @"YES")  otherButtonTitles:NSLocalizedString(@"NO", @"NO"),nil];
+        [stopAlert setTag:2];
         [stopAlert show];
     } else {
         [self.tracker startTrackingLocation];
-        sender.title = @"Stop";
+        sender.title = NSLocalizedString(@"STOP", @"STOP");
     }
 }
 
@@ -124,9 +127,9 @@
 
 - (void)setStartButtonLabel:(NSNotification *)notification {
     if (self.tracker.locationManagerRunning) {
-        [self startButton].title = @"Stop";
+        [self startButton].title = NSLocalizedString(@"STOP", @"STOP");
     } else {
-        [self startButton].title = @"Start";
+        [self startButton].title = NSLocalizedString(@"START", @"START");
     }
 }
 
@@ -142,6 +145,12 @@
     self.startButton.enabled = NO;
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
+    
+    self.startButton.title = NSLocalizedString(@"START", @"START");
+    self.settingsButton.title = NSLocalizedString(@"SETTINGS", @"SETTINGS");
+    self.syncButton.title = NSLocalizedString(@"SYNC", @"SYNC");
+    self.title = NSLocalizedString(@"TRACKER", @"TRACKER");
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerBusy:) name:@"STGTTrackerBusy" object:nil];

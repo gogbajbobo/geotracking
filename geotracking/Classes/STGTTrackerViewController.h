@@ -12,5 +12,4 @@
 @interface STGTTrackerViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *startButton;
 
-
 @end
