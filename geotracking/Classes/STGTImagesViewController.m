@@ -43,12 +43,24 @@
             self.spot.avatarXid = spotImage.xid;
         } else if (buttonIndex == 3) {
 //            NSLog(@"Delete current photo");
+            UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Delete photo" message: @"Are you sure?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
+            [stopAlert show];
+        }
+    } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
+        if (buttonIndex == 1) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        } else if (buttonIndex == 2) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+        }
+    } else if ([alertView.title isEqualToString:@"Delete photo"]) {
+        if (buttonIndex == 1) {
             STGTSpotImage *spotImage = [self.images objectAtIndex:self.currentIndex];
             if ([spotImage.xid isEqualToString:self.spot.avatarXid]) {
-                self.spot.avatarXid = @"";
+                STGTSpotImage *firstImage = [self.images objectAtIndex:0];
+                self.spot.avatarXid = firstImage.xid;
             }
             [self.spot removeImagesObject:spotImage];
-            self.images = nil;
+            self.images = [self spotImages];
             if (self.images.count > 0) {
                 if (self.currentIndex > 0) {
                     self.currentIndex--;
@@ -57,12 +69,6 @@
             } else {
                 [self.navigationController popViewControllerAnimated:YES];
             }
-        }
-    } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
-        if (buttonIndex == 1) {
-            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
-        } else if (buttonIndex == 2) {
-            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
         }
     }
 }
@@ -94,7 +100,7 @@
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
-    self.images = nil;
+    self.images = [self spotImages];
     self.currentIndex = self.images.count - 1;
     [self activateViewControllerAtIndex:self.currentIndex];
 }
@@ -115,12 +121,9 @@
 }
 
 
-- (NSArray *)images {
-    if (!_images) {
+- (NSArray *)spotImages {
         NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)]];
-        _images = [self.spot.images sortedArrayUsingDescriptors:sortDescriptors];
-    }
-    return _images;
+        return [self.spot.images sortedArrayUsingDescriptors:sortDescriptors];
 }
 
 - (STGTSpotImageViewController *)viewControllerAtIndex:(NSUInteger)index storyboard:(UIStoryboard *)storyboard
@@ -213,6 +216,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.images = [self spotImages];
     self.currentIndex = 0;
     [self activateViewControllerAtIndex:self.currentIndex];
     self.dataSource = self;

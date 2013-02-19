@@ -159,7 +159,8 @@
     image = [self resizeImage:image toSize:CGSizeMake(1024, 1024)];
     spotImage.imageData = UIImagePNGRepresentation(image);
     [self.spot addImagesObject:spotImage];
-    if (!self.spot.avatarXid) {
+    NSLog(@"self.spot.avatarXid %@", self.spot.avatarXid);
+    if (!self.spot.avatarXid || [self.spot.avatarXid isEqualToString:@""]) {
         self.spot.avatarXid = spotImage.xid;
         self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
     }

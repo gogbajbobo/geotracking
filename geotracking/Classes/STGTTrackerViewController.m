@@ -57,7 +57,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if ([alertView.title isEqualToString:@"Stop tracking"]) {
-        if (buttonIndex == 0) {
+        if (buttonIndex == 1) {
             [self.tracker stopTrackingLocation];
             [self startButton].title = @"Start";
         }
@@ -83,7 +83,7 @@
 
 - (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
     if (self.tracker.locationManagerRunning) {
-        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"YES"  otherButtonTitles:@"NO",nil];
+        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
         [stopAlert show];
     } else {
         [self.tracker startTrackingLocation];
