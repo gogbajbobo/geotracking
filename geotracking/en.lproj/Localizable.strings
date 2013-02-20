@@ -32,3 +32,11 @@
 "1TRACKS" = "track";
 "2TRACKS" = "tracks";
 "5TRACKS" = "tracks";
+
+"NO CONNECTION" = "No connection";
+"NO TOKEN" = "No token";
+"SYNC FAIL" = "Sync fail";
+"RESPONSE ERROR" = "Response error";
+"SYNC ERROR" = "Sync error";
+
+"ADD NEW SPOT" = "Add new spot…";

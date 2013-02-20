@@ -272,12 +272,12 @@
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         if (!connection) {
             NSLog(@"connection error");
-            self.tracker.trackerStatus = @"NO CONNECTION";
+            self.tracker.trackerStatus = NSLocalizedString(@"NO CONNECTION", @"");
             self.syncing = NO;
         }
     } else {
         NSLog(@"No Authorization header");
-        self.tracker.trackerStatus = @"NO TOKEN";
+        self.tracker.trackerStatus = NSLocalizedString(@"NO TOKEN", @"");
         self.syncing = NO;
     }
     
@@ -295,7 +295,7 @@
 #pragma mark - NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    self.tracker.trackerStatus = @"SYNC FAIL";
+    self.tracker.trackerStatus = NSLocalizedString(@"SYNC FAIL", @"");
     self.syncing = NO;
     NSLog(@"connection didFailWithError: %@", error);
 }
@@ -324,7 +324,7 @@
 
     if (!xmlDoc) {
         NSLog(@"%@", error.description);
-        self.tracker.trackerStatus = @"RESPONSE ERROR";
+        self.tracker.trackerStatus = NSLocalizedString(@"RESPONSE ERROR", @"");
         self.syncing = NO;
     } else {
         NSArray *errorNodes = [xmlDoc nodesForXPath:@"//ns:error" namespaces:namespaces error:nil];
@@ -332,7 +332,7 @@
             for (GDataXMLElement *errorNode in errorNodes) {
                 NSLog(@"error: %@", [errorNode attributeForName:@"code"].stringValue);
             }
-            self.tracker.trackerStatus = @"SYNC ERROR";
+            self.tracker.trackerStatus = NSLocalizedString(@"SYNC ERROR", @"");
             self.syncing = NO;
         } else {
             NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:response" namespaces:namespaces error:nil];
