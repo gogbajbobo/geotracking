@@ -29,13 +29,15 @@
 
 - (IBAction)editButtonPressed:(id)sender {
     UIAlertView *photosEditAlert = [[UIAlertView alloc] initWithTitle:@"Manage photos" message:@"Choose action" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add new photo", @"Set current photo as avatar", @"Delete current photo", nil];
+    photosEditAlert.tag = 1;
     [photosEditAlert show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    if ([alertView.title isEqualToString:@"Manage photos"]) {
+    if (alertView.tag == 1) {
         if (buttonIndex == 1) {
             UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+            sourceSelectAlert.tag = 2;
             [sourceSelectAlert show];
         } else if (buttonIndex == 2) {
 //            NSLog(@"Set current photo as avatar");
@@ -43,16 +45,17 @@
             self.spot.avatarXid = spotImage.xid;
         } else if (buttonIndex == 3) {
 //            NSLog(@"Delete current photo");
-            UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Delete photo" message: @"Are you sure?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
-            [stopAlert show];
+            UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle: @"Delete photo" message: @"Are you sure?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
+            deleteAlert.tag = 3;
+            [deleteAlert show];
         }
-    } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
+    } else if (alertView.tag == 2) {
         if (buttonIndex == 1) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         } else if (buttonIndex == 2) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
         }
-    } else if ([alertView.title isEqualToString:@"Delete photo"]) {
+    } else if (alertView.tag == 3) {
         if (buttonIndex == 1) {
             STGTSpotImage *spotImage = [self.images objectAtIndex:self.currentIndex];
             [self.spot removeImagesObject:spotImage];

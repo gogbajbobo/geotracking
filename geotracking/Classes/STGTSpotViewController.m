@@ -39,12 +39,23 @@
 
 - (IBAction)deleteSpot:(id)sender {
     UIAlertView *deleteSpotAlert = [[UIAlertView alloc] initWithTitle:@"Delete spot" message:@"Delete spot?" delegate:self cancelButtonTitle:@"YES"  otherButtonTitles:@"NO",nil];
+    deleteSpotAlert.tag = 1;
     [deleteSpotAlert show];
+}
+
+- (void)spotImageTap:(UITapGestureRecognizer *)gesture {
+    if (self.spot.images.count == 0) {
+        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+        sourceSelectAlert.tag = 2;
+        [sourceSelectAlert show];
+    } else {
+        [self performSegueWithIdentifier:@"showImageCollection" sender:self];
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.title isEqualToString:@"Delete spot"]) {
+    if (alertView.tag == 1) {
         if (buttonIndex == 0) {
             if ([self.spotLabel isFirstResponder]) {
                 self.spotLabel.text = @"";
@@ -56,7 +67,7 @@
             }];
             [self.navigationController popViewControllerAnimated:YES];
         }
-    } else if ([alertView.title isEqualToString:@"SourceSelect"]) {
+    } else if (alertView.tag == 2) {
         if (buttonIndex == 1) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         } else if (buttonIndex == 2) {
@@ -124,15 +135,6 @@
         }
     }
     
-}
-
-- (void)spotImageTap:(UITapGestureRecognizer *)gesture {
-    if (self.spot.images.count == 0) {
-        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
-        [sourceSelectAlert show];
-    } else {
-        [self performSegueWithIdentifier:@"showImageCollection" sender:self];
-    }
 }
 
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)imageSourceType {

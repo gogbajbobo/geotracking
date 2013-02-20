@@ -99,6 +99,7 @@
             NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
             if (indexPath.row != self.resultsController.fetchedObjects.count) {
                 UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+                sourceSelectAlert.tag = 1;
                 [sourceSelectAlert show];
             }
         }
@@ -107,7 +108,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.title isEqualToString:@"SourceSelect"]) {
+    if (alertView.tag == 1) {
         if (buttonIndex == 1) {
             [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
         } else if (buttonIndex == 2) {
@@ -151,18 +152,8 @@
         UITableViewCell *cell = (UITableViewCell *)imageView.superview.superview;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
 
-        NSManagedObject *object = [self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-        [[object valueForKey:@"image"] setValue:UIImagePNGRepresentation(imageView.image) forKey:@"imageData"];
-        
-//        if ([self.typeOfProperty isEqualToString:@"Interest"]) {
-//            STGTInterest *interest = (STGTInterest *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-//            interest.image = UIImagePNGRepresentation(imageView.image);
-//            
-//        } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
-//            STGTNetwork *network = (STGTNetwork *)[self.resultsController.fetchedObjects objectAtIndex:indexPath.row];
-//            network.image = UIImagePNGRepresentation(imageView.image);
-//            
-//        }
+        NSManagedObject *image = [[self.resultsController.fetchedObjects objectAtIndex:indexPath.row] valueForKey:@"image"];
+        [image setValue:UIImagePNGRepresentation(imageView.image) forKey:@"imageData"];
     }
 
 }

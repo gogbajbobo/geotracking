@@ -50,19 +50,26 @@
 }
 
 - (IBAction)clearData:(id)sender {
-        UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Clear database" message:@"Choose objects to delete:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Only tracks", @"All data", nil];
-        [clearAlert show];
+    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Clear database" message:@"Choose objects to delete:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Only tracks", @"All data", nil];
+    clearAlert.tag = 1;
+    [clearAlert show];
+}
+
+- (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
+    if (self.tracker.locationManagerRunning) {
+        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
+        stopAlert.tag = 2;
+        [stopAlert show];
+    } else {
+        [self.tracker startTrackingLocation];
+        sender.title = @"Stop";
+    }
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if ([alertView.title isEqualToString:@"Stop tracking"]) {
-        if (buttonIndex == 1) {
-            [self.tracker stopTrackingLocation];
-            [self startButton].title = @"Start";
-        }
-    } else if ([alertView.title isEqualToString:@"Clear database"]) {
-//        NSLog(@"buttonIndex %d", buttonIndex);
+    if (alertView.tag == 1) {
+        //        NSLog(@"buttonIndex %d", buttonIndex);
         if (buttonIndex == 1) {
             [self.tracker clearLocations];
         } else if (buttonIndex == 2) {
@@ -75,19 +82,14 @@
                 }
             } else {
                 UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You can not delete all data" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-                [clearAlert show];                
+                [clearAlert show];
             }
         }
-    }
-}
-
-- (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
-    if (self.tracker.locationManagerRunning) {
-        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
-        [stopAlert show];
-    } else {
-        [self.tracker startTrackingLocation];
-        sender.title = @"Stop";
+    } else if (alertView.tag == 2) {
+        if (buttonIndex == 1) {
+            [self.tracker stopTrackingLocation];
+            [self startButton].title = @"Start";
+        }
     }
 }
 
