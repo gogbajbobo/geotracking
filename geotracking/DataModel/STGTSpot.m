@@ -2,7 +2,7 @@
 //  STGTSpot.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/18/13.
+//  Created by Maxim Grigoriev on 2/20/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 

@@ -55,20 +55,27 @@
     } else if ([alertView.title isEqualToString:@"Delete photo"]) {
         if (buttonIndex == 1) {
             STGTSpotImage *spotImage = [self.images objectAtIndex:self.currentIndex];
-            if ([spotImage.xid isEqualToString:self.spot.avatarXid]) {
-                STGTSpotImage *firstImage = [self.images objectAtIndex:0];
-                self.spot.avatarXid = firstImage.xid;
-            }
             [self.spot removeImagesObject:spotImage];
             self.images = [self spotImages];
             if (self.images.count > 0) {
+                if ([spotImage.xid isEqualToString:self.spot.avatarXid]) {
+                    NSUInteger index = (self.currentIndex == 0) ? 1 : 0;
+                    STGTSpotImage *firstImage = [self.images objectAtIndex:index];
+                    self.spot.avatarXid = firstImage.xid;
+                }
                 if (self.currentIndex > 0) {
                     self.currentIndex--;
                 }
                 [self activateViewControllerAtIndex:self.currentIndex];
             } else {
+                self.spot.avatarXid = nil;
                 [self.navigationController popViewControllerAnimated:YES];
             }
+            [self.tracker.locationsDatabase.managedObjectContext deleteObject:spotImage];
+            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+                NSLog(@"spotImage UIDocumentSaveForOverwriting success");
+            }];
+
         }
     }
 }
@@ -85,9 +92,11 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [self startSavingAnimationWithMessage:@"Add photo to spot…" withTag:666 forView:self.view];
     [picker dismissViewControllerAnimated:YES completion:^{
-        NSLog(@"dismissViewControllerAnimated");
         [self saveImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+        NSLog(@"dismissViewControllerAnimated");
+        [self stopSavingAnimationWithTag:666 forView:self.view];
     }];
 }
 
@@ -97,12 +106,14 @@
     image = [self resizeImage:image toSize:CGSizeMake(1024, 1024)];
     spotImage.imageData = UIImagePNGRepresentation(image);
     [self.spot addImagesObject:spotImage];
+    self.images = [self spotImages];
+    [self activateViewControllerAtIndex:self.images.count - 2];
+    self.currentIndex = self.images.count - 1;
+    [self activateViewControllerAtIndex:self.currentIndex];
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
-    self.images = [self spotImages];
-    self.currentIndex = self.images.count - 1;
-    [self activateViewControllerAtIndex:self.currentIndex];
+
 }
 
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size{
@@ -120,9 +131,53 @@
     return resultImage;
 }
 
+-(void)startSavingAnimationWithMessage:(NSString *)message withTag:(NSUInteger)tag forView:(UIView *)view {
+    
+    UIView *activityView = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] bounds]];
+    activityView.tag = tag;
+    activityView.backgroundColor = [UIColor darkGrayColor];
+    activityView.alpha = 0.75;
+    
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityView addSubview:activityIndicator];
+    
+    UILabel *requestingInformation = [[UILabel alloc] init];
+    requestingInformation.text = message;
+    requestingInformation.backgroundColor = [UIColor clearColor];
+    requestingInformation.textColor = [UIColor whiteColor];
+    requestingInformation.font = [UIFont boldSystemFontOfSize:20];
+    [activityView addSubview:requestingInformation];
+    
+    CGSize requestingInformationSize = [requestingInformation.text sizeWithFont:requestingInformation.font constrainedToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height/2) lineBreakMode:requestingInformation.lineBreakMode];
+
+    activityIndicator.center = CGPointMake(self.view.frame.size.width/2,(self.view.frame.size.height/2));
+    requestingInformation.frame = CGRectMake((self.view.frame.size.width - requestingInformationSize.width)/2, self.view.frame.size.height/2 + requestingInformationSize.height, requestingInformationSize.width, requestingInformation.font.lineHeight);
+    
+    [view addSubview:activityView];
+    [view bringSubviewToFront:activityView];
+    
+    [activityIndicator startAnimating];
+}
+
+-(void)stopSavingAnimationWithTag:(NSUInteger)tag forView:(UIView *)view {
+    UIView *activityView = [view viewWithTag:tag];
+    
+    for (UIView *subview in [activityView subviews]) {
+        
+        if ([subview isKindOfClass:[UIActivityIndicatorView class]]) {
+            
+            UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)subview;
+            [activityIndicator stopAnimating];
+            break;
+            
+        }
+    }
+    
+    [activityView removeFromSuperview];
+}
 
 - (NSArray *)spotImages {
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)]];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:YES selector:@selector(compare:)]];
         return [self.spot.images sortedArrayUsingDescriptors:sortDescriptors];
 }
 
@@ -139,8 +194,8 @@
 
 - (void)activateViewControllerAtIndex:(NSUInteger)index {
     self.currentIndex = index;
-    STGTSpotImageViewController *startVC = [self viewControllerAtIndex:index storyboard:self.storyboard];
-    NSArray *viewControllers = @[startVC];
+    STGTSpotImageViewController *imageVC = [self viewControllerAtIndex:index storyboard:self.storyboard];
+    NSArray *viewControllers = @[imageVC];
     [self setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:NULL];
     [self updateTitle];
 }
@@ -201,6 +256,14 @@
         [self updateTitle];
     }
 }
+
+//- (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController {
+//    return self.images.count;
+//}
+//
+//- (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController {
+//    return self.currentIndex;
+//}
 
 #pragma mark - view lifecycle
 

@@ -147,9 +147,11 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    [self startSavingAnimationWithMessage:@"Add photo to spot…" withTag:666 forView:self.view];
     [picker dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
         [self saveImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
+        [self stopSavingAnimationWithTag:666 forView:self.view];
     }];
 }
 
@@ -159,7 +161,7 @@
     image = [self resizeImage:image toSize:CGSizeMake(1024, 1024)];
     spotImage.imageData = UIImagePNGRepresentation(image);
     [self.spot addImagesObject:spotImage];
-    NSLog(@"self.spot.avatarXid %@", self.spot.avatarXid);
+//    NSLog(@"self.spot.avatarXid %@", self.spot.avatarXid);
     if (!self.spot.avatarXid || [self.spot.avatarXid isEqualToString:@""]) {
         self.spot.avatarXid = spotImage.xid;
         self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
@@ -167,7 +169,7 @@
     [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
-    
+
 }
 
 -(UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)size{
@@ -189,6 +191,52 @@
     UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return resultImage;
+}
+
+-(void)startSavingAnimationWithMessage:(NSString *)message withTag:(NSUInteger)tag forView:(UIView *)view {
+    
+    UIView *activityView = [[UIView alloc] initWithFrame: [[UIScreen mainScreen] bounds]];
+    activityView.tag = tag;
+    activityView.backgroundColor = [UIColor darkGrayColor];
+    activityView.alpha = 0.75;
+    
+    UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    [activityView addSubview:activityIndicator];
+    
+    UILabel *requestingInformation = [[UILabel alloc] init];
+    requestingInformation.text = message;
+    requestingInformation.backgroundColor = [UIColor clearColor];
+    requestingInformation.textColor = [UIColor whiteColor];
+    requestingInformation.font = [UIFont boldSystemFontOfSize:20];
+    [activityView addSubview:requestingInformation];
+    
+    CGSize requestingInformationSize = [requestingInformation.text sizeWithFont:requestingInformation.font constrainedToSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height/2) lineBreakMode:requestingInformation.lineBreakMode];
+    
+    activityIndicator.center = CGPointMake(self.view.frame.size.width/2,(self.view.frame.size.height/2));
+    requestingInformation.frame = CGRectMake((self.view.frame.size.width - requestingInformationSize.width)/2, self.view.frame.size.height/2 + requestingInformationSize.height, requestingInformationSize.width, requestingInformation.font.lineHeight);
+    
+    [view addSubview:activityView];
+    [view bringSubviewToFront:activityView];
+    
+    [activityIndicator startAnimating];
+}
+
+-(void)stopSavingAnimationWithTag:(NSUInteger)tag forView:(UIView *)view {
+    
+    UIView *activityView = [view viewWithTag:tag];
+
+    for (UIView *subview in [activityView subviews]) {
+        
+        if ([subview isKindOfClass:[UIActivityIndicatorView class]]) {
+            
+            UIActivityIndicatorView *activityIndicator = (UIActivityIndicatorView *)subview;
+            [activityIndicator stopAnimating];
+            break;
+            
+        }
+    }
+
+    [activityView removeFromSuperview];
 }
 
 
@@ -281,6 +329,7 @@
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", self.spot.avatarXid];
     NSError *error;
     STGTImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+    
     if (spotImage) {
         self.spotImageView.image = [self resizeImage:[UIImage imageWithData:spotImage.imageData] toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
     } else {
