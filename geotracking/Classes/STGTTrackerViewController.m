@@ -50,19 +50,19 @@
 }
 
 - (IBAction)clearData:(id)sender {
-    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Clear database" message:@"Choose objects to delete:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Only tracks", @"All data", nil];
+    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CLEAR DATABASE", @"") message:NSLocalizedString(@"OBJECT TO DELETE", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"ONLY TRACKS", @""), NSLocalizedString(@"ALL DATA", @""), nil];
     clearAlert.tag = 1;
     [clearAlert show];
 }
 
 - (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
     if (self.tracker.locationManagerRunning) {
-        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle: @"Stop tracking" message: @"Stop?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
+        UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP TRACKING", @"") message:@"?" delegate: self cancelButtonTitle:NSLocalizedString(@"NO", @"") otherButtonTitles:NSLocalizedString(@"YES", @""), nil];
         stopAlert.tag = 2;
         [stopAlert show];
     } else {
         [self.tracker startTrackingLocation];
-        sender.title = @"Stop";
+        sender.title = NSLocalizedString(@"STOP", @"");
     }
 }
 
@@ -77,18 +77,18 @@
                 if (!self.tracker.locationManagerRunning) {
                     [self.tracker clearAllData];
                 } else {
-                    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You should stop locations tracking for clear procedure" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"STOP TRACKING FOR CLEAR", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
                     [clearAlert show];
                 }
             } else {
-                UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"You can not delete all data" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"CANT DELETE ALL DATA", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
                 [clearAlert show];
             }
         }
     } else if (alertView.tag == 2) {
         if (buttonIndex == 1) {
             [self.tracker stopTrackingLocation];
-            [self startButton].title = @"Start";
+            [self startButton].title = NSLocalizedString(@"START", @"");
         }
     }
 }
@@ -126,9 +126,9 @@
 
 - (void)setStartButtonLabel:(NSNotification *)notification {
     if (self.tracker.locationManagerRunning) {
-        [self startButton].title = @"Stop";
+        [self startButton].title = NSLocalizedString(@"STOP", @"");
     } else {
-        [self startButton].title = @"Start";
+        [self startButton].title = NSLocalizedString(@"START", @"");
     }
 }
 
@@ -144,6 +144,12 @@
     self.startButton.enabled = NO;
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
+    
+    self.startButton.title = NSLocalizedString(@"START", @"");
+    self.settingsButton.title = NSLocalizedString(@"SETTINGS", @"");
+    self.syncButton.title = NSLocalizedString(@"SYNC", @"");
+    self.title = NSLocalizedString(@"TRACKER", @"");
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerBusy:) name:@"STGTTrackerBusy" object:nil];

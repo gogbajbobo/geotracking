@@ -1,0 +1,34 @@
+/* 
+  Localizable.strings
+  geotracking
+
+  Created by Maxim Grigoriev on 2/20/13.
+  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
+*/
+"CLEAR DATABASE" = "Clear database";
+"OBJECT TO DELETE" = "Choose objects to delete:";
+"CANCEL" = "Cancel";
+"ONLY TRACKS" = "Only tracks";
+"ALL DATA" = "All data";
+"STOP TRACKING" = "Stop tracking";
+"NO" = "No";
+"YES" = "Yes";
+"STOP" = "Stop";
+"WARNING" = "Warning";
+"OK" = "Ok";
+"STOP TRACKING FOR CLEAR" = "You should stop locations tracking for clear procedure";
+"CANT DELETE ALL DATA" = "You can not delete all data";
+"START" = "Start";
+"SETTINGS" = "Settings";
+"SYNC" = "Sync";
+"TRACKER" = "Tracker";
+
+"M" = "m";
+"KM/H" = "km/h";
+"0POINTS" = "no points";
+"1POINTS" = "point";
+"2POINTS" = "points";
+"5POINTS" = "points";
+"1TRACKS" = "track";
+"2TRACKS" = "tracks";
+"5TRACKS" = "tracks";

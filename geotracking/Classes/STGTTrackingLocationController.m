@@ -237,13 +237,10 @@
 
 - (void)trackerInit {
     NSLog(@"trackerInit");
-//    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
     [[STGTDataSyncController sharedSyncer] startSyncer];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
-
-//    [self testDeleteTrack];
 
 }
 
@@ -266,11 +263,9 @@
 
 - (void)startNewTrack {
     STGTTrack *track = (STGTTrack *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTTrack" inManagedObjectContext:self.locationsDatabase.managedObjectContext];
-//    [track setXid:[self newid]];
     [track setOverallDistance:[NSNumber numberWithDouble:0.0]];
     NSDate *ts = [NSDate date];
     [track setStartTime:ts];
-//    [self.syncer changesCountPlusOne];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
     [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
@@ -293,8 +288,6 @@
             [location setCourse:[NSNumber numberWithDouble:-1]];
             [location setAltitude:[NSNumber numberWithDouble:self.lastLocation.altitude]];
             [location setVerticalAccuracy:[NSNumber numberWithDouble:self.lastLocation.verticalAccuracy]];
-//            [location setXid:[self newid]];
-//            [self.syncer changesCountPlusOne];
             [self.currentTrack setStartTime:ts];
             [self.currentTrack addLocationsObject:location];
 //            NSLog(@"copy lastLocation to new Track as first location");
@@ -316,8 +309,6 @@
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
     [location setAltitude:[NSNumber numberWithDouble:currentLocation.altitude]];
     [location setVerticalAccuracy:[NSNumber numberWithDouble:currentLocation.verticalAccuracy]];
-//    [location setXid:[self newid]];
-//    [self.syncer changesCountPlusOne];
 
     if (self.currentTrack.locations.count == 0) {
         self.currentTrack.startTime = timestamp;
@@ -401,11 +392,11 @@
         numberOfNotSyncedItems = @"";
     }
     
-    self.summary.text = [NSString stringWithFormat:@"%@m, %@km/h %@ /%@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]],[speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], self.trackerStatus, numberOfNotSyncedItems];
+    self.summary.text = [NSString stringWithFormat:@"%@%@, %@%@ %@ /%@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]], NSLocalizedString(@"M", @""), [speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], NSLocalizedString(@"KM/H", @""), self.trackerStatus, numberOfNotSyncedItems];
     if (self.currentAccuracy > 0) {
-        self.currentValues.text = [NSString stringWithFormat:@"DA %@m, RA %@m, DF %@m, CA %gm", self.settings.desiredAccuracy, self.settings.requiredAccuracy, self.settings.distanceFilter, self.currentAccuracy];
+        self.currentValues.text = [NSString stringWithFormat:@"DA %@%@, RA %@%@, DF %@%@, CA %g%@", self.settings.desiredAccuracy, NSLocalizedString(@"M", @""), self.settings.requiredAccuracy, NSLocalizedString(@"M", @""), self.settings.distanceFilter, NSLocalizedString(@"M", @""), self.currentAccuracy, NSLocalizedString(@"M", @"")];
     } else {
-        self.currentValues.text = [NSString stringWithFormat:@"DA %@m, RA %@m, DF %@m", self.settings.desiredAccuracy, self.settings.requiredAccuracy, self.settings.distanceFilter];
+        self.currentValues.text = [NSString stringWithFormat:@"DA %@%@, RA %@%@, DF %@%@", self.settings.desiredAccuracy, NSLocalizedString(@"M", @""), self.settings.requiredAccuracy, NSLocalizedString(@"M", @""), self.settings.distanceFilter, NSLocalizedString(@"M", @"")];
     }
 }
 
@@ -648,14 +639,28 @@
     }
     int idistance = ddistance;
 
-    NSString *tr;
-    if ([sectionInfo numberOfObjects] == 1) {
-        tr = @"track";
+    NSString *keyString;
+    int testNumber = [sectionInfo numberOfObjects] % 100;
+    if (testNumber >= 11 && testNumber <= 19) {
+        keyString = @"5TRACKS";
     } else {
-        tr = @"tracks";
+        int switchNumber = testNumber % 10;
+        switch (switchNumber) {
+            case 1:
+                keyString = @"1TRACKS";
+                break;
+            case 2:
+            case 3:
+            case 4:
+                keyString = @"2TRACKS";
+                break;
+            default:
+                keyString = @"5TRACKS";
+                break;
+        }
     }
 
-    return [NSString stringWithFormat:@"%@ - %d %@ - %dm", [sectionInfo name], [sectionInfo numberOfObjects], tr, idistance];
+    return [NSString stringWithFormat:@"%@ - %d %@ - %d%@", [sectionInfo name], [sectionInfo numberOfObjects], NSLocalizedString(keyString, @""), idistance, NSLocalizedString(@"M", @"")];
 }
 
 
@@ -701,7 +706,34 @@
     if (trackOverallTime > 0) {
         speed = [NSNumber numberWithDouble:(3.6 * [track.overallDistance doubleValue] / trackOverallTime)];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%@m %@km/h %dpoints", [distanceNumberFormatter stringFromNumber:track.overallDistance], [speedNumberFormatter stringFromNumber:speed], track.locations.count];
+    
+    NSString *keyString;
+    if (track.locations.count == 0) {
+        keyString = @"0POINTS";
+        cell.textLabel.text = [NSString stringWithFormat:@"%@%@ %@%@ %@", [distanceNumberFormatter stringFromNumber:track.overallDistance], NSLocalizedString(@"M", @""), [speedNumberFormatter stringFromNumber:speed], NSLocalizedString(@"KM/H", @""), NSLocalizedString(keyString, @"")];
+    } else {
+        int testNumber = track.locations.count % 100;
+        if (testNumber >= 11 && testNumber <= 19) {
+            keyString = @"5POINTS";
+        } else {
+            int switchNumber = testNumber % 10;
+            switch (switchNumber) {
+                case 1:
+                    keyString = @"1POINTS";
+                    break;
+                case 2:
+                case 3:
+                case 4:
+                    keyString = @"2POINTS";
+                    break;
+                default:
+                    keyString = @"5POINTS";
+                    break;
+            }
+        }
+        cell.textLabel.text = [NSString stringWithFormat:@"%@%@ %@%@ %d %@", [distanceNumberFormatter stringFromNumber:track.overallDistance], NSLocalizedString(@"M", @""), [speedNumberFormatter stringFromNumber:speed], NSLocalizedString(@"KM/H", @""), track.locations.count, NSLocalizedString(keyString, @"")];
+    }
+    
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ — %@", [startDateFormatter stringFromDate:track.startTime], [finishDateFormatter stringFromDate:track.finishTime]];
     
     return cell;
