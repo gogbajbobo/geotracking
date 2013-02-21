@@ -269,9 +269,12 @@
                     </navigationItem>
                     <connections>
                         <outlet property="interestsCollectionView" destination="0nN-Pa-aPw" id="awk-xo-Azb"/>
+                        <outlet property="interestsLabel" destination="b9G-S8-X6t" id="1aX-sm-yKN"/>
                         <outlet property="networkCollectionView" destination="43C-w0-ep3" id="LKc-po-pdi"/>
+                        <outlet property="networksLabel" destination="4s9-LY-Wp8" id="RIn-Z9-JKo"/>
                         <outlet property="spotImageView" destination="edl-82-fzK" id="L2E-0d-d7i"/>
                         <outlet property="spotInfo" destination="HwA-Vt-4GS" id="6uY-Zl-m1b"/>
+                        <outlet property="spotInfoLabel" destination="NdI-eT-7lI" id="UPR-iJ-pwQ"/>
                         <outlet property="spotLabel" destination="nWb-hk-WmC" id="cmJ-dv-Ndj"/>
                         <segue destination="YSR-xL-nVu" kind="push" identifier="showProperties" id="u1e-6T-tE2"/>
                         <segue destination="DgB-Hr-9VM" kind="push" identifier="showImageCollection" id="PJw-cg-QkE"/>
@@ -1170,78 +1173,6 @@
     <resources>
         <image name="STGTblank_image_44_44.png" width="44" height="44"/>
     </resources>
-    <classes>
-        <class className="STGTAddressSearchViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTAddressSearchViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="searchBar" candidateClass="UISearchBar"/>
-            </relationships>
-        </class>
-        <class className="STGTFilterSpotViewController" superclassName="UITabBarController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTFilterSpotViewController.h"/>
-        </class>
-        <class className="STGTImagesViewController" superclassName="UIPageViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTImagesViewController.h"/>
-        </class>
-        <class className="STGTMapViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTMapViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="headingLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="headingModeSwitch" candidateClass="UISwitch"/>
-                <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>
-                <relationship kind="outlet" name="mapView" candidateClass="MKMapView"/>
-                <relationship kind="outlet" name="trackNumberLabel" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="trackNumberSelector" candidateClass="UIStepper"/>
-                <relationship kind="outlet" name="trackSelectorLabel" candidateClass="UILabel"/>
-            </relationships>
-        </class>
-        <class className="STGTSettingsTableViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTSettingsTableViewController.h"/>
-        </class>
-        <class className="STGTSpotImageViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTSpotImageViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
-            </relationships>
-        </class>
-        <class className="STGTSpotPropertiesViewController" superclassName="UITableViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTSpotPropertiesViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="STGTSpotViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTSpotViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="interestsCollectionView" candidateClass="UICollectionView"/>
-                <relationship kind="outlet" name="networkCollectionView" candidateClass="UICollectionView"/>
-                <relationship kind="outlet" name="spotImageView" candidateClass="UIImageView"/>
-                <relationship kind="outlet" name="spotInfo" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="spotLabel" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="STGTTrackerViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTTrackerViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="currentValues" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="deleteButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="settingsButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="startButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="summary" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="syncButton" candidateClass="UIBarButtonItem"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="UICollectionReusableView" superclassName="UIView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
-        </class>
-        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
-        </class>
-        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

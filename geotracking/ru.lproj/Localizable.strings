@@ -70,4 +70,19 @@
 "authServiceURI" = "authServiceURI";
 "authServiceParameters" = "authServiceParameters";
 
+"SPOT" = "Метка";
+"SPOT INFO" = "Информация:";
+"SPOT LABEL" = "Имя метки";
+"ADD PHOTO TO SPOT" = "Добавляю фотографию к метке…";
+"INTERESTS" = "Интересы:";
+"NETWORKS" = "Сети:";
+"DELETE SPOT" = "Удалить метку";
+"SOURCE SELECT" = "Источник фото";
+"CHOOSE SOURCE" = "Выберите источник фотографии";
+"CAMERA" = "Камера";
+"PHOTO LIBRARY" = "Фото библиотека";
+
+
+
+
 

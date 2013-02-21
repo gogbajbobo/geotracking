@@ -24,6 +24,9 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *networkCollectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *spotImageView;
 @property (nonatomic, strong) STGTDataSyncController *syncer;
+@property (weak, nonatomic) IBOutlet UILabel *spotInfoLabel;
+@property (weak, nonatomic) IBOutlet UILabel *interestsLabel;
+@property (weak, nonatomic) IBOutlet UILabel *networksLabel;
 
 
 @end
@@ -38,14 +41,14 @@
 }
 
 - (IBAction)deleteSpot:(id)sender {
-    UIAlertView *deleteSpotAlert = [[UIAlertView alloc] initWithTitle:@"Delete spot" message:@"Delete spot?" delegate:self cancelButtonTitle:@"YES"  otherButtonTitles:@"NO",nil];
+    UIAlertView *deleteSpotAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"DELETE SPOT", @"") message:@"?" delegate:self cancelButtonTitle:NSLocalizedString(@"NO", @"")  otherButtonTitles:NSLocalizedString(@"YES", @""),nil];
     deleteSpotAlert.tag = 1;
     [deleteSpotAlert show];
 }
 
 - (void)spotImageTap:(UITapGestureRecognizer *)gesture {
     if (self.spot.images.count == 0) {
-        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+        UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SOURCE SELECT", @"") message:NSLocalizedString(@"CHOOSE SOURCE", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"CAMERA", @""), NSLocalizedString(@"PHOTO LIBRARY", @""), nil];
         sourceSelectAlert.tag = 2;
         [sourceSelectAlert show];
     } else {
@@ -56,7 +59,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 1) {
-        if (buttonIndex == 0) {
+        if (buttonIndex == 1) {
             if ([self.spotLabel isFirstResponder]) {
                 self.spotLabel.text = @"";
                 [self.spotLabel resignFirstResponder];
@@ -113,7 +116,7 @@
     self.spotLabel.returnKeyType = UIReturnKeyDone;
     self.spotLabel.tag = 1;
     self.spotLabel.delegate = self;
-    self.spotLabel.placeholder = @"Spot label";
+    self.spotLabel.placeholder = NSLocalizedString(@"SPOT LABEL", @"");
     self.spotLabel.text = self.spot.label;
 }
 
@@ -149,7 +152,7 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [self startSavingAnimationWithMessage:@"Add photo to spot…" withTag:666 forView:self.view];
+    [self startSavingAnimationWithMessage:NSLocalizedString(@"ADD PHOTO TO SPOT", @"") withTag:666 forView:self.view];
     [picker dismissViewControllerAnimated:YES completion:^{
         NSLog(@"dismissViewControllerAnimated");
         [self saveImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
@@ -347,6 +350,11 @@
 
 - (void)viewDidLoad
 {
+    self.title = NSLocalizedString(@"SPOT", @"");
+    self.spotInfoLabel.text = NSLocalizedString(@"SPOT INFO", @"");
+    self.interestsLabel.text = NSLocalizedString(@"INTERESTS", @"");
+    self.networksLabel.text = NSLocalizedString(@"NETWORKS", @"");
+    
     if (!self.spot) {
     STGTSpot *newSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];

@@ -70,3 +70,15 @@
 "authServiceURI" = "authServiceURI";
 "authServiceParameters" = "authServiceParameters";
 
+"SPOT" = "Spot";
+"SPOT INFO" = "Spot info:";
+"SPOT LABEL" = "Spot label";
+"ADD PHOTO TO SPOT" = "Add photo to spot…";
+"INTERESTS" = "Interests:";
+"NETWORKS" = "Networks:";
+"DELETE SPOT" = "Delete spot";
+"SOURCE SELECT" = "Source select";
+"CHOOSE SOURCE" = "Choose source for photo";
+"CAMERA" = "Camera";
+"PHOTO LIBRARY" = "Photo library";
+
