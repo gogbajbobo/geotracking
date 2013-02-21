@@ -46,3 +46,27 @@
 "HYBRID" = "Hybrid";
 "HEADING" = "Heading";
 "TRACK NUMBER" = "Track number";
+
+"GENERAL" = "General settings";
+"SYNCER" = "Syncer";
+"AUTHSERVICE" = "AuthService";
+
+"localAccessToSettings" = "localAccessToSettings";
+"desiredAccuracy" = "desiredAccuracy, m";
+"requiredAccuracy" = "requiredAccuracy, m";
+"distanceFilter" = "distanceFilter, m";
+"trackDetectionTime" = "trackDetectionTime, s";
+"trackerAutoStart" = "trackerAutoStart";
+"trackerStartTime" = "trackerStartTime";
+"trackerFinishTime" = "trackerFinishTime";
+"fetchLimit" = "fetchLimit";
+"syncInterval" = "syncInterval, s";
+"syncServerURI" = "syncServerURI";
+"xmlNamespace" = "xmlNamespace";
+"mapHeading" = "mapHeading";
+"mapType" = "mapType";
+"trackScale" = "trackScale";
+"tokenServerURL" = "tokenServerURL";
+"authServiceURI" = "authServiceURI";
+"authServiceParameters" = "authServiceParameters";
+

@@ -46,3 +46,28 @@
 "HYBRID" = "Гибрид";
 "HEADING" = "Компас";
 "TRACK NUMBER" = "Номер трека";
+
+"GENERAL" = "Общие настройки";
+"SYNCER" = "Синхронизация";
+"AUTHSERVICE" = "Аутентификация";
+
+"localAccessToSettings" = "локальный доступ";
+"desiredAccuracy" = "желаемая точность, м";
+"requiredAccuracy" = "требуемая точность, м";
+"distanceFilter" = "шаг слежения, м";
+"trackDetectionTime" = "время автоотсечки, с";
+"trackerAutoStart" = "автостарт";
+"trackerStartTime" = "время запуска";
+"trackerFinishTime" = "время остановки";
+"fetchLimit" = "количество объектов";
+"syncInterval" = "интервал, с";
+"syncServerURI" = "syncServerURI";
+"xmlNamespace" = "xmlNamespace";
+"mapHeading" = "компас";
+"mapType" = "вид";
+"trackScale" = "масштаб треков";
+"tokenServerURL" = "tokenServerURL";
+"authServiceURI" = "authServiceURI";
+"authServiceParameters" = "authServiceParameters";
+
+

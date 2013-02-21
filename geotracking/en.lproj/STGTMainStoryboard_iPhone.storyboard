@@ -696,7 +696,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="desiredAccuracy, m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0Xi-Tl-Crk">
-                                                    <rect key="frame" x="10" y="10" width="220" height="24"/>
+                                                    <rect key="frame" x="10" y="10" width="242" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -725,7 +725,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="requiredAccuracy, m" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qcd-Uv-ZwF">
-                                                    <rect key="frame" x="10" y="10" width="220" height="24"/>
+                                                    <rect key="frame" x="10" y="10" width="242" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -783,7 +783,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="trackDetectionTime, s" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="US0-0K-sVk">
-                                                    <rect key="frame" x="10" y="10" width="220" height="24"/>
+                                                    <rect key="frame" x="10" y="10" width="244" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -896,7 +896,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="1" contentMode="left" text="fetchLimit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rk1-wu-nFK">
-                                                    <rect key="frame" x="10" y="10" width="220" height="24"/>
+                                                    <rect key="frame" x="10" y="10" width="245" height="24"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -1186,11 +1186,6 @@
         <class className="STGTMapViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/STGTMapViewController.h"/>
             <relationships>
-                <relationship kind="action" name="addNewSpotButtonPressed:" candidateClass="UIButton"/>
-                <relationship kind="action" name="filterSpotButtonPressed:"/>
-                <relationship kind="action" name="headingModeSwitchSwitched:"/>
-                <relationship kind="action" name="mapSwitchPressed:"/>
-                <relationship kind="action" name="trackNumberChange:"/>
                 <relationship kind="outlet" name="headingLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="headingModeSwitch" candidateClass="UISwitch"/>
                 <relationship kind="outlet" name="mapSwitch" candidateClass="UISegmentedControl"/>

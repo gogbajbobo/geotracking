@@ -40,6 +40,9 @@
     return _settingsTitles;
 }
 
+- (NSArray *)sectionsTitles {
+    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", @"AUTHSERVICE", nil];
+}
 
 - (void)setupCells {
 
@@ -49,7 +52,8 @@
         for (NSString *settingName in settingsGroup) {
 //            NSLog(@"settingsName %@", settingsName);
             UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
-//            UILabel *cellLabel = (UILabel *)[cell.contentView viewWithTag:1];
+            UILabel *cellLabel = (UILabel *)[cell.contentView viewWithTag:1];
+            cellLabel.text = NSLocalizedString(settingName, @"");
             
             UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
             if ([settingName isEqualToString:@"trackerStartTime"] || [settingName isEqualToString:@"trackerFinishTime"]){
@@ -289,8 +293,7 @@
     int section = 0;
     for (NSArray *array in self.settingsTitles) {
         int row = 0;
-        NSString *sectionTitle = [self tableView:self.tableView titleForHeaderInSection:section];
-        if (![sectionTitle isEqualToString:@"General settings"] && ![sectionTitle isEqualToString:@"MapView"]) {
+        if (section != 0 && section != 3) {
             for (NSString *settingName in array) {
                 UITableViewCell *cell = [self tableView:self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:section]];
                 UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
@@ -307,6 +310,11 @@
         section++;
     }
 
+}
+
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return [tableView headerViewForSection:section].textLabel.text = NSLocalizedString([[self sectionsTitles] objectAtIndex:section], @"");
 }
 
 #pragma mark - View lifecycle
