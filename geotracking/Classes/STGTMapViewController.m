@@ -31,6 +31,8 @@
 @property (strong, nonatomic) STGTSpot *filterSpot;
 @property (strong, nonatomic) NSMutableDictionary *annotationsDictionary;
 @property (nonatomic, strong) STGTSettings *settings;
+@property (weak, nonatomic) IBOutlet UILabel *headingLabel;
+@property (weak, nonatomic) IBOutlet UILabel *trackSelectorLabel;
 
 
 @end
@@ -244,6 +246,9 @@
     } else if ([mapType integerValue] == MKMapTypeHybrid) {
         self.mapSwitch.selectedSegmentIndex = 2;
     }
+    [self.mapSwitch setTitle:NSLocalizedString(@"MAP", @"") forSegmentAtIndex:0];
+    [self.mapSwitch setTitle:NSLocalizedString(@"SATELLITE", @"") forSegmentAtIndex:1];
+    [self.mapSwitch setTitle:NSLocalizedString(@"HYBRID", @"") forSegmentAtIndex:2];
 
 }
 
@@ -481,7 +486,7 @@
         }
         pinView.annotation = annotation;
         UIButton *detailDisclosureButton;
-        if ([[pinView.annotation title] isEqualToString:@"Add new spot…"]) {
+        if ([[pinView.annotation title] isEqualToString:NSLocalizedString(@"ADD NEW SPOT", @"")]) {
             detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeContactAdd];
         } else {
             detailDisclosureButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
@@ -563,7 +568,7 @@
 }
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
-    if ([[view.annotation title] isEqualToString:@"Add new spot…"]) {
+    if ([[view.annotation title] isEqualToString:NSLocalizedString(@"ADD NEW SPOT", @"")]) {
         [mapView removeAnnotation:view.annotation];
     }
     self.selectedSpot = nil;
@@ -649,26 +654,25 @@
 
 - (void)viewDidLoad
 {
+//    NSLog(@"MVC viewDidLoad");
+    [super viewDidLoad];
+
+    self.title = NSLocalizedString(@"MAP", @"");
+    self.headingLabel.text = NSLocalizedString(@"HEADING", @"");
+    self.trackSelectorLabel.text = NSLocalizedString(@"TRACK NUMBER", @"");
     [self setHeadingMode];
     [self setMapType];
-    
     self.trackNumberLabel.text = [NSString stringWithFormat:@"%d", (self.tracker.numberOfTracks - self.tracker.selectedTrackNumber)];
     [self.mapView addOverlay:(id<MKOverlay>)self.allPathLine];
     [self.mapView addOverlay:(id<MKOverlay>)self.pathLine];
     [self trackNumberSelectorSetup];
     self.mapView.showsUserLocation = YES;
     self.annotationsDictionary = [NSMutableDictionary dictionary];
-//    [self performFetch];
     [self updateMapView];
 
     UILongPressGestureRecognizer *longTap = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longTap:)];
     [self.mapView addGestureRecognizer:longTap];
 
-    [super viewDidLoad];
-
-//    NSLog(@"MVC viewDidLoad");
-
-	// Do any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated {

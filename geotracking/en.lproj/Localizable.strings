@@ -39,4 +39,10 @@
 "RESPONSE ERROR" = "Response error";
 "SYNC ERROR" = "Sync error";
 
+"UNTITLED" = "untitled";
 "ADD NEW SPOT" = "Add new spot…";
+"MAP" = "Map";
+"SATELLITE" = "Satellite";
+"HYBRID" = "Hybrid";
+"HEADING" = "Heading";
+"TRACK NUMBER" = "Track number";

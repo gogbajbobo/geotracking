@@ -39,4 +39,10 @@
 "RESPONSE ERROR" = "Ошибка ответа сервера";
 "SYNC ERROR" = "Ошибка синхронизации";
 
+"UNTITLED" = "без названия";
 "ADD NEW SPOT" = "Добавить метку…";
+"MAP" = "Карта";
+"SATELLITE" = "Спутник";
+"HYBRID" = "Гибрид";
+"HEADING" = "Компас";
+"TRACK NUMBER" = "Номер трека";

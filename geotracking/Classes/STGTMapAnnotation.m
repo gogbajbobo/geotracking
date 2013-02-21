@@ -50,12 +50,12 @@
         return [NSString stringWithFormat:@"%@",[location description]];
     } else if (self.spot) {
         if (!self.spot.label) {
-            return @"untitled";
+            return NSLocalizedString(@"UNTITLED", @"");
         } else {
             return self.spot.label;
         }
     } else if (self.addNewSpot) {
-        return @"Add new spot…";
+        return NSLocalizedString(@"ADD NEW SPOT", @"");
     } else {
         return @"";
     }
