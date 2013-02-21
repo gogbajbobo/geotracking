@@ -98,7 +98,7 @@
             [[cell.contentView viewWithTag:1] resignFirstResponder];
             NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
             if (indexPath.row != self.resultsController.fetchedObjects.count) {
-                UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+                UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SOURCE SELECT", @"") message:NSLocalizedString(@"CHOOSE SOURCE 2", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"CAMERA", @""), NSLocalizedString(@"PHOTO LIBRARY", @""), nil];
                 sourceSelectAlert.tag = 1;
                 [sourceSelectAlert show];
             }
@@ -176,7 +176,13 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    return [NSString stringWithFormat:@"%@s", self.typeOfProperty];
+    if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+        return NSLocalizedString(@"INTERESTS", @"");
+    } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+        return NSLocalizedString(@"NETWORKS", @"");
+    } else {
+        return nil;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -191,7 +197,11 @@
     textField.returnKeyType = UIReturnKeyDone;
     textField.tag = 1;
     textField.delegate = self;
-    textField.placeholder = [NSString stringWithFormat:@"%@ %@", @"Name of", self.typeOfProperty];
+    if ([self.typeOfProperty isEqualToString:@"Interest"]) {
+        textField.placeholder = NSLocalizedString(@"INTEREST NAME", @"");
+    } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
+        textField.placeholder = NSLocalizedString(@"NETWORK NAME", @"");
+    }
     textField.text = nil;
     cell.imageView.image = [UIImage imageNamed:@"STGTblank_image_44_44.png"];
     if (indexPath.row != self.resultsController.fetchedObjects.count) {

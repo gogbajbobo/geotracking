@@ -82,3 +82,14 @@
 "CAMERA" = "Camera";
 "PHOTO LIBRARY" = "Photo library";
 
+"DELETE PHOTO" = "Delete photo";
+"R U SURE" = "Are you sure?";
+"MANAGE PHOTOS" = "Manage photos";
+"CHOOSE ACTION" = "Choose action";
+"ADD NEW PHOTO" = "Add new photo";
+"SET AS AVATAR" = "Set photo as avatar";
+"OF" = "of";
+
+"CHOOSE SOURCE 2" = "Choose source for picture";
+"INTEREST NAME" = "Name of interest";
+"NETWORK NAME" = "Name of network";

@@ -82,7 +82,17 @@
 "CAMERA" = "Камера";
 "PHOTO LIBRARY" = "Фото библиотека";
 
+"DELETE PHOTO" = "Удалить фото";
+"R U SURE" = "Вы уверены?";
+"MANAGE PHOTOS" = "Управление фотографиями";
+"CHOOSE ACTION" = "Выберите действие";
+"ADD NEW PHOTO" = "Добавить новое фото";
+"SET AS AVATAR" = "Сделать фото ключевым";
+"OF" = "из";
 
+"CHOOSE SOURCE 2" = "Выберите источник картинки";
+"INTEREST NAME" = "Название интереса";
+"NETWORK NAME" = "Имя сети";
 
 
 

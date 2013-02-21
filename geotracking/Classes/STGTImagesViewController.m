@@ -28,7 +28,7 @@
 }
 
 - (IBAction)editButtonPressed:(id)sender {
-    UIAlertView *photosEditAlert = [[UIAlertView alloc] initWithTitle:@"Manage photos" message:@"Choose action" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add new photo", @"Set current photo as avatar", @"Delete current photo", nil];
+    UIAlertView *photosEditAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"MANAGE PHOTOS", @"") message:NSLocalizedString(@"CHOOSE ACTION", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"ADD NEW PHOTO", @""), NSLocalizedString(@"SET AS AVATAR", @""), NSLocalizedString(@"DELETE PHOTO", @""), nil];
     photosEditAlert.tag = 1;
     [photosEditAlert show];
 }
@@ -36,7 +36,7 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (alertView.tag == 1) {
         if (buttonIndex == 1) {
-            UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:@"SourceSelect" message:@"Choose source for picture" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Camera", @"PhotoLibrary", nil];
+            UIAlertView *sourceSelectAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"SOURCE SELECT", @"") message:NSLocalizedString(@"CHOOSE SOURCE", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"CAMERA", @""), NSLocalizedString(@"PHOTO LIBRARY", @""), nil];
             sourceSelectAlert.tag = 2;
             [sourceSelectAlert show];
         } else if (buttonIndex == 2) {
@@ -45,7 +45,7 @@
             self.spot.avatarXid = spotImage.xid;
         } else if (buttonIndex == 3) {
 //            NSLog(@"Delete current photo");
-            UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle: @"Delete photo" message: @"Are you sure?" delegate: self cancelButtonTitle: @"NO"  otherButtonTitles:@"YES",nil];
+            UIAlertView *deleteAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"DELETE PHOTO", @"") message:NSLocalizedString(@"R U SURE", @"") delegate: self cancelButtonTitle:NSLocalizedString(@"NO", @"")  otherButtonTitles:NSLocalizedString(@"YES", @""),nil];
             deleteAlert.tag = 3;
             [deleteAlert show];
         }
@@ -95,7 +95,7 @@
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [self startSavingAnimationWithMessage:@"Add photo to spot…" withTag:666 forView:self.view];
+    [self startSavingAnimationWithMessage:NSLocalizedString(@"ADD PHOTO TO SPOT", @"") withTag:666 forView:self.view];
     [picker dismissViewControllerAnimated:YES completion:^{
         [self saveImage:[info objectForKey:UIImagePickerControllerOriginalImage]];
         NSLog(@"dismissViewControllerAnimated");
@@ -205,7 +205,7 @@
 
 - (void)updateTitle {
     self.currentIndex = [self.images indexOfObject:[[self.viewControllers lastObject] spotImage]];
-    self.title = [NSString stringWithFormat:@"%d of %d", self.currentIndex+1, self.images.count];
+    self.title = [NSString stringWithFormat:@"%d %@ %d", self.currentIndex+1, NSLocalizedString(@"OF", @""), self.images.count];
 }
 
 #pragma mark - Page View Controller Data Source
