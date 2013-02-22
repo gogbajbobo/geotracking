@@ -782,9 +782,9 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0 && indexPath.row == 0) {
-        return @"Add new track";
+        return NSLocalizedString(@"ADD NEW TRACK", @"");
     } else {
-        return @"Delete";
+        return nil;
     }
 }
 
