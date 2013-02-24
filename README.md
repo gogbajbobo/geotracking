@@ -23,7 +23,12 @@ Targets / Info / Custom iOS Target Properties / Required background modes / + Ap
 Использование
 ---
 
-`[STGTTrackingLocationController sharedTracker]` - доступ к геотрекеру. Геотрекер автоматически запускает синхронизатор. Если к синхронизатору нужен отдельный доступ, то: `[STGTDataSyncController sharedSyncer]` - доступ к синхронизатору.
+Запуск геотрекера:
+`
+    [[STGTTrackingLocationController sharedTracker] initDatabase:^(BOOL success) {
+        [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
+    }];
+`
 
 
 Описание ошибок
