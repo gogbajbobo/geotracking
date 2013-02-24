@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *syncButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *deleteButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *settingsButton;
+@property (weak, nonatomic) IBOutlet UIView *trackerActivityView;
 
 @end
 
@@ -127,8 +128,10 @@
 - (void)setStartButtonLabel:(NSNotification *)notification {
     if (self.tracker.locationManagerRunning) {
         [self startButton].title = NSLocalizedString(@"STOP", @"");
+        [self startAnimationOfTrackerActivityIndicator];
     } else {
         [self startButton].title = NSLocalizedString(@"START", @"");
+        [self stopAnimationOfTrackerActivityIndicator];
     }
 }
 
@@ -138,6 +141,21 @@
     }
 }
 
+- (void)startAnimationOfTrackerActivityIndicator {
+    [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat) animations:^{
+        self.trackerActivityView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+//        NSLog(@"finished");
+    }];
+}
+
+- (void)stopAnimationOfTrackerActivityIndicator {
+    [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState) animations:^{
+        self.trackerActivityView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+//        NSLog(@"finished");
+    }];
+}
 
 - (void)viewDidLoad
 {
