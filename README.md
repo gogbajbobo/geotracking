@@ -24,11 +24,11 @@ Targets / Info / Custom iOS Target Properties / Required background modes / + Ap
 ---
 
 Запуск геотрекера:
-`
+```
     [[STGTTrackingLocationController sharedTracker] initDatabase:^(BOOL success) {
         [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
     }];
-`
+```
 
 
 Описание ошибок
