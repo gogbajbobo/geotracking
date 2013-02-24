@@ -194,45 +194,87 @@
     
 }
 
-- (UIManagedDocument *)locationsDatabase {
-    
-    if (!_locationsDatabase) {
-    
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
+//- (UIManagedDocument *)locationsDatabase {
+//    
+//    if (!_locationsDatabase) {
+//        [self initDatabase];
 
-        NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-        url = [url URLByAppendingPathComponent:DB_FILE];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
+//
+//        NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//        url = [url URLByAppendingPathComponent:DB_FILE];
+//
+////        NSLog(@"url %@", url);
+////        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+//        _locationsDatabase = [[STGTTrackerManagedDocument alloc] initWithFileURL:url];
+//        _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+//        [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+//        
+////        NSLog(@"fileExistsAtPath: %d", [[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]);
+//        
+//        if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
+//            [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+//                [_locationsDatabase closeWithCompletionHandler:^(BOOL success) {
+//                    [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
+//                        NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
+//                        [self trackerInit];
+//                        [self startNewTrack];
+//                        [self performFetch];
+//                    }];
+//                }];
+//            }];
+//        } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
+//            [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
+//                NSLog(@"locationsDatabase openWithCompletionHandler success");
+//                [self trackerInit];
+//                [self performFetch];
+//            }];
+//        } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
+//            [self trackerInit];
+//        }
+//    }
+//    return _locationsDatabase;
+//}
 
-//        NSLog(@"url %@", url);
-//        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
-        _locationsDatabase = [[STGTTrackerManagedDocument alloc] initWithFileURL:url];
-        _locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
-        [_locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
-        
-//        NSLog(@"fileExistsAtPath: %d", [[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]);
-        
-        if (![[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]) {
-            [_locationsDatabase saveToURL:_locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
-                [_locationsDatabase closeWithCompletionHandler:^(BOOL success) {
-                    [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
-                        NSLog(@"locationsDatabase UIDocumentSaveForCreating success");
-                        [self trackerInit];
-                        [self startNewTrack];
-                        [self performFetch];
-                    }];
+- (void)initDatabase:(void (^)(BOOL success))completionHandler {
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerBusy" object:self];
+    
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    url = [url URLByAppendingPathComponent:DB_FILE];
+    
+    //        NSLog(@"url %@", url);
+    //        _locationsDatabase = [[UIManagedDocument alloc] initWithFileURL:url];
+    self.locationsDatabase = [[STGTTrackerManagedDocument alloc] initWithFileURL:url];
+    self.locationsDatabase.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
+    [self.locationsDatabase persistentStoreTypeForFileType:NSSQLiteStoreType];
+    
+    //        NSLog(@"fileExistsAtPath: %d", [[NSFileManager defaultManager] fileExistsAtPath:[_locationsDatabase.fileURL path]]);
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[self.locationsDatabase.fileURL path]]) {
+        [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
+            [self.locationsDatabase closeWithCompletionHandler:^(BOOL success) {
+                [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
+                    NSLog(@"locationsDatabase UIDocumentSaveForCreating success %d", success);
+                    completionHandler(YES);
+                    [self trackerInit];
+                    [self startNewTrack];
+                    [self performFetch];
                 }];
             }];
-        } else if (_locationsDatabase.documentState == UIDocumentStateClosed) {
-            [_locationsDatabase openWithCompletionHandler:^(BOOL success) {
-                NSLog(@"locationsDatabase openWithCompletionHandler success");
-                [self trackerInit];
-                [self performFetch];
-            }];
-        } else if (_locationsDatabase.documentState == UIDocumentStateNormal) {
+        }];
+    } else if (self.locationsDatabase.documentState == UIDocumentStateClosed) {
+        [self.locationsDatabase openWithCompletionHandler:^(BOOL success) {
+            NSLog(@"locationsDatabase openWithCompletionHandler success");
+            completionHandler(YES);
             [self trackerInit];
-        }
+            [self performFetch];
+        }];
+    } else if (self.locationsDatabase.documentState == UIDocumentStateNormal) {
+        completionHandler(YES);
+        [self trackerInit];
     }
-    return _locationsDatabase;
+    
 }
 
 - (void)trackerInit {

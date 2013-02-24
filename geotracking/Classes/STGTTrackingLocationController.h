@@ -34,7 +34,7 @@
 @property (nonatomic, strong) STGTSettings *settings;
 
 
-
+- (void)initDatabase:(void (^)(BOOL success))completionHandler;
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;

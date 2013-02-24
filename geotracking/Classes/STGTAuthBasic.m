@@ -18,22 +18,13 @@
 #define AUTH_SERVICE_PARAMETERS @"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"
 
 @interface STGTAuthBasic()
-@property (nonatomic, strong) STGTSettings *settings;
 
 @end
 
-
 @implementation STGTAuthBasic
 
-- (STGTSettings *)settings {
-    if (!_settings) {
-        _settings = [STGTTrackingLocationController sharedTracker].settings;
-    }
-    return _settings;
-}
-
 - (NSString *) reachabilityServer{
-    return self.settings.tokenServerURL;
+    return [STGTAuthBasic settings].tokenServerURL;
 }
 
 - (void) tokenReceived:(UDAuthToken *) token{
@@ -48,18 +39,16 @@
 + (id) tokenRetrieverMaker{
     
     UDAuthTokenRetriever *tokenRetriever = [[UDAuthTokenRetriever alloc] init];
-    tokenRetriever.authServiceURI = [NSURL URLWithString:AUTH_SERVICE_URI];
-//    NSLog(@"[self settings].authServiceURI %@", [self settings].authServiceURI);
-//    NSLog(@"[self settings].authServiceParameters %@", [self settings].authServiceParameters);
+    tokenRetriever.authServiceURI = [NSURL URLWithString:[self settings].authServiceURI];
     
     UDPushAuthCodeRetriever *codeRetriever = [UDPushAuthCodeRetriever codeRetriever];
-    codeRetriever.requestDelegate.uPushAuthServiceURI = [NSURL URLWithString:AUTH_SERVICE_URI];
+    codeRetriever.requestDelegate.uPushAuthServiceURI = [NSURL URLWithString:[self settings].authServiceURI];
 #if DEBUG
 //    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:@"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"];
-    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:AUTH_SERVICE_PARAMETERS];
+    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:[self settings].authServiceParameters];
 #else
 //    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:@"_host=hqvsrv73&app_id=geotracking&_svc=a/UPushAuth/"];
-    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:[AUTH_SERVICE_PARAMETERS stringByReplacingOccurrencesOfString:@"-dev" withString:@""]];
+    [(UDPushAuthRequestBasic *)[codeRetriever requestDelegate] setConstantGetParameters:[[self settings].authServiceParameters stringByReplacingOccurrencesOfString:@"-dev" withString:@""]];
 #endif
     tokenRetriever.codeDelegate = codeRetriever;
         

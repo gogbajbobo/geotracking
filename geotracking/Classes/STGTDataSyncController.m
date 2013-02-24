@@ -128,14 +128,14 @@
 }
 
 - (void)startSyncer {
-    NSLog(@"startSyncer");
+//    NSLog(@"startSyncer");
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenReceived:) name:@"tokenReceived" object:nil];
 }
 
 - (void)stopSyncer {
-    NSLog(@"stopSyncer");
+//    NSLog(@"stopSyncer");
     [self.timer invalidate];
     self.timer = nil;
     self.resultsController = nil;
@@ -266,8 +266,8 @@
     
 //    [[STGTAuthBasic sharedOAuth] checkToken];
     request = [[self.authDelegate authenticateRequest:(NSURLRequest *) request] mutableCopy];
-    NSLog(@"[request valueForHTTPHeaderField:Authorization] %@", [request valueForHTTPHeaderField:@"Authorization"]);
-    NSLog(@"request %@", request);
+//    NSLog(@"[request valueForHTTPHeaderField:Authorization] %@", [request valueForHTTPHeaderField:@"Authorization"]);
+//    NSLog(@"request %@", request);
     if ([request valueForHTTPHeaderField:@"Authorization"]) {
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         if (!connection) {

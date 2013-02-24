@@ -19,35 +19,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-
-    [STGTTrackingLocationController sharedTracker];
-    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-    [[STGTAuthBasic sharedOAuth] checkToken];
-    
-    self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
-    self.authCodeRetriever = (UDPushAuthCodeRetriever *)[(UDAuthTokenRetriever *)[[STGTAuthBasic sharedOAuth] tokenRetriever] codeDelegate];
-    self.reachability = [Reachability reachabilityWithHostname:[[STGTAuthBasic sharedOAuth] reachabilityServer]];
-    self.reachability.reachableOnWWAN = YES;
-    [self.reachability startNotifier];
-
-//    [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-    
-    
-//    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-//    
-//    self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
-//    self.authCodeRetriever = [UDPushAuthCodeRetriever codeRetriever];
-//    
-//    [STGTAuthBasic sharedOAuth];
-//    
-//    [STGTTrackingLocationController sharedTracker];
-//
-//    // allocate a reachability object
-//    self.reachability = [Reachability reachabilityWithHostname:@"system.unact.ru"];
-//    self.reachability.reachableOnWWAN = YES;
-//    
-//    [self.reachability startNotifier];
+    [[STGTTrackingLocationController sharedTracker] initDatabase:^(BOOL success) {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+        
+        [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
+        [[STGTAuthBasic sharedOAuth] checkToken];
+        
+        self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
+        self.authCodeRetriever = (UDPushAuthCodeRetriever *)[(UDAuthTokenRetriever *)[[STGTAuthBasic sharedOAuth] tokenRetriever] codeDelegate];
+        self.reachability = [Reachability reachabilityWithHostname:[[STGTAuthBasic sharedOAuth] reachabilityServer]];
+        self.reachability.reachableOnWWAN = YES;
+        [self.reachability startNotifier]; 
+    }];
     
     return YES;
 
