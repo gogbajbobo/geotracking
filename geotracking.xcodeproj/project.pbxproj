@@ -183,6 +183,7 @@
 		2CFC3A8716BFCFFA004B154A /* STGTTracker 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 7.xcdatamodel"; sourceTree = "<group>"; };
 		2CFC3A9316C294F2004B154A /* STGTTracker 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "STGTTracker 8.xcdatamodel"; sourceTree = "<group>"; };
 		9C01DD088AC6425A89DD5C5B /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+		F3D897AF16DB71770049FD56 /* STGTGeoTrackable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = STGTGeoTrackable.h; path = Protocols/STGTGeoTrackable.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -375,6 +376,7 @@
 		2CE4720515E3FEEC00B092DB /* geotracking */ = {
 			isa = PBXGroup;
 			children = (
+				F3D897AE16DB711D0049FD56 /* Protocols */,
 				2CA9488D16A7F1D7008463CA /* Supporting Files */,
 				2CA9488C16A7F097008463CA /* Resources */,
 				2C4BF64416A7EF36000A8E55 /* Classes */,
@@ -385,6 +387,14 @@
 				2CD3A88916D4FD2900187B80 /* Localizable.strings */,
 			);
 			path = geotracking;
+			sourceTree = "<group>";
+		};
+		F3D897AE16DB711D0049FD56 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				F3D897AF16DB71770049FD56 /* STGTGeoTrackable.h */,
+			);
+			name = Protocols;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
