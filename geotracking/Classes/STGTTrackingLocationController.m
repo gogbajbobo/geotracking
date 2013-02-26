@@ -524,8 +524,12 @@
             NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
             url = [url URLByAppendingPathComponent:DB_FILE];
             [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
-            [self.tableView reloadData];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
+            [self initDatabase:^(BOOL success) {
+                if (success) {
+                    [self.tableView reloadData];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
+                }
+            }];
         }];
     } else {
         NSLog(@"LocationManager is running, stop it first");
