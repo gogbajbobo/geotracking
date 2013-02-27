@@ -142,23 +142,44 @@
 }
 
 - (void)startAnimationOfTrackerActivityIndicator {
+    NSLog(@"startAnimationOfTrackerActivityIndicator");
     [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat) animations:^{
+        self.trackerActivityView.alpha = 1.0;
+    } completion:^(BOOL finished) {
+//        NSLog(@"finished");
+        [self stopAnimationOfTrackerActivityIndicator];
+    }];
+}
+
+- (void)stopAnimationOfTrackerActivityIndicator {
+    NSLog(@"stopAnimationOfTrackerActivityIndicator");
+    [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState) animations:^{
         self.trackerActivityView.alpha = 0.0;
     } completion:^(BOOL finished) {
 //        NSLog(@"finished");
     }];
 }
 
-- (void)stopAnimationOfTrackerActivityIndicator {
-    [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState) animations:^{
-        self.trackerActivityView.alpha = 1.0;
-    } completion:^(BOOL finished) {
-//        NSLog(@"finished");
-    }];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    NSLog(@"self.trackerActivityView.alpha1 %f", self.trackerActivityView.alpha);
+    if (self.tracker.locationManagerRunning) {
+        [self startAnimationOfTrackerActivityIndicator];
+        NSLog(@"self.trackerActivityView.alpha2 %f", self.trackerActivityView.alpha);
+    }
 }
+
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//    NSLog(@"self.trackerActivityView.alpha3 %f", self.trackerActivityView.alpha);
+//    [self stopAnimationOfTrackerActivityIndicator];
+//    NSLog(@"self.trackerActivityView.alpha4 %f", self.trackerActivityView.alpha);
+//}
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
+
     self.startButton.enabled = NO;
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
@@ -167,6 +188,7 @@
     self.settingsButton.title = NSLocalizedString(@"SETTINGS", @"");
     self.syncButton.title = NSLocalizedString(@"SYNC", @"");
     self.title = NSLocalizedString(@"TRACKER", @"");
+    self.trackerActivityView.alpha = 0.0;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
@@ -174,7 +196,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
-    [super viewDidLoad];
 }
 
 - (void)viewDidUnload
