@@ -20,6 +20,7 @@
             session.syncer = [[STGTDataSyncController alloc] init];
             session.syncer.tracker = self.tracker;
             session.syncer.authDelegate = authDelegate;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"newSessionStart" object:session];
         }
     }];
     return session;

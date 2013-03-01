@@ -7,7 +7,6 @@
 //
 
 #import "STGTSessionManager.h"
-#import "STGTSession.h"
 
 @interface STGTSessionManager()
 
@@ -18,6 +17,9 @@
 
 @implementation STGTSessionManager
 
+- (STGTSession *)currentSession {
+    return [self.sessions objectForKey:self.currentSessionUID];
+}
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate {
     STGTSession *session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate];

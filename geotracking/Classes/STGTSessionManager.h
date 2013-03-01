@@ -7,8 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STGTSession.h"
 
 @interface STGTSessionManager : NSObject
+
+@property (nonatomic, strong) STGTSession *currentSession;
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate;
 - (void)stopCurrentSession;

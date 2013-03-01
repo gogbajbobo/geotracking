@@ -10,6 +10,7 @@
 #import "STGTTrackingLocationController.h"
 #import "STGTLocation.h"
 #import "STGTDataSyncController.h"
+#import "STGTSession.h"
 
 @interface STGTTrackerViewController () <UIAlertViewDelegate>
 
@@ -31,15 +32,22 @@
 @synthesize summary = _summary;
 @synthesize currentValues = _currentValues;
 
-- (STGTTrackingLocationController *)tracker
-{
-    if(!_tracker) {
-        _tracker = [STGTTrackingLocationController sharedTracker];
-        _tracker.tableView = self.tableView;
-        _tracker.summary = self.summary;
-        _tracker.currentValues = self.currentValues;
-    }
-    return _tracker;
+//- (STGTTrackingLocationController *)tracker
+//{
+//    if(!_tracker) {
+//        _tracker = [STGTTrackingLocationController sharedTracker];
+//        _tracker.tableView = self.tableView;
+//        _tracker.summary = self.summary;
+//        _tracker.currentValues = self.currentValues;
+//    }
+//    return _tracker;
+//}
+
+- (void)newSessionStart:(NSNotification *)notification {
+    NSLog(@"newSessionStart");
+    self.tracker = [(STGTSession *)notification.object tracker];
+    [self.tracker updateInfoLabels];
+    [self.tracker.tableView reloadData];
 }
 
 - (IBAction)syncButtonPressed:(id)sender {
@@ -94,7 +102,7 @@
     }
 }
 
-- (void)syncStatusChanged:(NSNotification *) notification {
+- (void)syncStatusChanged:(NSNotification *)notification {
 //    NSLog(@"STGTDataSyncing");
     if ([notification.object isKindOfClass:[STGTDataSyncController class]]) {
         if ([(STGTDataSyncController *)notification.object syncing]) {
@@ -102,12 +110,9 @@
             [spinner startAnimating];
             self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:spinner];
             self.syncButton.enabled = NO;
-//            NSLog(@"spinner.isAnimating %d", spinner.isAnimating);
-//            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
         } else {
             self.navigationItem.rightBarButtonItem = nil;
             self.syncButton.enabled = YES;
-//            NSLog(@"self.syncButton.enabled %d", self.syncButton.enabled);
         }
     }
 }
@@ -169,18 +174,16 @@
     }
 }
 
-//- (void)viewWillDisappear:(BOOL)animated {
-//    [super viewWillDisappear:animated];
-//    NSLog(@"self.trackerActivityView.alpha3 %f", self.trackerActivityView.alpha);
-//    [self stopAnimationOfTrackerActivityIndicator];
-//    NSLog(@"self.trackerActivityView.alpha4 %f", self.trackerActivityView.alpha);
-//}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
     self.startButton.enabled = NO;
+
+    self.tracker.tableView = self.tableView;
+    self.tracker.summary = self.summary;
+    self.tracker.currentValues = self.currentValues;
+
     self.tableView.dataSource = self.tracker;
     self.tableView.delegate = self.tracker;
     
@@ -196,6 +199,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newSessionStart:) name:@"newSessionStart" object:nil];
 }
 
 - (void)viewDidUnload
@@ -209,6 +213,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerAutoStartChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"newSessionStart" object:nil];
     [super viewDidUnload];
 }
 
