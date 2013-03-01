@@ -11,11 +11,12 @@
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
 #import "STGTRequestAuthenticatable.h"
+#import "STGTTrackingLocationController.h"
 
 @interface STGTDataSyncController : NSObject
 
 @property (nonatomic, weak) id <STGTRequestAuthenticatable> authDelegate;
-
+@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSNumber *numberOfUnsynced;
 

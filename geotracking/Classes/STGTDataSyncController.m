@@ -7,8 +7,6 @@
 //
 
 #import "STGTDataSyncController.h"
-//#import "STGTAuthBasic.h"
-#import "STGTTrackingLocationController.h"
 #import "GDataXMLNode.h"
 #import "STGTSettingsController.h"
 #import "STGTSettings.h"
@@ -21,7 +19,6 @@
 @interface STGTDataSyncController() <NSURLConnectionDelegate, NSURLConnectionDataDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, strong) NSMutableData *responseData;
-@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic, strong) NSManagedObject *syncObject;
 @property (nonatomic, strong) STGTSettings *settings;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
