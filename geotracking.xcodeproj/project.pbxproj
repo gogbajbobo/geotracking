@@ -81,6 +81,7 @@
 
 /* Begin PBXFileReference section */
 		19979538E5644F14B8F469EA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C09DDE216E0A73500772FE5 /* STGTGeoTrackable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STGTGeoTrackable.h; sourceTree = "<group>"; };
 		2C0CBBD916B120E300F74384 /* STGTAuthBasic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STGTAuthBasic.h; sourceTree = "<group>"; };
 		2C0CBBDA16B120E300F74384 /* STGTAuthBasic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = STGTAuthBasic.m; sourceTree = "<group>"; };
 		2C0CBBDD16B1271A00F74384 /* STGTRequestAuthenticatable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = STGTRequestAuthenticatable.h; sourceTree = "<group>"; };
@@ -244,6 +245,7 @@
 		2C4BF64416A7EF36000A8E55 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2C09DDE216E0A73500772FE5 /* STGTGeoTrackable.h */,
 				2C21124516E0947A00E10126 /* STGTSessionManager.h */,
 				2C21124616E0947A00E10126 /* STGTSessionManager.m */,
 				2C21124916E0948F00E10126 /* STGTSession.h */,

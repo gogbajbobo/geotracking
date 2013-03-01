@@ -23,6 +23,7 @@
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate {
     STGTSession *session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate];
+    session.manager = self;
     [self.sessions setValue:session forKey:uid];
     self.currentSessionUID = uid;
 }

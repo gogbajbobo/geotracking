@@ -10,14 +10,14 @@
 #import "STGTTrackerManagedDocument.h"
 #import "STGTTrackingLocationController.h"
 #import "STGTDataSyncController.h"
-#import "STGTSessionManager.h"
+#import "STGTGeoTrackable.h"
 
-@interface STGTSession : NSObject
+@interface STGTSession : NSObject <STGTManagedSession>
 
 @property (strong, nonatomic) STGTTrackerManagedDocument *document;
 @property (strong, nonatomic) STGTDataSyncController *syncer;
 @property (strong, nonatomic) STGTTrackingLocationController *tracker;
-@property (weak, nonatomic) STGTSessionManager *manager;
+@property (weak, nonatomic) id <STGTSessionManager> manager;
 @property (strong, nonatomic) NSString *uid;
 
 - (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate;

@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "STGTGeoTrackable.h"
 #import "STGTSession.h"
 
-@interface STGTSessionManager : NSObject
+@interface STGTSessionManager : NSObject <STGTSessionManager, STGTSessionManagement>
 
 @property (nonatomic, strong) STGTSession *currentSession;
 
