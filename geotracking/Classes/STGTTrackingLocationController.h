@@ -46,6 +46,7 @@
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 - (NSString *)newid;
 - (void)updateInfoLabels;
+- (void)trackerInit;
 //+ (STGTTrackingLocationController *)sharedTracker;
 
 @end

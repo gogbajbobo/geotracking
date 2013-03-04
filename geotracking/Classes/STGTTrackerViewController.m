@@ -150,7 +150,7 @@
 }
 
 - (void)startAnimationOfTrackerActivityIndicator {
-    NSLog(@"startAnimationOfTrackerActivityIndicator");
+//    NSLog(@"startAnimationOfTrackerActivityIndicator");
     [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionAutoreverse | UIViewAnimationOptionRepeat) animations:^{
         self.trackerActivityView.alpha = 1.0;
     } completion:^(BOOL finished) {
@@ -160,7 +160,7 @@
 }
 
 - (void)stopAnimationOfTrackerActivityIndicator {
-    NSLog(@"stopAnimationOfTrackerActivityIndicator");
+//    NSLog(@"stopAnimationOfTrackerActivityIndicator");
     [UIView animateWithDuration:1.0 delay:0.0 options:(UIViewAnimationOptionBeginFromCurrentState) animations:^{
         self.trackerActivityView.alpha = 0.0;
     } completion:^(BOOL finished) {
@@ -169,20 +169,23 @@
 }
 
 - (void)viewInit {
+    
+//    NSLog(@"viewInit");
     self.session.tracker.tableView = self.tableView;
     self.session.tracker.summary = self.summary;
     self.session.tracker.currentValues = self.currentValues;
     
     self.tableView.dataSource = self.session.tracker;
     self.tableView.delegate = self.session.tracker;
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    NSLog(@"self.trackerActivityView.alpha1 %f", self.trackerActivityView.alpha);
+//    NSLog(@"self.trackerActivityView.alpha1 %f", self.trackerActivityView.alpha);
     if (self.session.tracker.locationManagerRunning) {
         [self startAnimationOfTrackerActivityIndicator];
-        NSLog(@"self.trackerActivityView.alpha2 %f", self.trackerActivityView.alpha);
+//        NSLog(@"self.trackerActivityView.alpha2 %f", self.trackerActivityView.alpha);
     }
 }
 

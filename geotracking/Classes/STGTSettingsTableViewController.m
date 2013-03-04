@@ -25,6 +25,8 @@
     if (!_settings) {
 //        _settings = [STGTTrackingLocationController sharedTracker].settings;
         _settings = [(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker].settings;
+        NSLog(@"[[STGTSessionManager sharedManager] currentSession] %@", [[STGTSessionManager sharedManager] currentSession]);
+        NSLog(@"_settings %@", _settings);
     }
     return _settings;
 }

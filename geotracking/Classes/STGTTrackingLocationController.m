@@ -73,6 +73,7 @@
 //    return _syncer;
 //}
 
+
 - (STGTSettings *)settings {
     if (!_settings && self.document.documentState == UIDocumentStateNormal) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTSettings"];
@@ -101,6 +102,7 @@
 //        NSLog(@"settings.xid %@", settings.xid);
 //        NSLog(@"settings.lts %@", settings.lts);
 //        NSLog(@"settings.distanceFilter %@", settings.distanceFilter);
+//        NSLog(@"settings %@", settings);
         _settings = settings;
     }
     return _settings;
@@ -283,6 +285,9 @@
     if ([self.session isKindOfClass:[STGTSession class]]) {
         [[(STGTSession *)self.session syncer] startSyncer];        
     }
+
+    [self performFetch];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
@@ -296,6 +301,8 @@
     } else {
         if (self.resultsController.fetchedObjects.count > 0) {
             self.currentTrack = [self.resultsController.fetchedObjects objectAtIndex:0];
+        } else {
+            [self startNewTrack];
         }
         [self.tableView reloadData];
         [self updateInfoLabels];
@@ -521,7 +528,7 @@
         if ([self.session isKindOfClass:[STGTSession class]]) {
             [[(STGTSession *)self.session syncer] stopSyncer];
         }
-//        [[STGTDataSyncController sharedSyncer] stopSyncer];
+
         [self.document closeWithCompletionHandler:^(BOOL success) {
             [self.settings removeObserver:self forKeyPath:@"distanceFilter"];
             [self.settings removeObserver:self forKeyPath:@"desiredAccuracy"];
@@ -532,8 +539,14 @@
             self.lastLocation = nil;
             [self.timer invalidate];
             if ([self.session isKindOfClass:[STGTSession class]]) {
+                NSError *error;
+                NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+                url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", [(STGTSession *)self.session uid], @"sqlite"]];
+                [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+
                 [(STGTSession *)self.session createNewDocumentWithcompletionHandler:^(BOOL success) {
                     if (success) {
+                        [self trackerInit];
                         [self.tableView reloadData];
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerReady" object:self];
                     }

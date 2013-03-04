@@ -19,7 +19,11 @@
             session.tracker = [[STGTTrackingLocationController alloc] init];
             session.syncer.document = session.document;
             session.tracker.document = session.document;
+            session.tracker.session = session;
+            session.syncer.session = session;
             session.syncer.authDelegate = authDelegate;
+            [session.tracker trackerInit];
+            NSLog(@"session %@", session);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"newSessionStart" object:session];
         }
     }];
@@ -63,14 +67,16 @@
 
 - (void)createNewDocumentWithcompletionHandler:(void (^)(BOOL success))completionHandler{
     
-    NSError *error;
-    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", self.uid, @"sqlite"]];
-    [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+//    NSError *error;
+//    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//    url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", self.uid, @"sqlite"]];
+//    [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
 
     [self documentWithUID:self.uid completionHandler:^(BOOL success) {
         if (success) {
+            NSLog(@"self.document %@", self.document);
             self.tracker.document = self.document;
+            self.syncer.document = self.document;
             completionHandler(YES);
         }
     }];

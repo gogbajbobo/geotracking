@@ -17,6 +17,13 @@
 
 @implementation STGTSessionManager
 
+- (NSMutableDictionary *)sessions {
+    if (!_sessions) {
+        _sessions = [NSMutableDictionary dictionary];
+    }
+    return _sessions;
+}
+
 - (STGTSession *)currentSession {
     return [self.sessions objectForKey:self.currentSessionUID];
 }

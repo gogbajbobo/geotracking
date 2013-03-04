@@ -7,10 +7,10 @@
 */
 "CLEAR DATABASE" = "Очистка базы данных";
 "OBJECT TO DELETE" = "Что вы хотите удалить?";
-"ONLY TRACKS" = "Только трэки";
+"ONLY TRACKS" = "Только треки";
 "ALL DATA" = "Все данные";
 "STOP TRACKING" = "Остановить геотрекинг";
-"STOP TRACKING FOR CLEAR" = "Вы должны остановть геотрэкинг перед началом очистки";
+"STOP TRACKING FOR CLEAR" = "Вы должны остановть геотрекинг перед началом очистки";
 "CANT DELETE ALL DATA" = "Вы не можете удалить все данные";
 "YES" = "Да";
 "NO" = "Нет";
