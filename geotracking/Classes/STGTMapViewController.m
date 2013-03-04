@@ -68,14 +68,14 @@
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"label" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.label == %@", @"@filter"];
         NSError *error;
-        self.filterSpot = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+        self.filterSpot = [[self.tracker.document.managedObjectContext executeFetchRequest:request error:&error] lastObject];
         if (!self.filterSpot) {
             [self createFilterSpot];
         }
 //        NSLog(@"self.filterSpot %@", self.filterSpot);
         request.predicate = nil;
         request.predicate = [NSPredicate predicateWithFormat:@"ANY SELF.interests IN %@ || ANY SELF.networks IN %@ || (SELF.interests.@count == 0 && SELF.networks.@count == 0) ", self.filterSpot.interests, self.filterSpot.networks];
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.document.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
     
@@ -104,25 +104,25 @@
 }
 
 - (void)createFilterSpot {
-    STGTSpot *filterSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpot *filterSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.document.managedObjectContext];
 //    [filterSpot setXid:[self.tracker newid]];
     filterSpot.label = @"@filter";
         
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTInterest"];
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     NSError *error;
-    NSArray *allInterests = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *allInterests = [self.tracker.document.managedObjectContext executeFetchRequest:request error:&error];
 //    NSLog(@"allInterests %@", allInterests);
     [filterSpot addInterests:[NSSet setWithArray:allInterests]];
     
     request = [NSFetchRequest fetchRequestWithEntityName:@"STGTNetwork"];
-    NSArray *allNetworks = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+    NSArray *allNetworks = [self.tracker.document.managedObjectContext executeFetchRequest:request error:&error];
     //    NSLog(@"allNetworks %@", allNetworks);
     [filterSpot addNetworks:[NSSet setWithArray:allNetworks]];
     
     self.filterSpot = filterSpot;
 //    NSLog(@"filterSpot %@", filterSpot);
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newSpot UIDocumentSaveForOverwriting success");
     }];
 }
@@ -498,7 +498,7 @@
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", mapAnnotation.spot.avatarXid];
         NSError *error;
-        STGTImage *image = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+        STGTImage *image = [[self.tracker.document.managedObjectContext executeFetchRequest:request error:&error] lastObject];
         if (image) {
             UIImage *spotImage = [self resizeImage:[UIImage imageWithData:image.imageData] toSize:CGSizeMake(32.0, 32.0)];
             CGFloat width = 32 * spotImage.size.width / spotImage.size.height;
@@ -697,7 +697,7 @@
 //    NSLog(@"MVC viewWillDisappear");
 //    NSLog(@"self.mapView.annotations %@", self.mapView.annotations);
     [super viewWillDisappear:animated];
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"mapViewWillDisappear UIDocumentSaveForOverwriting success");
     }];
 }

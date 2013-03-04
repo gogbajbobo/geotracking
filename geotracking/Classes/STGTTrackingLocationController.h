@@ -13,6 +13,8 @@
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
 #import "STGTSettingsController.h"
+#import "STGTGeoTrackable.h"
+#import "STGTTrackerManagedDocument.h"
 
 
 @interface STGTTrackingLocationController : NSObject <UITableViewDataSource, UITableViewDelegate>
@@ -28,13 +30,15 @@
 @property (weak, nonatomic) UILabel *currentValues;
 @property (nonatomic) NSInteger selectedTrackNumber;
 @property (nonatomic) NSInteger numberOfTracks;
-@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
+//@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 //@property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSString *trackerStatus;
 @property (nonatomic, strong) STGTSettings *settings;
+@property (nonatomic, strong) id <STGTSession> session;
+@property (nonatomic, strong) STGTTrackerManagedDocument *document;
 
 
-- (void)initDatabase:(void (^)(BOOL success))completionHandler;
+//- (void)initDatabase:(void (^)(BOOL success))completionHandler;
 - (void)startTrackingLocation;
 - (void)stopTrackingLocation;
 - (void)clearLocations;
@@ -42,6 +46,6 @@
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber;
 - (NSString *)newid;
 - (void)updateInfoLabels;
-+ (STGTTrackingLocationController *)sharedTracker;
+//+ (STGTTrackingLocationController *)sharedTracker;
 
 @end

@@ -22,5 +22,6 @@
 
 - (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate;
 - (void)completeSession;
+- (void)createNewDocumentWithcompletionHandler:(void (^)(BOOL success))completionHandler;
 
 @end

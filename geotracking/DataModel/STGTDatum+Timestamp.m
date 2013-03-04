@@ -11,11 +11,23 @@
 
 @implementation STGTDatum (Timestamp)
 
+- (NSString *)newid
+{
+    NSString *uuidString = nil;
+    CFUUIDRef uuid = CFUUIDCreate(nil);
+    if (uuid) {
+        uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(nil, uuid);
+        CFRelease(uuid);
+    }
+    
+    return uuidString;
+}
+
 - (void)awakeFromInsert {
 
 //    NSLog(@"awakeFromInsert");
 
-    [self setPrimitiveValue:[[STGTTrackingLocationController sharedTracker] newid] forKey:@"xid"];
+    [self setPrimitiveValue:[self newid] forKey:@"xid"];
 
     NSDate *ts = [NSDate date];
     

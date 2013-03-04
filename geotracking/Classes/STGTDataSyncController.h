@@ -11,19 +11,25 @@
 #import <libxml/encoding.h>
 #import <libxml/xmlwriter.h>
 #import "STGTRequestAuthenticatable.h"
-#import "STGTTrackingLocationController.h"
+//#import "STGTTrackingLocationController.h"
+#import "STGTGeoTrackable.h"
+#import "STGTTrackerManagedDocument.h"
 
 @interface STGTDataSyncController : NSObject
 
 @property (nonatomic, weak) id <STGTRequestAuthenticatable> authDelegate;
-@property (nonatomic, strong) STGTTrackingLocationController *tracker;
+//@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSNumber *numberOfUnsynced;
+@property (nonatomic, strong) id <STGTSession> session;
+@property (nonatomic, strong) STGTTrackerManagedDocument *document;
+
+
 
 - (void)startSyncer;
 - (void)stopSyncer;
 - (void)fireTimer;
-+ (STGTDataSyncController *)sharedSyncer;
+//+ (STGTDataSyncController *)sharedSyncer;
 
 
 @end

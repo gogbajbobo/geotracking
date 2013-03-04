@@ -11,6 +11,7 @@
 #import "STGTSettingsController.h"
 #import "STGTSettings.h"
 #import "STGTSpot.h"
+#import "STGTSession.h"
 
 #define DEFAULT_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 #define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
@@ -27,27 +28,29 @@
 
 @implementation STGTDataSyncController
 
-+ (STGTDataSyncController *)sharedSyncer
-{
-    static dispatch_once_t pred = 0;
-    __strong static id _sharedSyncer = nil;
-    dispatch_once(&pred, ^{
-        _sharedSyncer = [[self alloc] init];
-    });
-    return _sharedSyncer;
-}
+//+ (STGTDataSyncController *)sharedSyncer
+//{
+//    static dispatch_once_t pred = 0;
+//    __strong static id _sharedSyncer = nil;
+//    dispatch_once(&pred, ^{
+//        _sharedSyncer = [[self alloc] init];
+//    });
+//    return _sharedSyncer;
+//}
 
-- (STGTTrackingLocationController *)tracker
-{
-    if(!_tracker) {
-        _tracker = [STGTTrackingLocationController sharedTracker];
-    }
-    return _tracker;
-}
+//- (STGTTrackingLocationController *)tracker
+//{
+//    if(!_tracker) {
+//        _tracker = [STGTTrackingLocationController sharedTracker];
+//    }
+//    return _tracker;
+//}
 
 - (STGTSettings *)settings {
     if (!_settings) {
-        _settings = self.tracker.settings;
+        if ([self.session isKindOfClass:[STGTSession class]]) {
+            _settings = [[(STGTSession *)self.session tracker] settings];
+        }
     }
     return _settings;
 }
@@ -55,7 +58,10 @@
 - (void)setSyncing:(BOOL)syncing {
     if (_syncing != syncing) {
         _syncing = syncing;
-        [self.tracker updateInfoLabels];
+        if ([self.session isKindOfClass:[STGTSession class]]) {
+            [[(STGTSession *)self.session tracker] updateInfoLabels];
+        }
+//        [self.tracker updateInfoLabels];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTDataSyncing" object:self];
     }
 }
@@ -70,7 +76,7 @@
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
         [request setIncludesSubentities:YES];
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.document.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
         NSError *error;
         if (![_resultsController performFetch:&error]) {
@@ -80,7 +86,10 @@
 //            NSLog(@"sync init performFetch");
 //            NSLog(@"fetchedObjects.count %d", _resultsController.fetchedObjects.count);
 //            [UIApplication sharedApplication].applicationIconBadgeNumber = _resultsController.fetchedObjects.count;
-            [self.tracker updateInfoLabels];
+            if ([self.session isKindOfClass:[STGTSession class]]) {
+                [[(STGTSession *)self.session tracker] updateInfoLabels];
+            }
+//            [self.tracker updateInfoLabels];
         }
     }
     return _resultsController;
@@ -89,7 +98,11 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     //    NSLog(@"controllerDidChangeContent");
 //    [UIApplication sharedApplication].applicationIconBadgeNumber = controller.fetchedObjects.count;
-    [self.tracker updateInfoLabels];
+    if ([self.session isKindOfClass:[STGTSession class]]) {
+        [[(STGTSession *)self.session tracker] updateInfoLabels];
+    }
+
+//    [self.tracker updateInfoLabels];
     if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
         [self.timer fire];
     }
@@ -142,7 +155,10 @@
 
 - (void)dataSyncing {
     if (!self.syncing) {
-        self.tracker.trackerStatus = @"SYNC";
+        if ([self.session isKindOfClass:[STGTSession class]]) {
+            [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"SYNC", @"")];
+        }
+//        self.tracker.trackerStatus = @"SYNC";
         self.syncing = YES;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
@@ -151,7 +167,7 @@
         request.predicate = [NSPredicate predicateWithFormat:@"SELF.lts == %@ || SELF.ts > SELF.lts", nil];
         NSError *error;
             
-        NSArray *fetchedData = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+        NSArray *fetchedData = [self.document.managedObjectContext executeFetchRequest:request error:&error];
         
     //    NSLog(@"fetchedData.count %d", fetchedData.count);
     //    NSLog(@"fetchedData %@", fetchedData);
@@ -189,7 +205,7 @@
         
 //        NSLog(@"[[object entity] name] %@", [[object entity] name]);
         
-        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[[object entity] name] inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        NSEntityDescription *entityDescription = [NSEntityDescription entityForName:[[object entity] name] inManagedObjectContext:self.document.managedObjectContext];
         
         //            NSLog(@"relationshipsByName for %@: %@", [[object entity] name], entityDescription.relationshipsByName);
         
@@ -269,12 +285,18 @@
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         if (!connection) {
             NSLog(@"connection error");
-            self.tracker.trackerStatus = NSLocalizedString(@"NO CONNECTION", @"");
+            if ([self.session isKindOfClass:[STGTSession class]]) {
+                [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"NO CONNECTION", @"")];
+            }
+//            self.tracker.trackerStatus = NSLocalizedString(@"NO CONNECTION", @"");
             self.syncing = NO;
         }
     } else {
         NSLog(@"No Authorization header");
-        self.tracker.trackerStatus = NSLocalizedString(@"NO TOKEN", @"");
+        if ([self.session isKindOfClass:[STGTSession class]]) {
+            [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"NO TOKEN", @"")];
+        }
+//        self.tracker.trackerStatus = NSLocalizedString(@"NO TOKEN", @"");
         self.syncing = NO;
     }
     
@@ -292,7 +314,10 @@
 #pragma mark - NSURLConnectionDataDelegate
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    self.tracker.trackerStatus = NSLocalizedString(@"SYNC FAIL", @"");
+    if ([self.session isKindOfClass:[STGTSession class]]) {
+        [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"SYNC FAIL", @"")];
+    }
+//    self.tracker.trackerStatus = NSLocalizedString(@"SYNC FAIL", @"");
     self.syncing = NO;
     NSLog(@"connection didFailWithError: %@", error);
 }
@@ -321,7 +346,10 @@
 
     if (!xmlDoc) {
         NSLog(@"%@", error.description);
-        self.tracker.trackerStatus = NSLocalizedString(@"RESPONSE ERROR", @"");
+        if ([self.session isKindOfClass:[STGTSession class]]) {
+            [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"RESPONSE ERROR", @"")];
+        }
+//        self.tracker.trackerStatus = NSLocalizedString(@"RESPONSE ERROR", @"");
         self.syncing = NO;
     } else {
         NSArray *errorNodes = [xmlDoc nodesForXPath:@"//ns:error" namespaces:namespaces error:nil];
@@ -329,7 +357,10 @@
             for (GDataXMLElement *errorNode in errorNodes) {
                 NSLog(@"error: %@", [errorNode attributeForName:@"code"].stringValue);
             }
-            self.tracker.trackerStatus = NSLocalizedString(@"SYNC ERROR", @"");
+            if ([self.session isKindOfClass:[STGTSession class]]) {
+                [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"SYNC ERROR", @"")];
+            }
+//            self.tracker.trackerStatus = NSLocalizedString(@"SYNC ERROR", @"");
             self.syncing = NO;
         } else {
             NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:response" namespaces:namespaces error:nil];
@@ -349,13 +380,13 @@
                     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
                     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
                     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", entityXid];
-                    NSArray *result = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+                    NSArray *result = [self.document.managedObjectContext executeFetchRequest:request error:&error];
                     
                     if ([result lastObject]) {
                         self.syncObject = [result lastObject];
 //                        NSLog(@"result lastObject");
                     } else {
-                        self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+                        self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.document.managedObjectContext];
                         [self.syncObject setValue:entityXid forKey:@"xid"];
                         [self.syncObject setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lts"];
 //                        NSLog(@"insertNewObjectForEntity");
@@ -373,14 +404,14 @@
                             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:propertyName];
                             request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
                             request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", propertyXid];
-                            NSArray *result = [self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error];
+                            NSArray *result = [self.document.managedObjectContext executeFetchRequest:request error:&error];
                             NSManagedObject *property;
                             
                             if ([result lastObject]) {
                                 property = [result lastObject];
                                 //                        NSLog(@"result lastObject");
                             } else {
-                                property = [NSEntityDescription insertNewObjectForEntityForName:propertyName inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+                                property = [NSEntityDescription insertNewObjectForEntityForName:propertyName inManagedObjectContext:self.document.managedObjectContext];
                                 [property setValue:propertyXid forKey:@"xid"];
                                 [property setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lts"];
                                 //                        NSLog(@"insertNewObjectForEntity");
@@ -458,9 +489,12 @@
                 }
             }
             
-            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"setSynced UIDocumentSaveForOverwriting success");
-                self.tracker.trackerStatus = @"";
+                if ([self.session isKindOfClass:[STGTSession class]]) {
+                    [[(STGTSession *)self.session tracker] setTrackerStatus:@""];
+                }
+//                self.tracker.trackerStatus = @"";
                 self.syncing = NO;
                 if (self.resultsController.fetchedObjects.count > 0) {
                     [self dataSyncing];

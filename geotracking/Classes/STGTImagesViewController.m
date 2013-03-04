@@ -10,6 +10,8 @@
 #import "STGTSpotImageViewController.h"
 #import "STGTSpotImage.h"
 #import "STGTTrackingLocationController.h"
+#import "STGTSessionManager.h"
+#import "STGTSession.h"
 
 @interface STGTImagesViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIAlertViewDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong) NSArray *images;
@@ -22,7 +24,8 @@
 
 - (STGTTrackingLocationController *)tracker {
     if (!_tracker) {
-        _tracker = [STGTTrackingLocationController sharedTracker];
+//        _tracker = [STGTTrackingLocationController sharedTracker];
+        _tracker = [(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker];
     }
     return  _tracker;
 }
@@ -74,8 +77,8 @@
                 self.spot.avatarXid = nil;
                 [self.navigationController popViewControllerAnimated:YES];
             }
-            [self.tracker.locationsDatabase.managedObjectContext deleteObject:spotImage];
-            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            [self.tracker.document.managedObjectContext deleteObject:spotImage];
+            [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"spotImage UIDocumentSaveForOverwriting success");
             }];
 
@@ -105,7 +108,7 @@
 
 - (void)saveImage:(UIImage *)image {
     
-    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.document.managedObjectContext];
     image = [self resizeImage:image toSize:CGSizeMake(1024, 1024)];
     spotImage.imageData = UIImagePNGRepresentation(image);
     [self.spot addImagesObject:spotImage];
@@ -113,7 +116,7 @@
     [self activateViewControllerAtIndex:self.images.count - 2];
     self.currentIndex = self.images.count - 1;
     [self activateViewControllerAtIndex:self.currentIndex];
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
 
@@ -292,7 +295,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spot.image UIDocumentSaveForOverwriting success");
     }];
 }

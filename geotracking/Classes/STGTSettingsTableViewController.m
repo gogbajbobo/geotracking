@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import "STGTSettings.h"
 #import "STGTTrackingLocationController.h"
+#import "STGTSessionManager.h"
+#import "STGTSession.h"
 
 @interface STGTSettingsTableViewController () <UITextFieldDelegate>
 @property (nonatomic, strong) STGTSettings *settings;
@@ -21,7 +23,8 @@
 
 - (STGTSettings *)settings {
     if (!_settings) {
-        _settings = [STGTTrackingLocationController sharedTracker].settings;
+//        _settings = [STGTTrackingLocationController sharedTracker].settings;
+        _settings = [(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker].settings;
     }
     return _settings;
 }
@@ -355,7 +358,7 @@
     for (NSString *settingsName in [self.settings.entity.propertiesByName allKeys]) {
         [self.settings removeObserver:self forKeyPath:settingsName];
     }
-    [[STGTTrackingLocationController sharedTracker].locationsDatabase saveToURL:[STGTTrackingLocationController sharedTracker].locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [[(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker].document saveToURL:[(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker].document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"settingViewWillDisappear UIDocumentSaveForOverwriting success");
     }];
 }

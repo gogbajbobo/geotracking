@@ -11,10 +11,12 @@
 #import "STGTLocation.h"
 #import "STGTDataSyncController.h"
 #import "STGTSession.h"
+#import "STGTSession.h"
 
 @interface STGTTrackerViewController () <UIAlertViewDelegate>
 
-@property (nonatomic, strong) STGTTrackingLocationController *tracker;
+//@property (nonatomic, strong) STGTTrackingLocationController *tracker;
+@property (nonatomic, strong) STGTSession *session;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *summary;
 @property (weak, nonatomic) IBOutlet UILabel *currentValues;
@@ -27,7 +29,7 @@
 
 @implementation STGTTrackerViewController
 @synthesize startButton = _startButton;
-@synthesize tracker = _tracker;
+//@synthesize tracker = _tracker;
 @synthesize tableView = _tableView;
 @synthesize summary = _summary;
 @synthesize currentValues = _currentValues;
@@ -45,13 +47,14 @@
 
 - (void)newSessionStart:(NSNotification *)notification {
     NSLog(@"newSessionStart");
-    self.tracker = [(STGTSession *)notification.object tracker];
-    [self.tracker updateInfoLabels];
-    [self.tracker.tableView reloadData];
+    self.session = (STGTSession *)notification.object;
+    [self viewInit];
+    [self.session.tracker updateInfoLabels];
+    [self.session.tracker.tableView reloadData];
 }
 
 - (IBAction)syncButtonPressed:(id)sender {
-    [[STGTDataSyncController sharedSyncer] fireTimer];
+    [self.session.syncer fireTimer];
 }
 
 - (IBAction)showOptions:(id)sender {
@@ -65,12 +68,12 @@
 }
 
 - (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
-    if (self.tracker.locationManagerRunning) {
+    if (self.session.tracker.locationManagerRunning) {
         UIAlertView *stopAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"STOP TRACKING", @"") message:@"?" delegate: self cancelButtonTitle:NSLocalizedString(@"NO", @"") otherButtonTitles:NSLocalizedString(@"YES", @""), nil];
         stopAlert.tag = 2;
         [stopAlert show];
     } else {
-        [self.tracker startTrackingLocation];
+        [self.session.tracker startTrackingLocation];
         sender.title = NSLocalizedString(@"STOP", @"");
     }
 }
@@ -80,11 +83,11 @@
     if (alertView.tag == 1) {
         //        NSLog(@"buttonIndex %d", buttonIndex);
         if (buttonIndex == 1) {
-            [self.tracker clearLocations];
+            [self.session.tracker clearLocations];
         } else if (buttonIndex == 2) {
-            if ([self.tracker.settings.localAccessToSettings boolValue]) {
-                if (!self.tracker.locationManagerRunning) {
-                    [self.tracker clearAllData];
+            if ([self.session.tracker.settings.localAccessToSettings boolValue]) {
+                if (!self.session.tracker.locationManagerRunning) {
+                    [self.session.tracker clearAllData];
                 } else {
                     UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"STOP TRACKING FOR CLEAR", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
                     [clearAlert show];
@@ -96,7 +99,7 @@
         }
     } else if (alertView.tag == 2) {
         if (buttonIndex == 1) {
-            [self.tracker stopTrackingLocation];
+            [self.session.tracker stopTrackingLocation];
             [self startButton].title = NSLocalizedString(@"START", @"");
         }
     }
@@ -120,7 +123,7 @@
 
 - (void)trackerReady:(NSNotification *)notification {
     self.startButton.enabled = ![[[(STGTTrackingLocationController *)notification.object settings] valueForKey:@"trackerAutoStart"] boolValue];
-    self.syncButton.enabled = ![[STGTDataSyncController sharedSyncer] syncing];
+    self.syncButton.enabled = ![self.session.syncer syncing];
     self.settingsButton.enabled = YES;
 }
 
@@ -131,7 +134,7 @@
 }
 
 - (void)setStartButtonLabel:(NSNotification *)notification {
-    if (self.tracker.locationManagerRunning) {
+    if (self.session.tracker.locationManagerRunning) {
         [self startButton].title = NSLocalizedString(@"STOP", @"");
         [self startAnimationOfTrackerActivityIndicator];
     } else {
@@ -165,10 +168,19 @@
     }];
 }
 
+- (void)viewInit {
+    self.session.tracker.tableView = self.tableView;
+    self.session.tracker.summary = self.summary;
+    self.session.tracker.currentValues = self.currentValues;
+    
+    self.tableView.dataSource = self.session.tracker;
+    self.tableView.delegate = self.session.tracker;
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     NSLog(@"self.trackerActivityView.alpha1 %f", self.trackerActivityView.alpha);
-    if (self.tracker.locationManagerRunning) {
+    if (self.session.tracker.locationManagerRunning) {
         [self startAnimationOfTrackerActivityIndicator];
         NSLog(@"self.trackerActivityView.alpha2 %f", self.trackerActivityView.alpha);
     }
@@ -180,12 +192,9 @@
 
     self.startButton.enabled = NO;
 
-    self.tracker.tableView = self.tableView;
-    self.tracker.summary = self.summary;
-    self.tracker.currentValues = self.currentValues;
-
-    self.tableView.dataSource = self.tracker;
-    self.tableView.delegate = self.tracker;
+    if (self.session) {
+        [self viewInit];
+    }
     
     self.startButton.title = NSLocalizedString(@"START", @"");
     self.settingsButton.title = NSLocalizedString(@"SETTINGS", @"");
@@ -226,12 +235,12 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     
     if ([segue.identifier isEqualToString:@"showSettings"]) {
-        [segue.destinationViewController setTracker:self.tracker];
+        [segue.destinationViewController setTracker:self.session.tracker];
     }
     if ([segue.identifier isEqualToString:@"showMap"]) {
         if ([segue.destinationViewController isKindOfClass:[STGTMapViewController class]]) {
             STGTMapViewController *mapVC = segue.destinationViewController;
-            mapVC.tracker = self.tracker;
+            mapVC.tracker = self.session.tracker;
 //            NSLog(@"segue showMap");
         }
     }

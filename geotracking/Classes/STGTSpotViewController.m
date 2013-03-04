@@ -23,7 +23,7 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *interestsCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *networkCollectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *spotImageView;
-@property (nonatomic, strong) STGTDataSyncController *syncer;
+//@property (nonatomic, strong) STGTDataSyncController *syncer;
 @property (weak, nonatomic) IBOutlet UILabel *spotInfoLabel;
 @property (weak, nonatomic) IBOutlet UILabel *interestsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *networksLabel;
@@ -33,12 +33,12 @@
 
 @implementation STGTSpotViewController
 
-- (STGTDataSyncController *)syncer {
-    if (!_syncer) {
-        _syncer = [STGTDataSyncController sharedSyncer];
-    }
-    return _syncer;
-}
+//- (STGTDataSyncController *)syncer {
+//    if (!_syncer) {
+//        _syncer = [STGTDataSyncController sharedSyncer];
+//    }
+//    return _syncer;
+//}
 
 - (IBAction)deleteSpot:(id)sender {
     UIAlertView *deleteSpotAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"DELETE SPOT", @"") message:@"?" delegate:self cancelButtonTitle:NSLocalizedString(@"NO", @"")  otherButtonTitles:NSLocalizedString(@"YES", @""),nil];
@@ -64,8 +64,8 @@
                 self.spotLabel.text = @"";
                 [self.spotLabel resignFirstResponder];
             }
-            [self.tracker.locationsDatabase.managedObjectContext deleteObject:self.spot];
-            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            [self.tracker.document.managedObjectContext deleteObject:self.spot];
+            [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"deleteObject:self.spot UIDocumentSaveForOverwriting success");
             }];
             [self.navigationController popViewControllerAnimated:YES];
@@ -162,7 +162,7 @@
 
 - (void)saveImage:(UIImage *)image {
     
-    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpotImage *spotImage = (STGTSpotImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpotImage" inManagedObjectContext:self.tracker.document.managedObjectContext];
     image = [self resizeImage:image toSize:CGSizeMake(1024, 1024)];
     spotImage.imageData = UIImagePNGRepresentation(image);
     [self.spot addImagesObject:spotImage];
@@ -171,7 +171,7 @@
         self.spot.avatarXid = spotImage.xid;
         self.spotImageView.image = [self resizeImage:image toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
     }
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"spotImage UIDocumentSaveForOverwriting success");
     }];
 
@@ -300,7 +300,7 @@
     if (![textField.text isEqualToString:@""]) {
         if (![textField.text isEqualToString:self.spot.label]) {
             self.spot.label = textField.text;
-            [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+            [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
                 NSLog(@"spot.label UIDocumentSaveForOverwriting success");
             }];
         }
@@ -333,7 +333,7 @@
     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"xid" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
     request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", self.spot.avatarXid];
     NSError *error;
-    STGTImage *spotImage = [[self.tracker.locationsDatabase.managedObjectContext executeFetchRequest:request error:&error] lastObject];
+    STGTImage *spotImage = [[self.tracker.document.managedObjectContext executeFetchRequest:request error:&error] lastObject];
     
     if (spotImage) {
         self.spotImageView.image = [self resizeImage:[UIImage imageWithData:spotImage.imageData] toSize:CGSizeMake(self.spotImageView.bounds.size.width, self.spotImageView.bounds.size.height)];
@@ -356,12 +356,12 @@
     self.networksLabel.text = NSLocalizedString(@"NETWORKS", @"");
     
     if (!self.spot) {
-    STGTSpot *newSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+    STGTSpot *newSpot = (STGTSpot *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSpot" inManagedObjectContext:self.tracker.document.managedObjectContext];
     newSpot.latitude = [NSNumber numberWithDouble:self.coordinate.latitude];
     newSpot.longitude = [NSNumber numberWithDouble:self.coordinate.longitude];
     newSpot.address = @"";
     self.spot = newSpot;
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"newSpot UIDocumentSaveForOverwriting success");
     }];
 }

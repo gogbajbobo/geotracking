@@ -34,9 +34,9 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"tokenReceived" object:self];
 }
 
-+ (STGTSettings *)settings {
-    return [STGTTrackingLocationController sharedTracker].settings;
-}
+//+ (STGTSettings *)settings {
+//    return [STGTTrackingLocationController sharedTracker].settings;
+//}
 
 + (id) tokenRetrieverMaker{
     

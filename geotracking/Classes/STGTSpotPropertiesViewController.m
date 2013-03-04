@@ -18,24 +18,24 @@
 @property (strong, nonatomic) UITextField *activeTextField;
 @property (nonatomic, strong) NSFetchedResultsController *resultsController;
 @property (nonatomic, strong) UIImageView *tappedImageView;
-@property (nonatomic, strong) STGTDataSyncController *syncer;
+//@property (nonatomic, strong) STGTDataSyncController *syncer;
 
 @end
 
 @implementation STGTSpotPropertiesViewController
 
-- (STGTDataSyncController *)syncer {
-    if (!_syncer) {
-        _syncer = [STGTDataSyncController sharedSyncer];
-    }
-    return _syncer;
-}
+//- (STGTDataSyncController *)syncer {
+//    if (!_syncer) {
+//        _syncer = [STGTDataSyncController sharedSyncer];
+//    }
+//    return _syncer;
+//}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[NSString stringWithFormat:@"STGT%@", self.typeOfProperty]];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.locationsDatabase.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _resultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request managedObjectContext:self.tracker.document.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _resultsController.delegate = self;
     }
     return _resultsController;
@@ -65,19 +65,19 @@
 - (void)addNewPropertyWithName:(NSString *)name {
     
     if ([self.typeOfProperty isEqualToString:@"Interest"]) {
-        STGTInterest *newInterest = (STGTInterest *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterest" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        STGTInterest *newInterest = (STGTInterest *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterest" inManagedObjectContext:self.tracker.document.managedObjectContext];
 //        [newInterest setXid:[self.tracker newid]];
         [newInterest setName:name];
-        STGTInterestImage *interestImage = (STGTInterestImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterestImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        STGTInterestImage *interestImage = (STGTInterestImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTInterestImage" inManagedObjectContext:self.tracker.document.managedObjectContext];
         interestImage.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"]);
         [newInterest setImage:interestImage];
         [self.filterSpot addInterestsObject:newInterest];
 
     } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
-        STGTNetwork *newNetwork = (STGTNetwork *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetwork" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        STGTNetwork *newNetwork = (STGTNetwork *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetwork" inManagedObjectContext:self.tracker.document.managedObjectContext];
 //        [newNetwork setXid:[self.tracker newid]];
         [newNetwork setName:name];
-        STGTNetworkImage *networkImage = (STGTNetworkImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetworkImage" inManagedObjectContext:self.tracker.locationsDatabase.managedObjectContext];
+        STGTNetworkImage *networkImage = (STGTNetworkImage *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTNetworkImage" inManagedObjectContext:self.tracker.document.managedObjectContext];
         networkImage.imageData = UIImagePNGRepresentation([UIImage imageNamed:@"STGTblank_image_44_44.png"]);
         [newNetwork setImage:networkImage];
         [self.filterSpot addNetworksObject:newNetwork];
@@ -272,7 +272,7 @@
         } else if ([self.typeOfProperty isEqualToString:@"Network"]) {
             [self.filterSpot removeNetworksObject:(STGTNetwork *)propertyToDelete];
         }
-        [self.tracker.locationsDatabase.managedObjectContext deleteObject:propertyToDelete];
+        [self.tracker.document.managedObjectContext deleteObject:propertyToDelete];
     }
 }
 
@@ -347,7 +347,7 @@
 
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tracker.locationsDatabase saveToURL:self.tracker.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+    [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
         NSLog(@"controllerDidChangeContent UIDocumentSaveForOverwriting success");
     }];
 //    NSLog(@"controllerDidChangeContent");
