@@ -7,6 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C09DE2316E51E3000772FE5 /* STGTTrackingLocationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4722415E4055F00B092DB /* STGTTrackingLocationController.m */; };
+		2C09DE2416E51E8700772FE5 /* STGTSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C21124A16E0948F00E10126 /* STGTSession.m */; };
+		2C09DE2516E51E8D00772FE5 /* STGTSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBC1216B175ED00F74384 /* STGTSettingsController.m */; };
+		2C09DE2616E51EB700772FE5 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4721F15E4016300B092DB /* CoreLocation.framework */; };
+		2C09DE2B16E51EDF00772FE5 /* STGTSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C21124616E0947A00E10126 /* STGTSessionManager.m */; };
+		2C09DE2E16E51EDF00772FE5 /* STGTAddressSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD07D76167CE91500E76B81 /* STGTAddressSearchViewController.m */; };
+		2C09DE3116E51EDF00772FE5 /* STGTTrackerManagedDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD0372716888F1500BBEDD5 /* STGTTrackerManagedDocument.m */; };
+		2C09DE3316E51EDF00772FE5 /* STGTTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* STGTTrackerViewController.m */; };
+		2C09DE3516E51EDF00772FE5 /* STGTDataSyncController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3B3D0A165E64E6003F2347 /* STGTDataSyncController.m */; };
+		2C09DE3716E51EDF00772FE5 /* STGTMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* STGTMapViewController.m */; };
+		2C09DE3916E51EDF00772FE5 /* STGTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */; };
+		2C09DE3B16E51EDF00772FE5 /* STGTSettingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C33502A16B5228500C3EAB0 /* STGTSettingsTableViewController.m */; };
+		2C09DE3E16E51EDF00772FE5 /* STGTSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C32D33C1643A99700A2ADB7 /* STGTSpotViewController.m */; };
+		2C09DE4016E51EDF00772FE5 /* STGTImagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A86916D24C8B00187B80 /* STGTImagesViewController.m */; };
+		2C09DE4216E51EDF00772FE5 /* STGTSpotImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A7BE16D0ED3B00187B80 /* STGTSpotImageViewController.m */; };
+		2C09DE4416E51EDF00772FE5 /* STGTSpotPropertiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB24B6F1639A7A90040A211 /* STGTSpotPropertiesViewController.m */; };
+		2C09DE4616E51EDF00772FE5 /* STGTFilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */; };
+		2C09DE4916E51EDF00772FE5 /* STGTAuthBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBBDA16B120E300F74384 /* STGTAuthBasic.m */; };
+		2C09DE4A16E51EDF00772FE5 /* STGTTracker.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBDC16AEBBDE00AD92E4 /* STGTTracker.xcdatamodeld */; };
+		2C09DE4C16E51EDF00772FE5 /* STGTSpot.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD3A87A16D4CEF800187B80 /* STGTSpot.m */; };
+		2C09DE4E16E51EDF00772FE5 /* STGTLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568A16C39A03008D6529 /* STGTLocation.m */; };
+		2C09DE5016E51EDF00772FE5 /* STGTSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568716C39A03008D6529 /* STGTSettings.m */; };
+		2C09DE5216E51EDF00772FE5 /* STGTInterestImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568416C39A03008D6529 /* STGTInterestImage.m */; };
+		2C09DE5416E51EDF00772FE5 /* STGTInterest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C568116C39A03008D6529 /* STGTInterest.m */; };
+		2C09DE5616E51EDF00772FE5 /* STGTImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567E16C39A03008D6529 /* STGTImage.m */; };
+		2C09DE5816E51EDF00772FE5 /* STGTDatum.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567B16C39A03008D6529 /* STGTDatum.m */; };
+		2C09DE5A16E51EDF00772FE5 /* STGTNetworkImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567516C39A02008D6529 /* STGTNetworkImage.m */; };
+		2C09DE5C16E51EDF00772FE5 /* STGTTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C567216C39A02008D6529 /* STGTTrack.m */; };
+		2C09DE5E16E51EDF00772FE5 /* STGTTrack+dayAsString.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C31B9DF16CD17EF00FA040B /* STGTTrack+dayAsString.m */; };
+		2C09DE6016E51EDF00772FE5 /* STGTSpotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566F16C39A02008D6529 /* STGTSpotImage.m */; };
+		2C09DE6216E51EDF00772FE5 /* STGTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566C16C39A02008D6529 /* STGTNetwork.m */; };
+		2C09DE6416E51EDF00772FE5 /* STGTDatum+Timestamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1ABBE716AECD9200AD92E4 /* STGTDatum+Timestamp.m */; };
+		2C09DE6616E51FBC00772FE5 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C32A0A5161052E200713735 /* libxml2.dylib */; };
+		2C09DE6916E524D600772FE5 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19979538E5644F14B8F469EA /* libPods.a */; };
 		2C0CBBDB16B120E300F74384 /* STGTAuthBasic.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBBDA16B120E300F74384 /* STGTAuthBasic.m */; };
 		2C0CBC1316B175ED00F74384 /* STGTSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBC1216B175ED00F74384 /* STGTSettingsController.m */; };
 		2C0CBC4016B357EC00F74384 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C0CBC3C16B357EC00F74384 /* Icon-72.png */; };
@@ -197,9 +231,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C09DE2616E51EB700772FE5 /* CoreLocation.framework in Frameworks */,
 				2C32D42D164ACF0800A2ADB7 /* SenTestingKit.framework in Frameworks */,
 				2C32D42E164ACF0800A2ADB7 /* UIKit.framework in Frameworks */,
 				2C32D42F164ACF0800A2ADB7 /* Foundation.framework in Frameworks */,
+				2C09DE6616E51FBC00772FE5 /* libxml2.dylib in Frameworks */,
+				2C09DE6916E524D600772FE5 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +446,7 @@
 				2C32D426164ACF0800A2ADB7 /* Sources */,
 				2C32D427164ACF0800A2ADB7 /* Frameworks */,
 				2C32D428164ACF0800A2ADB7 /* Resources */,
+				2C09DE6816E522E300772FE5 /* Copy Pods Resources */,
 				2C32D429164ACF0800A2ADB7 /* ShellScript */,
 			);
 			buildRules = (
@@ -514,6 +552,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
 		};
+		2C09DE6816E522E300772FE5 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
 		2C32D429164ACF0800A2ADB7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -534,6 +586,37 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C09DE2B16E51EDF00772FE5 /* STGTSessionManager.m in Sources */,
+				2C09DE2E16E51EDF00772FE5 /* STGTAddressSearchViewController.m in Sources */,
+				2C09DE3116E51EDF00772FE5 /* STGTTrackerManagedDocument.m in Sources */,
+				2C09DE3316E51EDF00772FE5 /* STGTTrackerViewController.m in Sources */,
+				2C09DE3516E51EDF00772FE5 /* STGTDataSyncController.m in Sources */,
+				2C09DE3716E51EDF00772FE5 /* STGTMapViewController.m in Sources */,
+				2C09DE3916E51EDF00772FE5 /* STGTMapAnnotation.m in Sources */,
+				2C09DE3B16E51EDF00772FE5 /* STGTSettingsTableViewController.m in Sources */,
+				2C09DE3E16E51EDF00772FE5 /* STGTSpotViewController.m in Sources */,
+				2C09DE4016E51EDF00772FE5 /* STGTImagesViewController.m in Sources */,
+				2C09DE4216E51EDF00772FE5 /* STGTSpotImageViewController.m in Sources */,
+				2C09DE4416E51EDF00772FE5 /* STGTSpotPropertiesViewController.m in Sources */,
+				2C09DE4616E51EDF00772FE5 /* STGTFilterSpotViewController.m in Sources */,
+				2C09DE4916E51EDF00772FE5 /* STGTAuthBasic.m in Sources */,
+				2C09DE4A16E51EDF00772FE5 /* STGTTracker.xcdatamodeld in Sources */,
+				2C09DE4C16E51EDF00772FE5 /* STGTSpot.m in Sources */,
+				2C09DE4E16E51EDF00772FE5 /* STGTLocation.m in Sources */,
+				2C09DE5016E51EDF00772FE5 /* STGTSettings.m in Sources */,
+				2C09DE5216E51EDF00772FE5 /* STGTInterestImage.m in Sources */,
+				2C09DE5416E51EDF00772FE5 /* STGTInterest.m in Sources */,
+				2C09DE5616E51EDF00772FE5 /* STGTImage.m in Sources */,
+				2C09DE5816E51EDF00772FE5 /* STGTDatum.m in Sources */,
+				2C09DE5A16E51EDF00772FE5 /* STGTNetworkImage.m in Sources */,
+				2C09DE5C16E51EDF00772FE5 /* STGTTrack.m in Sources */,
+				2C09DE5E16E51EDF00772FE5 /* STGTTrack+dayAsString.m in Sources */,
+				2C09DE6016E51EDF00772FE5 /* STGTSpotImage.m in Sources */,
+				2C09DE6216E51EDF00772FE5 /* STGTNetwork.m in Sources */,
+				2C09DE6416E51EDF00772FE5 /* STGTDatum+Timestamp.m in Sources */,
+				2C09DE2516E51E8D00772FE5 /* STGTSettingsController.m in Sources */,
+				2C09DE2416E51E8700772FE5 /* STGTSession.m in Sources */,
+				2C09DE2316E51E3000772FE5 /* STGTTrackingLocationController.m in Sources */,
 				2C32D438164ACF0800A2ADB7 /* geotrackingTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -628,7 +711,6 @@
 		2C32D43B164ACF0800A2ADB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/geotracking.app/geotracking";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -651,7 +733,6 @@
 		2C32D43C164ACF0800A2ADB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/geotracking.app/geotracking";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;

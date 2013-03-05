@@ -7,7 +7,7 @@
 //
 
 #import "geotrackingTests.h"
-#import "TrackingLocationController.h"
+#import "STGTTrackingLocationController.h"
 
 @implementation geotrackingTests
 
@@ -26,7 +26,7 @@
 }
 
 - (void)testTLC {
-    TrackingLocationController *tlc = [[TrackingLocationController alloc] init];
+    STGTTrackingLocationController *tlc = [[STGTTrackingLocationController alloc] init];
     [tlc startTrackingLocation];
     STAssertTrue([tlc locationManagerRunning], nil);
     [tlc stopTrackingLocation];

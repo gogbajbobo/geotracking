@@ -12,6 +12,7 @@
 #import "STGTSettings.h"
 #import "STGTSpot.h"
 #import "STGTSession.h"
+//#import <GData/GDataXMLNode.h>
 
 #define DEFAULT_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 #define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
