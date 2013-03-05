@@ -10,9 +10,6 @@
 
 @interface STGTSessionManager()
 
-@property (nonatomic, strong) NSMutableDictionary *sessions;
-@property (nonatomic, strong) NSString *currentSessionUID;
-
 @end
 
 @implementation STGTSessionManager
@@ -29,18 +26,32 @@
 }
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate {
-    STGTSession *session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate];
-    session.manager = self;
-    [self.sessions setValue:session forKey:uid];
+    STGTSession *session = [self.sessions objectForKey:uid];
+    if (!session) {
+        session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate];
+        session.manager = self;
+        [self.sessions setValue:session forKey:uid];
+    } else {
+        
+    }
     self.currentSessionUID = uid;
 }
 
-- (void)stopCurrentSession {
-    [[self.sessions objectForKey:self.currentSessionUID] completeSession];
+- (void)stopSessionForUID:(NSString *)uid {
+    [[self.sessions objectForKey:uid] completeSession];
 }
 
 - (void)sessionCompletionFinished:(id)sender {
     [self.sessions removeObjectForKey:[(STGTSession *)sender uid]];
+}
+
+- (void)setCurrentSessionUID:(NSString *)currentSessionUID {
+    if ([[self.sessions allKeys] containsObject:currentSessionUID]) {
+        if (_currentSessionUID != currentSessionUID) {
+            _currentSessionUID = currentSessionUID;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"CurrentSessionChange" object:[self.sessions objectForKey:_currentSessionUID]];
+        }
+    }
 }
 
 

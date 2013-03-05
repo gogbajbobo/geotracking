@@ -69,6 +69,12 @@
 		2C417C6415E80E3F00A3A83D /* STGTTrackerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6315E80E3F00A3A83D /* STGTTrackerViewController.m */; };
 		2C417C6715E81E6000A3A83D /* STGTMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6615E81E6000A3A83D /* STGTMapViewController.m */; };
 		2C417C6A15E8280B00A3A83D /* STGTMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C417C6915E8280B00A3A83D /* STGTMapAnnotation.m */; };
+		2C68F7F916E605D0009E48E6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C3EB114166D251400748C23 /* SystemConfiguration.framework */; };
+		2C68F7FA16E605D3009E48E6 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4723315E54ECF00B092DB /* CoreData.framework */; };
+		2C68F7FB16E605D6009E48E6 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4722115E4016F00B092DB /* MapKit.framework */; };
+		2C68F7FC16E605E4009E48E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4720315E3FEEC00B092DB /* CoreGraphics.framework */; };
+		2C68F7FD16E614DB009E48E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4720B15E3FEEC00B092DB /* main.m */; };
+		2C68F7FE16E614DF009E48E6 /* STGTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA191CB16A98FEA0072E61F /* STGTAppDelegate.m */; };
 		2C94D722166FC00D0019A0C7 /* STGTFilterSpotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C94D721166FC00D0019A0C7 /* STGTFilterSpotViewController.m */; };
 		2C9C566D16C39A02008D6529 /* STGTNetwork.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566C16C39A02008D6529 /* STGTNetwork.m */; };
 		2C9C567016C39A02008D6529 /* STGTSpotImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9C566F16C39A02008D6529 /* STGTSpotImage.m */; };
@@ -231,10 +237,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C68F7F916E605D0009E48E6 /* SystemConfiguration.framework in Frameworks */,
+				2C68F7FA16E605D3009E48E6 /* CoreData.framework in Frameworks */,
+				2C68F7FB16E605D6009E48E6 /* MapKit.framework in Frameworks */,
 				2C09DE2616E51EB700772FE5 /* CoreLocation.framework in Frameworks */,
 				2C32D42D164ACF0800A2ADB7 /* SenTestingKit.framework in Frameworks */,
 				2C32D42E164ACF0800A2ADB7 /* UIKit.framework in Frameworks */,
 				2C32D42F164ACF0800A2ADB7 /* Foundation.framework in Frameworks */,
+				2C68F7FC16E605E4009E48E6 /* CoreGraphics.framework in Frameworks */,
 				2C09DE6616E51FBC00772FE5 /* libxml2.dylib in Frameworks */,
 				2C09DE6916E524D600772FE5 /* libPods.a in Frameworks */,
 			);
@@ -615,8 +625,10 @@
 				2C09DE6216E51EDF00772FE5 /* STGTNetwork.m in Sources */,
 				2C09DE6416E51EDF00772FE5 /* STGTDatum+Timestamp.m in Sources */,
 				2C09DE2516E51E8D00772FE5 /* STGTSettingsController.m in Sources */,
+				2C68F7FE16E614DF009E48E6 /* STGTAppDelegate.m in Sources */,
 				2C09DE2416E51E8700772FE5 /* STGTSession.m in Sources */,
 				2C09DE2316E51E3000772FE5 /* STGTTrackingLocationController.m in Sources */,
+				2C68F7FD16E614DB009E48E6 /* main.m in Sources */,
 				2C32D438164ACF0800A2ADB7 /* geotrackingTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -721,9 +733,17 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "geotrackingTests/geotrackingTests-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/libxml2/**",
+					"${PODS_HEADERS_SEARCH_PATHS}",
+				);
 				INFOPLIST_FILE = "geotrackingTests/geotrackingTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
+				PODS_BUILD_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/BuildHeaders\" \"${PODS_ROOT}/BuildHeaders/GData\" \"${PODS_ROOT}/BuildHeaders/Reachability\" \"${PODS_ROOT}/BuildHeaders/UDPushAuth\"";
+				PODS_HEADERS_SEARCH_PATHS = "${PODS_PUBLIC_HEADERS_SEARCH_PATHS}";
+				PODS_PUBLIC_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/Headers\" \"${PODS_ROOT}/Headers/GData\" \"${PODS_ROOT}/Headers/Reachability\" \"${PODS_ROOT}/Headers/UDPushAuth\"";
+				PODS_ROOT = "${SRCROOT}/Pods";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
@@ -743,8 +763,16 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "geotrackingTests/geotrackingTests-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(SDKROOT)/usr/include/libxml2/**",
+					"${PODS_HEADERS_SEARCH_PATHS}",
+				);
 				INFOPLIST_FILE = "geotrackingTests/geotrackingTests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PODS_BUILD_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/BuildHeaders\" \"${PODS_ROOT}/BuildHeaders/GData\" \"${PODS_ROOT}/BuildHeaders/Reachability\" \"${PODS_ROOT}/BuildHeaders/UDPushAuth\"";
+				PODS_HEADERS_SEARCH_PATHS = "${PODS_PUBLIC_HEADERS_SEARCH_PATHS}";
+				PODS_PUBLIC_HEADERS_SEARCH_PATHS = "\"${PODS_ROOT}/Headers\" \"${PODS_ROOT}/Headers/GData\" \"${PODS_ROOT}/Headers/Reachability\" \"${PODS_ROOT}/Headers/UDPushAuth\"";
+				PODS_ROOT = "${SRCROOT}/Pods";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;

@@ -13,9 +13,11 @@
 @interface STGTSessionManager : NSObject <STGTSessionManager, STGTSessionManagement>
 
 @property (nonatomic, strong) STGTSession *currentSession;
+@property (nonatomic, strong) NSMutableDictionary *sessions;
+@property (nonatomic, strong) NSString *currentSessionUID;
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate;
-- (void)stopCurrentSession;
+- (void)stopSessionForUID:(NSString *)uid;
 - (void)sessionCompletionFinished:(id)sender;
 
 + (STGTSessionManager *)sharedManager;

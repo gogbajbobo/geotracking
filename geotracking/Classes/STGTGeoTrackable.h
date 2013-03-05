@@ -22,7 +22,7 @@
 @protocol STGTSessionManagement <NSObject>
 
 - (void)startSessionForUID:(NSString *) uid AuthDelegate:(id)authDelegate;
-- (void)stopCurrentSession;
+- (void)stopSessionForUID:(NSString *)uid;
 
 @end
 
