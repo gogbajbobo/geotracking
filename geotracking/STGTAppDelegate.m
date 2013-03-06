@@ -20,18 +20,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-//    [[STGTTrackingLocationController sharedTracker] initDatabase:^(BOOL success) {
-//        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-//        
-//        [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-//        [[STGTAuthBasic sharedOAuth] checkToken];
-//        
-//        self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
-//        self.authCodeRetriever = (UDPushAuthCodeRetriever *)[(UDAuthTokenRetriever *)[[STGTAuthBasic sharedOAuth] tokenRetriever] codeDelegate];
-//        self.reachability = [Reachability reachabilityWithHostname:[[STGTAuthBasic sharedOAuth] reachabilityServer]];
-//        self.reachability.reachableOnWWAN = YES;
-//        [self.reachability startNotifier]; 
-//    }];
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
 
@@ -44,9 +32,6 @@
     [self.reachability startNotifier];
 
     [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
-
-//    [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
-
     
     return YES;
 
@@ -74,7 +59,7 @@
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
-    
+    [[STGTSessionManager sharedManager] cleanCompleteSessions];
 }
 
 @end
