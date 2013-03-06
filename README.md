@@ -25,9 +25,12 @@ Targets / Info / Custom iOS Target Properties / Required background modes / + Ap
 
 Запуск геотрекера:
 ```
-    [[STGTTrackingLocationController sharedTracker] initDatabase:^(BOOL success) {
-        [[STGTDataSyncController sharedSyncer] setAuthDelegate:[STGTAuthBasic sharedOAuth]];
-    }];
+    [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+```
+
+В методе - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application в AppDelegate добавить:
+```
+    [[STGTSessionManager sharedManager] cleanCompleteSessions];
 ```
 
 
