@@ -19,6 +19,7 @@
 @property (strong, nonatomic) STGTTrackingLocationController *tracker;
 @property (weak, nonatomic) id <STGTSessionManager> manager;
 @property (strong, nonatomic) NSString *uid;
+@property (nonatomic, strong) NSString *status;
 
 - (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate;
 - (void)completeSession;

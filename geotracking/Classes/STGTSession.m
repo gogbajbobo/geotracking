@@ -33,7 +33,8 @@
 }
 
 - (void)completeSession {
-    
+    [self.tracker stopTrackingLocation];
+    self.status = @"finishing";
 }
 
 - (void)documentWithUID:(NSString *)uid  completionHandler:(void (^)(BOOL success))completionHandler {

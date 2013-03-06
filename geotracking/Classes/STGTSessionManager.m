@@ -34,6 +34,7 @@
     } else {
         
     }
+    session.status = @"running";
     self.currentSessionUID = uid;
 }
 
@@ -46,7 +47,8 @@
     if ([[(STGTSession *)sender uid] isEqualToString:self.currentSessionUID]) {
         self.currentSessionUID = nil;
     }
-    [self.sessions removeObjectForKey:[(STGTSession *)sender uid]];
+    [[self.sessions objectForKey:[(STGTSession *)sender uid]] setStatus:@"complete"];
+//    [self.sessions removeObjectForKey:[(STGTSession *)sender uid]];
 }
 
 - (void)setCurrentSessionUID:(NSString *)currentSessionUID {

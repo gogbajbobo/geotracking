@@ -12,7 +12,7 @@
 #import "STGTSettings.h"
 #import "STGTSpot.h"
 #import "STGTSession.h"
-//#import <GData/GDataXMLNode.h>
+#import "STGTSessionManager.h"
 
 #define DEFAULT_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 #define DEFAULT_SYNCSERVER @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
@@ -176,10 +176,14 @@
     //    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
         
         if (fetchedData.count == 0) {
-            NSLog(@"No data to sync");
-    //        [self sendData:nil toServer:@"https://system.unact.ru/reflect/?--mirror"];
-            [self sendData:nil toServer:self.settings.syncServerURI];
-        } else {        
+            if ([[(STGTSession *)self.session status] isEqualToString:@"finishing"]) {
+                [[STGTSessionManager sharedManager] sessionCompletionFinished:self.session];
+            } else {
+                NSLog(@"No data to sync");
+                //        [self sendData:nil toServer:@"https://system.unact.ru/reflect/?--mirror"];
+                [self sendData:nil toServer:self.settings.syncServerURI];
+            }
+        } else {
 //        [self sendData:[self xmlFrom:fetchedData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
             [self sendData:[self xmlFrom:fetchedData] toServer:self.settings.syncServerURI];
         }

@@ -77,17 +77,26 @@
     [[STGTSessionManager sharedManager] sessionCompletionFinished:[[[STGTSessionManager sharedManager] sessions] objectForKey:@"2"]];
     
     count = [[[STGTSessionManager sharedManager] sessions] count];
-    testCount = 1;
+    testCount = 2;
     STAssertEquals(count, testCount, @"Wrong count");
     STAssertNil([STGTSessionManager sharedManager].currentSessionUID, @"currentSessionUID not nil");
 
     [[STGTSessionManager sharedManager] sessionCompletionFinished:[[[STGTSessionManager sharedManager] sessions] objectForKey:@"1"]];
     count = [[[STGTSessionManager sharedManager] sessions] count];
-    testCount = 0;
+    testCount = 2;
     STAssertEquals(count, testCount, @"Wrong count");
-
-//    sleep(10000);
     
+}
+
+- (void)testSessionCompletion {
+    [[STGTAuthBasic sharedOAuth] checkToken];
+    
+    [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+    [[STGTSessionManager sharedManager] stopSessionForUID:@"1"];
+    STAssertEquals([[[STGTSessionManager sharedManager].sessions objectForKey:@"1"] status], @"finishing", @"Wrong count");
+    STAssertNil([STGTSessionManager sharedManager].currentSessionUID, @"currentSessionUID not nil");
+    [[STGTSessionManager sharedManager] sessionCompletionFinished:[[[STGTSessionManager sharedManager] sessions] objectForKey:@"1"]];
+    STAssertEquals([[[STGTSessionManager sharedManager].sessions objectForKey:@"1"] status], @"complete", @"Wrong count");
 }
 
 - (void)currentSessionChange:(NSNotification *)notification {
