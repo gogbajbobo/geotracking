@@ -11,7 +11,9 @@
 #import "STGTLocation.h"
 #import "STGTDataSyncController.h"
 #import "STGTSession.h"
-#import "STGTSession.h"
+#import "STGTSessionManager.h"
+
+#import "STGTAuthBasic.h"
 
 @interface STGTTrackerViewController () <UIAlertViewDelegate>
 
@@ -65,6 +67,25 @@
     UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CLEAR DATABASE", @"") message:NSLocalizedString(@"OBJECT TO DELETE", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"ONLY TRACKS", @""), NSLocalizedString(@"ALL DATA", @""), nil];
     clearAlert.tag = 1;
     [clearAlert show];
+    [self changeSessionTest];
+}
+
+- (void)changeSessionTest {
+//    NSLog(@"changeSessionTest");
+    dispatch_queue_t queue = dispatch_queue_create("queue", NULL);
+    dispatch_async(queue, ^{
+        [NSThread sleepForTimeInterval:15];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [(STGTSessionManager *)self.session.manager startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+            dispatch_async(queue, ^{
+                [NSThread sleepForTimeInterval:15];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [(STGTSessionManager *)self.session.manager setCurrentSessionUID:@"1"];
+                });
+            });
+        });
+    });
+//    dispatch_release(queue);
 }
 
 - (IBAction)trackerSwitchPressed:(UIBarButtonItem *)sender {
@@ -81,7 +102,6 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == 1) {
-        //        NSLog(@"buttonIndex %d", buttonIndex);
         if (buttonIndex == 1) {
             [self.session.tracker clearLocations];
         } else if (buttonIndex == 2) {
@@ -197,6 +217,7 @@
 }
 
 - (void)currentSessionChange:(NSNotification *)notification {
+    [self.navigationController popToRootViewControllerAnimated:YES];
     self.session = nil;
     [self viewDeinit];
     self.session = (STGTSession *)notification.object;
