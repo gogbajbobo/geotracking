@@ -23,7 +23,7 @@
             session.syncer.session = session;
             session.syncer.authDelegate = authDelegate;
             [session.tracker trackerInit];
-            NSLog(@"session1 %@", session);
+//            NSLog(@"session1 %@", session);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NewSessionStart" object:session];
         } else {
 //            NSLog(@"not success");
@@ -34,7 +34,6 @@
 
 - (void)completeSession {
     [self.tracker stopTrackingLocation];
-    self.status = @"finishing";
 }
 
 - (void)documentWithUID:(NSString *)uid  completionHandler:(void (^)(BOOL success))completionHandler {

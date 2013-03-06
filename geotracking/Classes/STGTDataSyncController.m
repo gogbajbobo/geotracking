@@ -177,6 +177,7 @@
         
         if (fetchedData.count == 0) {
             if ([[(STGTSession *)self.session status] isEqualToString:@"finishing"]) {
+                [self stopSyncer];
                 [[STGTSessionManager sharedManager] sessionCompletionFinished:self.session];
             } else {
                 NSLog(@"No data to sync");

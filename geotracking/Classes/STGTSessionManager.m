@@ -39,7 +39,9 @@
 }
 
 - (void)stopSessionForUID:(NSString *)uid {
-    [[self.sessions objectForKey:uid] completeSession];
+    STGTSession *session = [self.sessions objectForKey:uid];
+    session.status = @"finishing";
+    [session completeSession];
     self.currentSessionUID = nil;
 }
 
