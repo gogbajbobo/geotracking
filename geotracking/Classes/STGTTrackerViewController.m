@@ -74,13 +74,19 @@
 //    NSLog(@"changeSessionTest");
     dispatch_queue_t queue = dispatch_queue_create("queue", NULL);
     dispatch_async(queue, ^{
-        [NSThread sleepForTimeInterval:15];
+        [NSThread sleepForTimeInterval:1];
         dispatch_async(dispatch_get_main_queue(), ^{
-            [(STGTSessionManager *)self.session.manager startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+            [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
             dispatch_async(queue, ^{
-                [NSThread sleepForTimeInterval:15];
+                [NSThread sleepForTimeInterval:1];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [(STGTSessionManager *)self.session.manager setCurrentSessionUID:@"1"];
+                    [[STGTSessionManager sharedManager] setCurrentSessionUID:nil];
+                    dispatch_async(queue, ^{
+                        [NSThread sleepForTimeInterval:1];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [[STGTSessionManager sharedManager] setCurrentSessionUID:@"1"];
+                        });
+                    });
                 });
             });
         });
@@ -210,10 +216,12 @@
     self.tableView.dataSource = nil;
     self.tableView.delegate = nil;
     self.summary.text = NSLocalizedString(@"NO ACTIVE SESSION", @"");
+    self.currentValues.text = nil;
     self.startButton.enabled = NO;
     self.settingsButton.enabled = NO;
     self.deleteButton.enabled = NO;
     self.syncButton.enabled = NO;
+    [self.tableView reloadData];
 }
 
 - (void)currentSessionChange:(NSNotification *)notification {
@@ -221,7 +229,9 @@
     self.session = nil;
     [self viewDeinit];
     self.session = (STGTSession *)notification.object;
-    [self viewInit];
+    if (self.session) {
+        [self viewInit];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
