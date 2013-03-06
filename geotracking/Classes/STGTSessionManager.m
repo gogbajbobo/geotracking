@@ -32,7 +32,9 @@
         session.manager = self;
         [self.sessions setValue:session forKey:uid];
     } else {
-        
+        if ([session.status isEqualToString:@"completed"]) {
+            [session.tracker trackerInit];
+        }
     }
     session.status = @"running";
     self.currentSessionUID = uid;

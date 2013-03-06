@@ -566,10 +566,12 @@
 }
 
 - (void)startTrackingLocation {
-    [[self locationManager] startUpdatingLocation];
-    self.locationManagerRunning = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerStart" object:self];
-    NSLog(@"startTrackingLocation");
+    if ([[(STGTSession *)self.session status] isEqualToString:@"running"]) {
+        [[self locationManager] startUpdatingLocation];
+        self.locationManagerRunning = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerStart" object:self];
+        NSLog(@"startTrackingLocation");
+    }
 }
 
 - (void)stopTrackingLocation {
