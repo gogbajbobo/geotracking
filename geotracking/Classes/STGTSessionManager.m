@@ -39,14 +39,18 @@
 
 - (void)stopSessionForUID:(NSString *)uid {
     [[self.sessions objectForKey:uid] completeSession];
+    self.currentSessionUID = nil;
 }
 
 - (void)sessionCompletionFinished:(id)sender {
+    if ([[(STGTSession *)sender uid] isEqualToString:self.currentSessionUID]) {
+        self.currentSessionUID = nil;
+    }
     [self.sessions removeObjectForKey:[(STGTSession *)sender uid]];
 }
 
 - (void)setCurrentSessionUID:(NSString *)currentSessionUID {
-    if ([[self.sessions allKeys] containsObject:currentSessionUID]) {
+    if ([[self.sessions allKeys] containsObject:currentSessionUID] || !currentSessionUID) {
         if (_currentSessionUID != currentSessionUID) {
             _currentSessionUID = currentSessionUID;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"CurrentSessionChange" object:[self.sessions objectForKey:_currentSessionUID]];

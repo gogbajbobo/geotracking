@@ -45,13 +45,13 @@
 //    return _tracker;
 //}
 
-- (void)newSessionStart:(NSNotification *)notification {
-    NSLog(@"newSessionStart");
-    self.session = (STGTSession *)notification.object;
-    [self viewInit];
-    [self.session.tracker updateInfoLabels];
-    [self.session.tracker.tableView reloadData];
-}
+//- (void)newSessionStart:(NSNotification *)notification {
+//    NSLog(@"newSessionStart");
+//    self.session = (STGTSession *)notification.object;
+//    [self viewInit];
+//    [self.session.tracker updateInfoLabels];
+//    [self.session.tracker.tableView reloadData];
+//}
 
 - (IBAction)syncButtonPressed:(id)sender {
     [self.session.syncer fireTimer];
@@ -177,7 +177,30 @@
     
     self.tableView.dataSource = self.session.tracker;
     self.tableView.delegate = self.session.tracker;
+    self.startButton.enabled = ![[[self.session.tracker settings] valueForKey:@"trackerAutoStart"] boolValue];
+    self.syncButton.enabled = ![self.session.syncer syncing];
+    self.settingsButton.enabled = YES;
+    self.deleteButton.enabled = YES;
+    [self.session.tracker updateInfoLabels];
+    [self.tableView reloadData];
 
+}
+
+- (void)viewDeinit {
+    self.tableView.dataSource = nil;
+    self.tableView.delegate = nil;
+    self.summary.text = NSLocalizedString(@"NO ACTIVE SESSION", @"");
+    self.startButton.enabled = NO;
+    self.settingsButton.enabled = NO;
+    self.deleteButton.enabled = NO;
+    self.syncButton.enabled = NO;
+}
+
+- (void)currentSessionChange:(NSNotification *)notification {
+    self.session = nil;
+    [self viewDeinit];
+    self.session = (STGTSession *)notification.object;
+    [self viewInit];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -197,6 +220,8 @@
 
     if (self.session) {
         [self viewInit];
+    } else {
+        [self viewDeinit];
     }
     
     self.startButton.title = NSLocalizedString(@"START", @"");
@@ -211,7 +236,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newSessionStart:) name:@"newSessionStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"NewSessionStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"CurrentSessionChange" object:nil];
+
 }
 
 - (void)viewDidUnload

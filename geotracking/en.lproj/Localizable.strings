@@ -34,6 +34,8 @@
 "2TRACKS" = "tracks";
 "5TRACKS" = "tracks";
 
+"NO ACTIVE SESSION" = "No active session";
+
 "NO CONNECTION" = "No connection";
 "NO TOKEN" = "No token";
 "SYNC FAIL" = "Sync fail";

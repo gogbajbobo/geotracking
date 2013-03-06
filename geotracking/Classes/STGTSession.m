@@ -23,8 +23,10 @@
             session.syncer.session = session;
             session.syncer.authDelegate = authDelegate;
             [session.tracker trackerInit];
-            NSLog(@"session %@", session);
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"newSessionStart" object:session];
+            NSLog(@"session1 %@", session);
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NewSessionStart" object:session];
+        } else {
+//            NSLog(@"not success");
         }
     }];
     return session;
@@ -37,7 +39,7 @@
 - (void)documentWithUID:(NSString *)uid  completionHandler:(void (^)(BOOL success))completionHandler {
     NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", uid, @"sqlite"]];
-    NSLog(@"url %@", [url standardizedURL]);
+//    NSLog(@"url %@", [url standardizedURL]);
     STGTTrackerManagedDocument *document = [[STGTTrackerManagedDocument alloc] initWithFileURL:url];
     document.persistentStoreOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     [document persistentStoreTypeForFileType:NSSQLiteStoreType];
@@ -66,11 +68,16 @@
 }
 
 - (void)createNewDocumentWithcompletionHandler:(void (^)(BOOL success))completionHandler{
-    
+
 //    NSError *error;
 //    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-//    url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", self.uid, @"sqlite"]];
+//    url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", [(STGTSession *)self.session uid], @"sqlite"]];
 //    [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+
+    NSError *error;
+    NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", self.uid, @"sqlite"]];
+    [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
 
     [self documentWithUID:self.uid completionHandler:^(BOOL success) {
         if (success) {

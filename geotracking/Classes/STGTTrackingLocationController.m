@@ -539,10 +539,10 @@
             self.lastLocation = nil;
             [self.timer invalidate];
             if ([self.session isKindOfClass:[STGTSession class]]) {
-                NSError *error;
-                NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-                url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", [(STGTSession *)self.session uid], @"sqlite"]];
-                [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
+//                NSError *error;
+//                NSURL *url = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+//                url = [url URLByAppendingPathComponent:[NSString stringWithFormat:@"STGT%@.%@", [(STGTSession *)self.session uid], @"sqlite"]];
+//                [[NSFileManager defaultManager] removeItemAtURL:url error:&error];
 
                 [(STGTSession *)self.session createNewDocumentWithcompletionHandler:^(BOOL success) {
                     if (success) {

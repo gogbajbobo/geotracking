@@ -20,7 +20,7 @@
 //            path = [[NSBundle mainBundle] pathForResource:@"STGTTracker" ofType:@"mom"];
             path = [bundle pathForResource:@"STGTTracker" ofType:@"mom"];
         }
-        NSLog(@"path %@", path);
+//        NSLog(@"path %@", path);
         NSURL *url = [NSURL fileURLWithPath:path];
 //        NSLog(@"url %@", url);
         _myManagedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:url];

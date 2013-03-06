@@ -45,6 +45,7 @@
 - (void)testSession {
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"CurrentSessionChange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newSessionStart:) name:@"NewSessionStart" object:nil];
     
     [[STGTAuthBasic sharedOAuth] checkToken];
     
@@ -53,25 +54,49 @@
     NSUInteger count = [[[STGTSessionManager sharedManager] sessions] count];
     NSUInteger testCount = 1;
     STAssertEquals(count, testCount, @"Wrong count");
+    STAssertEquals([STGTSessionManager sharedManager].currentSessionUID, @"1", @"Wrong count");
     
     [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
     count = [[[STGTSessionManager sharedManager] sessions] count];
     testCount = 2;
     STAssertEquals(count, testCount, @"Wrong count");
-
-    [STGTSessionManager sharedManager].currentSessionUID = @"2";
-    
-    [STGTSessionManager sharedManager].currentSessionUID = @"3";
     STAssertEquals([STGTSessionManager sharedManager].currentSessionUID, @"2", @"Wrong count");
-    
-    [STGTSessionManager sharedManager].currentSessionUID = @"1";
+
+    [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+    count = [[[STGTSessionManager sharedManager] sessions] count];
+    testCount = 2;
+    STAssertEquals(count, testCount, @"Wrong count");
     STAssertEquals([STGTSessionManager sharedManager].currentSessionUID, @"1", @"Wrong count");
     
+    [STGTSessionManager sharedManager].currentSessionUID = @"3";
+    STAssertEquals([STGTSessionManager sharedManager].currentSessionUID, @"1", @"Wrong count");
+    
+    [STGTSessionManager sharedManager].currentSessionUID = @"2";
+    STAssertEquals([STGTSessionManager sharedManager].currentSessionUID, @"2", @"Wrong count");
+    
+    [[STGTSessionManager sharedManager] sessionCompletionFinished:[[[STGTSessionManager sharedManager] sessions] objectForKey:@"2"]];
+    
+    count = [[[STGTSessionManager sharedManager] sessions] count];
+    testCount = 1;
+    STAssertEquals(count, testCount, @"Wrong count");
+    STAssertNil([STGTSessionManager sharedManager].currentSessionUID, @"currentSessionUID not nil");
+
+    [[STGTSessionManager sharedManager] sessionCompletionFinished:[[[STGTSessionManager sharedManager] sessions] objectForKey:@"1"]];
+    count = [[[STGTSessionManager sharedManager] sessions] count];
+    testCount = 0;
+    STAssertEquals(count, testCount, @"Wrong count");
+
+//    sleep(10000);
     
 }
 
 - (void)currentSessionChange:(NSNotification *)notification {
+    STAssertNotNil(notification, @"notification is nil");
+}
+
+- (void)newSessionStart:(NSNotification *)notification {
     STAssertNotNil(notification.object, @"notification.object is nil");
 }
+
 
 @end

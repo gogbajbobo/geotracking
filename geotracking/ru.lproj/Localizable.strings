@@ -34,6 +34,8 @@
 "2TRACKS" = "трека";
 "5TRACKS" = "треков";
 
+"NO ACTIVE SESSION" = "Нет активной сессии";
+
 "NO CONNECTION" = "Нет соединения";
 "NO TOKEN" = "Нет токена";
 "SYNC FAIL" = "Сбой синхронизации";

@@ -44,7 +44,9 @@
     [self.reachability startNotifier];
 
     [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
-    
+
+//    [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+
     
     return YES;
 
