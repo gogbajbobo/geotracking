@@ -580,6 +580,9 @@
     self.locationManager = nil;
     self.locationManagerRunning = NO;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerStop" object:self];
+    if (![[(STGTSession *)self.session status] isEqualToString:@"running"]) {
+        [self.timer invalidate];
+    }
     NSLog(@"stopTrackingLocation");
 }
 

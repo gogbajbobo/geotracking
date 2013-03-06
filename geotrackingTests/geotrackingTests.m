@@ -122,6 +122,25 @@
     
 }
 
+- (void)testSessionStatus {
+    [[STGTAuthBasic sharedOAuth] checkToken];
+    
+    [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+    [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+    [[STGTSessionManager sharedManager] stopSessionForUID:@"1"];
+    
+    STGTSession *session1 = [[STGTSessionManager sharedManager].sessions objectForKey:@"1"];
+    STGTSession *session2 = [[STGTSessionManager sharedManager].sessions objectForKey:@"2"];
+    
+    STAssertEquals([session1 status], @"finishing", @"Wrong count");
+    STAssertEquals([session2 status], @"running", @"Wrong count");
+        
+    [[STGTSessionManager sharedManager] sessionCompletionFinished:session1];
+    STAssertEquals([session1 status], @"completed", @"Wrong count");
+
+}
+
+
 - (void)currentSessionChange:(NSNotification *)notification {
     STAssertNotNil(notification, @"notification is nil");
 }

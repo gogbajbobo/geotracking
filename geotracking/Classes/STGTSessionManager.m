@@ -32,7 +32,7 @@
         session.manager = self;
         [self.sessions setValue:session forKey:uid];
     } else {
-        if ([session.status isEqualToString:@"completed"]) {
+        if (![session.status isEqualToString:@"running"]) {
             [session.tracker trackerInit];
         }
     }
