@@ -19,6 +19,7 @@
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate;
 - (void)stopSessionForUID:(NSString *)uid;
 - (void)sessionCompletionFinished:(id)sender;
+- (void)cleanCompleteSessions;
 
 + (STGTSessionManager *)sharedManager;
 

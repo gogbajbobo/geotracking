@@ -67,7 +67,7 @@
     UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CLEAR DATABASE", @"") message:NSLocalizedString(@"OBJECT TO DELETE", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"ONLY TRACKS", @""), NSLocalizedString(@"ALL DATA", @""), nil];
     clearAlert.tag = 1;
     [clearAlert show];
-    [self changeSessionTest];
+//    [self changeSessionTest];
 }
 
 - (void)changeSessionTest {

@@ -47,7 +47,7 @@
     if ([[(STGTSession *)sender uid] isEqualToString:self.currentSessionUID]) {
         self.currentSessionUID = nil;
     }
-    [[self.sessions objectForKey:[(STGTSession *)sender uid]] setStatus:@"complete"];
+    [[self.sessions objectForKey:[(STGTSession *)sender uid]] setStatus:@"completed"];
 //    [self.sessions removeObjectForKey:[(STGTSession *)sender uid]];
 }
 
@@ -60,6 +60,13 @@
     }
 }
 
+- (void)cleanCompleteSessions {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.status == %@", @"completed"];
+    NSArray *completedSessions = [[self.sessions allValues] filteredArrayUsingPredicate:predicate];
+    for (STGTSession *session in completedSessions) {
+        [self.sessions removeObjectForKey:session.uid];
+    }
+}
 
 + (STGTSessionManager *)sharedManager {
     static dispatch_once_t pred = 0;
