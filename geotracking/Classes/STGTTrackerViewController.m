@@ -283,7 +283,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStart" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerStop" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"STGTTrackerAutoStartChanged" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"newSessionStart" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NewSessionStart" object:nil];
     [super viewDidUnload];
 }
 
