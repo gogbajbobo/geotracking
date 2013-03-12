@@ -17,7 +17,7 @@
 
 @interface STGTDataSyncController : NSObject
 
-@property (nonatomic, weak) id <STGTRequestAuthenticatable> authDelegate;
+@property (nonatomic, strong) id <STGTRequestAuthenticatable> authDelegate;
 //@property (nonatomic, strong) STGTTrackingLocationController *tracker;
 @property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSNumber *numberOfUnsynced;

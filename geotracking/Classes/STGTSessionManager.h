@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "STGTGeoTrackable.h"
+#import "STGTRequestAuthenticatable.h"
 #import "STGTSession.h"
 
 @interface STGTSessionManager : NSObject <STGTSessionManager, STGTSessionManagement>
@@ -16,7 +17,7 @@
 @property (nonatomic, strong) NSMutableDictionary *sessions;
 @property (nonatomic, strong) NSString *currentSessionUID;
 
-- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate;
+- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id <STGTRequestAuthenticatable>)authDelegate;
 - (void)stopSessionForUID:(NSString *)uid;
 - (void)sessionCompletionFinished:(id)sender;
 - (void)cleanCompleteSessions;

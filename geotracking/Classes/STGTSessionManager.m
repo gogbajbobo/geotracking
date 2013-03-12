@@ -25,7 +25,7 @@
     return [self.sessions objectForKey:self.currentSessionUID];
 }
 
-- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate {
+- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id <STGTRequestAuthenticatable>)authDelegate {
     STGTSession *session = [self.sessions objectForKey:uid];
     if (!session) {
         session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate];
