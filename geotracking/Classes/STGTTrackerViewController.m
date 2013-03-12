@@ -248,6 +248,7 @@
     [super viewDidLoad];
 
     self.startButton.enabled = NO;
+    self.summary.text = NSLocalizedString(@"NO ACTIVE SESSION", @"");
 
     if (self.session) {
         [self viewInit];
@@ -261,14 +262,14 @@
     self.title = NSLocalizedString(@"TRACKER", @"");
     self.trackerActivityView.alpha = 0.0;
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerBusy:) name:@"STGTTrackerBusy" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"NewSessionStart" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"CurrentSessionChange" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerBusy:) name:@"STGTTrackerBusy" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"NewSessionStart" object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"CurrentSessionChange" object:nil];
 
 }
 
@@ -307,6 +308,39 @@
     }
 }
 
+- (id) init {
+    self = [super init];
+    if (self != nil) {
+        [self customInit];
+    }
+    return self;
+}
 
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self != nil) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (id) initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self != nil) {
+        [self customInit];
+    }
+    return self;
+}
+
+- (void)customInit {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(syncStatusChanged:) name:@"STGTDataSyncing" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerReady:) name:@"STGTTrackerReady" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerBusy:) name:@"STGTTrackerBusy" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setStartButtonLabel:) name:@"STGTTrackerStop" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"NewSessionStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"CurrentSessionChange" object:nil];
+}
 
 @end
