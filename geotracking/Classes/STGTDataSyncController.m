@@ -276,7 +276,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
     if (!requestData) {
         [request setHTTPMethod:@"GET"];
-//        NSLog(@"GET");
+        NSLog(@"GET request %@", request);
     } else {
 //        NSLog(@"POST");
         [request setHTTPMethod:@"POST"];
@@ -374,8 +374,8 @@
 //            NSArray *entityNodes = [xmlDoc nodesForXPath:@"//ns:post" namespaces:namespaces error:nil];
             
             for (GDataXMLElement *entityNode in entityNodes) {
-                //        NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
-                //        NSLog(@"entityName %@", entityName);
+//NSString *entityName = [[[entityNode nodesForXPath:@"@name" error:nil] lastObject] stringValue];
+//NSLog(@"entityName %@", entityName);
                 NSArray *entityItems = [entityNode nodesForXPath:@"./ns:d" namespaces:namespaces error:nil];
                 
                 for (GDataXMLElement *entityItem in entityItems) {
@@ -383,15 +383,20 @@
 //                    NSLog(@"entityName %@", entityName);
                     NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
 //                    NSLog(@"entityXid.stringValue %@", entityXid);
+//                    NSLog(@"self.settings.xid %@", self.settings.xid);
                     
                     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
                     request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
-                    request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", entityXid];
+                    if ([entityName isEqualToString:@"STGTSettings"]) {
+                        request.predicate = nil;
+                    } else {
+                        request.predicate = [NSPredicate predicateWithFormat:@"SELF.xid == %@", entityXid];
+                    }
                     NSArray *result = [self.document.managedObjectContext executeFetchRequest:request error:&error];
                     
                     if ([result lastObject]) {
                         self.syncObject = [result lastObject];
-//                        NSLog(@"result lastObject");
+//                        NSLog(@"result lastObject %@", self.syncObject);
                     } else {
                         self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.document.managedObjectContext];
                         [self.syncObject setValue:entityXid forKey:@"xid"];
