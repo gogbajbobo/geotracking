@@ -56,6 +56,7 @@
 //}
 
 - (IBAction)syncButtonPressed:(id)sender {
+//    NSLog(@"_________________________________syncButtonPressed");
     [self.session.syncer fireTimer];
 }
 

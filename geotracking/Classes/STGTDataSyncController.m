@@ -68,6 +68,7 @@
 }
 
 - (NSNumber *)numberOfUnsynced {
+//    NSLog(@"fetchedObjects %@", self.resultsController.fetchedObjects);
     return [NSNumber numberWithInt:self.resultsController.fetchedObjects.count];
 }
 
@@ -382,7 +383,7 @@
                     NSString *entityName = [[[entityItem nodesForXPath:@"@name" error:nil] lastObject] stringValue];
 //                    NSLog(@"entityName %@", entityName);
                     NSString *entityXid = [[[entityItem nodesForXPath:@"./@xid" error:nil] lastObject] stringValue];
-//                    NSLog(@"entityXid.stringValue %@", entityXid);
+//                    NSLog(@"server.settings.xid %@", entityXid);
 //                    NSLog(@"self.settings.xid %@", self.settings.xid);
                     
                     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:entityName];
@@ -396,12 +397,12 @@
                     
                     if ([result lastObject]) {
                         self.syncObject = [result lastObject];
-//                        NSLog(@"result lastObject %@", self.syncObject);
+//                        NSLog(@"self.syncObject before %@", self.syncObject);
                     } else {
                         self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.document.managedObjectContext];
                         [self.syncObject setValue:entityXid forKey:@"xid"];
                         [self.syncObject setValue:[NSDate dateWithTimeIntervalSince1970:0] forKey:@"lts"];
-//                        NSLog(@"insertNewObjectForEntity");
+                        NSLog(@"insertNewObjectForEntity");
                     }
                     
                     if ([entityName isEqualToString:@"STGTSpot"]) {
@@ -442,7 +443,9 @@
                     NSString *timestamp = [[[entityItem nodesForXPath:@"./ns:date[@name='ts']" namespaces:namespaces error:nil] lastObject] stringValue];
                     
                     if (timestamp) {
-                        //                    NSLog(@"timestamp %@", timestamp);
+                        
+//                        NSLog(@"server.timestamp %@", timestamp);
+                        
                         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
                         [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
                         NSDate *serverDate = [dateFormatter dateFromString:timestamp];
@@ -452,7 +455,9 @@
                         //            NSLog(@"localDate %@", localDate);
                         
                         if ([localDate compare:serverDate] == NSOrderedAscending) {
+                            
 //                            NSLog(@"serverDate > localDate");
+                            
                             NSArray *entityItemProperties = [entityItem nodesForXPath:@"./ns:*" namespaces:namespaces error:nil];
                             for (GDataXMLElement *entityItemProperty in entityItemProperties) {
                                 //                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
@@ -484,7 +489,7 @@
                                 }
                                 
                             }
-                            [self.syncObject setValue:serverDate forKey:@"ts"];
+                            [self.syncObject setValue:[NSDate date] forKey:@"ts"];
                             
                         } else {
 //                            NSLog(@"serverDate <= localDate");
@@ -496,7 +501,7 @@
                     [self.syncObject setValue:[NSDate date] forKey:@"lts"];
                     
                     
-                    //            NSLog(@"self.syncObject %@", self.syncObject);
+//                    NSLog(@"self.syncObject after %@", self.syncObject);
                     
                 }
             }
@@ -508,15 +513,19 @@
                 }
 //                self.tracker.trackerStatus = @"";
                 self.syncing = NO;
-                if (self.resultsController.fetchedObjects.count > 0) {
-                    [self dataSyncing];
-                } else {
-//                    NSLog(@"connection currentRequest HTTPMethod %@", [[connection currentRequest] HTTPMethod]);
-                    if (![[[connection currentRequest] HTTPMethod] isEqualToString:@"GET"]) {
+                
+                if (![[[connection currentRequest] HTTPMethod] isEqualToString:@"GET"]) {
+                    if (self.resultsController.fetchedObjects.count > 0) {
+//                        NSLog(@"fetchedObjects.count > 0");
+                        [self dataSyncing];
+                    } else {
+//                        NSLog(@"fetchedObjects.count <= 0");
                         self.syncing = YES;
                         [self sendData:nil toServer:self.settings.syncServerURI];
                     }
+                    
                 }
+                
             }];
             
         }
