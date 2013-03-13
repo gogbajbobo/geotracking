@@ -147,6 +147,7 @@
 
 - (void)stopSyncer {
 //    NSLog(@"stopSyncer");
+    self.syncing = NO;
     [self.timer invalidate];
     self.timer = nil;
     self.resultsController = nil;
