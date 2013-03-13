@@ -84,11 +84,12 @@
         if (!settings) {
             settings = (STGTSettings *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSettings" inManagedObjectContext:self.document.managedObjectContext];
             [settings setValuesForKeysWithDictionary:[STGTSettingsController defaultSettings]];
-//            [settings setValue:[self newid] forKey:@"xid"];
             
-            [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                NSLog(@"settings create UIDocumentSaveForOverwriting success");
-            }];
+            NSLog(@"settings create from defaultSettings");
+            
+//            [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//                NSLog(@"settings create UIDocumentSaveForOverwriting success");
+//            }];
             
         } else {
             NSLog(@"settings load from locationsDatabase success");
