@@ -32,6 +32,7 @@
         session.manager = self;
         [self.sessions setValue:session forKey:uid];
     } else {
+        session.syncer.authDelegate = authDelegate;
         if (![session.status isEqualToString:@"running"]) {
             [session.tracker trackerInit];
         }
