@@ -276,7 +276,7 @@
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:requestURL];
     if (!requestData) {
         [request setHTTPMethod:@"GET"];
-        NSLog(@"GET request %@", request);
+//        NSLog(@"GET");
     } else {
 //        NSLog(@"POST");
         [request setHTTPMethod:@"POST"];
@@ -510,6 +510,12 @@
                 self.syncing = NO;
                 if (self.resultsController.fetchedObjects.count > 0) {
                     [self dataSyncing];
+                } else {
+//                    NSLog(@"connection currentRequest HTTPMethod %@", [[connection currentRequest] HTTPMethod]);
+                    if (![[[connection currentRequest] HTTPMethod] isEqualToString:@"GET"]) {
+                        self.syncing = YES;
+                        [self sendData:nil toServer:self.settings.syncServerURI];
+                    }
                 }
             }];
             
