@@ -16,6 +16,7 @@
 #define STGT_DESIRED_ACCURACY kCLLocationAccuracyNearestTenMeters
 #define STGT_REQUIRED_ACCURACY 10.0
 #define STGT_DISTANCE_FILTER 50.0
+#define STGT_TIME_FILTER 10.0
 #define STGT_TRACK_DETECTION_TIME 300.0
 #define STGT_TRACKER_AUTOSTART NO
 #define STGT_TRACKER_STARTTIME 9.0
@@ -50,6 +51,7 @@
     [settings setValue:[NSNumber numberWithDouble:STGT_DESIRED_ACCURACY] forKey:@"desiredAccuracy"];
     [settings setValue:[NSNumber numberWithDouble:STGT_REQUIRED_ACCURACY] forKey:@"requiredAccuracy"];
     [settings setValue:[NSNumber numberWithDouble:STGT_DISTANCE_FILTER] forKey:@"distanceFilter"];
+    [settings setValue:[NSNumber numberWithDouble:STGT_TIME_FILTER] forKey:@"timeFilter"];
     [settings setValue:[NSNumber numberWithDouble:STGT_TRACK_DETECTION_TIME] forKey:@"trackDetectionTime"];
     [settings setValue:[NSNumber numberWithBool:STGT_TRACKER_AUTOSTART] forKey:@"trackerAutoStart"];
     [settings setValue:[NSNumber numberWithDouble:STGT_TRACKER_STARTTIME] forKey:@"trackerStartTime"];

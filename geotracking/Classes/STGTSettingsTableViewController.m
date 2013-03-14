@@ -35,7 +35,7 @@
 - (NSArray *)settingsTitles {
     if (!_settingsTitles) {
         NSArray *generalSettingsTitles = [NSArray arrayWithObjects:@"localAccessToSettings", nil];
-        NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
+        NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"timeFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
         NSArray *syncerSettingsTitles = [NSArray arrayWithObjects:@"fetchLimit", @"syncInterval", @"syncServerURI", @"xmlNamespace", nil];
         NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", @"trackScale", nil];
         NSArray *authServiceSettingsTitles = [NSArray arrayWithObjects:@"tokenServerURL", @"authServiceURI", @"authServiceParameters", nil];
@@ -150,6 +150,7 @@
     
     NSDictionary *stepValue = [NSDictionary dictionaryWithObjectsAndKeys:
                                [NSNumber numberWithDouble:10], @"requiredAccuracy",
+                               [NSNumber numberWithDouble:5], @"timeFilter",
                                [NSNumber numberWithDouble:30], @"trackDetectionTime",
                                [NSNumber numberWithDouble:60], @"syncInterval",
                                [NSNumber numberWithDouble:10], @"fetchLimit",
@@ -233,6 +234,7 @@
         
         NSArray *slidersLabels = [NSArray arrayWithObjects: @"requiredAccuracy",
                                                             @"distanceFilter",
+                                                            @"timeFilter",
                                                             @"trackDetectionTime",
                                                             @"syncInterval",
                                                             @"fetchLimit",

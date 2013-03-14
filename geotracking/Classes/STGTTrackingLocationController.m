@@ -688,7 +688,10 @@
     NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
     self.currentAccuracy = newLocation.horizontalAccuracy;
     [self updateInfoLabels];
-    if (locationAge < 5.0 && newLocation.horizontalAccuracy > 0 && newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue]) {
+    if (locationAge < 5.0 &&
+        newLocation.horizontalAccuracy > 0 &&
+        newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue] &&
+        [newLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.timeFilter doubleValue]) {
 //        NSLog(@"addLocation");
         [self addLocation:newLocation];
     }
