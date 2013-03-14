@@ -55,10 +55,12 @@
 "SYNCER" = "Syncer";
 "AUTHSERVICE" = "AuthService";
 
+"uid" = "User: ID";
 "localAccessToSettings" = "localAccessToSettings";
 "desiredAccuracy" = "desiredAccuracy, m";
 "requiredAccuracy" = "requiredAccuracy, m";
 "distanceFilter" = "distanceFilter, m";
+"timeFilter" = "timeFilter, s";
 "trackDetectionTime" = "trackDetectionTime, s";
 "trackerAutoStart" = "trackerAutoStart";
 "trackerStartTime" = "trackerStartTime";

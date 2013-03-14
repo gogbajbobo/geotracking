@@ -55,10 +55,12 @@
 "SYNCER" = "Синхронизация";
 "AUTHSERVICE" = "Аутентификация";
 
+"uid" = "Пользователь: ID";
 "localAccessToSettings" = "локальный доступ";
 "desiredAccuracy" = "желаемая точность, м";
 "requiredAccuracy" = "требуемая точность, м";
 "distanceFilter" = "шаг слежения, м";
+"timeFilter" = "фильтр времени, с";
 "trackDetectionTime" = "время автоотсечки, с";
 "trackerAutoStart" = "автостарт";
 "trackerStartTime" = "время запуска";

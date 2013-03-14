@@ -338,6 +338,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.title = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"uid", @""), [[STGTSessionManager sharedManager] currentSessionUID]];
         
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
