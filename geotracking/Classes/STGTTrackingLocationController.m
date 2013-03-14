@@ -691,10 +691,11 @@
     [self updateInfoLabels];
     if (locationAge < 5.0 &&
         newLocation.horizontalAccuracy > 0 &&
-        newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue] &&
-        [newLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.timeFilter doubleValue]) {
-//        NSLog(@"addLocation");
-        [self addLocation:newLocation];
+        newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue]) {
+        if (!self.lastLocation || [newLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.timeFilter doubleValue]) {
+            //        NSLog(@"addLocation");
+            [self addLocation:newLocation];
+        }
     }
 
 }
