@@ -46,15 +46,15 @@
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:[document.fileURL path]]) {
         [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
-//            [document closeWithCompletionHandler:^(BOOL success) {
-//                [document openWithCompletionHandler:^(BOOL success) {
-            if (success) {
-                NSLog(@"document UIDocumentSaveForCreating success");
-                self.document = document;
-                completionHandler(YES);
-            }
-//                }];
-//            }];
+            [document closeWithCompletionHandler:^(BOOL success) {
+                [document openWithCompletionHandler:^(BOOL success) {
+                    if (success) {
+                        NSLog(@"document UIDocumentSaveForCreating success");
+                        self.document = document;
+                        completionHandler(YES);
+                    }
+                }];
+            }];
         }];
     } else if (document.documentState == UIDocumentStateClosed) {
         [document openWithCompletionHandler:^(BOOL success) {
