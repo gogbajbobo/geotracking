@@ -48,9 +48,11 @@
         [document saveToURL:document.fileURL forSaveOperation:UIDocumentSaveForCreating completionHandler:^(BOOL success) {
 //            [document closeWithCompletionHandler:^(BOOL success) {
 //                [document openWithCompletionHandler:^(BOOL success) {
-                    NSLog(@"document UIDocumentSaveForCreating success");
-                    self.document = document;
-                    completionHandler(YES);
+            if (success) {
+                NSLog(@"document UIDocumentSaveForCreating success");
+                self.document = document;
+                completionHandler(YES);
+            }
 //                }];
 //            }];
         }];
