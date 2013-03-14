@@ -95,6 +95,7 @@
             NSLog(@"settings load from locationsDatabase success");
         }
         [settings addObserver:self forKeyPath:@"distanceFilter" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"timeFilter" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"desiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"trackerAutoStart" options:NSKeyValueObservingOptionNew context:nil];
@@ -113,7 +114,7 @@
 //    NSLog(@"observeValueForKeyPath");
 //    NSLog(@"object %@", object);
 //    NSLog(@"change %@", change);
-    if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
+    if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"timeFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
         self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
         self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
         [self updateInfoLabels];
@@ -452,9 +453,9 @@
     
     self.summary.text = [NSString stringWithFormat:@"%@%@, %@%@ %@ /%@",[distanceNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.overallDistance]], NSLocalizedString(@"M", @""), [speedNumberFormatter stringFromNumber:[NSNumber numberWithDouble:self.averageSpeed]], NSLocalizedString(@"KM/H", @""), self.trackerStatus, numberOfNotSyncedItems];
     if (self.currentAccuracy > 0) {
-        self.currentValues.text = [NSString stringWithFormat:@"DA %@%@, RA %@%@, DF %@%@, CA %g%@", self.settings.desiredAccuracy, NSLocalizedString(@"M", @""), self.settings.requiredAccuracy, NSLocalizedString(@"M", @""), self.settings.distanceFilter, NSLocalizedString(@"M", @""), self.currentAccuracy, NSLocalizedString(@"M", @"")];
+        self.currentValues.text = [NSString stringWithFormat:@"TF %@%@, DF %@%@, RA %@%@, CA %g%@", self.settings.timeFilter, NSLocalizedString(@"S", @""), self.settings.distanceFilter, NSLocalizedString(@"M", @""), self.settings.requiredAccuracy, NSLocalizedString(@"M", @""), self.currentAccuracy, NSLocalizedString(@"M", @"")];
     } else {
-        self.currentValues.text = [NSString stringWithFormat:@"DA %@%@, RA %@%@, DF %@%@", self.settings.desiredAccuracy, NSLocalizedString(@"M", @""), self.settings.requiredAccuracy, NSLocalizedString(@"M", @""), self.settings.distanceFilter, NSLocalizedString(@"M", @"")];
+        self.currentValues.text = [NSString stringWithFormat:@"TF %@%@, DF %@%@, RA %@%@", self.settings.timeFilter, NSLocalizedString(@"S", @""), self.settings.distanceFilter, NSLocalizedString(@"M", @""), self.settings.requiredAccuracy, NSLocalizedString(@"M", @"")];
     }
 }
 
