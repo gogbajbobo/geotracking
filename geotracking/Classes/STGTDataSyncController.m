@@ -466,26 +466,30 @@
                                 NSString *name = [[[entityItemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
                                 NSString *value = entityItemProperty.stringValue;
                                 
-                                if ([type isEqualToString:@"string"]) {
-                                    [self.syncObject setValue:value forKey:name];
-                                } else if ([type isEqualToString:@"double"]) {
-                                    NSNumber *number = [[[NSNumberFormatter alloc] init] numberFromString:value];
-                                    [self.syncObject setValue:number forKey:name];
-                                } else if ([type isEqualToString:@"png"] && ![value isEqualToString:@"text too large"]) {
-                                    NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
-                                    NSString *dataString = [[value stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
-                                    //                        NSLog(@"dataString %@", dataString);
-                                    NSMutableData *data = [NSMutableData data];
-                                    int i;
-                                    for (i = 0; i+2 <= dataString.length; i+=2) {
-                                        NSRange range = NSMakeRange(i, 2);
-                                        NSString* hexString = [dataString substringWithRange:range];
-                                        NSScanner* scanner = [NSScanner scannerWithString:hexString];
-                                        unsigned int intValue;
-                                        [scanner scanHexInt:&intValue];
-                                        [data appendBytes:&intValue length:1];
+                                if ([[self.syncObject.entity.propertiesByName allKeys] containsObject:name]) {
+                                    
+                                    if ([type isEqualToString:@"string"]) {
+                                        [self.syncObject setValue:value forKey:name];
+                                    } else if ([type isEqualToString:@"double"]) {
+                                        NSNumber *number = [[[NSNumberFormatter alloc] init] numberFromString:value];
+                                        [self.syncObject setValue:number forKey:name];
+                                    } else if ([type isEqualToString:@"png"] && ![value isEqualToString:@"text too large"]) {
+                                        NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
+                                        NSString *dataString = [[value stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+                                        //                        NSLog(@"dataString %@", dataString);
+                                        NSMutableData *data = [NSMutableData data];
+                                        int i;
+                                        for (i = 0; i+2 <= dataString.length; i+=2) {
+                                            NSRange range = NSMakeRange(i, 2);
+                                            NSString* hexString = [dataString substringWithRange:range];
+                                            NSScanner* scanner = [NSScanner scannerWithString:hexString];
+                                            unsigned int intValue;
+                                            [scanner scanHexInt:&intValue];
+                                            [data appendBytes:&intValue length:1];
+                                        }
+                                        [self.syncObject setValue:data forKey:name];
                                     }
-                                    [self.syncObject setValue:data forKey:name];
+                                    
                                 }
                                 
                             }
