@@ -139,21 +139,26 @@
     [self fireTimer];
 }
 
+- (void) setAuthDelegate:(id<STGTRequestAuthenticatable>) newAuthDelegate {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tokenReceived" object: _authDelegate];
+    _authDelegate = newAuthDelegate;
+}
+
 - (void)startSyncer {
-//    NSLog(@"startSyncer");
+    //    NSLog(@"startSyncer");
     NSRunLoop *currentRunLoop = [NSRunLoop currentRunLoop];
     [currentRunLoop addTimer:self.timer forMode:NSDefaultRunLoopMode];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenReceived:) name:@"tokenReceived" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tokenReceived:) name:@"tokenReceived" object: self.authDelegate];
 }
 
 - (void)stopSyncer {
-//    NSLog(@"stopSyncer");
+    //    NSLog(@"stopSyncer");
     self.syncing = NO;
     [self.timer invalidate];
     self.timer = nil;
     self.resultsController = nil;
     self.settings = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tokenReceived" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"tokenReceived" object:self.authDelegate];
 }
 
 - (void)dataSyncing {
