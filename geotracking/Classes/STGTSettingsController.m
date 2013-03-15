@@ -28,7 +28,7 @@
 
 #define STGT_FETCH_LIMIT 20
 #define STGT_SYNC_INTERVAL 1800.0
-#define STGT_SYNC_SERVER_URI @"https://system.unact.ru/utils/proxy.php?_address=https://hqvsrv58.unact.ru/rc_unact_old/chest"
+#define STGT_SYNC_SERVER_URI @"https://oldcat.unact.ru/rc_unact_old/chest"
 #define STGT_XML_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 
 #define STGT_LOCAL_ACCESS_TO_SETTINGS YES
