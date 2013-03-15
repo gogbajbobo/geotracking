@@ -1,21 +1,4 @@
-<<<<<<< HEAD
-
-geotracking.xcodeproj/project.xcworkspace/xcuserdata/grimax.xcuserdatad/UserInterfaceState.xcuserstate
-
-geotracking.xcodeproj/xcuserdata/grimax.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
-
-geotracking.xcodeproj/project.xcworkspace/xcuserdata/grimax.xcuserdatad/WorkspaceSettings.xcsettings
-
-*.xcworkspacedata
-Pods/
-geotracking.xcworkspace/xcuserdata/grimax.xcuserdatad/UserInterfaceState.xcuserstate
-
-geotracking.xcworkspace/xcuserdata/grimax.xcuserdatad/WorkspaceSettings.xcsettings
-
-geotracking.xcworkspace/xcuserdata/grimax.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
-
 .DS_Store
-=======
 # Xcode
 build/*
 *.pbxuser
@@ -33,4 +16,3 @@ profile
 *.moved-aside
 /Pods
 Podfile.lock
->>>>>>> ignore
