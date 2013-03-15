@@ -476,7 +476,9 @@
                                     if ([type isEqualToString:@"string"]) {
                                         [self.syncObject setValue:value forKey:name];
                                     } else if ([type isEqualToString:@"double"]) {
-                                        NSNumber *number = [[[NSNumberFormatter alloc] init] numberFromString:value];
+                                        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                                        [numberFormatter setDecimalSeparator:@"."];
+                                        NSNumber *number = [numberFormatter numberFromString:value];
                                         [self.syncObject setValue:number forKey:name];
                                     } else if ([type isEqualToString:@"png"] && ![value isEqualToString:@"text too large"]) {
                                         NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
