@@ -183,14 +183,14 @@
     //    NSLog(@"self.resultsController.fetchedObjects %@", self.resultsController.fetchedObjects);
         
         if (fetchedData.count == 0) {
-            if ([[(STGTSession *)self.session status] isEqualToString:@"finishing"]) {
-                [self stopSyncer];
-                [[STGTSessionManager sharedManager] sessionCompletionFinished:self.session];
-            } else {
+//            if ([[(STGTSession *)self.session status] isEqualToString:@"finishing"]) {
+//                [self stopSyncer];
+//                [[STGTSessionManager sharedManager] sessionCompletionFinished:self.session];
+//            } else {
                 NSLog(@"No data to sync");
                 //        [self sendData:nil toServer:@"https://system.unact.ru/reflect/?--mirror"];
                 [self sendData:nil toServer:self.settings.syncServerURI];
-            }
+//            }
         } else {
 //        [self sendData:[self xmlFrom:fetchedData] toServer:@"https://system.unact.ru/reflect/?--mirror"];
             [self sendData:[self xmlFrom:fetchedData] toServer:self.settings.syncServerURI];
@@ -534,7 +534,15 @@
                         self.syncing = YES;
                         [self sendData:nil toServer:self.settings.syncServerURI];
                     }
-                    
+                } else {
+                    if ([[(STGTSession *)self.session status] isEqualToString:@"finishing"]) {
+                        if (self.resultsController.fetchedObjects.count == 0) {
+                            [self stopSyncer];
+                            [[STGTSessionManager sharedManager] sessionCompletionFinished:self.session];
+                        } else {
+                            [self dataSyncing];
+                        }
+                    }
                 }
                 
             }];
