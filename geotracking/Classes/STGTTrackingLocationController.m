@@ -885,34 +885,39 @@
     
 //    NSLog(@"controller didChangeObject");
     
-    if (type == NSFetchedResultsChangeDelete) {
-        
-//        NSLog(@"NSFetchedResultsChangeDelete");
-        
-        if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
+    if ([[(STGTSession *)self.session status] isEqualToString:@"running"]) {
+
+    
+        if (type == NSFetchedResultsChangeDelete) {
+            
+    //        NSLog(@"NSFetchedResultsChangeDelete");
+            
+            if ([self.tableView numberOfRowsInSection:indexPath.section] == 1) {
+                [self.tableView reloadData];
+            } else {
+                [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+                [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+                [self updateInfoLabels];            
+            }
+
+        } else if (type == NSFetchedResultsChangeInsert) {
+            
+    //        NSLog(@"NSFetchedResultsChangeInsert");
+
             [self.tableView reloadData];
-        } else {
-            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:YES];
+    //        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    //        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+
+        } else if (type == NSFetchedResultsChangeUpdate) {
+
+    //        NSLog(@"NSFetchedResultsChangeUpdate");
+
+            [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-            [self updateInfoLabels];            
+
         }
-
-    } else if (type == NSFetchedResultsChangeInsert) {
         
-//        NSLog(@"NSFetchedResultsChangeInsert");
-
-        [self.tableView reloadData];
-//        [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-
-    } else if (type == NSFetchedResultsChangeUpdate) {
-
-//        NSLog(@"NSFetchedResultsChangeUpdate");
-
-        [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
-
     }
 }
 
