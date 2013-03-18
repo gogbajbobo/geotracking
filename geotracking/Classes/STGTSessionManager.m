@@ -26,9 +26,13 @@
 }
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id <STGTRequestAuthenticatable>)authDelegate {
+    [self startSessionForUID:uid AuthDelegate:authDelegate settings:nil];
+}
+
+- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id <STGTRequestAuthenticatable>)authDelegate settings:(NSDictionary *)settings {
     STGTSession *session = [self.sessions objectForKey:uid];
     if (!session) {
-        session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate];
+        session = [[STGTSession alloc] initWithUID:uid AuthDelegate:authDelegate settings:settings];
         session.manager = self;
         [self.sessions setValue:session forKey:uid];
     } else {

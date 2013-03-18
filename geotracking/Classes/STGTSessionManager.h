@@ -18,6 +18,7 @@
 @property (nonatomic, strong) NSString *currentSessionUID;
 
 - (void)startSessionForUID:(NSString *)uid AuthDelegate:(id <STGTRequestAuthenticatable>)authDelegate;
+- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id <STGTRequestAuthenticatable>)authDelegate settings:(NSDictionary *)settings;
 - (void)stopSessionForUID:(NSString *)uid;
 - (void)sessionCompletionFinished:(id)sender;
 - (void)cleanCompleteSessions;

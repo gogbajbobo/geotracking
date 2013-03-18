@@ -75,15 +75,15 @@
 //    NSLog(@"changeSessionTest");
     dispatch_queue_t queue = dispatch_queue_create("queue", NULL);
     dispatch_async(queue, ^{
-        [NSThread sleepForTimeInterval:1];
+        [NSThread sleepForTimeInterval:5];
         dispatch_async(dispatch_get_main_queue(), ^{
             [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
             dispatch_async(queue, ^{
-                [NSThread sleepForTimeInterval:1];
+                [NSThread sleepForTimeInterval:5];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [[STGTSessionManager sharedManager] setCurrentSessionUID:nil];
                     dispatch_async(queue, ^{
-                        [NSThread sleepForTimeInterval:1];
+                        [NSThread sleepForTimeInterval:5];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [[STGTSessionManager sharedManager] setCurrentSessionUID:@"1"];
                         });
@@ -197,7 +197,7 @@
 
 - (void)viewInit {
     
-//    NSLog(@"viewInit");
+    NSLog(@"viewInit");
     self.session.tracker.tableView = self.tableView;
     self.session.tracker.summary = self.summary;
     self.session.tracker.currentValues = self.currentValues;
@@ -214,6 +214,7 @@
 }
 
 - (void)viewDeinit {
+    NSLog(@"viewDeinit");
     self.tableView.dataSource = nil;
     self.tableView.delegate = nil;
     self.summary.text = NSLocalizedString(@"NO ACTIVE SESSION", @"");

@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSString *status;
 
 - (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate;
+- (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate settings:(NSDictionary *)settings;
 - (void)completeSession;
 - (void)createNewDocumentWithcompletionHandler:(void (^)(BOOL success))completionHandler;
 

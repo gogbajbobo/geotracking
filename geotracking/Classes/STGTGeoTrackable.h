@@ -22,6 +22,7 @@
 @protocol STGTSessionManagement <NSObject>
 
 - (void)startSessionForUID:(NSString *) uid AuthDelegate:(id)authDelegate;
+- (void)startSessionForUID:(NSString *)uid AuthDelegate:(id)authDelegate settings:(NSDictionary *)settings;
 - (void)stopSessionForUID:(NSString *)uid;
 
 @end
@@ -29,7 +30,8 @@
 
 @protocol STGTSession <NSObject>
 
-- (void)initWithUID:(NSString *) uid AuthDelegate:(id)authDelegate;
+- (id)initWithUID:(NSString *) uid AuthDelegate:(id)authDelegate;
+- (id)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate settings:(NSDictionary *)settings;
 - (void) completeSession;
 
 @end

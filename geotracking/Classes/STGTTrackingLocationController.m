@@ -94,6 +94,15 @@
         } else {
             NSLog(@"settings load from locationsDatabase success");
         }
+        
+        if (self.startSettings) {
+            for (NSString *key in [settings.entity.propertiesByName allKeys]) {
+                if ([[self.startSettings allKeys] containsObject:key]) {
+                    [settings setValue:[self.startSettings objectForKey:key] forKey:key];
+                }
+            }
+        }
+        
         [settings addObserver:self forKeyPath:@"distanceFilter" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"timeFilter" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"desiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
