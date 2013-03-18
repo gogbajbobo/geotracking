@@ -41,7 +41,7 @@
     
 //    NSLog(@"[self changedValues] %@", [self changedValues]);
     
-    if (![[[self changedValues] allKeys] containsObject:@"lts"]) {
+    if (![[[self changedValues] allKeys] containsObject:@"lts"] && ![[[self changedValues] allKeys] containsObject:@"sts"]) {
 
         NSDate *ts = [NSDate date];
         

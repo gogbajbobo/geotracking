@@ -270,6 +270,7 @@
             }
         }
         [postNode addChild:dNode];
+        [object setValue:[NSDate date] forKey:@"sts"];
     }
     GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
 //        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
@@ -404,7 +405,7 @@
                         self.syncObject = [result lastObject];
 //                        NSLog(@"self.syncObject before %@", self.syncObject);
                         if ([[entityItem stringValue] isEqualToString:@"ok"]) {
-                            [self.syncObject setValue:[NSDate date] forKey:@"lts"];
+                            [self.syncObject setValue:[self.syncObject valueForKey:@"sts"] forKey:@"lts"];
                         }
                     } else {
                         self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.document.managedObjectContext];
