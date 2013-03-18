@@ -331,9 +331,9 @@
     [track setStartTime:ts];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
-//    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//        NSLog(@"newTrack UIDocumentSaveForOverwriting success");
-//    }];
+    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+        NSLog(@"newTrack UIDocumentSaveForOverwriting success");
+    }];
 }
 
 - (void)addLocation:(CLLocation *)currentLocation {

@@ -2,7 +2,7 @@
 //  STGTDatum.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 2/7/13.
+//  Created by Maxim Grigoriev on 3/18/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -16,5 +16,6 @@
 @dynamic sqts;
 @dynamic ts;
 @dynamic xid;
+@dynamic sts;
 
 @end
