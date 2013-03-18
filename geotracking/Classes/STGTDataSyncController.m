@@ -403,6 +403,9 @@
                     if ([result lastObject]) {
                         self.syncObject = [result lastObject];
 //                        NSLog(@"self.syncObject before %@", self.syncObject);
+                        if ([[entityItem stringValue] isEqualToString:@"ok"]) {
+                            [self.syncObject setValue:[NSDate date] forKey:@"lts"];
+                        }
                     } else {
                         self.syncObject = [NSEntityDescription insertNewObjectForEntityForName:entityName inManagedObjectContext:self.document.managedObjectContext];
                         [self.syncObject setValue:entityXid forKey:@"xid"];
@@ -445,71 +448,76 @@
                     }
                     
                     
-                    NSString *timestamp = [[[entityItem nodesForXPath:@"./ns:date[@name='ts']" namespaces:namespaces error:nil] lastObject] stringValue];
+//                    NSString *timestamp = [[[entityItem nodesForXPath:@"./ns:date[@name='ts']" namespaces:namespaces error:nil] lastObject] stringValue];
+//                    
+//                    if (timestamp) {
                     
-                    if (timestamp) {
-                        
 //                        NSLog(@"server.timestamp %@", timestamp);
                         
-                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
-                        NSDate *serverDate = [dateFormatter dateFromString:timestamp];
-                        NSDate *localDate = [self.syncObject valueForKey:@"lts"];
-                        
+//                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//                        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss Z"];
+//                        NSDate *serverDate = [dateFormatter dateFromString:timestamp];
+//                        NSDate *localDate = [self.syncObject valueForKey:@"lts"];
+                    NSDate *lts = [self.syncObject valueForKey:@"lts"];
+                    NSDate *ts = [self.syncObject valueForKey:@"ts"];
+                    
+//                    NSLog(@"lts %@, ts %@", lts, ts);
+                    
                         //            NSLog(@"serverDate %@", serverDate);
                         //            NSLog(@"localDate %@", localDate);
                         
-                        if ([localDate compare:serverDate] == NSOrderedAscending) {
+                    if (!lts || [lts compare:ts] == NSOrderedDescending) {
+                        
+//                        NSLog(@"lts > ts");
+                        
+                        NSArray *entityItemProperties = [entityItem nodesForXPath:@"./ns:*" namespaces:namespaces error:nil];
+                        for (GDataXMLElement *entityItemProperty in entityItemProperties) {
+                            //                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
                             
-//                            NSLog(@"serverDate > localDate");
+                            NSString *type = [entityItemProperty name];
+                            NSString *name = [[[entityItemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
+                            NSString *value = entityItemProperty.stringValue;
                             
-                            NSArray *entityItemProperties = [entityItem nodesForXPath:@"./ns:*" namespaces:namespaces error:nil];
-                            for (GDataXMLElement *entityItemProperty in entityItemProperties) {
-                                //                    NSLog(@"entityItemProperty %@", [entityItemProperty name]);
+                            if ([[self.syncObject.entity.propertiesByName allKeys] containsObject:name]) {
                                 
-                                NSString *type = [entityItemProperty name];
-                                NSString *name = [[[entityItemProperty nodesForXPath:@"./@name" error:nil] lastObject] stringValue];
-                                NSString *value = entityItemProperty.stringValue;
-                                
-                                if ([[self.syncObject.entity.propertiesByName allKeys] containsObject:name]) {
-                                    
-                                    if ([type isEqualToString:@"string"]) {
-                                        [self.syncObject setValue:value forKey:name];
-                                    } else if ([type isEqualToString:@"double"]) {
-                                        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
-                                        [numberFormatter setDecimalSeparator:@"."];
-                                        NSNumber *number = [numberFormatter numberFromString:value];
-                                        [self.syncObject setValue:number forKey:name];
-                                    } else if ([type isEqualToString:@"png"] && ![value isEqualToString:@"text too large"]) {
-                                        NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
-                                        NSString *dataString = [[value stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
-                                        //                        NSLog(@"dataString %@", dataString);
-                                        NSMutableData *data = [NSMutableData data];
-                                        int i;
-                                        for (i = 0; i+2 <= dataString.length; i+=2) {
-                                            NSRange range = NSMakeRange(i, 2);
-                                            NSString* hexString = [dataString substringWithRange:range];
-                                            NSScanner* scanner = [NSScanner scannerWithString:hexString];
-                                            unsigned int intValue;
-                                            [scanner scanHexInt:&intValue];
-                                            [data appendBytes:&intValue length:1];
-                                        }
-                                        [self.syncObject setValue:data forKey:name];
+                                if ([type isEqualToString:@"string"]) {
+                                    [self.syncObject setValue:value forKey:name];
+                                } else if ([type isEqualToString:@"double"]) {
+                                    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+                                    [numberFormatter setDecimalSeparator:@"."];
+                                    NSNumber *number = [numberFormatter numberFromString:value];
+                                    [self.syncObject setValue:number forKey:name];
+                                } else if ([type isEqualToString:@"png"] && ![value isEqualToString:@"text too large"]) {
+                                    NSCharacterSet *charsToRemove = [NSCharacterSet characterSetWithCharactersInString:@"< >"];
+                                    NSString *dataString = [[value stringByTrimmingCharactersInSet:charsToRemove] stringByReplacingOccurrencesOfString:@" " withString:@""];
+                                    //                        NSLog(@"dataString %@", dataString);
+                                    NSMutableData *data = [NSMutableData data];
+                                    int i;
+                                    for (i = 0; i+2 <= dataString.length; i+=2) {
+                                        NSRange range = NSMakeRange(i, 2);
+                                        NSString* hexString = [dataString substringWithRange:range];
+                                        NSScanner* scanner = [NSScanner scannerWithString:hexString];
+                                        unsigned int intValue;
+                                        [scanner scanHexInt:&intValue];
+                                        [data appendBytes:&intValue length:1];
                                     }
-                                    
+                                    [self.syncObject setValue:data forKey:name];
                                 }
                                 
                             }
-                            [self.syncObject setValue:[NSDate date] forKey:@"ts"];
                             
-                        } else {
-//                            NSLog(@"serverDate <= localDate");
                         }
+//                        [self.syncObject setValue:[NSDate date] forKey:@"ts"];
+                        [self.syncObject setValue:[NSDate date] forKey:@"lts"];
                         
+                    } else {
+//                        NSLog(@"lts <= ts");
                     }
                     
+//                    }
                     
-                    [self.syncObject setValue:[NSDate date] forKey:@"lts"];
+                    
+//                    [self.syncObject setValue:[NSDate date] forKey:@"lts"];
                     
                     
 //                    NSLog(@"self.syncObject after %@", self.syncObject);
