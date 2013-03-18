@@ -331,15 +331,15 @@
     [track setStartTime:ts];
 //    NSLog(@"newTrack %@", track);
     self.currentTrack = track;
-    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"newTrack UIDocumentSaveForOverwriting success");
-    }];
+//    [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
+//        NSLog(@"newTrack UIDocumentSaveForOverwriting success");
+//    }];
 }
 
 - (void)addLocation:(CLLocation *)currentLocation {
 
     NSDate *timestamp = currentLocation.timestamp;
-    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.trackDetectionTime doubleValue]) {
+    if ([currentLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.trackDetectionTime doubleValue] && self.currentTrack.locations.count != 0) {
         [self startNewTrack];
         if ([currentLocation distanceFromLocation:self.lastLocation] < (2 * [self.settings.distanceFilter doubleValue])) {
             NSDate *ts = [NSDate date];
@@ -836,7 +836,11 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == 0 && indexPath.row == 0) {
-        return UITableViewCellEditingStyleDelete;
+        if (self.currentTrack.locations.count != 0) {
+            return UITableViewCellEditingStyleDelete;
+        } else {
+            return UITableViewCellEditingStyleNone;
+        }
     } else {
         if (![self.settings.localAccessToSettings boolValue] && [tableView cellForRowAtIndexPath:indexPath].tag == 0) {
             return UITableViewCellEditingStyleNone;
@@ -850,7 +854,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
 
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        if (indexPath.section == 0 && indexPath.row == 0) {
+        if (indexPath.section == 0 && indexPath.row == 0 && self.currentTrack.locations.count != 0) {
             [self startNewTrack];
         } else {
             id <NSFetchedResultsSectionInfo> sectionInfo = [[self.resultsController sections] objectAtIndex:indexPath.section];
