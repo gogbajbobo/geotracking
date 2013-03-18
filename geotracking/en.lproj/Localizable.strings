@@ -17,6 +17,7 @@
 "WARNING" = "Warning";
 "OK" = "Ok";
 "STOP TRACKING FOR CLEAR" = "You should stop locations tracking for clear procedure";
+"WAIT FOR SYNCING COMPLETE" = "Wait for syncing complete";
 "CANT DELETE ALL DATA" = "You can not delete all data";
 "START" = "Start";
 "SETTINGS" = "Settings";

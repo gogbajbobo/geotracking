@@ -113,11 +113,14 @@
             [self.session.tracker clearLocations];
         } else if (buttonIndex == 2) {
             if ([self.session.tracker.settings.localAccessToSettings boolValue]) {
-                if (!self.session.tracker.locationManagerRunning) {
-                    [self.session.tracker clearAllData];
-                } else {
+                if (self.session.tracker.locationManagerRunning) {
                     UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"STOP TRACKING FOR CLEAR", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
                     [clearAlert show];
+                } else if (self.session.syncer.syncing) {
+                    UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"WAIT FOR SYNCING COMPLETE", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
+                    [clearAlert show];
+                } else {
+                    [self.session.tracker clearAllData];
                 }
             } else {
                 UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"CANT DELETE ALL DATA", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
