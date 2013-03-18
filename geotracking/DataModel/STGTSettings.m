@@ -2,7 +2,7 @@
 //  STGTSettings.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 3/14/13.
+//  Created by Maxim Grigoriev on 3/18/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -11,8 +11,6 @@
 
 @implementation STGTSettings
 
-@dynamic authServiceParameters;
-@dynamic authServiceURI;
 @dynamic desiredAccuracy;
 @dynamic distanceFilter;
 @dynamic fetchLimit;
@@ -22,13 +20,12 @@
 @dynamic requiredAccuracy;
 @dynamic syncInterval;
 @dynamic syncServerURI;
-@dynamic tokenServerURL;
+@dynamic timeFilter;
 @dynamic trackDetectionTime;
 @dynamic trackerAutoStart;
 @dynamic trackerFinishTime;
 @dynamic trackerStartTime;
 @dynamic trackScale;
 @dynamic xmlNamespace;
-@dynamic timeFilter;
 
 @end

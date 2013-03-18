@@ -9,9 +9,9 @@
 #import "STGTSettingsController.h"
 #import "STGTTrackingLocationController.h"
 
-#define STGT_TOKEN_SERVER_URL @"system.unact.ru"
-#define STGT_AUTH_SERVICE_URI @"https://system.unact.ru/asa"
-#define STGT_AUTH_SERVICE_PARAMETERS @"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"
+//#define STGT_TOKEN_SERVER_URL @"system.unact.ru"
+//#define STGT_AUTH_SERVICE_URI @"https://system.unact.ru/asa"
+//#define STGT_AUTH_SERVICE_PARAMETERS @"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"
 
 #define STGT_DESIRED_ACCURACY kCLLocationAccuracyNearestTenMeters
 #define STGT_REQUIRED_ACCURACY 10.0
@@ -44,9 +44,9 @@
 + (NSDictionary *)defaultSettings {
 
     NSMutableDictionary *settings = [NSMutableDictionary dictionary];
-    [settings setValue:STGT_TOKEN_SERVER_URL forKey:@"tokenServerURL"];
-    [settings setValue:STGT_AUTH_SERVICE_URI forKey:@"authServiceURI"];
-    [settings setValue:STGT_AUTH_SERVICE_PARAMETERS forKey:@"authServiceParameters"];
+//    [settings setValue:STGT_TOKEN_SERVER_URL forKey:@"tokenServerURL"];
+//    [settings setValue:STGT_AUTH_SERVICE_URI forKey:@"authServiceURI"];
+//    [settings setValue:STGT_AUTH_SERVICE_PARAMETERS forKey:@"authServiceParameters"];
     
     [settings setValue:[NSNumber numberWithDouble:STGT_DESIRED_ACCURACY] forKey:@"desiredAccuracy"];
     [settings setValue:[NSNumber numberWithDouble:STGT_REQUIRED_ACCURACY] forKey:@"requiredAccuracy"];

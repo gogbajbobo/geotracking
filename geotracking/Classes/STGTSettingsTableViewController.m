@@ -38,15 +38,14 @@
         NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"timeFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
         NSArray *syncerSettingsTitles = [NSArray arrayWithObjects:@"fetchLimit", @"syncInterval", @"syncServerURI", @"xmlNamespace", nil];
         NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", @"trackScale", nil];
-        NSArray *authServiceSettingsTitles = [NSArray arrayWithObjects:@"tokenServerURL", @"authServiceURI", @"authServiceParameters", nil];
-        _settingsTitles = [NSArray arrayWithObjects:generalSettingsTitles, trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, authServiceSettingsTitles, nil];
+        _settingsTitles = [NSArray arrayWithObjects:generalSettingsTitles, trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, nil];
 //        NSLog(@"_settingsTitles %@", _settingsTitles);
     }
     return _settingsTitles;
 }
 
 - (NSArray *)sectionsTitles {
-    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", @"AUTHSERVICE", nil];
+    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", nil];
 }
 
 - (void)setupCells {
@@ -283,10 +282,7 @@
             segmentedControl.selectedSegmentIndex = [[self.settings valueForKey:keyPath] integerValue];
 
         } else if ([keyPath isEqualToString:@"syncServerURI"] ||
-                   [keyPath isEqualToString:@"xmlNamespace"] ||
-                   [keyPath isEqualToString:@"tockenServerURL"] ||
-                   [keyPath isEqualToString:@"authServiceURI"] ||
-                   [keyPath isEqualToString:@"authServiceParameters"]) {
+                   [keyPath isEqualToString:@"xmlNamespace"]) {
             UITextField *textField = (UITextField *)[cell.contentView viewWithTag:6];
             textField.text = [self.settings valueForKey:keyPath];
         }
