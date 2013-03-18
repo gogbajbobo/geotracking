@@ -72,9 +72,6 @@
 "mapHeading" = "компас";
 "mapType" = "вид";
 "trackScale" = "масштаб треков";
-"tokenServerURL" = "tokenServerURL";
-"authServiceURI" = "authServiceURI";
-"authServiceParameters" = "authServiceParameters";
 
 "SPOT" = "Метка";
 "SPOT INFO" = "Информация:";

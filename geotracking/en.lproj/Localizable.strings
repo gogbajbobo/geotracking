@@ -72,9 +72,6 @@
 "mapHeading" = "mapHeading";
 "mapType" = "mapType";
 "trackScale" = "trackScale";
-"tokenServerURL" = "tokenServerURL";
-"authServiceURI" = "authServiceURI";
-"authServiceParameters" = "authServiceParameters";
 
 "SPOT" = "Spot";
 "SPOT INFO" = "Spot info:";
