@@ -11,6 +11,10 @@
 @implementation STGTSession
 
 - (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate {
+    return [self initWithUID:uid AuthDelegate:authDelegate settings:nil];
+}
+
+- (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate settings:(NSDictionary *)settings {
     STGTSession *session = [[STGTSession alloc] init];
     session.uid = uid;
     [session documentWithUID:uid completionHandler:^(BOOL success) {
@@ -20,13 +24,14 @@
             session.syncer.document = session.document;
             session.tracker.document = session.document;
             session.tracker.session = session;
+            session.tracker.startSettings = settings;
             session.syncer.session = session;
             session.syncer.authDelegate = authDelegate;
             [session.tracker trackerInit];
-//            NSLog(@"session1 %@", session);
+            //            NSLog(@"session1 %@", session);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NewSessionStart" object:session];
         } else {
-//            NSLog(@"not success");
+            //            NSLog(@"not success");
         }
     }];
     return session;

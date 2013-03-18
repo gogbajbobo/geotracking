@@ -31,7 +31,8 @@
     self.reachability.reachableOnWWAN = YES;
     [self.reachability startNotifier];
 
-    [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth]];
+    NSDictionary *startSettings = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:120.0], @"timeFilter", nil];
+    [[STGTSessionManager sharedManager] startSessionForUID:@"1" AuthDelegate:[STGTAuthBasic sharedOAuth] settings:startSettings];
     
     return YES;
 

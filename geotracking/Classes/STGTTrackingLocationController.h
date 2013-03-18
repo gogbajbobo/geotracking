@@ -33,6 +33,7 @@
 //@property (nonatomic, strong) UIManagedDocument *locationsDatabase;
 //@property (nonatomic) BOOL syncing;
 @property (nonatomic, strong) NSString *trackerStatus;
+@property (nonatomic, strong) NSDictionary *startSettings;
 @property (nonatomic, strong) STGTSettings *settings;
 @property (nonatomic, strong) id <STGTSession> session;
 @property (nonatomic, strong) STGTTrackerManagedDocument *document;
