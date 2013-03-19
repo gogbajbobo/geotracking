@@ -26,4 +26,7 @@
 - (void)completeSession;
 - (void)createNewDocumentWithcompletionHandler:(void (^)(BOOL success))completionHandler;
 
+- (void)startBatteryChecking;
+- (void)stopBatteryChecking;
+
 @end

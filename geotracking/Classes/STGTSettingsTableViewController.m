@@ -38,14 +38,15 @@
         NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"timeFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
         NSArray *syncerSettingsTitles = [NSArray arrayWithObjects:@"fetchLimit", @"syncInterval", @"syncServerURI", @"xmlNamespace", nil];
         NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", @"trackScale", nil];
-        _settingsTitles = [NSArray arrayWithObjects:generalSettingsTitles, trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, nil];
+        NSArray *batterySettingsTitles = [NSArray arrayWithObjects:@"batteryCheckingInterval", nil];
+        _settingsTitles = [NSArray arrayWithObjects:generalSettingsTitles, trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, batterySettingsTitles, nil];
 //        NSLog(@"_settingsTitles %@", _settingsTitles);
     }
     return _settingsTitles;
 }
 
 - (NSArray *)sectionsTitles {
-    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", nil];
+    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", @"BATTERY", nil];
 }
 
 - (void)setupCells {
@@ -155,7 +156,8 @@
                                [NSNumber numberWithDouble:10], @"fetchLimit",
                                [NSNumber numberWithDouble:0.5], @"trackerStartTime",
                                [NSNumber numberWithDouble:0.5], @"trackerFinishTime",
-                               [NSNumber numberWithDouble:0.5], @"trackScale", nil];
+                               [NSNumber numberWithDouble:0.5], @"trackScale",
+                               [NSNumber numberWithDouble:60], @"batteryCheckingInterval", nil];
     
     if ([settingName isEqualToString:@"desiredAccuracy"]) {
         NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
@@ -237,7 +239,8 @@
                                                             @"trackDetectionTime",
                                                             @"syncInterval",
                                                             @"fetchLimit",
-                                                            @"trackScale", nil];
+                                                            @"trackScale",
+                                                            @"batteryCheckingInterval", nil];
         if ([slidersLabels containsObject:keyPath]) {
             UILabel *valueLabel = (UILabel *)[cell.contentView viewWithTag:2];
             valueLabel.text = [NSString stringWithFormat:@"%@", [self.settings valueForKey:keyPath]];

@@ -8,6 +8,12 @@
 
 #import "STGTSession.h"
 
+@interface STGTSession()
+
+@property (nonatomic, strong) NSTimer *batteryTimer;
+
+@end
+
 @implementation STGTSession
 
 - (STGTSession *)initWithUID:(NSString *)uid AuthDelegate:(id)authDelegate {
@@ -95,5 +101,21 @@
         }
     }];
 }
+
+- (void)startBatteryChecking {
+    
+}
+
+- (void)stopBatteryChecking {
+    
+}
+
+- (NSTimer *)batteryTimer {
+    if (!_batteryTimer) {
+        _batteryTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.tracker.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:NO];;
+    }
+    return _batteryTimer;
+}
+
 
 @end

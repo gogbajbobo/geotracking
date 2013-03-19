@@ -31,6 +31,8 @@
 #define STGT_SYNC_SERVER_URI @"https://oldcat.unact.ru/rc_unact_old/chest"
 #define STGT_XML_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 
+#define STGT_BATTERY_CHECKING_INTERVAL 300.0
+
 #define STGT_LOCAL_ACCESS_TO_SETTINGS YES
 
 
@@ -67,7 +69,9 @@
     [settings setValue:STGT_XML_NAMESPACE forKey:@"xmlNamespace"];
     
     [settings setValue:[NSNumber numberWithBool:STGT_LOCAL_ACCESS_TO_SETTINGS] forKey:@"localAccessToSettings"];
-    
+
+    [settings setValue:[NSNumber numberWithBool:STGT_BATTERY_CHECKING_INTERVAL] forKey:@"batteryCheckingInterval"];
+
     return [settings copy];
 }
 

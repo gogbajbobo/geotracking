@@ -55,6 +55,7 @@
 "GENERAL" = "Общие настройки";
 "SYNCER" = "Синхронизация";
 "AUTHSERVICE" = "Аутентификация";
+"BATTERY" = "Батарея";
 
 "uid" = "Пользователь: ID";
 "localAccessToSettings" = "локальный доступ";
@@ -73,6 +74,7 @@
 "mapHeading" = "компас";
 "mapType" = "вид";
 "trackScale" = "масштаб треков";
+"batteryCheckingInterval" = "интервал проверки, с";
 
 "SPOT" = "Метка";
 "SPOT INFO" = "Информация:";
