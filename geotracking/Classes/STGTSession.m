@@ -36,12 +36,22 @@
             [session.tracker trackerInit];
             //            NSLog(@"session1 %@", session);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NewSessionStart" object:session];
+//            [session testBatteryStatus];
         } else {
             //            NSLog(@"not success");
         }
     }];
     return session;
 }
+
+//- (void)testBatteryStatus {
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTBatteryStatus"];
+//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)]];
+//    NSError *error;
+//    NSArray *result = [self.document.managedObjectContext executeFetchRequest:request error:&error];
+//    NSLog(@"result %@", result);
+//
+//}
 
 - (void)completeSession {
     [self.tracker stopTrackingLocation];

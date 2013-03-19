@@ -74,7 +74,7 @@
 "mapHeading" = "компас";
 "mapType" = "вид";
 "trackScale" = "масштаб треков";
-"batteryCheckingInterval" = "интервал проверки, с";
+"checkingBattery" = "следить за батареей";
 
 "SPOT" = "Метка";
 "SPOT INFO" = "Информация:";

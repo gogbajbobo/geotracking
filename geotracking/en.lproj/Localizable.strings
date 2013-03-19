@@ -74,7 +74,7 @@
 "mapHeading" = "mapHeading";
 "mapType" = "mapType";
 "trackScale" = "trackScale";
-"batteryCheckingInterval" = "checkingInterval, s";
+"checkingBattery" = "checkingBattery";
 
 "SPOT" = "Spot";
 "SPOT INFO" = "Spot info:";
