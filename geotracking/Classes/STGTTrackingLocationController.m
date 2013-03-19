@@ -109,6 +109,8 @@
         [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"trackerAutoStart" options:NSKeyValueObservingOptionNew context:nil];
         [settings addObserver:self forKeyPath:@"localAccessToSettings" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"checkingBattery" options:NSKeyValueObservingOptionNew context:nil];
+
 
 //        NSLog(@"settings.xid %@", settings.xid);
 //        NSLog(@"settings.lts %@", settings.lts);
@@ -120,9 +122,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-//    NSLog(@"observeValueForKeyPath");
-//    NSLog(@"object %@", object);
-//    NSLog(@"change %@", change);
+
     if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"timeFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
         self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
         self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
@@ -131,26 +131,17 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAutoStartChanged" object:self];
     } else if ([keyPath isEqualToString:@"localAccessToSettings"]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAccessToSettingsChanged" object:self];
+    } else if ([keyPath isEqualToString:@"checkingBattery"]) {
+        if ([self.settings.checkingBattery boolValue]) {
+            [(STGTSession *)self.session startBatteryChecking];
+        } else {
+            [(STGTSession *)self.session stopBatteryChecking];
+        }
+
     }
     
-//    [self.locationsDatabase saveToURL:self.locationsDatabase.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-//        NSLog(@"observeValueForKeyPath change: UIDocumentSaveForOverwriting success");
-//    }];
-    
-    
-//    NSTimer *timer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:10 target:self selector:@selector(timerTest) userInfo:nil repeats:NO];
-////    NSLog(@"[timer isValid] %d", [timer isValid]);
-//    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-////    NSLog(@"[timer isValid] %d", [timer isValid]);
-//    [timer invalidate];
-////    NSLog(@"[timer isValid] %d", [timer isValid]);
-////    NSLog(@"[self.timer isValid] %d", [self.timer isValid]);
 
 }
-
-//- (void)timerTest {
-////    NSLog(@"test");
-//}
 
 - (NSFetchedResultsController *)resultsController {
     if (!_resultsController) {

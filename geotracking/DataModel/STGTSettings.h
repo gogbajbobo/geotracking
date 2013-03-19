@@ -13,6 +13,7 @@
 
 @interface STGTSettings : STGTDatum
 
+@property (nonatomic, retain) NSNumber * checkingBattery;
 @property (nonatomic, retain) NSNumber * desiredAccuracy;
 @property (nonatomic, retain) NSNumber * distanceFilter;
 @property (nonatomic, retain) NSNumber * fetchLimit;
@@ -29,6 +30,5 @@
 @property (nonatomic, retain) NSNumber * trackerStartTime;
 @property (nonatomic, retain) NSNumber * trackScale;
 @property (nonatomic, retain) NSString * xmlNamespace;
-@property (nonatomic, retain) NSNumber * batteryCheckingInterval;
 
 @end

@@ -11,6 +11,7 @@
 
 @implementation STGTSettings
 
+@dynamic checkingBattery;
 @dynamic desiredAccuracy;
 @dynamic distanceFilter;
 @dynamic fetchLimit;
@@ -27,6 +28,5 @@
 @dynamic trackerStartTime;
 @dynamic trackScale;
 @dynamic xmlNamespace;
-@dynamic batteryCheckingInterval;
 
 @end

@@ -200,7 +200,7 @@
 
 - (void)viewInit {
     
-    NSLog(@"viewInit");
+//    NSLog(@"viewInit");
     self.session.tracker.tableView = self.tableView;
     self.session.tracker.summary = self.summary;
     self.session.tracker.currentValues = self.currentValues;
@@ -217,7 +217,7 @@
 }
 
 - (void)viewDeinit {
-    NSLog(@"viewDeinit");
+//    NSLog(@"viewDeinit");
     self.tableView.dataSource = nil;
     self.tableView.delegate = nil;
     self.summary.text = NSLocalizedString(@"NO ACTIVE SESSION", @"");

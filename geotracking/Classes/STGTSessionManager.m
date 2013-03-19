@@ -38,6 +38,7 @@
     } else {
         session.syncer.authDelegate = authDelegate;
         if (![session.status isEqualToString:@"running"]) {
+            [session startBatteryChecking];
             [session.tracker trackerInit];
         }
     }
@@ -48,14 +49,14 @@
 - (void)stopSessionForUID:(NSString *)uid {
     STGTSession *session = [self.sessions objectForKey:uid];
     session.status = @"finishing";
+    [session stopBatteryChecking];
     [session completeSession];
-    self.currentSessionUID = nil;
+    if ([uid isEqualToString:self.currentSessionUID]) {
+        self.currentSessionUID = nil;
+    }
 }
 
 - (void)sessionCompletionFinished:(id)sender {
-    if ([[(STGTSession *)sender uid] isEqualToString:self.currentSessionUID]) {
-        self.currentSessionUID = nil;
-    }
     [[self.sessions objectForKey:[(STGTSession *)sender uid]] setStatus:@"completed"];
 //    [self.sessions removeObjectForKey:[(STGTSession *)sender uid]];
 }

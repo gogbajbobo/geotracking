@@ -7,10 +7,9 @@
 //
 
 #import "STGTSession.h"
+#import "STGTBatteryStatus.h"
 
 @interface STGTSession()
-
-@property (nonatomic, strong) NSTimer *batteryTimer;
 
 @end
 
@@ -33,6 +32,7 @@
             session.tracker.startSettings = settings;
             session.syncer.session = session;
             session.syncer.authDelegate = authDelegate;
+            [session startBatteryChecking];
             [session.tracker trackerInit];
             //            NSLog(@"session1 %@", session);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NewSessionStart" object:session];
@@ -103,19 +103,47 @@
 }
 
 - (void)startBatteryChecking {
-    
+    if ([self.tracker.settings.checkingBattery boolValue]) {
+        NSLog(@"startBatteryChecking");
+        [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:@"UIDeviceBatteryLevelDidChangeNotification" object:[UIDevice currentDevice]];
+        [self getBatteryStatus];
+    }
 }
 
 - (void)stopBatteryChecking {
-    
+    NSLog(@"stopBatteryChecking");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryLevelDidChangeNotification" object:[UIDevice currentDevice]];
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:NO];
 }
 
-- (NSTimer *)batteryTimer {
-    if (!_batteryTimer) {
-        _batteryTimer = [[NSTimer alloc] initWithFireDate:[NSDate date] interval:[self.tracker.settings.syncInterval doubleValue] target:self selector:@selector(onTimerTick:) userInfo:nil repeats:NO];;
+
+- (void)batteryChanged:(NSNotification *)notification {
+    [self getBatteryStatus];
+}
+
+- (void)getBatteryStatus {
+    STGTBatteryStatus *batteryStatus = (STGTBatteryStatus *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTBatteryStatus" inManagedObjectContext:self.document.managedObjectContext];
+    batteryStatus.batteryLevel = [NSNumber numberWithDouble:[UIDevice currentDevice].batteryLevel];
+    NSString *batteryState;
+    switch ([UIDevice currentDevice].batteryState) {
+        case UIDeviceBatteryStateUnknown:
+            batteryState = @"Unknown";
+            break;
+        case UIDeviceBatteryStateUnplugged:
+            batteryState = @"Unplugged";
+            break;
+        case UIDeviceBatteryStateCharging:
+            batteryState = @"Charging";
+            break;
+        case UIDeviceBatteryStateFull:
+            batteryState = @"Full";
+            break;
     }
-    return _batteryTimer;
+    batteryStatus.batteryState = batteryState;
+//    NSLog(@"batteryStatus %@", batteryStatus);
 }
-
 
 @end
