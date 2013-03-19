@@ -7,6 +7,11 @@
 //
 
 #import "STGTSession.h"
+#import "STGTBatteryStatus.h"
+
+@interface STGTSession()
+
+@end
 
 @implementation STGTSession
 
@@ -27,15 +32,26 @@
             session.tracker.startSettings = settings;
             session.syncer.session = session;
             session.syncer.authDelegate = authDelegate;
+            [session startBatteryChecking];
             [session.tracker trackerInit];
             //            NSLog(@"session1 %@", session);
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NewSessionStart" object:session];
+//            [session testBatteryStatus];
         } else {
             //            NSLog(@"not success");
         }
     }];
     return session;
 }
+
+//- (void)testBatteryStatus {
+//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTBatteryStatus"];
+//    request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"ts" ascending:YES selector:@selector(compare:)]];
+//    NSError *error;
+//    NSArray *result = [self.document.managedObjectContext executeFetchRequest:request error:&error];
+//    NSLog(@"result %@", result);
+//
+//}
 
 - (void)completeSession {
     [self.tracker stopTrackingLocation];
@@ -94,6 +110,50 @@
             completionHandler(YES);
         }
     }];
+}
+
+- (void)startBatteryChecking {
+    if ([self.tracker.settings.checkingBattery boolValue]) {
+        NSLog(@"startBatteryChecking");
+        [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(batteryChanged:) name:@"UIDeviceBatteryLevelDidChangeNotification" object:[UIDevice currentDevice]];
+        [self getBatteryStatus];
+    }
+}
+
+- (void)stopBatteryChecking {
+    NSLog(@"stopBatteryChecking");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryLevelDidChangeNotification" object:[UIDevice currentDevice]];
+    [[UIDevice currentDevice] setBatteryMonitoringEnabled:NO];
+}
+
+
+- (void)batteryChanged:(NSNotification *)notification {
+    [self getBatteryStatus];
+}
+
+- (void)getBatteryStatus {
+    STGTBatteryStatus *batteryStatus = (STGTBatteryStatus *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTBatteryStatus" inManagedObjectContext:self.document.managedObjectContext];
+    batteryStatus.batteryLevel = [NSNumber numberWithDouble:[UIDevice currentDevice].batteryLevel];
+    NSString *batteryState;
+    switch ([UIDevice currentDevice].batteryState) {
+        case UIDeviceBatteryStateUnknown:
+            batteryState = @"Unknown";
+            break;
+        case UIDeviceBatteryStateUnplugged:
+            batteryState = @"Unplugged";
+            break;
+        case UIDeviceBatteryStateCharging:
+            batteryState = @"Charging";
+            break;
+        case UIDeviceBatteryStateFull:
+            batteryState = @"Full";
+            break;
+    }
+    batteryStatus.batteryState = batteryState;
+//    NSLog(@"batteryStatus %@", batteryStatus);
 }
 
 @end

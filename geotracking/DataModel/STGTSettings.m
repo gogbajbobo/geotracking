@@ -2,7 +2,7 @@
 //  STGTSettings.m
 //  geotracking
 //
-//  Created by Maxim Grigoriev on 3/18/13.
+//  Created by Maxim Grigoriev on 3/19/13.
 //  Copyright (c) 2013 Maxim V. Grigoriev. All rights reserved.
 //
 
@@ -11,6 +11,7 @@
 
 @implementation STGTSettings
 
+@dynamic checkingBattery;
 @dynamic desiredAccuracy;
 @dynamic distanceFilter;
 @dynamic fetchLimit;

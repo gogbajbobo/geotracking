@@ -38,14 +38,15 @@
         NSArray *trackerSettingsTitles = [NSArray arrayWithObjects:@"desiredAccuracy", @"requiredAccuracy", @"distanceFilter", @"timeFilter", @"trackDetectionTime", @"trackerAutoStart", @"trackerStartTime", @"trackerFinishTime", nil];
         NSArray *syncerSettingsTitles = [NSArray arrayWithObjects:@"fetchLimit", @"syncInterval", @"syncServerURI", @"xmlNamespace", nil];
         NSArray *mapViewSettingsTitles = [NSArray arrayWithObjects:@"mapHeading", @"mapType", @"trackScale", nil];
-        _settingsTitles = [NSArray arrayWithObjects:generalSettingsTitles, trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, nil];
+        NSArray *batterySettingsTitles = [NSArray arrayWithObjects:@"checkingBattery", nil];
+        _settingsTitles = [NSArray arrayWithObjects:generalSettingsTitles, trackerSettingsTitles, syncerSettingsTitles, mapViewSettingsTitles, batterySettingsTitles, nil];
 //        NSLog(@"_settingsTitles %@", _settingsTitles);
     }
     return _settingsTitles;
 }
 
 - (NSArray *)sectionsTitles {
-    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", nil];
+    return [NSArray arrayWithObjects:@"GENERAL", @"TRACKER", @"SYNCER", @"MAP", @"BATTERY", nil];
 }
 
 - (void)setupCells {
@@ -75,6 +76,7 @@
             
             UISlider *slider = (UISlider *)[cell.contentView viewWithTag:3];
             [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+//            [slider addTarget:self action:@selector(sliderValueChangedFinished:) forControlEvents:UIControlEventTouchUpInside];
             double numericValue = [[self.settings valueForKey:settingName] doubleValue];
             if ([settingName isEqualToString:@"desiredAccuracy"]) {
                 NSArray *accuracyArray = [NSArray arrayWithObjects: [NSNumber numberWithDouble:kCLLocationAccuracyBestForNavigation],
@@ -141,6 +143,18 @@
     
 }
 
+//- (void)sliderValueChangedFinished:(UISlider *)sender {
+////    NSLog(@"UIControlEventTouchUpInside");
+//    
+//    NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)sender.superview.superview];
+//    NSString *settingName = [[self.settingsTitles objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+//
+//    if ([settingName isEqualToString:@"batteryCheckingInterval"]) {
+//        [self.settings setValue:[NSNumber numberWithDouble:sender.value] forKey:settingName];
+////        NSLog(@"slider %f, settings %@", sender.value, [self.settings valueForKey:settingName]);
+//    }
+//
+//}
 
 - (void)sliderValueChanged:(UISlider *)sender {
     
@@ -169,6 +183,10 @@
     } else if ([settingName isEqualToString:@"distanceFilter"]) {
         [sender setValue:floor(sender.value/10)*10];
         self.settings.distanceFilter = [NSNumber numberWithDouble:sender.value];
+//    } else if ([settingName isEqualToString:@"batteryCheckingInterval"]) {
+//        [sender setValue:rint(sender.value/60)*60];
+//        UILabel *valueLabel = (UILabel *)[[(UITableViewCell *)sender.superview.superview contentView] viewWithTag:2];
+//        valueLabel.text = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:sender.value]];
     } else {
         double step = [[stepValue objectForKey:settingName] doubleValue];
         [sender setValue:rint(sender.value/step)*step];
@@ -182,6 +200,7 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)sender.superview.superview];
     NSString *settingName = [[self.settingsTitles objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     [self.settings setValue:[NSNumber numberWithBool:sender.on] forKey:settingName];
+//    NSLog(@"switch %@", [self.settings valueForKey:settingName]);
     
 }
 
@@ -270,11 +289,14 @@
             
         } else if ([keyPath isEqualToString:@"mapHeading"] ||
                    [keyPath isEqualToString:@"trackerAutoStart"] ||
-                   [keyPath isEqualToString:@"localAccessToSettings"]) {
+                   [keyPath isEqualToString:@"localAccessToSettings"] ||
+                   [keyPath isEqualToString:@"checkingBattery"]) {
             UISwitch *switchButton = (UISwitch *)[cell.contentView viewWithTag:4];
-            [switchButton setOn:[[self.settings valueForKey:keyPath] boolValue] animated:YES];
-            if ([keyPath isEqualToString:@"localAccessToSettings"]) {
-                [self localAccessToSettings];
+            if ([self.settings valueForKey:keyPath] != [NSNumber numberWithBool:switchButton.on]) {
+                [switchButton setOn:[[self.settings valueForKey:keyPath] boolValue] animated:YES];
+                if ([keyPath isEqualToString:@"localAccessToSettings"]) {
+                    [self localAccessToSettings];
+                }
             }
             
         } else if ([keyPath isEqualToString:@"mapType"]) {

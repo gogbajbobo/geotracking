@@ -55,6 +55,7 @@
 "GENERAL" = "General settings";
 "SYNCER" = "Syncer";
 "AUTHSERVICE" = "AuthService";
+"BATTERY" = "Battery";
 
 "uid" = "User: ID";
 "localAccessToSettings" = "localAccessToSettings";
@@ -73,6 +74,7 @@
 "mapHeading" = "mapHeading";
 "mapType" = "mapType";
 "trackScale" = "trackScale";
+"checkingBattery" = "checkingBattery";
 
 "SPOT" = "Spot";
 "SPOT INFO" = "Spot info:";
