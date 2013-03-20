@@ -1,33 +1,29 @@
 
-EXTERNAL SOURCES: 
-  UDPushAuth: 
-    :git: https://github.com/Unact/UDPushAuth.git
-    :branch: master
+COCOAPODS: 0.16.1
 
 SPEC CHECKSUMS: 
-  GData/YouTube: d1dc33624d13149423a943159d82b8e6e97bfc01
-  UDPushAuth: 7df52124c241a6ba2646968a49cdd8670642b0bd
+  GData: 8f13d83b6ef87a90e7deb7ea5bce53f0fcb4ae77
   Reachability: 1c8584c5f26fa776695efef95caaa50402c94cfb
-  GData/Core: d1dc33624d13149423a943159d82b8e6e97bfc01
-  GData/XMLNode: d1dc33624d13149423a943159d82b8e6e97bfc01
-  GData: d1dc33624d13149423a943159d82b8e6e97bfc01
-
-DEPENDENCIES: 
-- GData (~> 1.9.1)
-- UDPushAuth (from `https://github.com/Unact/UDPushAuth.git', branch `master')
-
-COCOAPODS: 0.16.1
+  UDPushAuth: 7df52124c241a6ba2646968a49cdd8670642b0bd
+  GData/Core: 8f13d83b6ef87a90e7deb7ea5bce53f0fcb4ae77
+  GData/XMLNode: 8f13d83b6ef87a90e7deb7ea5bce53f0fcb4ae77
 
 PODS: 
 - GData (1.9.1): 
   - GData/Core (= 1.9.1)
   - GData/XMLNode (= 1.9.1)
-  - GData/YouTube (= 1.9.1)
 - GData/Core (1.9.1)
 - GData/XMLNode (1.9.1)
-- GData/YouTube (1.9.1): 
-  - GData/Core
 - Reachability (3.1.0)
 - UDPushAuth (0.2.1): 
   - GData (~> 1.9.1)
   - Reachability (~> 3.1.0)
+
+DEPENDENCIES: 
+- GData (~> 1.9.1)
+- UDPushAuth (from `https://github.com/Unact/UDPushAuth.git', branch `master')
+
+EXTERNAL SOURCES: 
+  UDPushAuth: 
+    :git: https://github.com/Unact/UDPushAuth.git
+    :branch: master
