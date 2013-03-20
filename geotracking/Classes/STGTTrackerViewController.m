@@ -234,7 +234,7 @@
     self.session = nil;
     [self viewDeinit];
     self.session = (STGTSession *)notification.object;
-    if (self.session) {
+    if (self.session.tracker) {
         [self viewInit];
     }
 }
@@ -255,7 +255,7 @@
     self.startButton.enabled = NO;
     self.summary.text = NSLocalizedString(@"NO ACTIVE SESSION", @"");
 
-    if (self.session) {
+    if (self.session.tracker) {
         [self viewInit];
     } else {
         [self viewDeinit];

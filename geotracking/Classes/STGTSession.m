@@ -104,7 +104,7 @@
 
     [self documentWithUID:self.uid completionHandler:^(BOOL success) {
         if (success) {
-            NSLog(@"self.document %@", self.document);
+//            NSLog(@"self.document %@", self.document);
             self.tracker.document = self.document;
             self.syncer.document = self.document;
             completionHandler(YES);
@@ -114,7 +114,7 @@
 
 - (void)startBatteryChecking {
     if ([self.tracker.settings.checkingBattery boolValue]) {
-        NSLog(@"startBatteryChecking");
+//        NSLog(@"startBatteryChecking");
         [[UIDevice currentDevice] setBatteryMonitoringEnabled:YES];
 
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
@@ -127,7 +127,7 @@
 }
 
 - (void)stopBatteryChecking {
-    NSLog(@"stopBatteryChecking");
+//    NSLog(@"stopBatteryChecking");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryStateDidChangeNotification" object:[UIDevice currentDevice]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UIDeviceBatteryLevelDidChangeNotification" object:[UIDevice currentDevice]];
     [[UIDevice currentDevice] setBatteryMonitoringEnabled:NO];
