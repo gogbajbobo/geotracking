@@ -383,7 +383,7 @@
         [self.settings removeObserver:self forKeyPath:settingsName];
     }
     [[(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker].document saveToURL:[(STGTSession *)[[STGTSessionManager sharedManager] currentSession] tracker].document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"settingViewWillDisappear UIDocumentSaveForOverwriting success");
+//        NSLog(@"settingViewWillDisappear UIDocumentSaveForOverwriting success");
     }];
 }
 

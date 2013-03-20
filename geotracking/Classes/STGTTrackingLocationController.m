@@ -85,14 +85,14 @@
             settings = (STGTSettings *)[NSEntityDescription insertNewObjectForEntityForName:@"STGTSettings" inManagedObjectContext:self.document.managedObjectContext];
             [settings setValuesForKeysWithDictionary:[STGTSettingsController defaultSettings]];
             
-            NSLog(@"settings create from defaultSettings");
+//            NSLog(@"settings create from defaultSettings");
             
 //            [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
 //                NSLog(@"settings create UIDocumentSaveForOverwriting success");
 //            }];
             
         } else {
-            NSLog(@"settings load from locationsDatabase success");
+//            NSLog(@"settings load from locationsDatabase success");
         }
         
         if (self.startSettings) {
@@ -123,7 +123,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 
-    if ([change valueForKey:@"new"] != [change valueForKey:@"old"]) {
+    if ([change valueForKey:NSKeyValueChangeNewKey] != [change valueForKey:NSKeyValueChangeOldKey]) {
         
         if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"timeFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
             self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
@@ -285,7 +285,7 @@
 //}
 
 - (void)trackerInit {
-    NSLog(@"trackerInit");
+//    NSLog(@"trackerInit");
 //    [[STGTDataSyncController sharedSyncer] startSyncer];
     if ([self.session isKindOfClass:[STGTSession class]]) {
         [[(STGTSession *)self.session syncer] startSyncer];        

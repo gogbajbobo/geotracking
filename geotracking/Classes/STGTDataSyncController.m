@@ -187,7 +187,7 @@
 //                [self stopSyncer];
 //                [[STGTSessionManager sharedManager] sessionCompletionFinished:self.session];
 //            } else {
-                NSLog(@"No data to sync");
+//                NSLog(@"No data to sync");
                 //        [self sendData:nil toServer:@"https://system.unact.ru/reflect/?--mirror"];
                 [self sendData:nil toServer:self.settings.syncServerURI];
 //            }
@@ -527,7 +527,7 @@
             }
             
             [self.document saveToURL:self.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-                NSLog(@"setSynced UIDocumentSaveForOverwriting success");
+//                NSLog(@"setSynced UIDocumentSaveForOverwriting success");
                 if ([self.session isKindOfClass:[STGTSession class]]) {
                     [[(STGTSession *)self.session tracker] setTrackerStatus:@""];
                 }
