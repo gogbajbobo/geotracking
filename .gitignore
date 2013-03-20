@@ -16,3 +16,5 @@ profile
 *.moved-aside
 /Pods
 Podfile.lock
+
+*.lock
