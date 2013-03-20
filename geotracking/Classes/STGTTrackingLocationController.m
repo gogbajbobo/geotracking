@@ -103,13 +103,13 @@
             }
         }
         
-        [settings addObserver:self forKeyPath:@"distanceFilter" options:NSKeyValueObservingOptionNew context:nil];
-        [settings addObserver:self forKeyPath:@"timeFilter" options:NSKeyValueObservingOptionNew context:nil];
-        [settings addObserver:self forKeyPath:@"desiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
-        [settings addObserver:self forKeyPath:@"requiredAccuracy" options:NSKeyValueObservingOptionNew context:nil];
-        [settings addObserver:self forKeyPath:@"trackerAutoStart" options:NSKeyValueObservingOptionNew context:nil];
-        [settings addObserver:self forKeyPath:@"localAccessToSettings" options:NSKeyValueObservingOptionNew context:nil];
-        [settings addObserver:self forKeyPath:@"checkingBattery" options:NSKeyValueObservingOptionNew context:nil];
+        [settings addObserver:self forKeyPath:@"distanceFilter" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+        [settings addObserver:self forKeyPath:@"timeFilter" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+        [settings addObserver:self forKeyPath:@"desiredAccuracy" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+        [settings addObserver:self forKeyPath:@"requiredAccuracy" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+        [settings addObserver:self forKeyPath:@"trackerAutoStart" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+        [settings addObserver:self forKeyPath:@"localAccessToSettings" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
+        [settings addObserver:self forKeyPath:@"checkingBattery" options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil];
 
 
 //        NSLog(@"settings.xid %@", settings.xid);
@@ -123,24 +123,26 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
 
-    if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"timeFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
-        self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
-        self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
-        [self updateInfoLabels];
-    } else if ([keyPath isEqualToString:@"trackerAutoStart"]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAutoStartChanged" object:self];
-    } else if ([keyPath isEqualToString:@"localAccessToSettings"]) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAccessToSettingsChanged" object:self];
-    } else if ([keyPath isEqualToString:@"checkingBattery"]) {
-//        NSLog(@"self.settings %@", self.settings);
-        if ([self.settings.checkingBattery boolValue]) {
-            [(STGTSession *)self.session startBatteryChecking];
-        } else {
-            [(STGTSession *)self.session stopBatteryChecking];
+    if ([change valueForKey:@"new"] != [change valueForKey:@"old"]) {
+        
+        if ([keyPath isEqualToString:@"distanceFilter"] || [keyPath isEqualToString:@"timeFilter"] || [keyPath isEqualToString:@"desiredAccuracy"] || [keyPath isEqualToString:@"requiredAccuracy"]) {
+            self.locationManager.distanceFilter = [self.settings.distanceFilter doubleValue];
+            self.locationManager.desiredAccuracy = [self.settings.desiredAccuracy doubleValue];
+            [self updateInfoLabels];
+        } else if ([keyPath isEqualToString:@"trackerAutoStart"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAutoStartChanged" object:self];
+        } else if ([keyPath isEqualToString:@"localAccessToSettings"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAccessToSettingsChanged" object:self];
+        } else if ([keyPath isEqualToString:@"checkingBattery"]) {
+            if ([self.settings.checkingBattery boolValue]) {
+                [(STGTSession *)self.session startBatteryChecking];
+            } else {
+                [(STGTSession *)self.session stopBatteryChecking];
+            }
+            
         }
-
+        
     }
-    
 
 }
 
