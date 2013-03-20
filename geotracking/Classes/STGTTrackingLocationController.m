@@ -132,6 +132,7 @@
     } else if ([keyPath isEqualToString:@"localAccessToSettings"]) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"STGTTrackerAccessToSettingsChanged" object:self];
     } else if ([keyPath isEqualToString:@"checkingBattery"]) {
+//        NSLog(@"self.settings %@", self.settings);
         if ([self.settings.checkingBattery boolValue]) {
             [(STGTSession *)self.session startBatteryChecking];
         } else {
