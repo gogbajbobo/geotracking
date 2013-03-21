@@ -68,24 +68,30 @@
     UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"CLEAR DATABASE", @"") message:NSLocalizedString(@"OBJECT TO DELETE", @"") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", @"") otherButtonTitles:NSLocalizedString(@"ONLY TRACKS", @""), NSLocalizedString(@"ALL DATA", @""), nil];
     clearAlert.tag = 1;
     [clearAlert show];
-//    [self changeSessionTest];
 }
 
 - (void)changeSessionTest {
 //    NSLog(@"changeSessionTest");
     dispatch_queue_t queue = dispatch_queue_create("queue", NULL);
     dispatch_async(queue, ^{
-        [NSThread sleepForTimeInterval:5];
+        [NSThread sleepForTimeInterval:1];
         dispatch_async(dispatch_get_main_queue(), ^{
             [[STGTSessionManager sharedManager] startSessionForUID:@"2" AuthDelegate:[STGTAuthBasic sharedOAuth]];
             dispatch_async(queue, ^{
-                [NSThread sleepForTimeInterval:5];
+                [NSThread sleepForTimeInterval:1];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [[STGTSessionManager sharedManager] setCurrentSessionUID:nil];
                     dispatch_async(queue, ^{
-                        [NSThread sleepForTimeInterval:5];
+                        [NSThread sleepForTimeInterval:1];
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [[STGTSessionManager sharedManager] setCurrentSessionUID:@"1"];
+                            [[STGTSessionManager sharedManager] stopSessionForUID:@"2"];
+                            [[STGTSessionManager sharedManager] sessionCompletionFinished:[[STGTSessionManager sharedManager].sessions objectForKey:@"2"]];
+                            NSLog(@"session 2 status %@", [[[STGTSessionManager sharedManager].sessions objectForKey:@"2"] status]);
+
+//                            CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(),   (CFStringRef)@"UISimulatedMemoryWarningNotification", NULL, NULL, true);
+                            NSLog(@"sessions count %d", [[[STGTSessionManager sharedManager] sessions] count]);
+
                         });
                     });
                 });
@@ -126,6 +132,8 @@
                 UIAlertView *clearAlert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"WARNING", @"") message:NSLocalizedString(@"CANT DELETE ALL DATA", @"") delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"OK", @""), nil];
                 [clearAlert show];
             }
+        } else if (buttonIndex == 0) {
+//            [self changeSessionTest];
         }
     } else if (alertView.tag == 2) {
         if (buttonIndex == 1) {
@@ -346,6 +354,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(startButtonAccess:) name:@"STGTTrackerAutoStartChanged" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"NewSessionStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentSessionChange:) name:@"CurrentSessionChange" object:nil];
+}
+
+- (void)didReceiveMemoryWarning {
+    NSLog(@"didReceiveMemoryWarning");
+    [super didReceiveMemoryWarning];
+//    NSLog(@"sessions count %d", [[[STGTSessionManager sharedManager] sessions] count]);
 }
 
 @end
