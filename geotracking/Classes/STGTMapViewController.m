@@ -698,7 +698,7 @@
 //    NSLog(@"self.mapView.annotations %@", self.mapView.annotations);
     [super viewWillDisappear:animated];
     [self.tracker.document saveToURL:self.tracker.document.fileURL forSaveOperation:UIDocumentSaveForOverwriting completionHandler:^(BOOL success) {
-        NSLog(@"mapViewWillDisappear UIDocumentSaveForOverwriting success");
+//        NSLog(@"mapViewWillDisappear UIDocumentSaveForOverwriting success");
     }];
 }
 
@@ -719,5 +719,13 @@
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    if ([self isViewLoaded] && [self.view window] == nil) {
+        self.view = nil;
+    }
+}
+
 
 @end

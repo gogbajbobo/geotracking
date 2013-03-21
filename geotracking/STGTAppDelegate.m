@@ -60,6 +60,7 @@
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+//    NSLog(@"applicationDidReceiveMemoryWarning");
     [[STGTSessionManager sharedManager] cleanCompleteSessions];
 }
 

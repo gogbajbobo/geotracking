@@ -49,7 +49,6 @@
 - (void)stopSessionForUID:(NSString *)uid {
     STGTSession *session = [self.sessions objectForKey:uid];
     session.status = @"finishing";
-    [session stopBatteryChecking];
     [session completeSession];
     if ([uid isEqualToString:self.currentSessionUID]) {
         self.currentSessionUID = nil;

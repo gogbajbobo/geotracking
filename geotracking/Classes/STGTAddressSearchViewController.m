@@ -64,10 +64,11 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if ([self isViewLoaded] && [self.view window] == nil) {
+        self.view = nil;
+    }
 }
 
 #pragma mark - Table view data source

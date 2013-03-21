@@ -54,7 +54,9 @@
 //}
 
 - (void)completeSession {
+    [self stopBatteryChecking];
     [self.tracker stopTrackingLocation];
+    [self.syncer fireTimer];
 }
 
 - (void)documentWithUID:(NSString *)uid  completionHandler:(void (^)(BOOL success))completionHandler {

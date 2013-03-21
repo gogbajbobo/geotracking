@@ -97,19 +97,23 @@
     return _resultsController;
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    //    NSLog(@"controllerDidChangeContent");
-//    [UIApplication sharedApplication].applicationIconBadgeNumber = controller.fetchedObjects.count;
-    if ([self.session isKindOfClass:[STGTSession class]]) {
-        [[(STGTSession *)self.session tracker] updateInfoLabels];
-    }
 
-//    [self.tracker updateInfoLabels];
-    if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
-        [self.timer fire];
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    if (type != NSFetchedResultsChangeUpdate) {
+        if ([self.session isKindOfClass:[STGTSession class]]) {
+            [[(STGTSession *)self.session tracker] updateInfoLabels];
+        }
+//        NSLog(@"count %d", controller.fetchedObjects.count);
+        if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
+            if (!self.syncing) {
+                [self.timer fire];
+            }
+        }
     }
-
+    
 }
+
 
 - (void)fireTimer {
     //    NSLog(@"timer fire at %@", [NSDate date]);
@@ -166,7 +170,6 @@
         if ([self.session isKindOfClass:[STGTSession class]]) {
             [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"SYNC", @"")];
         }
-//        self.tracker.trackerStatus = @"SYNC";
         self.syncing = YES;
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"STGTDatum"];
         request.sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"sqts" ascending:YES selector:@selector(compare:)]];
@@ -211,6 +214,8 @@
         //        NSLog(@"createTimestamp %@", [object valueForKey:@"cts"]);
         //        NSLog(@"lastSyncTimestamp %@", [object valueForKey:@"lts"]);
         //        NSLog(@"sendQueryTimestamp %@", [object valueForKey:@"sqts"]);
+        
+        [object setValue:[NSDate date] forKey:@"sts"];
         
         GDataXMLElement *dNode = [GDataXMLElement elementWithName:@"d"];
         [dNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[object entity] name]]];
@@ -270,7 +275,6 @@
             }
         }
         [postNode addChild:dNode];
-        [object setValue:[NSDate date] forKey:@"sts"];
     }
     GDataXMLDocument *xmlDoc = [[GDataXMLDocument alloc] initWithRootElement:postNode];
 //        NSLog(@"xmlDoc %@", [[NSString alloc] initWithData:[xmlDoc XMLData] encoding:NSUTF8StringEncoding]);
@@ -306,7 +310,7 @@
             self.syncing = NO;
         }
     } else {
-        NSLog(@"No Authorization header");
+        NSLog(@"No Authorization header for session %@", [(STGTSession *)self.session uid]);
         if ([self.session isKindOfClass:[STGTSession class]]) {
             [[(STGTSession *)self.session tracker] setTrackerStatus:NSLocalizedString(@"NO TOKEN", @"")];
         }
