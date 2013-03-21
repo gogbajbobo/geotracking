@@ -248,6 +248,7 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+//    NSLog(@"tracker viewDidAppear");
     [super viewDidAppear:animated];
 //    NSLog(@"self.trackerActivityView.alpha1 %f", self.trackerActivityView.alpha);
     if (self.session.tracker.locationManagerRunning) {
@@ -258,6 +259,8 @@
 
 - (void)viewDidLoad
 {
+//    NSLog(@"tracker viewDidLoad");
+    
     [super viewDidLoad];
 
     self.startButton.enabled = NO;
@@ -357,9 +360,13 @@
 }
 
 - (void)didReceiveMemoryWarning {
-    NSLog(@"didReceiveMemoryWarning");
+//    NSLog(@"didReceiveMemoryWarning");
     [super didReceiveMemoryWarning];
 //    NSLog(@"sessions count %d", [[[STGTSessionManager sharedManager] sessions] count]);
+
+    if ([self isViewLoaded] && [self.view window] == nil) {
+        self.view = nil;
+    }
 }
 
 @end
