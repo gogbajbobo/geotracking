@@ -97,22 +97,35 @@
     return _resultsController;
 }
 
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
-    
-    if (type != NSFetchedResultsChangeUpdate) {
-        if ([self.session isKindOfClass:[STGTSession class]]) {
-            [[(STGTSession *)self.session tracker] updateInfoLabels];
-        }
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    if ([self.session isKindOfClass:[STGTSession class]]) {
+        [[(STGTSession *)self.session tracker] updateInfoLabels];
+    }
 //        NSLog(@"count %d", controller.fetchedObjects.count);
-        if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
-            if (!self.syncing) {
-                [self.timer fire];
-            }
+    if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
+        if (!self.syncing) {
+            [self.timer fire];
         }
     }
-    
 }
+
+//- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+//    
+//    if (type != NSFetchedResultsChangeUpdate) {
+//        if ([self.session isKindOfClass:[STGTSession class]]) {
+//            [[(STGTSession *)self.session tracker] updateInfoLabels];
+//        }
+////        NSLog(@"count %d", controller.fetchedObjects.count);
+//        if (controller.fetchedObjects.count % [self.settings.fetchLimit integerValue] == 0) {
+//            if (!self.syncing) {
+//                [self.timer fire];
+//            }
+//        }
+//    } else {
+//        NSLog(@"NSFetchedResultsChangeUpdate");
+//    }
+//    
+//}
 
 
 - (void)fireTimer {
@@ -215,7 +228,7 @@
         //        NSLog(@"lastSyncTimestamp %@", [object valueForKey:@"lts"]);
         //        NSLog(@"sendQueryTimestamp %@", [object valueForKey:@"sqts"]);
         
-        [object setValue:[NSDate date] forKey:@"sts"];
+        [object setPrimitiveValue:[NSDate date] forKey:@"sts"];
         
         GDataXMLElement *dNode = [GDataXMLElement elementWithName:@"d"];
         [dNode addAttribute:[GDataXMLNode attributeWithName:@"name" stringValue:[[object entity] name]]];

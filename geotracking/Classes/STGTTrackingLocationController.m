@@ -784,10 +784,10 @@
 
     UIColor *textColor;
     if ([track.ts compare:track.lts] == NSOrderedAscending) {
-        textColor = [UIColor grayColor];
+        textColor = [UIColor blackColor];
         cell.tag = 1;
     } else {
-        textColor = [UIColor blackColor];
+        textColor = [UIColor grayColor];
     }
     cell.textLabel.textColor = textColor;
     cell.detailTextLabel.textColor = textColor;
