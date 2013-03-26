@@ -250,10 +250,11 @@
 - (void)viewDidAppear:(BOOL)animated {
 //    NSLog(@"tracker viewDidAppear");
     [super viewDidAppear:animated];
-//    NSLog(@"self.trackerActivityView.alpha1 %f", self.trackerActivityView.alpha);
     if (self.session.tracker.locationManagerRunning) {
         [self startAnimationOfTrackerActivityIndicator];
-//        NSLog(@"self.trackerActivityView.alpha2 %f", self.trackerActivityView.alpha);
+        [self startButton].title = NSLocalizedString(@"STOP", @"");
+    } else {
+        [self startButton].title = NSLocalizedString(@"START", @"");
     }
 }
 
