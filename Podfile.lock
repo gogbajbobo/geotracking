@@ -35,11 +35,11 @@ PODS:
 
 DEPENDENCIES:
   - GData (~> 1.9.1)
-  - UDPushAuth (from `https://github.com/Unact/UDPushAuth.git`, branch `dev`)
+  - UDPushAuth (from `https://github.com/Unact/UDPushAuth.git`, branch `master`)
 
 EXTERNAL SOURCES:
   UDPushAuth:
-    :branch: dev
+    :branch: master
     :git: https://github.com/Unact/UDPushAuth.git
 
 SPEC CHECKSUMS:

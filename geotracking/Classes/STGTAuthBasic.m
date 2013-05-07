@@ -15,9 +15,10 @@
 #import "STGTTrackingLocationController.h"
 
 #define TOKEN_SERVER_URL @"system.unact.ru"
-#define AUTH_SERVICE_URI @"https://uoauth.unact.ru/a/UPushAuth/"
-#define AUTH_SERVICE_PARAMETERS @"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"
-//#define AUTH_SERVICE_PARAMETERS @""
+//#define AUTH_SERVICE_URI @"https://uoauth.unact.ru/a/UPushAuth/"
+#define AUTH_SERVICE_URI @"https://system.unact.ru/asa/"
+//#define AUTH_SERVICE_PARAMETERS @"_host=hqvsrv73&app_id=geotracking-dev&_svc=a/UPushAuth/"
+#define AUTH_SERVICE_PARAMETERS @"_host=uoauth&app_id=geotracking-dev&_svc=a/upushauth/"
 
 @interface STGTAuthBasic()
 
