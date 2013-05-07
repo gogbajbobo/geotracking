@@ -252,7 +252,7 @@
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    NSUInteger count;
+    NSUInteger count = 0;
     if (collectionView.tag == 1) {
         count = [self.spot.interests sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:NO selector:@selector(localizedCaseInsensitiveCompare:)]]].count;
     } else if (collectionView.tag == 2) {

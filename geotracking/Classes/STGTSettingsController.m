@@ -28,7 +28,8 @@
 
 #define STGT_FETCH_LIMIT 20
 #define STGT_SYNC_INTERVAL 1800.0
-#define STGT_SYNC_SERVER_URI @"https://system.unact.ru/asa/?_host=asa0&_svc=chest"
+//#define STGT_SYNC_SERVER_URI @"https://system.unact.ru/asa/?_host=asa0&_svc=chest"
+#define STGT_SYNC_SERVER_URI @"https://uoauth.unact.ru/a/UPushAuth/"
 #define STGT_XML_NAMESPACE @"https://github.com/sys-team/ASA.chest"
 
 #define STGT_BATTERY_CHECKING NO
