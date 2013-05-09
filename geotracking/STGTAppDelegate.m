@@ -9,6 +9,8 @@
 #import "STGTAppDelegate.h"
 #import "STGTSessionManager.h"
 
+#define PUSH_REGISTER_RETRY_TIMEOUT 10
+
 @implementation STGTAppDelegate
 
 @synthesize window = _window;
@@ -19,10 +21,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-
-    
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-
+    [self registerFotPushNotifications];
     [[STGTAuthBasic sharedOAuth] checkToken];
 
     self.pushNotificatonCenter = [UDPushNotificationCenter sharedPushNotificationCenter];
@@ -40,10 +39,15 @@
 
 - (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
+    if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] != UIRemoteNotificationTypeNone) {
 #if DEBUG
-    NSLog(@"Device token: %@", deviceToken);
+        NSLog(@"Device token: %@", deviceToken);
 #endif
-    [self.authCodeRetriever registerDeviceWithPushToken:deviceToken];
+        [self.authCodeRetriever registerDeviceWithPushToken:deviceToken];
+    }
+    else{
+        [self failedToRegisterForPushNotifications];
+    }
 }
 
 - (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
@@ -51,17 +55,28 @@
 #if DEBUG
     NSLog(@"Failed to get token, error: %@", error);
 #endif
-    
+    [self failedToRegisterForPushNotifications];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    NSLog(@"Token %@",userInfo);
     [self.pushNotificatonCenter processPushNotification:userInfo];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
 //    NSLog(@"applicationDidReceiveMemoryWarning");
     [[STGTSessionManager sharedManager] cleanCompleteSessions];
+}
+
+- (void) registerFotPushNotifications{
+    NSLog(@"Trying to register for push");
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+}
+
+- (void) failedToRegisterForPushNotifications{
+    NSLog(@"Failed to register for push");
+    [self performSelector:@selector(registerFotPushNotifications) withObject:self afterDelay:PUSH_REGISTER_RETRY_TIMEOUT];
 }
 
 @end
