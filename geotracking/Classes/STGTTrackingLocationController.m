@@ -163,12 +163,12 @@
     for (STGTTrack *track in self.resultsController.fetchedObjects) {
         [allLocations unionSet:track.locations];
     }
-    return [allLocations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"сts" ascending:NO selector:@selector(compare:)]]];
+    return [allLocations sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:NO selector:@selector(compare:)]]];
 }
 
 - (NSArray *)locationsArrayForTrack:(NSInteger)trackNumber {
     if (trackNumber >= 0 && trackNumber < self.resultsController.fetchedObjects.count) {
-        return [[[self.resultsController.fetchedObjects objectAtIndex:trackNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"сts" ascending:NO selector:@selector(compare:)]]];
+        return [[[self.resultsController.fetchedObjects objectAtIndex:trackNumber] locations] sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"cts" ascending:NO selector:@selector(compare:)]]];
     } else {
         return nil;
     }
