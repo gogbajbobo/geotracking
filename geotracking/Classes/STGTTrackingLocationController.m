@@ -686,18 +686,20 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
-    CLLocation *newLocation = [locations lastObject];
-//    CLLocation *newLocation = self.locationManager.location;
-//    NSLog(@"newLocation %@",newLocation);
-    NSTimeInterval locationAge = -[newLocation.timestamp timeIntervalSinceNow];
-    self.currentAccuracy = newLocation.horizontalAccuracy;
-    [self updateInfoLabels];
-    if (locationAge < 5.0 &&
-        newLocation.horizontalAccuracy > 0 &&
-        newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue]) {
-        if (!self.lastLocation || [newLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp] > [self.settings.timeFilter doubleValue]) {
-            //        NSLog(@"addLocation");
-            [self addLocation:newLocation];
+    for (CLLocation *newLocation in locations) {
+        
+        self.currentAccuracy = newLocation.horizontalAccuracy;
+        [self updateInfoLabels];
+        
+        if ( newLocation.horizontalAccuracy > 0 &&
+             newLocation.horizontalAccuracy <= [self.settings.requiredAccuracy doubleValue]
+        ) {
+            if (!self.lastLocation
+                || [newLocation.timestamp timeIntervalSinceDate:self.lastLocation.timestamp]
+                    > [self.settings.timeFilter doubleValue]
+            ) {
+                [self addLocation:newLocation];
+            }
         }
     }
 
