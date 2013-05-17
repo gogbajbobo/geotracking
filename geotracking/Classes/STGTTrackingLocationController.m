@@ -345,6 +345,7 @@
             [location setCourse:[NSNumber numberWithDouble:-1]];
             [location setAltitude:[NSNumber numberWithDouble:self.lastLocation.altitude]];
             [location setVerticalAccuracy:[NSNumber numberWithDouble:self.lastLocation.verticalAccuracy]];
+            [location setTimestamp:self.lastLocation.timestamp];
             [self.currentTrack setStartTime:ts];
             [self.currentTrack addLocationsObject:location];
 //            NSLog(@"copy lastLocation to new Track as first location");
@@ -366,6 +367,7 @@
     [location setCourse:[NSNumber numberWithDouble:currentLocation.course]];
     [location setAltitude:[NSNumber numberWithDouble:currentLocation.altitude]];
     [location setVerticalAccuracy:[NSNumber numberWithDouble:currentLocation.verticalAccuracy]];
+    [location setTimestamp:currentLocation.timestamp];
 
     if (self.currentTrack.locations.count == 0) {
         self.currentTrack.startTime = timestamp;

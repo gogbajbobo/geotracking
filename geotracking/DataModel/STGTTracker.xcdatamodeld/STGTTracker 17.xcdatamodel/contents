@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="STGTBatteryStatus" representedClassName="STGTBatteryStatus" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="batteryLevel" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="batteryState" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STGTDatum" representedClassName="STGTDatum" isAbstract="YES" syncable="YES">
+        <attribute name="cts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sqts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="ts" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="xid" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STGTImage" representedClassName="STGTImage" isAbstract="YES" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="imageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
+    </entity>
+    <entity name="STGTInterest" representedClassName="STGTInterest" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="image" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="STGTInterestImage" inverseName="interest" inverseEntity="STGTInterestImage" syncable="YES"/>
+        <relationship name="spots" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTSpot" inverseName="interests" inverseEntity="STGTSpot" syncable="YES"/>
+    </entity>
+    <entity name="STGTInterestImage" representedClassName="STGTInterestImage" parentEntity="STGTImage" syncable="YES">
+        <relationship name="interest" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STGTInterest" inverseName="image" inverseEntity="STGTInterest" syncable="YES"/>
+    </entity>
+    <entity name="STGTLocation" representedClassName="STGTLocation" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="altitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="course" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="horizontalAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="speed" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="verticalAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="track" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STGTTrack" inverseName="locations" inverseEntity="STGTTrack" syncable="YES"/>
+    </entity>
+    <entity name="STGTNetwork" representedClassName="STGTNetwork" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="image" optional="YES" minCount="1" maxCount="1" deletionRule="Cascade" destinationEntity="STGTNetworkImage" inverseName="network" inverseEntity="STGTNetworkImage" syncable="YES"/>
+        <relationship name="spots" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTSpot" inverseName="networks" inverseEntity="STGTSpot" syncable="YES"/>
+    </entity>
+    <entity name="STGTNetworkImage" representedClassName="STGTNetworkImage" parentEntity="STGTImage" syncable="YES">
+        <relationship name="network" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STGTNetwork" inverseName="image" inverseEntity="STGTNetwork" syncable="YES"/>
+    </entity>
+    <entity name="STGTSettings" representedClassName="STGTSettings" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="checkingBattery" optional="YES" attributeType="Boolean" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="desiredAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="distanceFilter" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="fetchLimit" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="localAccessToSettings" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="mapHeading" optional="YES" attributeType="Integer 16" defaultValueString="NO" syncable="YES"/>
+        <attribute name="mapType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="requiredAccuracy" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="syncInterval" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="syncServerURI" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timeFilter" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="trackDetectionTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="trackerAutoStart" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="trackerFinishTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="trackerStartTime" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="trackScale" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="xmlNamespace" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="STGTSpot" representedClassName="STGTSpot" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="avatarXid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="label" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STGTSpotImage" inverseName="spot" inverseEntity="STGTSpotImage" syncable="YES"/>
+        <relationship name="interests" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTInterest" inverseName="spots" inverseEntity="STGTInterest" syncable="YES"/>
+        <relationship name="networks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="STGTNetwork" inverseName="spots" inverseEntity="STGTNetwork" syncable="YES"/>
+    </entity>
+    <entity name="STGTSpotImage" representedClassName="STGTSpotImage" parentEntity="STGTImage" syncable="YES">
+        <relationship name="spot" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="STGTSpot" inverseName="images" inverseEntity="STGTSpot" syncable="YES"/>
+    </entity>
+    <entity name="STGTTrack" representedClassName="STGTTrack" parentEntity="STGTDatum" syncable="YES">
+        <attribute name="finishTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="overallDistance" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <relationship name="locations" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="STGTLocation" inverseName="track" inverseEntity="STGTLocation" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="STGTBatteryStatus" positionX="-1098" positionY="-259" width="128" height="73"/>
+        <element name="STGTDatum" positionX="-783" positionY="-324" width="128" height="133"/>
+        <element name="STGTImage" positionX="-810" positionY="-495" width="128" height="58"/>
+        <element name="STGTInterest" positionX="-684" positionY="-108" width="128" height="88"/>
+        <element name="STGTInterestImage" positionX="-486" positionY="-148" width="128" height="58"/>
+        <element name="STGTLocation" positionX="-873" positionY="-126" width="128" height="178"/>
+        <element name="STGTNetwork" positionX="-441" positionY="-315" width="128" height="88"/>
+        <element name="STGTNetworkImage" positionX="-648" positionY="-432" width="128" height="58"/>
+        <element name="STGTSettings" positionX="-990" positionY="-567" width="128" height="298"/>
+        <element name="STGTSpot" positionX="-452" positionY="-553" width="128" height="163"/>
+        <element name="STGTSpotImage" positionX="-641" positionY="-522" width="128" height="58"/>
+        <element name="STGTTrack" positionX="-1098" positionY="-153" width="128" height="103"/>
+    </elements>
+</model>
