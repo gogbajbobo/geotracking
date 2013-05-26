@@ -18,3 +18,5 @@ profile
 Podfile.lock
 
 *.lock
+
+*.lock
