@@ -18,5 +18,4 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency 'GData', '~> 1.9.1'
-  s.dependency 'UDPushAuth', :git => 'https://github.com/Unact/UDPushAuth.git', :branch => 'dev'
 end
