@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '5.0'
 
   s.source_files = 'geotracking/*.lproj/STGT*.storyboard', 'geotracking/*.lproj/Localizable.strings', 'geotracking/Classes/STGT*.{h,m}', 'geotracking/DataModel/STGT*.{h,m,xcdatamodel,xcdatamodeld}'
-  s.resources = "geotracking/Resources/STGT*.{png,html,xml,js}"
+  s.resources = 'geotracking/Resources/STGT*.{png,html,xml,js}', 'geotracking/DataModel/STGT*.{xcdatamodel,xcdatamodeld}'
 
   s.frameworks = 'SystemConfiguration', 'CoreData', 'MapKit', 'CoreLocation', 'UIKit', 'Foundation', 'CoreGraphics'
   s.library   = 'xml2'
